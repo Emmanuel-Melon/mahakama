@@ -1,9 +1,8 @@
 'use client';
-
 import { useState } from "react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { Button } from "app/components/ui/button"
-import { LawyerCard } from "app/components/lawyer-card"
+import { LawyerCard } from "./lawyer-card"
 import type { Lawyer } from "app/types/lawyer"
 
 const LAWYERS_PER_PAGE = 2

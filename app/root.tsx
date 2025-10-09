@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { Header } from "./components/header";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -25,15 +26,20 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            {children}
+          </div>
+        </main>
         <ScrollRestoration />
         <Scripts />
       </body>

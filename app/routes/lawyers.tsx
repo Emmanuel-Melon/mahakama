@@ -1,5 +1,5 @@
 import type { Route } from "./+types/lawyers";
-import { LawyersList } from "app/components/lawyers-list";
+import { LawyersList } from "~/components/lawyers/lawyers-list";
 import type { Lawyer } from "app/types/lawyer";
 
 export function meta({}: Route.MetaArgs) {
