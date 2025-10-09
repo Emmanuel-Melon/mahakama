@@ -1,5 +1,6 @@
 import type { Route } from "./+types/lawyers";
 import { LawyersList } from "~/components/lawyers/lawyers-list";
+import { HeroSection } from "~/components/about/HeroSection";
 import type { Lawyer } from "app/types/lawyer";
 
 export function meta({}: Route.MetaArgs) {
@@ -48,30 +49,35 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
   const { lawyers, error } = loaderData;
 
   return (
-    <section className="container mx-auto py-8">
-      <div className="w-full">
-        <h1 className="text-3xl font-bold mb-2">Find a Lawyer</h1>
-        <p className="text-muted-foreground mb-8">Connect with experienced legal professionals who can help with your specific needs.</p>
-        
-        {error ? (
-          <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-6 rounded-lg">
-            <h3 className="font-medium mb-2">Connection Issue</h3>
-            <p className="mb-4">{error}</p>
-            <div className="text-sm text-muted-foreground">
-              <p>While we work on restoring the connection, here's what you can do:</p>
-              <ul className="list-disc pl-5 mt-2 space-y-1">
-                <li>Check your internet connection</li>
-                <li>Try refreshing the page</li>
-                <li>Contact support if the issue persists</li>
-              </ul>
-            </div>
+    <div className="min-h-screen">
+      <HeroSection 
+        title="Find Trusted Legal Professionals"
+        description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <section className="container mx-auto py-8">
+          <div className="w-full">
+            {error ? (
+              <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-6 rounded-lg">
+                <h3 className="font-medium mb-2">Connection Issue</h3>
+                <p className="mb-4">{error}</p>
+                <div className="text-sm text-muted-foreground">
+                  <p>While we work on restoring the connection, here's what you can do:</p>
+                  <ul className="list-disc pl-5 mt-2 space-y-1">
+                    <li>Check your internet connection</li>
+                    <li>Try refreshing the page</li>
+                    <li>Contact support if the issue persists</li>
+                  </ul>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-background/50 backdrop-blur-sm p-6 rounded-xl border">
+                <LawyersList lawyers={lawyers} />
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="bg-background/50 backdrop-blur-sm p-6 rounded-xl border">
-            <LawyersList lawyers={lawyers} />
-          </div>
-        )}
+        </section>
       </div>
-    </section>
+    </div>
   );
 }

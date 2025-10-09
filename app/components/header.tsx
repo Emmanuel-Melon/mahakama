@@ -1,4 +1,4 @@
-import { Scale, Users, Info, Menu, X, ChevronDown, Check, Paperclip } from "lucide-react";
+import { Scale, Users, Info, Menu, X, ChevronDown, Check, BookOpen } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 type Country = {
@@ -22,7 +22,7 @@ const links = [
   {
     id: 2,
     title: "Legal Database",
-    icon: Paperclip,
+    icon: BookOpen,
     url: "/legal-database",
   },
   {
@@ -72,47 +72,65 @@ export function Header() {
   }, []);
 
   return (
-    <header className={`sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? 'shadow-sm' : ''}`}>
-      <div className="flex h-16 items-center justify-between max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center">
-          <a href="/" className="flex items-center space-x-2">
-            <Scale className="h-6 w-6 text-primary" />
-            <span className="inline-block font-bold text-foreground">Mahakama</span>
-          </a>
-        </div>
+    <header 
+      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b-2 border-gray-900 ${isScrolled ? 'shadow-[0_4px_0_0_rgba(0,0,0,0.1)]' : ''} transition-shadow duration-300`}
+      style={{
+        borderImageSource: "url(" +
+          "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%233b82f6' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E" + ")",
+        borderImageSlice: '1',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
+          <div className="flex items-center">
+            <a href="/" className="flex items-center group">
+              <div className="relative">
+                <Scale className="h-7 w-7 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
+                <div className="absolute -inset-1 bg-yellow-200/60 -rotate-1 -z-10 rounded-sm group-hover:bg-yellow-300/60 transition-colors"></div>
+              </div>
+              <span className="ml-3 text-2xl font-black text-gray-900 font-serif">Mahakama</span>
+            </a>
+          </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <nav className="hidden md:flex items-center gap-2">
+        <div className="flex items-center gap-3 md:gap-6">
+          <nav className="hidden md:flex items-center gap-1">
             {links.map((link) => {
               const Icon = link.icon;
               return (
                 <a
                   key={link.id}
                   href={link.url}
-                  className="flex items-center gap-3 px-3 py-2 text-base font-medium text-muted-foreground hover:bg-muted/50 rounded-md"
+                  className="group relative px-4 py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors"
                 >
-                  <Icon className="h-5 w-5" />
-                  <span>{link.title}</span>
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {link.title}
+                  </span>
+                  <span className="absolute bottom-1 left-0 right-0 h-1 bg-yellow-300/60 -rotate-1 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
                 </a>
               );
             })}
           </nav>
+          
           {/* Country Selector - Desktop */}
-          <div className="relative">
+          <div className="relative hidden md:block">
             <button
               ref={countryButtonRef}
               onClick={toggleCountryMenu}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-muted/50 transition-colors"
+              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-gray-200"
               aria-haspopup="true"
               aria-expanded={isCountryOpen}
             >
               <span className="text-lg">{selectedCountry.flag}</span>
               <span className="hidden sm:inline">{selectedCountry.name}</span>
-              <ChevronDown size={16} className={`transition-transform ${isCountryOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown 
+                size={16} 
+                className={`transition-transform ${isCountryOpen ? 'rotate-180' : ''} text-gray-500`} 
+              />
             </button>
             
             {isCountryOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-md border bg-popover p-1 text-popover-foreground shadow-md animate-in fade-in-80">
+              <div className="absolute right-0 mt-2 w-56 rounded-lg border-2 border-gray-900 bg-white p-1 shadow-[4px_4px_0_0_rgba(0,0,0,1)] animate-in fade-in-80">
                 <div className="py-1">
                   {countries.map((country) => (
                     <button
@@ -121,18 +139,18 @@ export function Header() {
                         setSelectedCountry(country);
                         setIsCountryOpen(false);
                       }}
-                      className={`relative flex w-full items-center justify-between rounded-sm px-2 py-1.5 text-sm outline-none transition-colors ${
+                      className={`relative flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium outline-none transition-colors ${
                         selectedCountry.code === country.code
-                          ? 'bg-accent text-accent-foreground'
-                          : 'hover:bg-accent hover:text-accent-foreground'
+                          ? 'bg-yellow-100 text-gray-900'
+                          : 'text-gray-700 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{country.flag}</span>
-                        <span>{country.name}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{country.flag}</span>
+                        <span className="font-semibold">{country.name}</span>
                       </div>
                       {selectedCountry.code === country.code && (
-                        <Check className="h-4 w-4 text-primary" />
+                        <Check className="h-4 w-4 text-blue-600" />
                       )}
                     </button>
                   ))}
@@ -141,33 +159,39 @@ export function Header() {
             )}
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1">
+            
             {/* Country Selector - Mobile */}
             <button
               onClick={toggleCountryMenu}
-              className="md:hidden p-2 rounded-md hover:bg-muted/50 transition-colors"
+              className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
               aria-label="Select country"
             >
-              <span className="text-lg">{selectedCountry.flag}</span>
+              <span className="text-xl">{selectedCountry.flag}</span>
             </button>
 
             {/* Mobile Menu Button */}
             <button 
               onClick={toggleMenu} 
-              className="inline-flex items-center justify-center rounded-md p-2 text-muted-foreground hover:bg-muted/50 hover:text-foreground md:hidden"
+              className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 text-gray-700 md:hidden transition-colors"
               aria-label="Toggle menu"
             >
-              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden fixed inset-0 top-[73px] bg-background border-t border-border z-50">
-            <div className="w-full p-4 border-b border-border">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2 px-4">Country</h3>
-              <div className="space-y-1 mb-4">
+          <div className="md:hidden fixed inset-0 top-20 bg-white z-50 border-t-2 border-gray-900 overflow-y-auto">            
+            {/* Country Selector */}
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Select Country</h3>
+              <div className="space-y-2">
                 {countries.map((country) => (
                   <button
                     key={country.code}
@@ -175,47 +199,53 @@ export function Header() {
                       setSelectedCountry(country);
                       setIsCountryOpen(false);
                     }}
-                    className={`w-full flex items-center justify-between px-4 py-2 rounded-md text-left ${
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors ${
                       selectedCountry.code === country.code
-                        ? 'bg-primary/10 text-primary'
-                        : 'text-foreground hover:bg-muted/50'
+                        ? 'bg-yellow-100 text-gray-900 font-semibold'
+                        : 'text-gray-700 hover:bg-gray-50'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-xl">{country.flag}</span>
-                      <span>{country.name}</span>
+                      <span className="text-2xl">{country.flag}</span>
+                      <span className="text-base">{country.name}</span>
                     </div>
                     {selectedCountry.code === country.code && (
-                      <Check className="h-4 w-4 text-primary" />
+                      <Check className="h-5 w-5 text-blue-600" />
                     )}
                   </button>
                 ))}
               </div>
             </div>
-            <nav className="flex flex-col items-center gap-2 p-4 w-full">
-              <h3 className="w-full text-sm font-medium text-muted-foreground mb-2 px-4">Navigation</h3>
-              {links.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  onClick={() => setIsOpen(false)}
-                  className={`
-                    w-full text-center text-lg transition-colors
-                    flex gap-2 rounded-md px-4 py-3 items-center justify-center
-                    ${
-                      location.pathname === link.url
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    }
-                  `}
-                >
-                  <link.icon className="w-5 h-5" />
-                  {link.title}
-                </a>
-              ))}
+            
+            {/* Navigation Links */}
+            <nav className="p-2">
+              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">Menu</h3>
+              <div className="space-y-1">
+                {links.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <a
+                      key={link.id}
+                      href={link.url}
+                      onClick={() => setIsOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-semibold transition-colors ${
+                        window.location.pathname === link.url
+                          ? 'bg-blue-50 text-blue-700'
+                          : 'text-gray-800 hover:bg-gray-50'
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {link.title}
+                    </a>
+                  );
+                })}
+              </div>
             </nav>
+            
+
           </div>
         )}
+        </div>
       </div>
     </header>
   );
