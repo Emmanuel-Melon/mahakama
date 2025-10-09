@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Route } from "./+types/home";
+import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
+import type { Country } from "../components/header";
+import { CountryContext } from "../components/home/CountryContext";
+import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -10,60 +14,35 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  const [inquiry, setInquiry] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inquiry.trim()) return;
-    
+  const handleCountryChange = (country: Country) => {
+    setSelectedCountry(country);
+    saveSelectedCountry(country);
+  };
+
+  const handleSubmit = (inquiry: string) => {
     setIsSubmitting(true);
     console.log('Legal inquiry submitted:', inquiry);
     
     // Simulate API call
     setTimeout(() => {
-      setInquiry('');
       setIsSubmitting(false);
     }, 1000);
   };
 
   return (
     <section className="w-full p-6">
-      <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Legal Inquiry</h2>
-        <p className="text-gray-600 mb-6">
-          Describe your legal question or concern in the box below. Our system will analyze your inquiry and provide helpful information.
-        </p>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label htmlFor="legal-inquiry" className="block text-sm font-medium text-gray-700 mb-2">
-              Your Legal Question
-            </label>
-            <textarea
-              id="legal-inquiry"
-              rows={8}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Type your legal question here..."
-              value={inquiry}
-              onChange={(e) => setInquiry(e.target.value)}
-              disabled={isSubmitting}
-              required
-            />
-          </div>
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              disabled={isSubmitting || !inquiry.trim()}
-              className={`px-4 py-2 rounded-md text-white font-medium ${
-                isSubmitting || !inquiry.trim()
-                  ? 'bg-blue-300 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
-            </button>
-          </div>
-        </form>
+      <div className="space-y-6">
+        <CountryContext 
+          country={selectedCountry} 
+          onCountryChange={handleCountryChange} 
+        />
+        <LegalInquiryForm 
+          onSubmit={handleSubmit} 
+          isSubmitting={isSubmitting} 
+        />
       </div>
     </section>
   );

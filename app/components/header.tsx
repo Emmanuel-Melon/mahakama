@@ -1,7 +1,8 @@
 import { Scale, Users, Info, Menu, X, ChevronDown, Check, BookOpen } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
 
-type Country = {
+export type Country = {
   code: 'SS' | 'UG';
   name: string;
   flag: string;
@@ -37,8 +38,13 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(countries[0]);
+  const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
+  const [currentPath, setCurrentPath] = useState('');
   const countryButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setCurrentPath(window.location.pathname);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,6 +61,12 @@ export function Header() {
 
   const toggleCountryMenu = () => {
     setIsCountryOpen(!isCountryOpen);
+  };
+
+  const handleCountrySelect = (country: Country) => {
+    setSelectedCountry(country);
+    saveSelectedCountry(country);
+    setIsCountryOpen(false);
   };
 
   // Close country dropdown when clicking outside
@@ -100,13 +112,23 @@ export function Header() {
                 <a
                   key={link.id}
                   href={link.url}
-                  className="group relative px-4 py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors"
+                  className={`group relative px-4 py-2 text-sm font-bold transition-colors ${
+                    currentPath === link.url 
+                      ? 'text-gray-900' 
+                      : 'text-gray-700 hover:text-gray-900'
+                  }`}
                 >
                   <span className="relative z-10 flex items-center gap-2">
                     <Icon className="h-4 w-4" />
                     {link.title}
                   </span>
-                  <span className="absolute bottom-1 left-0 right-0 h-1 bg-yellow-300/60 -rotate-1 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300"></span>
+                  <span 
+                    className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
+                      currentPath === link.url 
+                        ? 'bg-yellow-400 scale-x-100' 
+                        : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
+                    }`}
+                  ></span>
                 </a>
               );
             })}
@@ -135,10 +157,7 @@ export function Header() {
                   {countries.map((country) => (
                     <button
                       key={country.code}
-                      onClick={() => {
-                        setSelectedCountry(country);
-                        setIsCountryOpen(false);
-                      }}
+                      onClick={() => handleCountrySelect(country)}
                       className={`relative flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium outline-none transition-colors ${
                         selectedCountry.code === country.code
                           ? 'bg-yellow-100 text-gray-900'
@@ -227,12 +246,12 @@ export function Header() {
                     <a
                       key={link.id}
                       href={link.url}
-                      onClick={() => setIsOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-base font-semibold transition-colors ${
-                        window.location.pathname === link.url
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'text-gray-800 hover:bg-gray-50'
+                      className={`flex items-center gap-3 px-4 py-3 text-base font-bold rounded-lg ${
+                        currentPath === link.url 
+                          ? 'bg-yellow-100 text-gray-900' 
+                          : 'text-gray-700 hover:bg-gray-50'
                       }`}
+                      onClick={() => setIsOpen(false)}
                     >
                       <Icon className="h-5 w-5" />
                       {link.title}
@@ -242,7 +261,6 @@ export function Header() {
               </div>
             </nav>
             
-
           </div>
         )}
         </div>
