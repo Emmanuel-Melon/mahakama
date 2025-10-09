@@ -74,14 +74,31 @@ export function Header() {
   return (
     <header className={`sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isScrolled ? 'shadow-sm' : ''}`}>
       <div className="flex h-16 items-center justify-between max-w-[70%] mx-auto w-full px-4 sm:px-6 lg:px-8">
-        <a href="/" className="flex items-center space-x-2">
-          <Scale className="h-6 w-6 text-primary" />
-          <span className="inline-block font-bold text-foreground">Mahakama</span>
-        </a>
+        <div className="flex items-center">
+          <a href="/" className="flex items-center space-x-2">
+            <Scale className="h-6 w-6 text-primary" />
+            <span className="inline-block font-bold text-foreground">Mahakama</span>
+          </a>
+        </div>
 
         <div className="flex items-center gap-2 md:gap-4">
+          <nav className="hidden md:flex items-center gap-2">
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <a
+                  key={link.id}
+                  href={link.url}
+                  className="flex items-center gap-3 px-3 py-2 text-base font-medium text-muted-foreground hover:bg-muted/50 rounded-md"
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{link.title}</span>
+                </a>
+              );
+            })}
+          </nav>
           {/* Country Selector - Desktop */}
-          <div className="relative hidden md:block">
+          <div className="relative">
             <button
               ref={countryButtonRef}
               onClick={toggleCountryMenu}
@@ -123,19 +140,6 @@ export function Header() {
               </div>
             )}
           </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1">
-            {links.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:text-primary/90 h-10 px-4 py-2 hover:bg-muted/50"
-              >
-                {link.title}
-              </a>
-            ))}
-          </nav>
 
           <div className="flex items-center space-x-2">
             {/* Country Selector - Mobile */}
