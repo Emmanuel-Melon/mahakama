@@ -72,7 +72,7 @@ export default function About() {
         description="Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free."
       />
 
-      <div className="max-w-4xl mx-auto mb-20">
+      <div className="w-full mb-20">
         <div className="prose prose-lg text-muted-foreground mx-auto mb-16">
           <h2 className="text-2xl font-semibold text-foreground mb-6">Legal Knowledge, Made Simple</h2>
           <p className="mb-6">

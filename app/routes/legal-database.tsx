@@ -54,7 +54,7 @@ export default function LegalDatabase() {
 
   return (
     <div className="py-12">
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full">
         <h1 className="text-3xl font-bold text-foreground mb-2">Legal Database</h1>
         <p className="text-muted-foreground mb-8">
           Access the complete collection of laws and legal documents. Each document is available in its original form

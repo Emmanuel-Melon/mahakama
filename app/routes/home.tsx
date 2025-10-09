@@ -28,7 +28,7 @@ export default function Home() {
   };
 
   return (
-    <section className="max-w-4xl mx-auto p-6">
+    <section className="w-full p-6">
       <div className="mt-8 bg-white rounded-lg shadow-md p-6">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Legal Inquiry</h2>
         <p className="text-gray-600 mb-6">

@@ -49,7 +49,7 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
 
   return (
     <section className="container mx-auto py-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full">
         <h1 className="text-3xl font-bold mb-2">Find a Lawyer</h1>
         <p className="text-muted-foreground mb-8">Connect with experienced legal professionals who can help with your specific needs.</p>
         
