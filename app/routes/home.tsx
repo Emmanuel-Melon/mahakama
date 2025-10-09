@@ -1,13 +1,18 @@
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { Header } from 'app/components/header'
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Mahakama - Legal Assistance Platform" },
+    { name: "description", content: "Democratizing legal access through human-centered engineering. Understand your legal rights in plain language with our AI-powered legal assistance platform." },
+    { name: "keywords", content: "legal assistance, legal rights, law help, legal documents, legal advice, mahakama, court, legal aid" },
   ];
 }
 
 export default function Home() {
-  return <Welcome />;
+  return (
+    <section>
+      <Header />
+    </section>
+  );
 }
