@@ -1,24 +1,81 @@
-# Mahakama - Legal Assistance Platform
+# Mahakama - Legal Knowledge for Everyone
 
-> Democratizing legal access through human-centered engineering
+> Empowering citizens with legal knowledge, connecting with lawyers when needed
 
-Mahakama (Swahili/Arabic for "Court") is a legal assistance platform that transforms complex legal documents into understandable, actionable information using natural language processing. Built with Human-Centered Engineering principles, it helps everyday people understand their legal rights without needing legal expertise.
+Mahakama (Swahili/Arabic for "Court") is a legal empowerment platform that makes the law accessible to everyone. We believe that legal knowledge should be a right, not a privilege. Our AI-powered platform helps you understand your legal rights and options in plain language, without needing a law degree.
+
+## Our Mission
+
+In South Sudan and Uganda, accessing legal information is often expensive and confusing. Government legal databases exist, but they're filled with complex terminology that's hard to understand without a law degree. Mahakama changes that by providing free, easy-to-understand legal information in everyday language.
+
+### Knowledge First, Lawyers Second
+
+While we can connect you with legal professionals if absolutely necessary, our primary goal is to empower you with knowledge first. Most legal questions can be resolved by understanding your rights and options - no lawyer required.
 
 ## Features
 
-- 🧠 Natural Language Search - Ask legal questions in plain language
-- 📱 Mobile-First Design - Works seamlessly on all devices
-- 🔍 Semantic Understanding - Maps everyday language to legal sections
-- ⚖️ Legal Professional Network - Connect with vetted lawyers
-- 🌍 Accessible - Designed for users in high-stress legal situations
-- 🛠 Built with React, TypeScript, and TailwindCSS
+### For Everyone
+- 🧠 **Plain Language Answers** - Get clear explanations of laws without legal jargon
+- 🔍 **Everyday Language Search** - Ask about real situations:
+  - "What can I do if my landlord won't return my deposit?"
+  - "What are my rights if I'm injured at work?"
+  - "How do I report a business that scammed me?"
+- 📚 **Comprehensive Legal Database** - Direct access to:
+  - National Constitution
+  - Criminal and Civil Codes
+  - Labor and Employment Laws
+  - Property and Tenancy Laws
+  - Consumer Protection Regulations
+- 📱 **Mobile-First Design** - Get legal help when and where you need it
+
+### When You Need a Lawyer
+- ⚖️ **Vetted Legal Professionals** - Connect with experienced lawyers when needed
+- 🤝 **Case Representation** - Find representation for complex legal matters
+- 📝 **Document Review** - Get professional review of your legal documents
+
+### Built for Accessibility
+- 🌍 **Multiple Languages** - Available in English and local languages
+- 👥 **Community Focused** - Designed with input from local communities
+- 🛠 **Open Source** - Built with React, TypeScript, and TailwindCSS
+
+## How It Works
+
+1. **Ask Your Question** - Describe your legal situation in everyday language:
+   - "My landlord changed the locks without notice"
+   - "My employee quit without giving notice"
+   - "My neighbor is building on my property"
+   - "I was unfairly dismissed from work"
+
+2. **Get Clear Answers** - Our AI:
+   - References the exact laws and sections (Constitution, Criminal Code, Labor Act, etc.)
+   - Explains the law in simple terms
+   - Provides relevant precedents where applicable
+
+3. **Understand Your Rights** - Learn:
+   - What the law says about your specific situation
+   - Your legal rights and protections
+   - Common next steps and solutions
+
+4. **Take Action** - Get guidance on:
+   - How to resolve the issue yourself
+   - What documents you might need
+   - When to consider professional legal help
+
+5. **Connect with a Lawyer** - Only if your situation requires:
+   - Court representation
+   - Complex legal documents
+   - Specialized legal advice
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20
 - npm or yarn
+
+### For Legal Professionals
+
+Lawyers can join our network to help expand access to legal information and assist users who need professional representation.
 
 ### Installation
 
