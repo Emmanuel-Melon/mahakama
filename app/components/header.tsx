@@ -1,4 +1,4 @@
-import { Scale, Users, Info, Menu, X, ChevronDown, Check } from "lucide-react";
+import { Scale, Users, Info, Menu, X, ChevronDown, Check, Paperclip } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 type Country = {
@@ -21,6 +21,12 @@ const links = [
   },
   {
     id: 2,
+    title: "Legal Database",
+    icon: Paperclip,
+    url: "/legal-database",
+  },
+  {
+    id: 3,
     title: "About",
     icon: Info,
     url: "/about",

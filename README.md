@@ -2,7 +2,7 @@
 
 > Empowering citizens with legal knowledge, connecting with lawyers when needed
 
-Mahakama (Swahili/Arabic for "Court") is a legal empowerment platform that makes the law accessible to everyone. We believe that legal knowledge should be a right, not a privilege. Our AI-powered platform helps you understand your legal rights and options in plain language, without needing a law degree.
+Legal knowledge is a right, not a privilege. Mahakama (Swahili/Arabic for "Court") is the AI-powered legal empowerment platform built to demystify the law in South Sudan and Uganda. We deliver instant, plain-language answers to your real-life legal questions, empowering you to know your rights before you need a lawyer.
 
 ## Our Mission
 
@@ -15,18 +15,26 @@ While we can connect you with legal professionals if absolutely necessary, our p
 ## Features
 
 ### For Everyone
-- 🧠 **Plain Language Answers** - Get clear explanations of laws without legal jargon
-- 🔍 **Everyday Language Search** - Ask about real situations:
-  - "What can I do if my landlord won't return my deposit?"
-  - "What are my rights if I'm injured at work?"
-  - "How do I report a business that scammed me?"
-- 📚 **Comprehensive Legal Database** - Direct access to:
-  - National Constitution
-  - Criminal and Civil Codes
-  - Labor and Employment Laws
-  - Property and Tenancy Laws
-  - Consumer Protection Regulations
-- 📱 **Mobile-First Design** - Get legal help when and where you need it
+- 🧠 **Plain Language Answers** - Get clear explanations of laws without legal jargon, with the ability to view the exact legal text
+- 🔍 **Everyday Language Search** - Ask about real situations and get answers that reference specific laws:
+  - "What can I do if my landlord won't return my deposit?" (References: Landlord and Tenant Act, 2022)
+  - "What are my rights if I'm injured at work?" (References: Labor Act, 2017)
+  - "How do I report a business that scammed me?" (References: Consumer Protection Act, 2021)
+
+- 📚 **Verified Legal Database** - Direct access to the complete, unaltered legal documents:
+  - National Constitution (Latest Amendment: 2023)
+  - Criminal Code Act (2022 Edition)
+  - Civil Procedure Act (2021)
+  - Landlord and Tenant Act (2022)
+  - Labor Act (2017, Amended 2023)
+  - All laws include versioning and amendment history
+
+- 🔍 **Source Verification** - Every AI answer includes:
+  - Direct links to the relevant legal sections
+  - Version information for each cited law
+  - Option to view the full legal text in context
+
+- 📱 **Mobile-First Design** - Access legal help and reference materials anywhere, anytime
 
 ### When You Need a Lawyer
 - ⚖️ **Vetted Legal Professionals** - Connect with experienced lawyers when needed
@@ -46,15 +54,17 @@ While we can connect you with legal professionals if absolutely necessary, our p
    - "My neighbor is building on my property"
    - "I was unfairly dismissed from work"
 
-2. **Get Clear Answers** - Our AI:
-   - References the exact laws and sections (Constitution, Criminal Code, Labor Act, etc.)
-   - Explains the law in simple terms
-   - Provides relevant precedents where applicable
+2. **Get Clear, Verifiable Answers** - Our AI:
+   - References the exact laws, sections, and subsections
+   - Provides both simplified explanations and direct quotes from the legal text
+   - Shows the official version and effective date of each law referenced
+   - Links to the full legal document for verification
 
-3. **Understand Your Rights** - Learn:
-   - What the law says about your specific situation
-   - Your legal rights and protections
-   - Common next steps and solutions
+3. **Verify and Understand** - With each answer:
+   - Read the AI's plain-language explanation
+   - Review the exact legal text that applies
+   - See related laws and precedents
+   - Understand how the law has been interpreted in practice
 
 4. **Take Action** - Get guidance on:
    - How to resolve the issue yourself
