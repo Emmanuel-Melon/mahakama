@@ -1,4 +1,4 @@
-import { ArrowRight, Gavel, FileText, Scale } from "lucide-react";
+import { ArrowRight, Gavel, FileText, Scale, ChevronRight } from "lucide-react";
 import { cn } from '~/lib/utils';
 
 type Service = {
@@ -15,49 +15,91 @@ type LegalServicesSectionProps = {
 };
 
 export function LegalServicesSection({ 
-  services, 
+  services = [], 
   ctaText, 
   ctaHref, 
   className 
 }: LegalServicesSectionProps) {
   return (
-    <section className={cn("py-16 bg-white", className)}>
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl mb-4">
-            Legal Services
-          </h2>
-          <p className="text-lg text-gray-600">
+    <section className={cn("py-16 bg-white relative overflow-hidden", className)}>
+      {/* Decorative background elements */}
+      <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-yellow-100/50 -z-10"></div>
+      <div className="absolute -left-10 bottom-10 w-32 h-32 rounded-full bg-blue-100/50 -z-10"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <div className="relative inline-block">
+            <h2 className="text-4xl font-black text-gray-900 sm:text-5xl mb-4 relative z-10">
+              Legal Services
+            </h2>
+            <div className="absolute -bottom-2 left-0 right-0 h-3 bg-yellow-200/60 -rotate-1 transform scale-x-110 -z-10"></div>
+          </div>
+          <p className="text-lg text-gray-700 max-w-2xl mx-auto mt-6 font-medium">
             Expert legal assistance when you need it most. Our network of verified professionals is here to help.
           </p>
         </div>
 
-        <div className="space-y-0 divide-y divide-gray-200">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <div key={index} className="py-6">
-              <div className="flex items-start">
-                <div className="flex-shrink-0 mr-4">
-                  <service.icon className="h-6 w-6 text-primary" aria-hidden="true" />
+            <div 
+              key={index} 
+              className="relative p-6 bg-white border-2 border-gray-900 hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)] transition-all duration-200 transform hover:-translate-y-1"
+              style={{
+                borderRadius: '16px 8px 16px 8px',
+                border: '2px solid #000',
+                boxShadow: '4px 4px 0 0 #000',
+              }}
+            >
+              {/* Decorative corner elements */}
+              <div className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900 bg-yellow-300"></div>
+              <div className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900 bg-yellow-300"></div>
+              
+              <div className="flex flex-col h-full">
+                <div className="mb-4 p-3 inline-flex items-center justify-center w-14 h-14 rounded-full bg-yellow-100 border-2 border-gray-900">
+                  <service.icon className="h-6 w-6 text-gray-900" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-medium text-gray-900">
-                    {service.title}
-                  </h3>
-                  <p className="mt-1 text-gray-600">
-                    {service.description}
-                  </p>
-                </div>
+                
+                <h3 className="text-xl font-black text-gray-900 mb-3 relative inline-block">
+                  {service.title}
+                  <div className="absolute -bottom-1 left-0 right-0 h-2 bg-yellow-200/60 -rotate-1 -z-10"></div>
+                </h3>
+                
+                <p className="text-gray-700 mb-6 flex-grow">
+                  {service.description}
+                </p>
+                
+                <a 
+                  href={ctaHref} 
+                  className="mt-auto inline-flex items-center text-sm font-bold text-gray-900 hover:text-blue-600 group transition-colors"
+                >
+                  Learn more
+                  <ChevronRight className="ml-1 h-4 w-4 transform group-hover:translate-x-1 transition-transform" />
+                </a>
               </div>
+              
+              {/* Hand-drawn underline */}
+              <div 
+                className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200"
+                style={{
+                  clipPath: 'polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%)',
+                }}
+              ></div>
             </div>
           ))}
         </div>
 
-        <div className="mt-10 text-center">
+        <div className="mt-16 text-center">
           <a
             href={ctaHref}
-            className="inline-flex items-center text-primary font-medium hover:text-primary/90"
+            className="relative px-6 py-3 text-sm font-bold text-gray-900 border-2 border-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] inline-flex items-center"
+            style={{
+              borderRadius: '8px 16px 8px 16px',
+              boxShadow: '3px 3px 0 0 #000',
+            }}
           >
             {ctaText}
+            <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
+            <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
             <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
           </a>
         </div>
