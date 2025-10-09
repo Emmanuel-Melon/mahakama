@@ -36,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex-1">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[70%] mx-auto w-full px-4 sm:px-6 lg:px-8">
             {children}
           </div>
         </main>
