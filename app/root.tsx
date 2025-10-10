@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 import { Header } from "./components/header";
+import { Footer } from "./components/home/Footer";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -33,15 +34,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
         <Header />
         <main className="flex-1">
-          <div className="max-w-7xl mx-auto w-full">
+          <div className="flex-1">
             {children}
           </div>
         </main>
+        <Footer className="mt-auto" />
         <ScrollRestoration />
-        <Scripts />
       </body>
     </html>
   );

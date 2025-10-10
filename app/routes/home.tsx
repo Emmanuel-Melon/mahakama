@@ -33,17 +33,19 @@ export default function Home() {
   };
 
   return (
-    <section className="w-full p-6">
-      <div className="space-y-6">
-        <CountryContext 
-          country={selectedCountry} 
-          onCountryChange={handleCountryChange} 
-        />
-        <LegalInquiryForm 
-          onSubmit={handleSubmit} 
-          isSubmitting={isSubmitting} 
-        />
-      </div>
-    </section>
+    <div className="min-h-screen flex flex-col max-w-7xl mx-auto">
+      <section className=" p-6 flex-1">
+        <div className="space-y-6">
+          <CountryContext 
+            country={selectedCountry} 
+            onCountryChange={handleCountryChange} 
+          />
+          <LegalInquiryForm 
+            onSubmit={handleSubmit} 
+            isSubmitting={isSubmitting} 
+          />
+        </div>
+      </section>
+    </div>
   );
 }

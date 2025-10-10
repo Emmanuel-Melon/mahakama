@@ -36,7 +36,6 @@ export function HeroSection({
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-2 bg-gray-900"></div>
     </div>
   );
 }
