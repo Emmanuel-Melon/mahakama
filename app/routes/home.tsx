@@ -5,6 +5,7 @@ import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext
 import type { Country } from "../components/header";
 import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
+import { LegalAnswerDisplay } from "../components/home/AnswerView";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -57,15 +58,34 @@ export async function action({
 export default function Home({
   actionData,
 }: Route.ComponentProps) {
-
-  console.log("actionData", actionData);
-
-
   const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
+  const [currentQuestion, setCurrentQuestion] = useState<string>('');
+
+  console.log(actionData);
 
   const handleCountryChange = (country: Country) => {
     setSelectedCountry(country);
     saveSelectedCountry(country);
+  };
+
+  const handleFormSubmit = (question: string) => {
+    setCurrentQuestion(question);
+    // Scroll to the answer section after a short delay to allow for re-render
+    setTimeout(() => {
+      const answerSection = document.getElementById('answer-section');
+      if (answerSection) {
+        answerSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
+  const handleNewQuestion = () => {
+    setCurrentQuestion('');
+    // Reset the form if needed
+    const form = document.querySelector('form');
+    if (form) {
+      form.reset();
+    }
   };
 
   return (
@@ -77,31 +97,36 @@ export default function Home({
             onCountryChange={handleCountryChange} 
           />
           <div className="space-y-6">
-          <LegalInquiryForm 
-              onSubmit={() => {
-                const form = document.querySelector('form');
-                if (form) {
-                  form.requestSubmit();
-                }
-              }}
-            />
-            {/* {actionData?.error && (
+            {!actionData?.answer && (
+              <LegalInquiryForm 
+                onSubmit={() => {
+                  const form = document.querySelector('form');
+                  if (form) {
+                    const questionInput = form.querySelector('textarea[name="question"]') as HTMLTextAreaElement;
+                    if (questionInput && questionInput.value.trim()) {
+                      handleFormSubmit(questionInput.value.trim());
+                      form.requestSubmit();
+                    }
+                  }
+                }}
+              />
+            )}
+
+            {actionData?.error && (
               <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
                 {actionData.error}
               </div>
-            )} */}
-            {actionData?.answer && (
-              <div className="mt-6 p-6 bg-white rounded-lg shadow">
-                <h3 className="text-lg font-semibold mb-2">Answer:</h3>
-                <div 
-                  className="text-gray-700 prose max-w-none" 
-                  dangerouslySetInnerHTML={{ 
-                    __html: actionData.answer.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') 
-                  }} 
-                />
-              </div>
             )}
 
+            <div id="answer-section">
+              {actionData?.answer && (
+                <LegalAnswerDisplay 
+                  question={currentQuestion}
+                  answer={actionData.answer}
+                  onNewQuestion={handleNewQuestion}
+                />
+              )}
+            </div>
           </div>
         </div>
       </section>
