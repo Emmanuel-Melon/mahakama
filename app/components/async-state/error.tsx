@@ -1,75 +1,115 @@
-import { AlertTriangle } from 'lucide-react';
-import { Button } from '~/components/ui/button';
+import { AlertTriangle, RotateCcw, Home } from 'lucide-react';
+import { CardWithLabel } from '~/components/ui/card-with-label';
+import { StateActionItems } from '~/components/ui/state-action-items';
 
 interface ErrorDisplayProps {
-  title?: string;
-  error: string | Error;
-  className?: string;
-  onRetry?: () => void;
-  retryText?: string;
+    title?: string;
+    error: string | Error;
+    className?: string;
+    onRetry?: () => void;
+    retryText?: string;
+    label?: string;
+    showDefaultActions?: boolean;
 }
 
 export function ErrorDisplay({
-  title = 'Something went wrong',
-  error,
-  className = '',
-  onRetry,
-  retryText = 'Try again',
+    title = 'Something went wrong',
+    error,
+    className = '',
+    onRetry,
+    retryText = 'Try again',
+    label = 'Error',
+    showDefaultActions = true,
 }: ErrorDisplayProps) {
-  const errorMessage = typeof error === 'string' ? error : error.message;
+    const errorMessage = typeof error === 'string' ? error : error.message;
 
-  return (
-    <div 
-      className={`relative bg-white border-2 border-gray-900 p-6 ${className}`}
-      style={{
-        borderRadius: '8px 16px 8px 16px',
-        boxShadow: '3px 3px 0 0 #000',
-        background: 'linear-gradient(135deg, #fff8f8 0%, #fff0f0 100%)',
-      }}
-    >
-      {/* Corner decorations */}
-      <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-red-600"></span>
-      <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-red-600"></span>
-      
-      <div className="relative z-10">
-        <div className="flex items-start gap-3">
-          <div className="flex-shrink-0">
-            <AlertTriangle className="h-6 w-6 text-red-600" />
-          </div>
-          <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
-            <p className="text-red-700 mb-4">{errorMessage}</p>
-            
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
-              <p className="text-sm text-gray-700 font-medium mb-2">
-                While we work on fixing this, here's what you can do:
-              </p>
-              <ul className="list-disc pl-5 space-y-1 text-sm text-gray-600">
-                <li>Check your internet connection</li>
-                <li>Try refreshing the page</li>
-                <li>Contact support if the issue persists</li>
-              </ul>
+    const defaultActions = [
+        {
+            label: 'Go to Home',
+            href: '/',
+            variant: 'outline',
+            icon: <Home className="h-4 w-4 mr-2" />
+        },
+        {
+            label: retryText,
+            onClick: onRetry,
+            variant: 'default',
+            icon: <RotateCcw className="h-4 w-4 mr-2" />
+        }
+    ];
+
+    const displayActions = showDefaultActions ? defaultActions.filter(action =>
+        action.onClick === undefined || onRetry !== undefined
+    ) : [];
+
+    return (
+        <CardWithLabel
+            label={label}
+            className={`bg-white ${className}`}
+            labelClassName="text-red-600"
+        >
+            <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 mt-1">
+                    <AlertTriangle className="h-5 w-5 text-red-600" />
+                </div>
+                <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+                    <p className="text-red-700 text-sm mb-4">{errorMessage}</p>
+
+                    <StateActionItems
+                        variant="warning"
+                        label="Recovery Steps"
+                        title="Troubleshooting Tips"
+                        items={[
+                            'Check your internet connection',
+                            'Try refreshing the page',
+                            'Contact support if the issue persists',
+                        ]}
+                    />
+
+                    {displayActions.length > 0 && (
+                        <div className="mt-6 flex flex-wrap gap-4">
+                            {displayActions.map((action, index) => {
+                                const isPrimary = action.variant === 'default' || !action.variant;
+                                const buttonClass = isPrimary
+                                    ? 'bg-yellow-400 hover:bg-yellow-300 text-gray-900 border-gray-900 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                                    : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-900';
+
+                                return (
+                                    <a
+                                        key={index}
+                                        href={action.href || '#'}
+                                        className={`relative px-6 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${buttonClass}`}
+                                        style={{
+                                            borderRadius: '8px 16px 8px 16px',
+                                            boxShadow: '3px 3px 0 0 #000',
+                                        }}
+                                        onClick={(e) => {
+                                            if (action.onClick) {
+                                                e.preventDefault();
+                                                action.onClick();
+                                            }
+                                        }}
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            {action.icon}
+                                            {action.label}
+                                        </div>
+                                        {isPrimary && (
+                                            <>
+                                                <span className="absolute -right-1 -top-1 w-3 h-3 border-t-2 border-r-2 border-gray-900"></span>
+                                                <span className="absolute -left-1 -bottom-1 w-3 h-3 border-b-2 border-l-2 border-gray-900"></span>
+                                            </>
+                                        )}
+                                    </a>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
             </div>
-            
-            {onRetry && (
-              <div className="mt-4">
-                <Button
-                  variant="outline"
-                  onClick={onRetry}
-                  className="border-2 border-gray-900 hover:bg-gray-100 transition-colors"
-                  style={{
-                    boxShadow: '2px 2px 0 0 #000',
-                  }}
-                >
-                  {retryText}
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+        </CardWithLabel>
+    );
 }
 
 export default ErrorDisplay;

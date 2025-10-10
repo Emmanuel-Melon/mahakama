@@ -1,5 +1,5 @@
-import { FileSearch, Plus, Home, ArrowLeft } from 'lucide-react';
-import { Button } from '~/components/ui/button';
+import { FileSearch, Plus, Home } from 'lucide-react';
+import { CardWithLabel } from '~/components/ui/card-with-label';
 
 interface ActionButton {
   label: string;
@@ -43,10 +43,7 @@ export function EmptyState({
 
   const displayActions = showDefaultActions ? [...defaultActions, ...actions] : actions;
   return (
-    <div className={`w-full max-w-7xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded relative ${className}`}>
-      <div className="absolute -top-2 left-4 px-2 bg-white text-xs font-mono text-gray-500">
-        {label}
-      </div>
+    <CardWithLabel label={label} className={className}>
       
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 mt-1">
@@ -76,7 +73,7 @@ export function EmptyState({
                   <a 
                     key={index}
                     href={action.href || '#'}
-                    className={`relative px-6 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${buttonClass} ${action.className || ''}`}
+                    className={`relative px-6 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${buttonClass}`}
                     style={{
                       borderRadius: '8px 16px 8px 16px',
                       boxShadow: '3px 3px 0 0 #000',
@@ -105,7 +102,7 @@ export function EmptyState({
           )}
         </div>
       </div>
-    </div>
+    </CardWithLabel>
   );
 }
 

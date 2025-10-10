@@ -1,52 +1,41 @@
 import { Loader2 } from 'lucide-react';
+import { CardWithLabel } from '~/components/ui/card-with-label';
 
 interface LoadingStateProps {
-  itemCount?: number;
+  label?: string;
+  title?: string;
+  description?: string | React.ReactNode;
   className?: string;
-  message?: string;
 }
 
 export function LoadingState({
-  itemCount = 3,
-  className = '',
-  message = 'Loading content...',
+  label = 'Loading',
+  title = 'Loading Content',
+  description = 'Please wait while we load your content...',
+  className = ''
 }: LoadingStateProps) {
   return (
-    <div 
-      className={`relative bg-white border-2 border-gray-900 p-6 ${className}`}
-      style={{
-        borderRadius: '8px 16px 8px 16px',
-        boxShadow: '3px 3px 0 0 #000',
-        background: 'linear-gradient(135deg, #f9fff8 0%, #f0fff0 100%)',
-      }}
+    <CardWithLabel 
+      label={label}
+      className={`bg-white ${className}`}
+      labelClassName="text-blue-600"
     >
-      {/* Corner decorations */}
-      <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-green-600"></span>
-      <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-green-600"></span>
-      
-      <div className="relative z-10">
-        <div className="flex flex-col items-center justify-center py-8">
-          <div className="relative mb-6">
-            <Loader2 className="h-10 w-10 text-green-600 animate-spin" />
-          </div>
-          
-          <p className="text-gray-700 font-medium mb-6">{message}</p>
-          
-          <div className="w-full space-y-4">
-            {Array.from({ length: itemCount }).map((_, i) => (
-              <div 
-                key={i}
-                className="h-16 w-full bg-gray-100 rounded-md animate-pulse"
-                style={{
-                  border: '1px solid #e5e7eb',
-                  boxShadow: '2px 2px 0 0 #000',
-                }}
-              />
-            ))}
+      <div className="flex items-start gap-4">
+        <div className="flex-shrink-0 mt-1">
+          <Loader2 className="h-5 w-5 text-blue-600 animate-spin" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
+          <div className="text-gray-700 text-sm mb-6">
+            {typeof description === 'string' ? (
+              <p>{description}</p>
+            ) : (
+              description
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </CardWithLabel>
   );
 }
 
