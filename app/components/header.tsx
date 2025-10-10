@@ -1,3 +1,4 @@
+"use client";
 import { Scale, Users, BookOpen, Menu, X, ChevronDown, Check, Library } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { IconContainer } from '~/components/icon-container';
@@ -107,170 +108,174 @@ export function Header() {
             </a>
           </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <nav className="hidden md:flex items-center gap-1">
+          <div className="flex items-center gap-2 md:gap-4">
+            <nav className="hidden md:flex items-center gap-1">
+              {links.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    className={`group relative px-4 py-2 text-sm font-bold transition-colors ${
+                      currentPath === link.url 
+                        ? 'text-gray-900' 
+                        : 'text-gray-700 hover:text-gray-900'
+                    }`}
+                  >
+                    <span className="relative z-10 flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      {link.title}
+                    </span>
+                    <span 
+                      className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
+                        currentPath === link.url 
+                          ? 'bg-yellow-400 scale-x-100' 
+                          : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
+                      }`}
+                    ></span>
+                  </a>
+                );
+              })}
+            </nav>
+            
+            {/* Vertical Separator */}
+            <div className="hidden md:block h-6 w-0.5 bg-gray-300 mx-2"></div>
+            
+            {/* Country Selector - Desktop */}
+            <div className="relative hidden md:block">
+              <button
+                ref={countryButtonRef}
+                onClick={toggleCountryMenu}
+                className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-gray-200"
+                aria-haspopup="true"
+                aria-expanded={isCountryOpen}
+              >
+                <span className="text-lg">{selectedCountry.flag}</span>
+                <span className="hidden sm:inline">{selectedCountry.name}</span>
+                <ChevronDown 
+                  size={16} 
+                  className={`transition-transform ${isCountryOpen ? 'rotate-180' : ''} text-gray-500`} 
+                />
+              </button>
+              
+              {isCountryOpen && (
+                <div className="absolute right-0 mt-2 w-56 rounded-lg border-2 border-gray-900 bg-white p-1 shadow-[4px_4px_0_0_rgba(0,0,0,1)] animate-in fade-in-80">
+                  <div className="py-1">
+                    {countries.map((country) => (
+                      <button
+                        key={country.code}
+                        onClick={() => handleCountrySelect(country)}
+                        className={`relative flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium outline-none transition-colors ${
+                          selectedCountry.code === country.code
+                            ? 'bg-yellow-100 text-gray-900'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">{country.flag}</span>
+                          <span className="font-semibold">{country.name}</span>
+                        </div>
+                        {selectedCountry.code === country.code && (
+                          <Check className="h-4 w-4 text-blue-600" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-1">
+              {/* Country Selector - Mobile */}
+              <button
+                onClick={toggleCountryMenu}
+                className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
+                aria-label="Select country"
+              >
+                <span className="text-xl">{selectedCountry.flag}</span>
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button 
+                onClick={toggleMenu} 
+                className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 text-gray-700 md:hidden transition-colors"
+                aria-label="Toggle menu"
+              >
+                {isOpen ? (
+                  <X className="h-6 w-6" />
+                ) : (
+                  <Menu className="h-6 w-6" />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Navigation */}
+      <div className={`md:hidden fixed inset-0 top-20 bg-white z-40 border-t-2 border-gray-900 overflow-y-auto transition-all duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* Country Selector */}
+        <div className="p-4 border-b border-gray-200">
+          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Select Country</h3>
+          <div className="space-y-2">
+            {countries.map((country) => (
+              <button
+                key={country.code}
+                onClick={() => {
+                  handleCountrySelect(country);
+                  setIsOpen(false);
+                }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors ${
+                  selectedCountry.code === country.code
+                    ? 'bg-yellow-100 text-gray-900 font-semibold'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{country.flag}</span>
+                  <span className="text-base">{country.name}</span>
+                </div>
+                {selectedCountry.code === country.code && (
+                  <Check className="h-5 w-5 text-blue-600" />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+        
+        {/* Navigation Links */}
+        <nav className="p-2">
+          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">Menu</h3>
+          <div className="space-y-1">
             {links.map((link) => {
               const Icon = link.icon;
               return (
                 <a
                   key={link.id}
                   href={link.url}
-                  className={`group relative px-4 py-2 text-sm font-bold transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-3 text-base font-bold rounded-lg ${
                     currentPath === link.url 
-                      ? 'text-gray-900' 
-                      : 'text-gray-700 hover:text-gray-900'
+                      ? 'bg-yellow-100 text-gray-900' 
+                      : 'text-gray-700 hover:bg-gray-50'
                   }`}
+                  onClick={() => setIsOpen(false)}
                 >
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
-                    {link.title}
-                  </span>
-                  <span 
-                    className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
-                      currentPath === link.url 
-                        ? 'bg-yellow-400 scale-x-100' 
-                        : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
-                    }`}
-                  ></span>
+                  <Icon className="h-5 w-5" />
+                  {link.title}
                 </a>
               );
             })}
-          </nav>
-          
-          {/* Vertical Separator */}
-          <div className="hidden md:block h-6 w-0.5 bg-gray-300 mx-2"></div>
-          
-          {/* Country Selector - Desktop */}
-          <div className="relative hidden md:block">
-            <button
-              ref={countryButtonRef}
-              onClick={toggleCountryMenu}
-              className="flex items-center gap-2 px-3 py-2 rounded-md text-sm font-bold text-gray-700 hover:bg-gray-100 transition-colors border-2 border-transparent hover:border-gray-200"
-              aria-haspopup="true"
-              aria-expanded={isCountryOpen}
-            >
-              <span className="text-lg">{selectedCountry.flag}</span>
-              <span className="hidden sm:inline">{selectedCountry.name}</span>
-              <ChevronDown 
-                size={16} 
-                className={`transition-transform ${isCountryOpen ? 'rotate-180' : ''} text-gray-500`} 
-              />
-            </button>
-            
-            {isCountryOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-lg border-2 border-gray-900 bg-white p-1 shadow-[4px_4px_0_0_rgba(0,0,0,1)] animate-in fade-in-80">
-                <div className="py-1">
-                  {countries.map((country) => (
-                    <button
-                      key={country.code}
-                      onClick={() => handleCountrySelect(country)}
-                      className={`relative flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium outline-none transition-colors ${
-                        selectedCountry.code === country.code
-                          ? 'bg-yellow-100 text-gray-900'
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center gap-3">
-                        <span className="text-xl">{country.flag}</span>
-                        <span className="font-semibold">{country.name}</span>
-                      </div>
-                      {selectedCountry.code === country.code && (
-                        <Check className="h-4 w-4 text-blue-600" />
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
-
-          <div className="flex items-center space-x-1">
-            
-            {/* Country Selector - Mobile */}
-            <button
-              onClick={toggleCountryMenu}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors md:hidden"
-              aria-label="Select country"
-            >
-              <span className="text-xl">{selectedCountry.flag}</span>
-            </button>
-
-            {/* Mobile Menu Button */}
-            <button 
-              onClick={toggleMenu} 
-              className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 text-gray-700 md:hidden transition-colors"
-              aria-label="Toggle menu"
-            >
-              {isOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="h-6 w-6" />
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden fixed inset-0 top-20 bg-white z-50 border-t-2 border-gray-900 overflow-y-auto">            
-            {/* Country Selector */}
-            <div className="p-4 border-b border-gray-200">
-              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Select Country</h3>
-              <div className="space-y-2">
-                {countries.map((country) => (
-                  <button
-                    key={country.code}
-                    onClick={() => {
-                      setSelectedCountry(country);
-                      setIsCountryOpen(false);
-                    }}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors ${
-                      selectedCountry.code === country.code
-                        ? 'bg-yellow-100 text-gray-900 font-semibold'
-                        : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{country.flag}</span>
-                      <span className="text-base">{country.name}</span>
-                    </div>
-                    {selectedCountry.code === country.code && (
-                      <Check className="h-5 w-5 text-blue-600" />
-                    )}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
-            {/* Navigation Links */}
-            <nav className="p-2">
-              <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">Menu</h3>
-              <div className="space-y-1">
-                {links.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <a
-                      key={link.id}
-                      href={link.url}
-                      className={`flex items-center gap-3 px-4 py-3 text-base font-bold rounded-lg ${
-                        currentPath === link.url 
-                          ? 'bg-yellow-100 text-gray-900' 
-                          : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Icon className="h-5 w-5" />
-                      {link.title}
-                    </a>
-                  );
-                })}
-              </div>
-            </nav>
-            
-          </div>
-        )}
-        </div>
+        </nav>
       </div>
+      
+      {/* Overlay for mobile menu */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-30 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </header>
   );
 }

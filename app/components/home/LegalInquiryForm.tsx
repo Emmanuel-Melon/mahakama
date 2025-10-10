@@ -36,7 +36,7 @@ export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
         </div>
         <div className="space-y-4">
           <div className="relative inline-block">
-            <h2 className="text-3xl font-black text-gray-900 font-serif">Ask a Legal Question</h2>
+            <h2 className="text-2xl font-black text-gray-900 font-serif">Ask a Legal Question</h2>
             <div className="absolute -bottom-1 left-0 right-0 h-2.5 bg-yellow-200/60 -rotate-1 transform -z-10"></div>
           </div>
         </div>
