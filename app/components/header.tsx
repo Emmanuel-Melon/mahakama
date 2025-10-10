@@ -1,6 +1,8 @@
 "use client";
 import { Scale, Users, BookOpen, Menu, X, ChevronDown, Check, Library } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { NavLink } from "react-router";
+import type { NavLinkProps } from "react-router";
 import { IconContainer } from '~/components/icon-container';
 import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
 
@@ -41,12 +43,7 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
-  const [currentPath, setCurrentPath] = useState('');
   const countryButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setCurrentPath(window.location.pathname);
-  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,7 +94,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
-            <a href="/" className="flex items-center group">
+            <NavLink to="/" className="flex items-center group">
               <IconContainer 
                 icon={Scale} 
                 size="lg" 
@@ -105,7 +102,7 @@ export function Header() {
                 className="group-hover:rotate-12 transition-transform duration-300"
               />
               <span className="ml-3 text-2xl font-black text-gray-900 font-serif">Mahakama</span>
-            </a>
+            </NavLink>
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">
@@ -113,27 +110,32 @@ export function Header() {
               {links.map((link) => {
                 const Icon = link.icon;
                 return (
-                  <a
+                  <NavLink
                     key={link.id}
-                    href={link.url}
-                    className={`group relative px-4 py-2 text-sm font-bold transition-colors ${
-                      currentPath === link.url 
+                    to={link.url}
+                    className={({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => `group relative px-4 py-2 text-sm font-bold transition-colors ${
+                      isActive 
                         ? 'text-gray-900' 
                         : 'text-gray-700 hover:text-gray-900'
                     }`}
                   >
-                    <span className="relative z-10 flex items-center gap-2">
-                      <Icon className="h-4 w-4" />
-                      {link.title}
-                    </span>
-                    <span 
-                      className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
-                        currentPath === link.url 
-                          ? 'bg-yellow-400 scale-x-100' 
-                          : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
-                      }`}
-                    ></span>
-                  </a>
+                    {({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => (
+                      <>
+                        <span className="relative z-10 flex items-center gap-2">
+                          <Icon className="h-4 w-4" />
+                          {link.title}
+                          {isPending && <span className="ml-1">...</span>}
+                        </span>
+                        <span 
+                          className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
+                            isActive 
+                              ? 'bg-yellow-400 scale-x-100' 
+                              : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
+                          }`}
+                        ></span>
+                      </>
+                    )}
+                  </NavLink>
                 );
               })}
             </nav>
@@ -250,25 +252,22 @@ export function Header() {
             {links.map((link) => {
               const Icon = link.icon;
               return (
-                <a
+                <NavLink
                   key={link.id}
-                  href={link.url}
-                  className={`flex items-center gap-3 px-4 py-3 text-base font-bold rounded-lg ${
-                    currentPath === link.url 
-                      ? 'bg-yellow-100 text-gray-900' 
-                      : 'text-gray-700 hover:bg-gray-50'
+                  to={link.url}
+                  className={({ isActive }: { isActive: boolean }) => `flex items-center gap-2 px-4 py-3 text-sm font-medium ${
+                    isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'
                   }`}
-                  onClick={() => setIsOpen(false)}
+                  onClick={toggleMenu}
                 >
                   <Icon className="h-5 w-5" />
                   {link.title}
-                </a>
+                </NavLink>
               );
             })}
           </div>
         </nav>
       </div>
-      
       {/* Overlay for mobile menu */}
       {isOpen && (
         <div 
