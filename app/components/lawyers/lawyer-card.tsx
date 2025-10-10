@@ -1,6 +1,5 @@
-import { MapPin, Briefcase, Star, MessageSquare, UserCheck, Languages } from "lucide-react"
+import { MapPin, Briefcase, Star, MessageSquare, UserCheck, Languages, ChevronRight } from "lucide-react"
 import { Button } from "app/components/ui/button"
-import { Badge } from "app/components/ui/badge"
 import type { Lawyer } from "app/types/lawyer"
 
 interface LawyerCardProps {
@@ -21,82 +20,102 @@ export function LawyerCard({ lawyer }: LawyerCardProps) {
   }
 
   return (
-    <div
-      className="border-b pb-8 mb-8 last:border-b-0 last:pb-0 last:mb-0"
+    <div 
+      className="relative h-full bg-white border-2 border-gray-900 p-6 transition-all hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]"
+      style={{
+        borderRadius: '8px 16px 8px 16px',
+        boxShadow: '3px 3px 0 0 #000',
+        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+      }}
     >
-      <div className="grid grid-cols-[auto,1fr] gap-6 items-start">
-        <div className="relative">
-          <div
-            className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-primary/30 text-primary font-semibold text-lg relative"
-          >
-            {lawyer.id}
-            <div
-              className="absolute inset-0 rounded-full border border-primary/30"
-            />
-            {Array.from({ length: 2 }).map((_, i) => (
-              <div
-                key={i}
-                className="absolute w-0.5 h-0.5 bg-accent/60 rounded-full"
+      {/* Corner decorations */}
+      <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
+      <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
+      
+      <div className="relative z-10 h-full flex flex-col">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-16 h-16 rounded-full bg-yellow-100 border-2 border-gray-900 flex items-center justify-center text-2xl font-bold"
                 style={{
-                  left: `${30 + i * 20}%`,
-                  top: `${30 + i * 15}%`,
+                  boxShadow: '2px 2px 0 0 #000',
                 }}
-              />
-            ))}
+              >
+                {lawyer.name.split(' ').map(n => n[0]).join('')}
+              </div>
+              <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${getAvailabilityColor()}`}></div>
+            </div>
+            
+            <div>
+              <h3 className="text-xl font-black text-gray-900 font-serif">{lawyer.name}</h3>
+              <p className="text-sm text-gray-600">{lawyer.specialization}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-1 bg-yellow-100 px-2 py-1 rounded-full border-2 border-gray-900"
+            style={{
+              boxShadow: '1px 1px 0 0 #000',
+            }}
+          >
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-500" />
+            <span className="text-sm font-bold">{lawyer.rating}</span>
           </div>
         </div>
-
-        <div className="space-y-4">
-          <div>
-            <div className="flex items-start justify-between gap-4 mb-2">
-              <div>
-                <h3 className="text-xl font-medium text-foreground">{lawyer.name}</h3>
-                <p className="text-sm text-muted-foreground">{lawyer.specialization}</p>
-              </div>
-              <div className="flex items-center gap-1 rounded-md bg-accent/10 px-2 py-1 shrink-0">
-                <Star className="h-4 w-4 fill-accent text-accent" />
-                <span className="text-sm font-semibold text-accent">{lawyer.rating}</span>
-                <span className="text-xs text-muted-foreground">({lawyer.casesHandled} cases)</span>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-sm">
-              <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
-                <span>{lawyer.location}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Briefcase className="w-4 h-4" />
-                <span>{getExperienceText(lawyer.experienceYears)} experience</span>
-              </div>
-            </div>
+        
+        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-700 mb-4">
+          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border-2 border-gray-900"
+            style={{
+              boxShadow: '1px 1px 0 0 #000',
+            }}
+          >
+            <MapPin className="w-4 h-4" />
+            <span>{lawyer.location}</span>
           </div>
-
-          <div className="flex flex-wrap gap-2">
-            <div
-              className="flex items-center gap-2 px-3 py-1 rounded-full bg-muted text-foreground text-xs"
-            >
-              <span className={`w-2 h-2 rounded-full ${getAvailabilityColor()}`}></span>
-              {lawyer.specialization}
-            </div>
+          
+          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border-2 border-gray-900"
+            style={{
+              boxShadow: '1px 1px 0 0 #000',
+            }}
+          >
+            <Briefcase className="w-4 h-4" />
+            <span>{getExperienceText(lawyer.experienceYears)}</span>
           </div>
-
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          
+          <div className="flex items-center gap-1 bg-white px-3 py-1 rounded-full border-2 border-gray-900"
+            style={{
+              boxShadow: '1px 1px 0 0 #000',
+            }}
+          >
+            <UserCheck className="w-4 h-4" />
+            <span>{lawyer.casesHandled} cases</span>
+          </div>
+        </div>
+        
+        <div className="mb-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
             <Languages className="w-4 h-4" />
+            <span className="font-medium">Languages:</span>
             <span>{lawyer.languages.join(", ")}</span>
           </div>
           
-          <p className="text-sm text-muted-foreground">
-            <span className="font-medium">{lawyer.casesHandled.toLocaleString()}</span> cases handled
-          </p>
-
-          <div className="flex items-center gap-2">
-            <Badge 
-              variant="outline" 
-              className={`border-${getAvailabilityColor().replace("bg-", "")}`}
-            >
-              {getAvailabilityText()}
-            </Badge>
+          <div className="flex items-center gap-2 text-sm">
+            <span className={`w-2 h-2 rounded-full ${getAvailabilityColor()}`}></span>
+            <span className="font-medium">{getAvailabilityText()}</span>
           </div>
+        </div>
+        
+        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+          <Button 
+            className="w-full group flex items-center justify-between bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold py-3 px-4 border-2 border-gray-900"
+            style={{
+              borderRadius: '4px 12px 4px 12px',
+              boxShadow: '2px 2px 0 0 #000',
+            }}
+          >
+            <span>Contact {lawyer.name.split(' ')[0]}</span>
+            <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+          </Button>
+        </div>
 
           <div className="flex gap-3 pt-2">
             <Button className="flex-1 bg-primary hover:bg-primary/90 text-sm">
@@ -110,6 +129,5 @@ export function LawyerCard({ lawyer }: LawyerCardProps) {
           </div>
         </div>
       </div>
-    </div>
   )
 }

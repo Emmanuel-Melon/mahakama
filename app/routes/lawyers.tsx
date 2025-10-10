@@ -53,6 +53,7 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
       <HeroSection 
         title="Find Trusted Legal Professionals"
         description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
+        actionVariant="search"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section className="container mx-auto py-8">
@@ -71,7 +72,7 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
                 </div>
               </div>
             ) : (
-              <div className="bg-background/50 backdrop-blur-sm p-6 rounded-xl border">
+              <div className="bg-background/50">
                 <LawyersList lawyers={lawyers} />
               </div>
             )}
