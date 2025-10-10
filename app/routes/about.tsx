@@ -1,5 +1,5 @@
 import type { Route } from "./+types/about";
-import { Search, Globe, Clock, Gavel, FileText, Scale } from 'lucide-react';
+import { Search, Globe, Clock, Gavel, FileText, Scale, BookOpen } from 'lucide-react';
 import { HeroSection, FeaturesGrid, StepsSection, LegalServicesSection } from '~/components/about';
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { AboutIntro } from "~/components/about/Intro";
@@ -69,35 +69,36 @@ const legalServices = [
 
 export default function About() {
   return (
-    <section className="container mx-auto py-12 px-4 space-y-12">
-      <HeroSection 
-        title="Free Legal Knowledge for East Africa"
-        description="Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free."
-      />
-      <DiagonalSeparator />
-      <div className="space-y-4">
-      <div className="w-full">
-        <AboutIntro />
-        <StepsSection 
-          title="Get Legal Answers in 3 Simple Steps"
-          steps={steps}
-          footerText="Only if your situation is complex, we can help you find a lawyer in our network"
+    <div className="w-full py-12 px-4">
+      <div className="max-w-7xl mx-auto space-y-12">
+        <HeroSection 
+          title="Free Legal Knowledge for East Africa"
+          description="Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free."
+          icon={BookOpen}
         />
-      </div>
+        <DiagonalSeparator />
+        <div className="space-y-16">
+          <div className="space-y-8">
+            <AboutIntro />
+            <StepsSection 
+              title="Get Legal Answers in 3 Simple Steps"
+              icon={Search}
+              description="Mahakama is a free legal knowledge platform for East Africa. Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free."
+              steps={steps}
+              footerText="Only if your situation is complex, we can help you find a lawyer in our network"
+            />
+          </div>
+  
+          <FeaturesGrid features={features} />
+     
 
-      <div>
-        <h2 className="text-2xl font-semibold text-foreground text-center mb-12">
-          Why Choose Mahakama?
-        </h2>
-        <FeaturesGrid features={features} />
+          <LegalServicesSection 
+            services={legalServices}
+            ctaText="Browse Legal Professionals"
+            ctaHref="/lawyers"
+          />
+        </div>
       </div>
-
-      <LegalServicesSection 
-        services={legalServices}
-        ctaText="Browse Legal Professionals"
-        ctaHref="/lawyers"
-      />
-      </div>
-    </section>
+    </div>
   );
 }

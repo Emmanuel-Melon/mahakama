@@ -1,5 +1,9 @@
 import { cn } from "~/lib/utils";
 import { HeroSectionAction } from "~/components/ui/hero-section-action";
+import { IconContainer } from "~/components/icon-container";
+import { Scale } from "lucide-react";
+
+import type { LucideIcon } from 'lucide-react';
 
 interface HeroSectionProps {
   title: string;
@@ -8,6 +12,7 @@ interface HeroSectionProps {
   actionVariant?: 'cta' | 'search';
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
+  icon?: LucideIcon;
 }
 export function HeroSection({ 
   title, 
@@ -15,12 +20,16 @@ export function HeroSection({
   className, 
   actionVariant = 'cta',
   onSearch,
-  searchPlaceholder
+  searchPlaceholder,
+  icon: Icon = Scale
 }: HeroSectionProps) {
   return (
     <div className={cn("bg-background relative overflow-hidden", className)}>
       <div className="px-6 py-8 sm:py-24 lg:px-8">
         <div className="mx-auto max-w-4xl text-center space-y-4">
+          <div className="flex justify-center">
+            <IconContainer icon={Icon} color="handdrawn" size="lg" />
+          </div>
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
             {title}
           </h1>
@@ -36,6 +45,13 @@ export function HeroSection({
           </div>
         </div>
       </div>
+      {/* Hand-drawn underline for the card */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200"
+        style={{
+          clipPath: 'polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%)',
+        }}
+      ></div>
     </div>
   );
 }

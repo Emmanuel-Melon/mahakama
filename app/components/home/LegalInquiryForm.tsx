@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ExampleQuestions, ExampleCategories } from './ExampleQuestions';
+import { BorderedBox } from '../ui/bordered-box';
 
 interface LegalInquiryFormProps {
   isSubmitting?: boolean;
@@ -23,17 +24,14 @@ export function LegalInquiryForm({ isSubmitting }: LegalInquiryFormProps) {
 
   return (
     <section className='space-y-8'>
-      <div
-        className="relative bg-white border-2 border-gray-900 p-6"
-        style={{
-          borderRadius: '8px 16px 8px 16px',
-          boxShadow: '3px 3px 0 0 #000',
-          background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        }}
+      <BorderedBox 
+        className="p-6"
+        borderColor="border-gray-900"
+        borderRadius="rounded-xl"
+        shadowSize="3px"
+        gradientFrom="from-white"
+        gradientTo="from-slate-50"
       >
-        {/* Corner decorations */}
-        <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
-        <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
 
         <div className="relative z-10">
           <div className="relative inline-block mb-2">
@@ -86,7 +84,7 @@ export function LegalInquiryForm({ isSubmitting }: LegalInquiryFormProps) {
             </div>
           </div>
         </div>
-      </div>
+      </BorderedBox>
       <ExampleQuestions handleExampleClick={handleExampleClick} />
     </section>
   );

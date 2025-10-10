@@ -1,6 +1,6 @@
 'use client';
 import { LawyerCard } from "./lawyer-card"
-import { ListControls } from "./list-controls"
+import { ListControls } from "../list-controls"
 import type { Lawyer } from "app/types/lawyer"
 
 interface LawyersListProps {

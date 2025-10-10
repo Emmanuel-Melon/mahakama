@@ -1,5 +1,6 @@
-import { Scale, Users, Info, Menu, X, ChevronDown, Check, BookOpen } from "lucide-react";
+import { Scale, Users, BookOpen, Menu, X, ChevronDown, Check, Library } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { IconContainer } from '~/components/icon-container';
 import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
 
 export type Country = {
@@ -23,13 +24,13 @@ const links = [
   {
     id: 2,
     title: "Legal Database",
-    icon: BookOpen,
+    icon: Library,
     url: "/legal-database",
   },
   {
     id: 3,
     title: "About",
-    icon: Info,
+    icon: BookOpen,
     url: "/about",
   },
 ];
@@ -96,15 +97,17 @@ export function Header() {
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <a href="/" className="flex items-center group">
-              <div className="relative">
-                <Scale className="h-7 w-7 text-blue-600 group-hover:rotate-12 transition-transform duration-300" />
-                <div className="absolute -inset-1 bg-yellow-200/60 -rotate-1 -z-10 rounded-sm group-hover:bg-yellow-300/60 transition-colors"></div>
-              </div>
+              <IconContainer 
+                icon={Scale} 
+                size="lg" 
+                color="outline" 
+                className="group-hover:rotate-12 transition-transform duration-300"
+              />
               <span className="ml-3 text-2xl font-black text-gray-900 font-serif">Mahakama</span>
             </a>
           </div>
 
-        <div className="flex items-center gap-3 md:gap-6">
+        <div className="flex items-center gap-2 md:gap-4">
           <nav className="hidden md:flex items-center gap-1">
             {links.map((link) => {
               const Icon = link.icon;
@@ -133,6 +136,9 @@ export function Header() {
               );
             })}
           </nav>
+          
+          {/* Vertical Separator */}
+          <div className="hidden md:block h-6 w-0.5 bg-gray-300 mx-2"></div>
           
           {/* Country Selector - Desktop */}
           <div className="relative hidden md:block">

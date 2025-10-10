@@ -1,6 +1,7 @@
 import { Filter, ArrowDownUp } from "lucide-react"
 import { Button } from "app/components/ui/button"
 import { Input } from "app/components/ui/input"
+import { BorderedBox } from "app/components/ui/bordered-box"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,17 +15,11 @@ interface ListControlsProps {
 
 export function ListControls({ totalItems }: ListControlsProps) {
   return (
-    <div className="relative bg-white border-2 border-gray-900 p-4 mb-6"
-      style={{
-        borderRadius: '8px 16px 8px 16px',
-        boxShadow: '3px 3px 0 0 #000',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-      }}
+    <BorderedBox 
+      className="mb-6 p-4"
+      borderRadius="rounded-xl"
+      label="Section"
     >
-      {/* Corner decorations */}
-      <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
-      <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
-      
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="text-sm text-gray-700">
           <span className="font-bold">{totalItems}</span> {totalItems === 1 ? 'lawyer' : 'lawyers'} found
@@ -127,6 +122,6 @@ export function ListControls({ totalItems }: ListControlsProps) {
           </div>
         </div>
       </div>
-    </div>
+    </BorderedBox>
   )
 }

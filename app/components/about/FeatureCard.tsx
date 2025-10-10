@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import { cn } from '~/lib/utils';
+import { IconContainer } from '~/components/icon-container';
 
 type FeatureCardProps = {
   title: string;
@@ -32,15 +33,13 @@ export function FeatureCard({
       <div className="absolute -left-2 -bottom-2 w-3 h-3 border-b-2 border-l-2 border-gray-900 bg-yellow-300"></div>
       
       {/* Icon Container */}
-      <div className="flex-shrink-0">
-        <div 
-          className="w-12 h-12 rounded-full bg-yellow-100 border-2 border-gray-900 flex items-center justify-center mt-1"
-          style={{
-            boxShadow: '3px 3px 0 0 #000',
-          }}
-        >
-          <Icon className="w-5 h-5 text-gray-900" />
-        </div>
+      <div className="flex-shrink-0 mt-1">
+        <IconContainer 
+          icon={Icon} 
+          size="lg" 
+          color="outline"
+          className="shadow-[3px_3px_0_0_#000]"
+        />
       </div>
       
       {/* Content */}

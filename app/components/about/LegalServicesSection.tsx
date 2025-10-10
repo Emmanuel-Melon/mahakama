@@ -1,5 +1,6 @@
 import { ArrowRight, Gavel, FileText, Scale, ChevronRight } from "lucide-react";
 import { cn } from '~/lib/utils';
+import { IconContainer } from "../icon-container";
 
 type Service = {
   title: string;
@@ -27,14 +28,12 @@ export function LegalServicesSection({
       <div className="absolute -left-10 bottom-10 w-32 h-32 rounded-full bg-blue-100/50 -z-10"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <div className="relative inline-block">
-            <h2 className="text-4xl font-black text-gray-900 sm:text-5xl mb-4 relative z-10">
+        <div className="mb-16 space-y-4">
+          <IconContainer icon={Gavel} color="handdrawn" />
+        <h2 className="text-4xl font-black text-gray-900 sm:text-5xl">
               Legal Services
             </h2>
-            <div className="absolute -bottom-2 left-0 right-0 h-3 bg-yellow-200/60 -rotate-1 transform scale-x-110 -z-10"></div>
-          </div>
-          <p className="text-lg text-gray-700 max-w-2xl mx-auto mt-6 font-medium">
+          <p className="text-lg text-gray-700 font-medium">
             Expert legal assistance when you need it most. Our network of verified professionals is here to help.
           </p>
         </div>
@@ -55,10 +54,7 @@ export function LegalServicesSection({
               <div className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900 bg-yellow-300"></div>
               
               <div className="flex flex-col h-full">
-                <div className="mb-4 p-3 inline-flex items-center justify-center w-14 h-14 rounded-full bg-yellow-100 border-2 border-gray-900">
-                  <service.icon className="h-6 w-6 text-gray-900" />
-                </div>
-                
+                <IconContainer icon={service.icon} color="outline" />
                 <h3 className="text-xl font-black text-gray-900 mb-3 relative inline-block">
                   {service.title}
                   <div className="absolute -bottom-1 left-0 right-0 h-2 bg-yellow-200/60 -rotate-1 -z-10"></div>

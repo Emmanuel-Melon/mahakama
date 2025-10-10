@@ -1,6 +1,6 @@
 import { Input } from "./input";
 import { Button } from "./button";
-import { Search } from "lucide-react";
+import { Search, ChevronRight } from 'lucide-react';
 
 interface HeroSectionActionProps {
   variant?: 'cta' | 'search';
@@ -43,6 +43,7 @@ export function HeroSectionAction({
         }}
       >
         Get Started
+        <ChevronRight className="ml-2 h-4 w-4 inline-block" />
         <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
         <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
       </a>

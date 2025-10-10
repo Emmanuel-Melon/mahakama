@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 import type { Country } from "../header";
+import { BorderedBox } from "../ui/bordered-box";
 
 const countries: Country[] = [
   { code: 'SS', name: 'South Sudan', flag: '🇸🇸' },
@@ -30,25 +31,23 @@ export function CountryContext({ country, onCountryChange }: CountryContextProps
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <div 
-        className="relative mb-6 bg-white border-2 border-gray-900 p-4 cursor-pointer group"
-        style={{
-          borderRadius: '8px 16px 8px 16px',
-          boxShadow: '3px 3px 0 0 #000',
-          background: 'linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%)',
-          transition: 'all 0.2s ease-in-out',
-        }}
+      <BorderedBox 
+        className="mb-6 p-4 cursor-pointer group"
+        borderColor="border-gray-900"
+        borderRadius="rounded-xl"
+        gradientFrom="from-slate-50"
+        gradientTo="from-sky-50"
         onClick={() => setIsOpen(!isOpen)}
+        label="Country"
       >
-        {/* Corner decorations */}
-        <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
-        <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
         
         <div className="flex items-center justify-between relative">
           <div className="flex items-center">
-            <div className="relative flex-shrink-0 bg-yellow-100 p-2 rounded-full border-2 border-gray-900">
-              <span className="text-2xl">{country.flag}</span>
-              <div className="absolute -inset-1 bg-yellow-200/60 -rotate-1 -z-10 rounded-full group-hover:bg-yellow-300/60 transition-colors"></div>
+            <div className="relative flex-shrink-0">
+              <div className="relative">
+                <div className="absolute -inset-1 bg-yellow-200/60 -rotate-1 -z-10 rounded-full group-hover:bg-yellow-300/60 transition-colors"></div>
+                <div className="text-3xl">{country.flag}</div>
+              </div>
             </div>
             <div className="ml-4">
               <h3 className="text-sm font-bold text-gray-700 tracking-wide">Viewing legal context for</h3>
@@ -60,15 +59,14 @@ export function CountryContext({ country, onCountryChange }: CountryContextProps
             strokeWidth={2.5}
           />
         </div>
-      </div>
+      </BorderedBox>
 
       {isOpen && (
-        <div 
-          className="absolute z-10 mt-1 w-full bg-white border-2 border-gray-900 overflow-hidden"
-          style={{
-            borderRadius: '8px 16px 8px 16px',
-            boxShadow: '4px 4px 0 0 #000',
-          }}
+        <BorderedBox 
+          className="absolute z-10 mt-1 w-full overflow-hidden p-0"
+          borderColor="border-gray-900"
+          borderRadius="rounded-xl"
+          shadowSize="4px"
         >
           <div className="py-1">
             {countries.map((c) => (
@@ -97,7 +95,7 @@ export function CountryContext({ country, onCountryChange }: CountryContextProps
               </button>
             ))}
           </div>
-        </div>
+        </BorderedBox>
       )}
     </div>
   );

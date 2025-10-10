@@ -57,9 +57,9 @@ export function ErrorDisplay({
                     <p className="text-red-700 text-sm mb-4">{errorMessage}</p>
 
                     <StateActionItems
-                        variant="warning"
-                        label="Recovery Steps"
-                        title="Troubleshooting Tips"
+
+                        title="Recovery Steps"
+
                         items={[
                             'Check your internet connection',
                             'Try refreshing the page',

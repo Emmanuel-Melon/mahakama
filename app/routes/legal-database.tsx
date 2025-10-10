@@ -1,6 +1,7 @@
-import { HeroSection } from "~/components/about/HeroSection";
+import { HeroSection } from "~/components/HeroSection";
 import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { Library } from 'lucide-react';
 
 const legalDocuments = [
   {
@@ -60,6 +61,7 @@ export default function LegalDatabase() {
         title="Legal Database"
         description="Access a comprehensive collection of legal documents, acts, and regulations. Stay informed with the latest legal resources and references."
         actionVariant="search"
+        icon={Library}
       />
       <DiagonalSeparator />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

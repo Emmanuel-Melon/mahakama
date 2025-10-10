@@ -1,7 +1,8 @@
 import type { Route } from "./+types/lawyers";
 import { LawyersList } from "~/components/lawyers/lawyers-list";
-import { HeroSection } from "~/components/about/HeroSection";
+import { HeroSection } from "~/components/HeroSection";
 import type { Lawyer } from "app/types/lawyer";
+import { Gavel } from 'lucide-react';
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 
@@ -52,24 +53,23 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="min-h-screen">
-      <HeroSection
-        title="Find Trusted Legal Professionals"
-        description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
-        actionVariant="search"
-      />
-      <DiagonalSeparator />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <section className="container mx-auto py-8">
-          <div className="w-full">
-            {error ? (
-              <ErrorDisplay error={error} />
-            ) : (
-              <div className="bg-background/50">
-                <LawyersList lawyers={lawyers} />
-              </div>
-            )}
-          </div>
-        </section>
+      <div className="bg-background">
+        <HeroSection
+          title="Find Trusted Legal Professionals"
+          description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
+          actionVariant="search"
+          icon={Gavel}
+        />
+        <DiagonalSeparator />
+      </div>
+      <div className="w-full bg-background/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {error ? (
+            <ErrorDisplay error={error} />
+          ) : (
+            <LawyersList lawyers={lawyers} />
+          )}
+        </div>
       </div>
     </div>
   );
