@@ -2,6 +2,9 @@ import type { Route } from "./+types/lawyers";
 import { LawyersList } from "~/components/lawyers/lawyers-list";
 import { HeroSection } from "~/components/about/HeroSection";
 import type { Lawyer } from "app/types/lawyer";
+import { ErrorDisplay } from "~/components/async-state/error";
+import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import {EmptyState } from '~/components/async-state/empty'
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -55,22 +58,15 @@ export default function Lawyers({ loaderData }: Route.ComponentProps) {
         description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
         actionVariant="search"
       />
+
+      <DiagonalSeparator />
+
+      <EmptyState />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <section className="container mx-auto py-8">
           <div className="w-full">
             {error ? (
-              <div className="bg-destructive/10 border border-destructive/30 text-destructive-foreground p-6 rounded-lg">
-                <h3 className="font-medium mb-2">Connection Issue</h3>
-                <p className="mb-4">{error}</p>
-                <div className="text-sm text-muted-foreground">
-                  <p>While we work on restoring the connection, here's what you can do:</p>
-                  <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Check your internet connection</li>
-                    <li>Try refreshing the page</li>
-                    <li>Contact support if the issue persists</li>
-                  </ul>
-                </div>
-              </div>
+              <ErrorDisplay error={error} />
             ) : (
               <div className="bg-background/50">
                 <LawyersList lawyers={lawyers} />

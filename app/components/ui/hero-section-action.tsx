@@ -15,7 +15,7 @@ export function HeroSectionAction({
 }: HeroSectionActionProps) {
   if (variant === 'search') {
     return (
-      <div className="mt-10 w-full max-w-2xl mx-auto">
+      <div className="w-full max-w-2xl mx-auto">
         <div className="relative">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
@@ -33,7 +33,7 @@ export function HeroSectionAction({
   }
 
   return (
-    <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
       <a
         href="/search"
         className="relative px-6 py-3 text-sm font-bold text-gray-900 border-2 border-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"

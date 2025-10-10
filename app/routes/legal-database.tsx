@@ -1,5 +1,6 @@
 import { HeroSection } from "~/components/about/HeroSection";
 import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
+import { DiagonalSeparator } from "~/components/diagnoal-separator";
 
 const legalDocuments = [
   {
@@ -60,6 +61,7 @@ export default function LegalDatabase() {
         description="Access a comprehensive collection of legal documents, acts, and regulations. Stay informed with the latest legal resources and references."
         actionVariant="search"
       />
+      <DiagonalSeparator />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="w-full">
           <h1 className="text-3xl font-bold text-foreground mb-2">Legal Database</h1>
