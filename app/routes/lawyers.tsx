@@ -8,9 +8,15 @@ import { DiagonalSeparator } from "~/components/diagnoal-separator";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Find Legal Experts - Mahakama Legal Network" },
-    { name: "description", content: "Connect with vetted legal professionals through Mahakama's network. Get expert legal assistance in family law, employment, housing, and more." },
-    { name: "keywords", content: "find lawyer, legal professionals, attorney directory, legal help, legal consultation, legal experts, mahakama lawyers" },
+    { title: "Find Vetted Lawyers in South Sudan & Uganda - Mahakama" },
+    { name: "description", content: "Connect with experienced, vetted legal professionals in South Sudan and Uganda. Get expert help with family law, employment rights, housing issues, and more through our trusted network." },
+    { name: "keywords", content: "find lawyer South Sudan, Uganda attorneys, legal professionals, vetted lawyers, legal consultation, family law, employment law, housing rights, legal representation" },
+    { name: "og:title", content: "Find Trusted Legal Professionals - Mahakama" },
+    { name: "og:description", content: "Connect with vetted legal experts in South Sudan and Uganda for personalized legal assistance and representation when you need it most." },
+    { name: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Find Vetted Lawyers in East Africa" },
+    { name: "twitter:description", content: "Mahakama connects you with trusted legal professionals in South Sudan and Uganda for expert legal advice and representation." }
   ];
 }
 

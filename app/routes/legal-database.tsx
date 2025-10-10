@@ -1,7 +1,22 @@
+import type { MetaFunction } from '@remix-run/node';
 import { HeroSection } from "~/components/HeroSection";
 import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { Library } from 'lucide-react';
+
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Legal Database - Access South Sudan & Uganda Laws" },
+    { name: "description", content: "Free access to comprehensive legal documents from South Sudan and Uganda. Search and browse national constitutions, criminal codes, and other essential legislation in one place." },
+    { name: "keywords", content: "South Sudan laws, Uganda legal documents, free legal texts, criminal code, constitution, labor laws, legal database, African law" },
+    { name: "og:title", content: "Free Legal Database - South Sudan & Uganda Laws" },
+    { name: "og:description", content: "Access complete legal texts from South Sudan and Uganda. Search and download official legal documents, all in one place." },
+    { name: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: "Legal Database - South Sudan & Uganda" },
+    { name: "twitter:description", content: "Your free resource for accessing and understanding the laws of South Sudan and Uganda. Search and browse legal documents with ease." }
+  ];
+};
 
 const legalDocuments = [
   {
