@@ -5,7 +5,17 @@ import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext
 import type { Country } from "../components/header";
 import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
-import { LegalAnswerDisplay } from "../components/home/AnswerView";
+import { LegalAnswerDisplay, type LawItem, type DocumentItem } from "../components/home/AnswerView";
+
+interface LegalAnswerResponse {
+  question: string;
+  country: string;
+  answer: string;
+  relatedDocuments: DocumentItem[];
+  relevantLaws: LawItem[];
+  provider: string;
+  error?: string;
+}
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -53,7 +63,8 @@ export async function action({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        question: question.toString()
+        question: question.toString(),
+        country: country || 'South Sudan' // Default to South Sudan if country not provided
       })
     });
 
@@ -61,17 +72,26 @@ export async function action({
       throw new Error('Failed to get answer from the API');
     }
 
-    const data = await response.json();
-    return { answer: data.answer };
+    const data: LegalAnswerResponse = await response.json();
+    return data; // Return the full response data
   } catch (error) {
     console.error('Error fetching answer:', error);
-    return { error: error instanceof Error ? error.message : 'An error occurred while processing your question' };
+    return { 
+      error: error instanceof Error ? error.message : 'An error occurred while processing your question' 
+    };
   }
 }
 
+type ActionData = 
+  | LegalAnswerResponse 
+  | { error: string; answer?: never; question?: never; country?: never; relevantLaws?: never; relatedDocuments?: never }
+  | null;
+
 export default function Home({
   actionData,
-}: Route.ComponentProps) {
+}: {
+  actionData: ActionData;
+}) {
   const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
   const [currentQuestion, setCurrentQuestion] = useState<string>('');
 
@@ -131,13 +151,20 @@ export default function Home({
             )}
 
             <div id="answer-section">
-              {actionData?.answer && (
+              {actionData && 'answer' in actionData ? (
                 <LegalAnswerDisplay 
-                  question={currentQuestion}
-                  answer={actionData.answer}
+                  question={actionData.question || currentQuestion}
+                  country={actionData.country}
+                  answer={actionData.answer || ''}
+                  relevantLaws={actionData.relevantLaws || []}
+                  relatedDocuments={actionData.relatedDocuments || []}
                   onNewQuestion={handleNewQuestion}
                 />
-              )}
+              ) : actionData?.error ? (
+                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                  {actionData.error}
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
