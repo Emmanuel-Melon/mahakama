@@ -1,13 +1,10 @@
-"use client";
-
-import { useState, useEffect } from 'react';
-import type { MetaFunction } from '@remix-run/node';
 import { HeroSection } from "~/components/HeroSection";
 import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { Library, Loader2 } from 'lucide-react';
+import { Library } from 'lucide-react';
+import type { Route } from './+types/legal-database';
 
-interface LegalDocument {
+export interface LegalDocument {
   id: string;
   title: string;
   description: string;
@@ -16,7 +13,7 @@ interface LegalDocument {
   type: string;
 }
 
-export const meta: MetaFunction = () => {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Legal Database - Access South Sudan & Uganda Laws" },
     { name: "description", content: "Free access to comprehensive legal documents from South Sudan and Uganda. Search and browse national constitutions, criminal codes, and other essential legislation in one place." },
@@ -30,35 +27,42 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-// Document data is now fetched from the API
+export async function loader() {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
-export default function LegalDatabase() {
-  const [documents, setDocuments] = useState<LegalDocument[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+    const response = await fetch('https://makakama-api.netlify.app/.netlify/functions/api/documents', {
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('https://makakama-api.netlify.app/.netlify/functions/api/documents');
-        
-        if (!response.ok) {
-          throw new Error('Failed to fetch documents');
-        }
-        
-        const data = await response.json();
-        setDocuments(data);
-      } catch (err) {
-        console.error('Error fetching documents:', err);
-        setError('Failed to load documents. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch documents: ${response.status} ${response.statusText}`);
+    }
+
+    const documents: LegalDocument[] = await response.json();
+    return {
+      documents,
+      error: null,
+      timestamp: new Date().toISOString()
     };
+  } catch (error) {
+    console.error('Error fetching documents:', error);
+    return {
+      documents: [],
+      error: 'Failed to load documents. Please try again later.',
+      timestamp: new Date().toISOString()
+    };
+  }
+}
 
-    fetchDocuments();
-  }, []);
+export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
+  const { documents, error } = loaderData;
 
   return (
     <div className="min-h-screen">
@@ -71,18 +75,12 @@ export default function LegalDatabase() {
       <DiagonalSeparator />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="w-full">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Legal Database</h1>
           <p className="text-muted-foreground mb-8">
             Access the complete collection of laws and legal documents. Each document is available in its original form
             with version history and amendments. Our AI helps you navigate and understand these complex legal texts.
           </p>
           
-          {loading ? (
-            <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-yellow-500 mb-4" />
-              <p className="text-gray-600">Loading documents...</p>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -96,13 +94,10 @@ export default function LegalDatabase() {
               </div>
             </div>
           ) : (
-            <>
-              <DocumentList documents={documents} />
-              <AboutLegalDatabase />
-            </>
+            <DocumentList documents={loaderData.documents} />
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }
