@@ -76,7 +76,7 @@ export function DocumentCard({
         </div>
         
         <Link 
-          to={`/legal-database/${document.id}`}
+          to={`/document/${document.id}`}
           className="group inline-flex items-center font-medium text-gray-900 hover:text-yellow-600 transition-colors text-sm"
         >
           View full document

@@ -1,7 +1,8 @@
-import { MapPin, Briefcase, Star, MessageSquare, ChevronRight, Languages } from "lucide-react"
+import { MapPin, Briefcase, Star, ChevronRight, Languages, User } from "lucide-react"
 import { Button } from "app/components/ui/button"
 import { HandDrawnAvatar } from "app/components/ui/hand-drawn-avatar"
 import type { Lawyer } from "app/types/lawyer"
+import { NavLink } from "react-router"
 
 type CardVariant = 'default' | 'minimal';
 type DisplayMode = 'grid' | 'list';
@@ -19,7 +20,7 @@ export function LawyerCard({
   variant = 'default',
   displayMode = 'list' 
 }: LawyerCardProps) {
-  
+
   const getExperienceText = (years: number) => {
     return years === 1 ? `${years} year` : `${years} years`;
   }
@@ -45,7 +46,7 @@ export function LawyerCard({
             <HandDrawnAvatar 
               name={lawyer.name}
               size={displayMode === 'grid' ? 'md' : 'lg'}
-              color="handdrawn-yellow"
+              color="outline"
               className="flex-shrink-0"
             />
             
@@ -83,15 +84,29 @@ export function LawyerCard({
           </div>
         </div>
         
-        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300 flex gap-3">
+          <NavLink 
+            to={`/lawyers/${lawyer.id}`}
+            className={({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => `group flex-1 flex items-center justify-center py-3 px-4 text-sm font-bold transition-colors bg-white border-2 border-gray-900 rounded-[4px_12px_4px_12px] shadow-[2px_2px_0_0_#000] hover:bg-gray-100 ${
+              isActive ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'
+            }`}
+          >
+            {({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => (
+              <>
+                <User className="w-4 h-4 mr-2" />
+                <span>View Profile</span>
+                {isPending && <span className="ml-1">...</span>}
+              </>
+            )}
+          </NavLink>
           <Button 
-            className="group flex items-center justify-between bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold py-3 px-4 border-2 border-gray-900"
+            className="group flex-1 items-center justify-between bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold py-3 px-4 border-2 border-gray-900"
             style={{
               borderRadius: '4px 12px 4px 12px',
               boxShadow: '2px 2px 0 0 #000',
             }}
           >
-            <span>Contact {lawyer.name.split(' ')[0]}</span>
+            <span>Contact</span>
             <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
           </Button>
         </div>
