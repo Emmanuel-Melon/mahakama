@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ExampleQuestions } from './ExampleQuestions';
 import { BorderedBox } from '~/components/ui/bordered-box';
 import { Button } from '~/components/ui/button';
 import { Textarea } from '~/components/ui/textarea';
 import { Label } from '~/components/ui/label';
-import { Form } from "react-router";
+import { useFetcher } from "react-router";
 import { User } from 'lucide-react';
 import { IconContainer } from '../icon-container';
 
@@ -14,6 +14,7 @@ interface LegalInquiryFormProps {
 
 export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
   const [inquiry, setInquiry] = useState('');
+  const fetcher = useFetcher();
 
   const handleExampleClick = (question: string) => {
     setInquiry(question);
@@ -27,6 +28,27 @@ export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInquiry(e.target.value);
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!inquiry.trim()) return;
+    
+    // Submit the form data to the home route action
+    fetcher.submit(
+      { question: inquiry },
+      { method: 'post', action: '/' }
+    );
+  };
+
+  // Reset the form after successful submission
+  useEffect(() => {
+    if (fetcher.state === 'idle' && fetcher.data) {
+      setInquiry('');
+      if (onSubmit) {
+        onSubmit();
+      }
+    }
+  }, [fetcher.state, fetcher.data, onSubmit]);
 
   return (
     <section className='space-y-4'>
@@ -48,7 +70,7 @@ export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
         gradientFrom="from-white"
         gradientTo="from-slate-50"
       >
-        <Form method="post" className="w-full">
+        <fetcher.Form method="post" onSubmit={handleSubmit} className="w-full">
           <div className="relative z-10">
             <div className="space-y-4">
               <div className="space-y-2">
@@ -73,20 +95,25 @@ export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
               <div className="flex justify-end">
                 <Button
                   type="submit"
-                  className="relative px-6 py-3 text-sm font-bold border-2 border-gray-900 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)]"
+                  className={`relative px-6 py-3 text-sm font-bold border-2 border-gray-900 transition-all duration-200 transform ${
+                    fetcher.state !== 'idle' 
+                      ? 'opacity-70 cursor-wait' 
+                      : 'hover:-translate-y-0.5 hover:shadow-[3px_3px_0_0_rgba(0,0,0,1)]'
+                  }`}
+                  disabled={fetcher.state !== 'idle'}
                   style={{
                     borderRadius: '6px 12px 6px 12px',
                     boxShadow: '2px 2px 0 0 #000',
                   }}
                 >
-                  Get Answer
+                  {fetcher.state !== 'idle' ? 'Getting Answer...' : 'Get Answer'}
                   <span className="absolute -right-1 -top-1 w-3 h-3 border-t-2 border-r-2 border-gray-900"></span>
                   <span className="absolute -left-1 -bottom-1 w-3 h-3 border-b-2 border-l-2 border-gray-900"></span>
                 </Button>
               </div>
             </div>
           </div>
-        </Form>
+        </fetcher.Form>
       </BorderedBox>
       <ExampleQuestions handleExampleClick={handleExampleClick} />
     </section>

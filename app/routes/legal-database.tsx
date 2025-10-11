@@ -1,8 +1,20 @@
+"use client";
+
+import { useState, useEffect } from 'react';
 import type { MetaFunction } from '@remix-run/node';
 import { HeroSection } from "~/components/HeroSection";
 import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { Library } from 'lucide-react';
+import { Library, Loader2 } from 'lucide-react';
+
+interface LegalDocument {
+  id: string;
+  title: string;
+  description: string;
+  lastUpdated: string;
+  sections: number;
+  type: string;
+}
 
 export const meta: MetaFunction = () => {
   return [
@@ -18,58 +30,36 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const legalDocuments = [
-  {
-    id: 'constitution',
-    title: 'National Constitution',
-    description: 'The supreme law of the country, establishing the framework of government and fundamental rights.',
-    lastUpdated: '2023',
-    sections: 300,
-    type: 'Constitutional Law'
-  },
-  {
-    id: 'criminal-code',
-    title: 'Criminal Code Act',
-    description: 'Comprehensive legislation covering all criminal offenses and their corresponding penalties.',
-    lastUpdated: '2022',
-    sections: 412,
-    type: 'Criminal Law'
-  },
-  {
-    id: 'labor-act',
-    title: 'Labor Act',
-    description: 'Regulates employment relationships, working conditions, and workers\' rights.',
-    lastUpdated: '2017',
-    sections: 187,
-    type: 'Labor Law'
-  },
-  {
-    id: 'landlord-tenant',
-    title: 'Landlord and Tenant Act',
-    description: 'Governs the rental of residential and commercial properties and the rights of both parties.',
-    lastUpdated: '2022',
-    sections: 154,
-    type: 'Property Law'
-  },
-  {
-    id: 'consumer-protection',
-    title: 'Consumer Protection Act',
-    description: 'Protects consumers from unfair trade practices and ensures fair market competition.',
-    lastUpdated: '2021',
-    sections: 98,
-    type: 'Commercial Law'
-  },
-  {
-    id: 'civil-procedure',
-    title: 'Civil Procedure Act',
-    description: 'Rules and procedures for civil litigation in courts of law.',
-    lastUpdated: '2021',
-    sections: 203,
-    type: 'Civil Procedure'
-  }
-];
+// Document data is now fetched from the API
 
 export default function LegalDatabase() {
+  const [documents, setDocuments] = useState<LegalDocument[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://makakama-api.netlify.app/.netlify/functions/api/documents');
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch documents');
+        }
+        
+        const data = await response.json();
+        setDocuments(data);
+      } catch (err) {
+        console.error('Error fetching documents:', err);
+        setError('Failed to load documents. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDocuments();
+  }, []);
+
   return (
     <div className="min-h-screen">
       <HeroSection 
@@ -87,8 +77,30 @@ export default function LegalDatabase() {
             with version history and amendments. Our AI helps you navigate and understand these complex legal texts.
           </p>
           
-          <DocumentList documents={legalDocuments} />
-          <AboutLegalDatabase />
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-yellow-500 mb-4" />
+              <p className="text-gray-600">Loading documents...</p>
+            </div>
+          ) : error ? (
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <DocumentList documents={documents} />
+              <AboutLegalDatabase />
+            </>
+          )}
         </div>
       </div>
     </div>

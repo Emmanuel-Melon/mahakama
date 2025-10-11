@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Form } from 'react-router';
+import { useNavigation, Form } from "react-router";
 import type { Route } from "./+types/home";
 import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
 import type { Country } from "../components/header";
@@ -24,9 +24,23 @@ export function meta({}: Route.MetaArgs) {
 export async function action({
   request,
 }: Route.ActionArgs) {
-  const formData = await request.formData();
-  const question = formData.get("question");
-  const country = formData.get("country");
+  // Check if the request is JSON
+  const isJson = request.headers.get('Content-Type')?.includes('application/json');
+  
+  let question: string | null = null;
+  let country: string | null = null;
+
+  if (isJson) {
+    // Parse JSON body
+    const body = await request.json();
+    question = body.question;
+    country = body.country;
+  } else {
+    // Handle form data
+    const formData = await request.formData();
+    question = formData.get("question") as string;
+    country = formData.get("country") as string;
+  }
 
   if (!question) {
     return { error: "Question is required" };
@@ -60,8 +74,6 @@ export default function Home({
 }: Route.ComponentProps) {
   const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
   const [currentQuestion, setCurrentQuestion] = useState<string>('');
-
-  console.log(actionData);
 
   const handleCountryChange = (country: Country) => {
     setSelectedCountry(country);
