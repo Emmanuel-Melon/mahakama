@@ -12,6 +12,7 @@ interface BorderedBoxProps extends React.HTMLAttributes<HTMLDivElement> {
   labelPosition?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   variant?: 'default' | 'decorated';
   accentColor?: string;
+  hoverEffect?: 'none' | 'lift';
 }
 
 export function BorderedBox({
@@ -27,13 +28,14 @@ export function BorderedBox({
   labelPosition = 'top-left',
   variant = 'default',
   accentColor = 'bg-yellow-300',
+  hoverEffect = 'none',
   ...props
 }: BorderedBoxProps) {
   return (
     <div 
       className={cn(
-        'relative p-6 bg-white transition-all duration-200 transform hover:-translate-y-1',
-        'hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)]',
+        'relative p-6 bg-white transition-all duration-200',
+        hoverEffect === 'lift' && 'transform hover:-translate-y-1 hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)]',
         borderColor || 'border-gray-900',
         borderRadius,
         gradientFrom || 'from-white',

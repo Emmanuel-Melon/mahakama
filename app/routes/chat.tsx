@@ -1,5 +1,6 @@
 import type { MetaArgs, LoaderArgs, ComponentProps, LoaderData, ChatDetails } from "./+types/chat";
 import { LegalAnswerDisplay } from '~/components/home/AnswerView';
+import { PageLayout } from '~/components/layouts/page-layout';
 
 export function meta({ loaderData }: MetaArgs) {
   const { chat } = loaderData;
@@ -84,16 +85,14 @@ export default function ChatPage({ loaderData }: ComponentProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        <LegalAnswerDisplay 
-          question={chat.question}
-          answer={chat.answer}
-          relevantLaws={chat.relevantLaws || []}
-          relatedDocuments={chat.relatedDocuments || []}
-          onNewQuestion={() => window.location.href = '/'}
-        />
-      </div>
-    </div>
+    <PageLayout>
+      <LegalAnswerDisplay 
+        question={chat.question}
+        answer={chat.answer}
+        relevantLaws={chat.relevantLaws || []}
+        relatedDocuments={chat.relatedDocuments || []}
+        onNewQuestion={() => window.location.href = '/'}
+      />
+    </PageLayout>
   );
 }

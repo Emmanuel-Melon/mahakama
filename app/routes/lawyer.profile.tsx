@@ -1,7 +1,15 @@
-import { MapPin, Briefcase, Star, Mail, Phone, CheckCircle2, Clock, GraduationCap, Award, Languages } from "lucide-react";
 import type { MetaArgs, LoaderArgs, ComponentProps, LoaderData } from "./+types/lawyer.profile";
-import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
-import { Button } from "~/components/ui/button";
+import { PageLayout, PageHeader } from '~/components/layouts/page-layout';
+import { ErrorDisplay } from '~/components/async-state/error';
+import { EmptyState } from '~/components/async-state/empty';
+import { LawyerProfileHeader } from '~/components/lawyers/lawyer-profile-header';
+import { LawyerBio } from '~/components/lawyers/lawyer-bio';
+import { DiagonalSeparator } from '~/components/diagnoal-separator';
+import { BorderedBox } from '~/components/ui/bordered-box';
+import { Button } from '~/components/ui/button';
+import { CardWithLabel } from '~/components/ui/card-with-label';
+import { MapPin, Mail, Phone, Briefcase, Mail as MailIcon, Phone as PhoneIcon, MapPin as MapPinIcon, GraduationCap } from 'lucide-react';
+import { StylizedList } from '~/components/ui/stylized-list';
 
 export function meta({ loaderData }: MetaArgs) {
   const { lawyer } = loaderData;
@@ -16,35 +24,104 @@ export function meta({ loaderData }: MetaArgs) {
 export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
   try {
     const { lawyerId } = params;
-    const mockLawyer = {
-      id: lawyerId,
-      name: 'John Doe',
-      title: 'Senior Attorney',
-      specialization: 'Corporate Law',
-      bio: 'Experienced attorney with over 10 years of practice in corporate law and intellectual property. Specializing in mergers and acquisitions, corporate governance, and regulatory compliance. Committed to providing exceptional legal services tailored to each client\'s unique needs.',
-      rating: 4.8,
-      location: 'Nairobi, Kenya',
-      experienceYears: 10,
-      casesHandled: 245,
-      languages: ['English', 'Kiswahili', 'French'],
-      isAvailable: true,
-      education: [
-        { degree: 'LL.M in Corporate Law', institution: 'Harvard Law School', year: 2015 },
-        { degree: 'Juris Doctor (JD)', institution: 'University of Nairobi', year: 2010 },
-      ],
-      certifications: [
-        { name: 'Certified Corporate Governance Professional', issuingOrganization: 'ICPAK', year: 2017 },
-        { name: 'Arbitration & Mediation Certification', issuingOrganization: 'CIArb', year: 2016 },
-      ],
-      email: 'john.doe@lawfirm.co.ke',
-      phone: '+254 700 123456',
-    };
+    if (!lawyerId) {
+      throw new Error('Lawyer ID is required');
+    }
 
-    return { lawyer: mockLawyer };
+    const response = await fetch(`https://makakama-api.netlify.app/.netlify/functions/api/lawyers/${lawyerId}`);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch lawyer data: ${response.status} ${response.statusText}`);
+    }
+
+    const lawyer = await response.json();
+    
+    // Ensure we have the basic required fields
+    if (!lawyer || !lawyer.id || !lawyer.name) {
+      throw new Error('Invalid lawyer data received from the server');
+    }
+    
+    // Convert rating to number if it's a string
+    if (typeof lawyer.rating === 'string') {
+      lawyer.rating = parseFloat(lawyer.rating) || 0;
+    }
+    
+    return { lawyer };
   } catch (error) {
     console.error('Error loading lawyer profile:', error);
-    return { lawyer: null, error: 'Failed to load lawyer profile' };
+    return { 
+      lawyer: null, 
+      error: error instanceof Error ? error.message : 'Failed to load lawyer profile' 
+    };
   }
+}
+
+function EducationSection() {
+  const educationItems = [
+    'LLM in International Human Rights Law - University of London (2015)',
+    'LLB (Hons) - University of Nairobi (2011)',
+    'Certificate in Criminal Justice - The Hague Academy (2013)'
+  ];
+
+  return (
+    <CardWithLabel 
+      label="Education" 
+      labelClassName="text-xs font-mono text-gray-500"
+    >
+      <div className="py-2">
+        <StylizedList
+          items={educationItems.map(text => ({ text }))}
+          itemClassName="group"
+          defaultIcon={GraduationCap}
+          renderItem={(item) => (
+            <span className="text-gray-800 group-hover:text-gray-900">
+              {item.text}
+            </span>
+          )}
+        />
+      </div>
+    </CardWithLabel>
+  );
+}
+
+function StyledContactList({ email, phone, location }: { email?: string; phone?: string; location?: string }) {
+  return (
+    <StylizedList
+      items={[
+        {
+          text: email || 'contact@example.com',
+          icon: MailIcon,
+          href: email ? `mailto:${email}` : undefined,
+        },
+        {
+          text: phone || '+1 (234) 567-890',
+          icon: PhoneIcon,
+          href: phone ? `tel:${phone}` : undefined,
+        },
+        {
+          text: location || 'Nairobi, Kenya',
+          icon: MapPinIcon,
+        },
+      ]}
+      itemClassName="group"
+      renderItem={(item) => {
+        const content = (
+          <span className="text-gray-800 group-hover:text-gray-900">
+            {item.text}
+          </span>
+        );
+
+        return item.href ? (
+          <a 
+            href={item.href} 
+            className="text-blue-600 hover:underline hover:text-blue-700"
+          >
+            {content}
+          </a>
+        ) : content;
+      }}
+    />
+  );
 }
 
 export default function LawyerProfile({ loaderData }: ComponentProps) {
@@ -52,84 +129,86 @@ export default function LawyerProfile({ loaderData }: ComponentProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="text-center p-6 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Profile Not Found</h1>
-          <p className="text-muted-foreground">We couldn't find the lawyer profile you're looking for.</p>
-        </div>
-      </div>
+      <PageLayout className="py-8">
+        <ErrorDisplay 
+          error={error} 
+          title="Error Loading Profile"
+          className="max-w-3xl mx-auto"
+        />
+      </PageLayout>
     );
   }
 
   if (!lawyer) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-pulse text-center">
-          <div className="h-24 w-24 rounded-full bg-muted mx-auto mb-4"></div>
-          <div className="h-6 w-48 bg-muted rounded mx-auto mb-2"></div>
-          <div className="h-4 w-32 bg-muted rounded mx-auto"></div>
-        </div>
-      </div>
+      <PageLayout className="py-8">
+        <EmptyState 
+          title="Profile Not Found"
+          description="We couldn't find the lawyer profile you're looking for."
+          className="max-w-3xl mx-auto"
+          actions={[
+            {
+              label: 'Back to Lawyers',
+              href: '/lawyers',
+              icon: <MapPin className="w-4 h-4 mr-2" />,
+              variant: 'default'
+            }
+          ]}
+        />
+      </PageLayout>
     );
   }
 
-  const availabilityBadge = lawyer.isAvailable ? (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-      <CheckCircle2 className="w-4 h-4 mr-1" /> Available
-    </span>
-  ) : (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
-      <Clock className="w-4 h-4 mr-1" /> Unavailable
-    </span>
-  );
+  const handleContact = () => {
+    // TODO: Implement contact functionality
+    console.log('Contact lawyer:', lawyer.id);
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Section */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row gap-8 items-start">
-            <div className="flex-shrink-0">
-              <HandDrawnAvatar
-                name={lawyer.name}
-                size="lg"
-                className="w-40 h-40 text-5xl border-4 border-white shadow-md"
+    <PageLayout className="space-y-8">
+      <PageHeader />
+      <LawyerProfileHeader 
+        lawyer={lawyer} 
+        onContact={handleContact}
+      />
+      
+      <div className="max-w-7xl mx-auto">
+        <DiagonalSeparator className="mb-12" />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Left Column - Bio */}
+          <div className="lg:col-span-2">
+            <BorderedBox>
+            <div className="space-y-6">
+              <LawyerBio 
+                bio={lawyer.bio || 'No bio available for this lawyer.'}
+                className="h-full"
               />
+              <EducationSection />
             </div>
-            <div className="flex-1">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">{lawyer.name}</h1>
-                  <p className="text-lg text-gray-600 mt-1">{lawyer.title} • {lawyer.specialization}</p>
-                  <div className="flex items-center mt-2 text-gray-600">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    <span>{lawyer.location}</span>
+            </BorderedBox>
+          </div>
+          
+          {/* Right Column - Contact Info */}
+          <div className="lg:col-span-1 space-y-4">
+            <BorderedBox className="h-full p-6" hoverEffect="lift">
+              <div className="space-y-6">
+                <h3 className="text-xl font-bold text-gray-900">Contact Information</h3>
+                
+                <CardWithLabel label="Contact Details" labelClassName="text-xs font-mono text-gray-500">
+                  <div className="py-2">
+                    <StyledContactList 
+                      email={lawyer.email}
+                      phone={lawyer.phone}
+                      location={lawyer.location}
+                    />
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
-                    <Star className="w-5 h-5 text-yellow-500 fill-yellow-400 mr-1" />
-                    <span className="font-bold">{lawyer.rating}</span>
-                    <span className="text-gray-500 text-sm ml-1">({lawyer.casesHandled} cases)</span>
-                  </div>
-                  {availabilityBadge}
-                </div>
+                </CardWithLabel>
               </div>
-
-              <div className="mt-6 flex flex-wrap gap-4">
-                <Button variant="outline" className="gap-2">
-                  <Mail className="w-4 h-4" />
-                  Send Message
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <Phone className="w-4 h-4" />
-                  Call Now
-                </Button>
-              </div>
-            </div>
+            </BorderedBox>
           </div>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

@@ -2,6 +2,7 @@ import { FileText, Clock, User, Tag, Download, Share2, Star, Bookmark, File, Fol
 import type { MetaArgs, LoaderArgs, ComponentProps, LoaderData } from "./+types/document.details";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
+import { PageLayout, PageHeader } from '~/components/layouts/page-layout';
 
 export function meta({ loaderData }: MetaArgs) {
   const { document } = loaderData;
@@ -103,74 +104,62 @@ function getStatusBadge(status: string) {
 export default function DocumentDetails({ loaderData }: ComponentProps) {
   const { document, error } = loaderData;
 
-  if (error) {
+  if (error || !document) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
+      <PageLayout className="flex items-center justify-center">
         <div className="text-center p-6 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Document Not Found</h1>
-          <p className="text-muted-foreground">We couldn't find the document you're looking for.</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">
+            {error ? 'Error Loading Document' : 'Document Not Found'}
+          </h1>
+          <p className="text-muted-foreground">
+            {error || "We couldn't find the document you're looking for."}
+          </p>
         </div>
-      </div>
-    );
-  }
-
-  if (!document) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="animate-pulse text-center">
-          <div className="h-24 w-24 rounded-full bg-muted mx-auto mb-4"></div>
-          <div className="h-6 w-48 bg-muted rounded mx-auto mb-2"></div>
-          <div className="h-4 w-32 bg-muted rounded mx-auto"></div>
-        </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div className="flex items-start gap-4">
-              <div className="p-3 rounded-lg bg-blue-50">
-                {getFileIcon(document.fileType)}
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-gray-900">{document.title}</h1>
-                  {document.isTemplate && (
-                    <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
-                      Template
-                    </Badge>
-                  )}
-                  {getStatusBadge(document.status)}
-                </div>
-     
-                {document.folderName && (
-                  <div className="mt-2 flex items-center text-sm text-gray-500">
-                    <Folder className="h-4 w-4 mr-1" />
-                    <span>{document.folderName}</span>
-                  </div>
+    <PageLayout className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border p-6">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="p-3 rounded-lg bg-blue-50">
+              {getFileIcon(document.fileType)}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-gray-900">{document.title}</h1>
+                {document.isTemplate && (
+                  <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
+                    Template
+                  </Badge>
                 )}
+                {getStatusBadge(document.status)}
               </div>
+  
+              {document.folderName && (
+                <div className="mt-2 flex items-center text-sm text-gray-500">
+                  <Folder className="h-4 w-4 mr-1" />
+                  <span>{document.folderName}</span>
+                </div>
+              )}
             </div>
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="gap-2">
-                <Share2 className="h-4 w-4" />
-                Share
-              </Button>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Download className="h-4 w-4" />
-                Download
-              </Button>
-              <Button variant="outline" size="icon" className="h-9 w-9">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="gap-2">
+              <Share2 className="h-4 w-4" />
+              Share
+            </Button>
+            <Button variant="outline" size="sm" className="gap-2">
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" className="h-9 w-9">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </div>
-
-    </div>
+    </PageLayout>
   );
 }

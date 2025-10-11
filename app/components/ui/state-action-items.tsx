@@ -1,7 +1,6 @@
-import { cn } from '~/lib/utils';
 import { Wifi, RefreshCw, MessageCircle } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { IconContainer } from '~/components/icon-container';
+import { StylizedList } from './stylized-list';
 
 type ActionItem = {
   text: string;
@@ -35,10 +34,12 @@ export function StateActionItems({
   items = defaultActionItems,
   className = '',
   defaultItems = true,
+  ...props
 }: StateActionItemsProps) {
   const displayItems = defaultItems ? defaultActionItems : (items || []);
+  
   return (
-    <div className={cn('mt-4', className)}>
+    <div className={className}>
       {title && (
         <div className="flex items-center gap-2 mb-4">
           <h4 className="text-sm font-semibold text-gray-800 tracking-wide">
@@ -46,42 +47,11 @@ export function StateActionItems({
           </h4>
         </div>
       )}
-
-      {/* Stylized List */}
-      <ul className="flex flex-col gap-2.5 text-sm">
-        {displayItems.map((item, i) => {
-          if (item === null || item === undefined) return null;
-          
-          let Icon: LucideIcon = RefreshCw;
-          let content: React.ReactNode;
-          
-          if (typeof item === 'string') {
-            content = item;
-          } else if (item && typeof item === 'object' && 'text' in item && 'icon' in item) {
-            Icon = (item as ActionItem).icon;
-            content = (item as ActionItem).text;
-          } else {
-            content = item as React.ReactNode;
-          }
-          
-          return (
-            <li
-              key={i}
-              className="flex items-center gap-3 transition-colors hover:text-gray-900 group"
-            >
-              <IconContainer 
-                icon={Icon}
-                size="sm"
-                color="outline"
-                className="flex-shrink-0"
-              />
-              <span className="text-gray-600 group-hover:text-gray-900 leading-snug">
-                {content}
-              </span>
-            </li>
-          );
-        })}
-      </ul>
+      <StylizedList 
+        items={displayItems} 
+        defaultIcon={RefreshCw}
+        {...props}
+      />
     </div>
   );
 }

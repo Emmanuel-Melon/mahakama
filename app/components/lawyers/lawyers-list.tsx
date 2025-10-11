@@ -5,14 +5,14 @@ import { ListControls } from "../list-controls"
 import type { Lawyer } from "app/types/lawyer"
 
 interface LawyersListProps {
-  lawyers: Lawyer[]
+  lawyers: Lawyer[];
   displayMode?: 'list' | 'grid';
   variant?: 'default' | 'minimal';
   showControls?: boolean;
 }
 
 export function LawyersList({ 
-  lawyers, 
+  lawyers = [],
   displayMode: externalDisplayMode = 'list',
   variant = 'default',
   showControls = true
@@ -33,7 +33,7 @@ export function LawyersList({
           onDisplayModeChange={setDisplayMode}
         />
       )}
-      
+
       {displayMode === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {lawyers.map((lawyer) => (

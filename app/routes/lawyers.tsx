@@ -38,9 +38,14 @@ export async function loader() {
       throw new Error(`Failed to fetch lawyers: ${response.status} ${response.statusText}`);
     }
 
-    const lawyers: Lawyer[] = await response.json();
+    const result = await response.json();
+    
+    if (!result.success) {
+      throw new Error('Failed to fetch lawyers: Invalid response from server');
+    }
+
     return {
-      lawyers,
+      lawyers: result.data || [],
       error: null,
       timestamp: new Date().toISOString()
     };
