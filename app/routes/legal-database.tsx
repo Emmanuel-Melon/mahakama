@@ -1,17 +1,43 @@
+import { useState, useMemo } from 'react';
 import { HeroSection } from "~/components/HeroSection";
-import { DocumentList, AboutLegalDatabase } from "~/components/legal-database";
+import { DocumentCollection } from "~/components/legal-database/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { Library } from 'lucide-react';
+import { Library, Search } from 'lucide-react';
 import type { Route } from './+types/legal-database';
+import { ErrorDisplay } from '~/components/async-state/error';
+import { EmptyState } from '~/components/async-state/empty';
 
 export interface LegalDocument {
-  id: string;
+  id: string;  // Changed from number to string to match Document interface
   title: string;
   description: string;
-  lastUpdated: string;
-  sections: number;
   type: string;
+  sections: number;
+  lastUpdated: string;
+  storageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
+interface ApiResponse {
+  data: LegalDocument[];
+  meta: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
+}
+
+type LoaderData = {
+  documents: LegalDocument[];
+  meta: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
+  error: string | null;
+  timestamp?: string;
+};
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -27,74 +53,111 @@ export function meta({ }: Route.MetaArgs) {
   ];
 };
 
-export async function loader() {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+const API_URL = 'https://makakama-api.netlify.app/.netlify/functions/api/documents';
+const REQUEST_TIMEOUT = 10000; // 10 seconds
 
-    const response = await fetch('https://makakama-api.netlify.app/.netlify/functions/api/documents', {
+export async function loader(): Promise<LoaderData> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
+
+  try {
+    const response = await fetch(API_URL, {
       signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=3600', // 1 hour cache
       },
     });
 
     clearTimeout(timeoutId);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch documents: ${response.status} ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(
+        errorData.message || `Failed to fetch documents: ${response.status} ${response.statusText}`
+      );
     }
 
-    const documents: LegalDocument[] = await response.json();
+    const { data = [], meta } = (await response.json()) as ApiResponse;
+    
     return {
-      documents,
+      documents: Array.isArray(data) ? data : [],
+      meta: {
+        total: meta?.total || 0,
+        limit: meta?.limit || 10,
+        offset: meta?.offset || 0,
+      },
       error: null,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   } catch (error) {
     console.error('Error fetching documents:', error);
+    
     return {
       documents: [],
-      error: 'Failed to load documents. Please try again later.',
-      timestamp: new Date().toISOString()
+      meta: { total: 0, limit: 10, offset: 0 },
+      error: error instanceof Error ? error.message : 'Failed to load documents. Please try again later.',
     };
+  } finally {
+    clearTimeout(timeoutId);
   }
 }
 
-export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
-  const { documents, error } = loaderData;
+export default function LegalDatabase({ loaderData }: { loaderData: LoaderData }) {
+  const { documents, meta, error } = loaderData;
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredDocuments = useMemo(() => {
+    if (!searchQuery.trim()) return documents;
+    
+    const query = searchQuery.toLowerCase();
+    return documents.filter(doc => 
+      doc.title.toLowerCase().includes(query) ||
+      doc.description.toLowerCase().includes(query) ||
+      doc.type.toLowerCase().includes(query) ||
+      doc.lastUpdated.toString().includes(query)
+    );
+  }, [documents, searchQuery]);
+
+  if (error) {
+    return (
+      <div className="min-h-screen">
+        <HeroSection 
+          title="Legal Database"
+          description="Access a comprehensive collection of legal documents, acts, and regulations."
+          icon={Library}
+        />
+        <DiagonalSeparator />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <ErrorDisplay 
+            title="Error loading documents"
+            error="Hello"
+            onRetry={() => window.location.reload()}
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
       <HeroSection 
         title="Legal Database"
-        description="Access a comprehensive collection of legal documents, acts, and regulations. Stay informed with the latest legal resources and references."
-        actionVariant="search"
+        description="Access a comprehensive collection of legal documents, acts, and regulations."
         icon={Library}
+        actionVariant="search"
       />
       <DiagonalSeparator />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="w-full">
-          <p className="text-muted-foreground mb-8">
-            Access the complete collection of laws and legal documents. Each document is available in its original form
-            with version history and amendments. Our AI helps you navigate and understand these complex legal texts.
-          </p>
-          
-          {error ? (
-            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-8">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              </div>
-            </div>
+        <div className="w-full">        
+          {filteredDocuments.length === 0 ? (
+            <EmptyState
+              title="No documents found"
+              description="Try adjusting your search or check back later for updates."
+    
+            />
           ) : (
-            <DocumentList documents={loaderData.documents} />
+            <DocumentCollection documents={filteredDocuments} />
           )}
         </div>
       </div>

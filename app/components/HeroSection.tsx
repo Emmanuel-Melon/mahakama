@@ -45,13 +45,7 @@ export function HeroSection({
           </div>
         </div>
       </div>
-      {/* Hand-drawn underline for the card */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200"
-        style={{
-          clipPath: 'polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%)',
-        }}
-      ></div>
+
     </div>
   );
 }
