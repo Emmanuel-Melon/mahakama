@@ -17,6 +17,10 @@ export interface ChatParticipant {
 }
 
 export interface ChatDetails {
+  question: any;
+  answer: string;
+  relevantLaws: never[];
+  relatedDocuments: never[];
   id: string;
   title: string;
   participants: ChatParticipant[];

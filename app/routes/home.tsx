@@ -5,19 +5,18 @@ import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext
 import type { Country } from "../components/header";
 import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
-import { LegalAnswerDisplay, type LawItem, type DocumentItem } from "../components/home/AnswerView";
 
 interface LegalAnswerResponse {
   question: string;
   country: string;
   answer: string;
-  relatedDocuments: DocumentItem[];
-  relevantLaws: LawItem[];
+  relatedDocuments: Array<{ id: number; title: string; description: string; url: string }>;
+  relevantLaws: Array<{ title: string; description: string }>;
   provider: string;
   error?: string;
 }
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda" },
     { name: "description", content: "Get free, plain-language answers to your legal questions about South Sudan and Uganda. Understand your rights without the legal jargon. No law degree required." },
@@ -36,7 +35,7 @@ export async function action({
 }: Route.ActionArgs) {
   // Check if the request is JSON
   const isJson = request.headers.get('Content-Type')?.includes('application/json');
-  
+
   let question: string | null = null;
   let country: string | null = null;
 
@@ -74,52 +73,27 @@ export async function action({
 
     const data: LegalAnswerResponse = await response.json();
 
-    console.log("response data", data);
+    // Store the response in session storage before redirecting
+    const chatId = `chat-${Date.now()}`;
     
-    // If the API already provides the data in the response, use it directly
-    if (data.relatedDocuments && data.relevantLaws) {
-      return data;
-    }
 
-    // Fallback to parsing from answer text if the separate fields aren't provided
-    let relatedDocuments: DocumentItem[] = [];
-    let relevantLaws: LawItem[] = [];
-    let cleanAnswer = data.answer;
-
-    // Try to extract and parse documents and laws from the answer text if needed
-    try {
-      const documentsMatch = data.answer.match(/<<<DOCUMENTS>>>[\s\S]*?```(?:json\n)?([\s\S]*?)```/);
-      if (documentsMatch) {
-        relatedDocuments = JSON.parse(documentsMatch[1].trim());
-        cleanAnswer = cleanAnswer.replace(/<<<DOCUMENTS>>>[\s\S]*?```/g, '');
-      }
-
-      const lawsMatch = data.answer.match(/<<<LAWS>>>[\s\S]*?```(?:json\n)?([\s\S]*?)```/);
-      if (lawsMatch) {
-        relevantLaws = JSON.parse(lawsMatch[1].trim());
-        cleanAnswer = cleanAnswer.replace(/<<<LAWS>>>[\s\S]*?```/g, '');
-      }
-    } catch (error) {
-      console.error('Error parsing documents or laws:', error);
-    }
-    
-    return {
-      ...data,
-      answer: cleanAnswer,
-      relatedDocuments,
-      relevantLaws,
-    };
+    // Redirect to the chat view with the chat ID
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: `/chat/${chatId}`,
+      },
+    });
   } catch (error) {
     console.error('Error fetching answer:', error);
-    return { 
-      error: error instanceof Error ? error.message : 'An error occurred while processing your question' 
+    return {
+      error: error instanceof Error ? error.message : 'An error occurred while processing your question'
     };
   }
 }
 
-type ActionData = 
-  | LegalAnswerResponse 
-  | { error: string; answer?: never; question?: never; country?: never; relevantLaws?: never; relatedDocuments?: never }
+type ActionData =
+  | { error: string }
   | null;
 
 export default function Home({
@@ -162,48 +136,29 @@ export default function Home({
     <div className="min-h-screen flex flex-col max-w-7xl mx-auto">
       <section className="p-6 flex-1">
         <div className="space-y-4">
-          <CountryContext 
-            country={selectedCountry} 
-            onCountryChange={handleCountryChange} 
+          <CountryContext
+            country={selectedCountry}
+            onCountryChange={handleCountryChange}
           />
           <div className="space-y-6">
-            {!actionData?.answer && (
-              <LegalInquiryForm 
-                onSubmit={() => {
-                  const form = document.querySelector('form');
-                  if (form) {
-                    const questionInput = form.querySelector('textarea[name="question"]') as HTMLTextAreaElement;
-                    if (questionInput && questionInput.value.trim()) {
-                      handleFormSubmit(questionInput.value.trim());
-                      form.requestSubmit();
-                    }
+            <LegalInquiryForm
+              onSubmit={() => {
+                const form = document.querySelector('form');
+                if (form) {
+                  const questionInput = form.querySelector('textarea[name="question"]') as HTMLTextAreaElement;
+                  if (questionInput && questionInput.value.trim()) {
+                    handleFormSubmit(questionInput.value.trim());
+                    form.requestSubmit();
                   }
-                }}
-              />
-            )}
+                }
+              }}
+            />
 
             {actionData?.error && (
               <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
                 {actionData.error}
               </div>
             )}
-
-            <div id="answer-section">
-              {actionData && 'answer' in actionData ? (
-                <LegalAnswerDisplay 
-                  question={actionData.question || currentQuestion}
-                  country={actionData.country}
-                  answer={actionData.answer || ''}
-                  relevantLaws={actionData.relevantLaws || []}
-                  relatedDocuments={actionData.relatedDocuments || []}
-                  onNewQuestion={handleNewQuestion}
-                />
-              ) : actionData?.error ? (
-                <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                  {actionData.error}
-                </div>
-              ) : null}
-            </div>
           </div>
         </div>
       </section>
