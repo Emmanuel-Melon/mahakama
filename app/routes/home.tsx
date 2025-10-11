@@ -73,7 +73,42 @@ export async function action({
     }
 
     const data: LegalAnswerResponse = await response.json();
-    return data; // Return the full response data
+
+    console.log("response data", data);
+    
+    // If the API already provides the data in the response, use it directly
+    if (data.relatedDocuments && data.relevantLaws) {
+      return data;
+    }
+
+    // Fallback to parsing from answer text if the separate fields aren't provided
+    let relatedDocuments: DocumentItem[] = [];
+    let relevantLaws: LawItem[] = [];
+    let cleanAnswer = data.answer;
+
+    // Try to extract and parse documents and laws from the answer text if needed
+    try {
+      const documentsMatch = data.answer.match(/<<<DOCUMENTS>>>[\s\S]*?```(?:json\n)?([\s\S]*?)```/);
+      if (documentsMatch) {
+        relatedDocuments = JSON.parse(documentsMatch[1].trim());
+        cleanAnswer = cleanAnswer.replace(/<<<DOCUMENTS>>>[\s\S]*?```/g, '');
+      }
+
+      const lawsMatch = data.answer.match(/<<<LAWS>>>[\s\S]*?```(?:json\n)?([\s\S]*?)```/);
+      if (lawsMatch) {
+        relevantLaws = JSON.parse(lawsMatch[1].trim());
+        cleanAnswer = cleanAnswer.replace(/<<<LAWS>>>[\s\S]*?```/g, '');
+      }
+    } catch (error) {
+      console.error('Error parsing documents or laws:', error);
+    }
+    
+    return {
+      ...data,
+      answer: cleanAnswer,
+      relatedDocuments,
+      relevantLaws,
+    };
   } catch (error) {
     console.error('Error fetching answer:', error);
     return { 
@@ -94,6 +129,9 @@ export default function Home({
 }) {
   const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
   const [currentQuestion, setCurrentQuestion] = useState<string>('');
+
+
+  console.log("action data", actionData);
 
   const handleCountryChange = (country: Country) => {
     setSelectedCountry(country);
