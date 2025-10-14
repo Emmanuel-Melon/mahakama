@@ -41,6 +41,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </main>
         <Footer className="mt-auto" />
         <ScrollRestoration />
+        <Scripts /> 
       </body>
     </html>
   );

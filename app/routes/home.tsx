@@ -166,10 +166,6 @@ export default function Home({ actionData }: { actionData: ActionData }) {
     <div className="min-h-screen flex flex-col max-w-7xl mx-auto">
       <section className="p-6 flex-1">
         <div className="space-y-4">
-          <CountryContext
-            country={selectedCountry}
-            onCountryChange={handleCountryChange}
-          />
           <div className="space-y-6">
             <LegalInquiryForm
               onSubmit={() => {
