@@ -1,54 +1,13 @@
-export interface DocumentAuthor {
-  id: string;
-  name: string;
-  title?: string;
-  specialization?: string;
-  avatarUrl?: string;
-}
-
-export interface DocumentVersion {
-  version: number;
-  updatedAt: string;
-  updatedBy: string;
-  changes: string;
-}
-
 export interface DocumentDetails {
-  id: string;
+  id: number;
   title: string;
   description: string;
-  content: string;
-  category: string;
-  status: 'draft' | 'review' | 'published' | 'archived';
+  type: string;
+  sections: number;
+  lastUpdated: string;
+  storageUrl: string;
   createdAt: string;
   updatedAt: string;
-  author: DocumentAuthor;
-  lastModifiedBy: string;
-  tags: string[];
-  relatedDocuments: string[];
-  versions: DocumentVersion[];
-  isTemplate: boolean;
-  accessLevel: 'private' | 'team' | 'public';
-  fileType: 'docx' | 'pdf' | 'txt' | 'md';
-  fileSize: string;
-  downloadUrl?: string;
-  previewUrl?: string;
-  wordCount: number;
-  pageCount?: number;
-  lastOpenedAt?: string;
-  lastOpenedBy?: string;
-  folderId?: string;
-  folderName?: string;
-  isBookmarked?: boolean;
-  isStarred?: boolean;
-  isShared?: boolean;
-  sharedWith?: Array<{
-    id: string;
-    name: string;
-    email: string;
-    role: 'viewer' | 'editor' | 'commenter';
-    avatarUrl?: string;
-  }>;
 }
 
 export interface LoaderData {

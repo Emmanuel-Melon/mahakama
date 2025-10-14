@@ -178,7 +178,7 @@ export default function LawyerProfile({ loaderData }: ComponentProps) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Bio */}
           <div className="lg:col-span-2">
-            <BorderedBox>
+            <BorderedBox variant="decorated" label="Lawyer Profile">
             <div className="space-y-6">
               <LawyerBio 
                 bio={lawyer.bio || 'No bio available for this lawyer.'}
@@ -191,19 +191,16 @@ export default function LawyerProfile({ loaderData }: ComponentProps) {
           
           {/* Right Column - Contact Info */}
           <div className="lg:col-span-1 space-y-4">
-            <BorderedBox className="h-full p-6" hoverEffect="lift">
+            <BorderedBox className="h-full p-6" hoverEffect="lift" variant="decorated" label="Contact Information">
               <div className="space-y-6">
-                <h3 className="text-xl font-bold text-gray-900">Contact Information</h3>
                 
-                <CardWithLabel label="Contact Details" labelClassName="text-xs font-mono text-gray-500">
-                  <div className="py-2">
+                     <div className="py-2">
                     <StyledContactList 
                       email={lawyer.email}
                       phone={lawyer.phone}
                       location={lawyer.location}
                     />
                   </div>
-                </CardWithLabel>
               </div>
             </BorderedBox>
           </div>

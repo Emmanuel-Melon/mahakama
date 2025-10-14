@@ -1,8 +1,7 @@
-import { FileText, Clock, User, Tag, Download, Share2, Star, Bookmark, File, Folder, MoreVertical, Edit, History, Users, Lock, Globe, Eye } from 'lucide-react';
 import type { MetaArgs, LoaderArgs, ComponentProps, LoaderData } from "./+types/document.details";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
-import { PageLayout, PageHeader } from '~/components/layouts/page-layout';
+import { PageLayout } from '~/components/layouts/page-layout';
+import { DocumentDetailsHeader, DocumentMetadata, DocumentHighlights, RelatedDocuments } from '~/components/documents';
+import { DiagonalSeparator } from "~/components/diagnoal-separator";
 
 export function meta({ loaderData }: MetaArgs) {
   const { document } = loaderData;
@@ -17,89 +16,20 @@ export function meta({ loaderData }: MetaArgs) {
 export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
   try {
     const { documentId } = params;
-    // Mock data for the document
-    const mockDocument = {
-      id: documentId,
-      title: 'Shareholders Agreement Template',
-      description: 'Standard template for shareholder agreements in Kenya',
-      content: 'This agreement is made and entered into as of [DATE] by and between...',
-      category: 'Corporate Law',
-      status: 'published' as const,
-      createdAt: '2025-01-15T10:30:00Z',
-      updatedAt: '2025-03-22T14:45:00Z',
-      author: {
-        id: 'auth-123',
-        name: 'Jane Mwangi',
-        title: 'Senior Partner',
-        specialization: 'Corporate Law',
-        avatarUrl: undefined,
-      },
-      lastModifiedBy: 'John Doe',
-      tags: ['shareholders', 'agreement', 'template', 'corporate'],
-      relatedDocuments: ['doc-456', 'doc-789'],
-      versions: [
-        { version: 2, updatedAt: '2025-03-22T14:45:00Z', updatedBy: 'John Doe', changes: 'Updated clauses 4.2 and 7.1' },
-        { version: 1, updatedAt: '2025-01-15T10:30:00Z', updatedBy: 'Jane Mwangi', changes: 'Initial version' },
-      ],
-      isTemplate: true,
-      accessLevel: 'team' as const,
-      fileType: 'docx' as const,
-      fileSize: '245 KB',
-      downloadUrl: '/api/documents/doc-123/download',
-      previewUrl: '/api/documents/doc-123/preview',
-      wordCount: 3420,
-      pageCount: 12,
-      lastOpenedAt: '2025-10-10T09:15:00Z',
-      lastOpenedBy: 'You',
-      folderId: 'folder-456',
-      folderName: 'Templates/Corporate',
-      isBookmarked: true,
-      isStarred: false,
-      isShared: true,
-      sharedWith: [
-        { id: 'user-2', name: 'Alex Johnson', email: 'alex@example.com', role: 'editor' as const },
-        { id: 'user-3', name: 'Sarah Kimani', email: 'sarah@example.com', role: 'viewer' as const },
-      ],
-    };
-
-    return { document: mockDocument };
+    const response = await fetch(`https://makakama-api.netlify.app/.netlify/functions/api/documents/${documentId}`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch document');
+    }
+    
+    const document = await response.json();
+    return { document };
   } catch (error) {
     console.error('Error loading document:', error);
     return { document: null, error: 'Failed to load document' };
   }
 }
 
-function getFileIcon(type: string) {
-  switch (type) {
-    case 'pdf':
-      return <File className="h-5 w-5 text-red-500" />;
-    case 'docx':
-      return <FileText className="h-5 w-5 text-blue-500" />;
-    case 'txt':
-      return <File className="h-5 w-5 text-gray-500" />;
-    case 'md':
-      return <FileText className="h-5 w-5 text-purple-500" />;
-    default:
-      return <File className="h-5 w-5 text-gray-400" />;
-  }
-}
-
-function getStatusBadge(status: string) {
-  const statusMap: Record<string, { label: string; color: string }> = {
-    draft: { label: 'Draft', color: 'bg-gray-100 text-gray-800' },
-    review: { label: 'In Review', color: 'bg-blue-100 text-blue-800' },
-    published: { label: 'Published', color: 'bg-green-100 text-green-800' },
-    archived: { label: 'Archived', color: 'bg-yellow-100 text-yellow-800' },
-  };
-  
-  const statusInfo = statusMap[status] || { label: status, color: 'bg-gray-100 text-gray-800' };
-  
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
-      {statusInfo.label}
-    </span>
-  );
-}
 
 export default function DocumentDetails({ loaderData }: ComponentProps) {
   const { document, error } = loaderData;
@@ -121,45 +51,39 @@ export default function DocumentDetails({ loaderData }: ComponentProps) {
 
   return (
     <PageLayout className="space-y-6">
-      <div className="bg-white rounded-lg shadow-sm border p-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="p-3 rounded-lg bg-blue-50">
-              {getFileIcon(document.fileType)}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold text-gray-900">{document.title}</h1>
-                {document.isTemplate && (
-                  <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
-                    Template
-                  </Badge>
-                )}
-                {getStatusBadge(document.status)}
-              </div>
-  
-              {document.folderName && (
-                <div className="mt-2 flex items-center text-sm text-gray-500">
-                  <Folder className="h-4 w-4 mr-1" />
-                  <span>{document.folderName}</span>
-                </div>
-              )}
-            </div>
+        <DocumentDetailsHeader document={document} />
+        <DiagonalSeparator />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+          {/* Left Pane - Document Highlights and Related Documents */}
+          <div className="lg:col-span-2 space-y-6">
+            <DocumentHighlights 
+              documents={[
+                {
+                  id: '2',
+                  title: 'Land Acquisition Act 2021',
+                  type: 'Act',
+                  lastUpdated: '2023-05-15'
+                }
+              ]}
+              highlights={[
+                `Key provision in Section 4.2 about ${document.type} requirements`,
+                `Important update in the ${new Date(document.updatedAt).getFullYear()} version`,
+                `Special considerations for ${document.type === 'Act' ? 'legal' : 'regulatory'} compliance`,
+                `Recent amendments effective from ${document.lastUpdated}`
+              ]} 
+            />
           </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Share2 className="h-4 w-4" />
-              Share
-            </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Download className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" className="h-9 w-9">
-              <MoreVertical className="h-4 w-4" />
-            </Button>
+          
+          {/* Right Pane - Document Metadata */}
+          <div className="lg:col-span-1">
+            <DocumentMetadata 
+              type={document.type}
+              sections={document.sections}
+              lastUpdated={document.lastUpdated}
+              createdAt={document.createdAt}
+            />
           </div>
         </div>
-      </div>
-    </PageLayout>
+      </PageLayout>
   );
 }

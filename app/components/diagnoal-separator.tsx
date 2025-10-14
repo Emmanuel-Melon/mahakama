@@ -15,7 +15,7 @@ export const DiagonalSeparator = ({
         "max-w-7xl mx-auto bg-repeat-x",
         height,
         className
-      )}
+      )} 
       style={{
         backgroundImage: `repeating-linear-gradient(
           45deg,

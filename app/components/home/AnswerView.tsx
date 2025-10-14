@@ -4,6 +4,7 @@ import { RelevantLaws } from "./RelevantLaws"
 import { ResponseControls } from "./ResponseControls"
 import { RelatedDocuments } from "./RelatedDocuments"
 import { AnswerContent } from "./AnswerContent"
+import { BorderedBox } from '~/components/ui/bordered-box';
 
 export interface LawItem {
   title: string;
@@ -46,8 +47,12 @@ export function LegalAnswerDisplay({
 
   return (
     <div className="space-y-6">
+             <AnswerDisclaimer />
       {/* Answer Display */}
-      <div
+      <BorderedBox
+        label="Legal Answer"
+        labelClassName="bg-yellow-100 text-yellow-800 font-bold"
+        variant="decorated"
         className="relative bg-white border-2 border-gray-900 p-6"
         style={{
           borderRadius: "8px 16px 8px 16px",
@@ -58,6 +63,7 @@ export function LegalAnswerDisplay({
         <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
 
         <div className="space-y-4">
+      
           <AnswerContent answer={answer} />
           {relevantLaws.length > 0 && <RelevantLaws laws={relevantLaws} />}
           <RelatedDocuments documents={relatedDocuments} />
@@ -66,9 +72,9 @@ export function LegalAnswerDisplay({
             onSave={handleSave}
             onShare={handleShare}
           />
-          <AnswerDisclaimer />
+       
         </div>
-      </div>
+      </BorderedBox>
     </div>
   )
 }

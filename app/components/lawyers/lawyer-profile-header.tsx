@@ -39,18 +39,24 @@ export function LawyerProfileHeader({ lawyer, onContact, onBook }: LawyerProfile
             className="mb-6 p-8"
             variant="decorated"
             accentColor="bg-yellow-100"
+            label="Lawyer Profile"
+            labelClassName="bg-yellow-100 text-yellow-800 font-bold"
+            borderRadius="rounded-tl-2xl rounded-br-2xl"
+            gradientFrom="from-white"
+            gradientTo="to-gray-50"
         >
 
             <div className="relative z-10">
                 <div className="flex flex-col md:flex-row gap-4 items-start">
-                    <HandDrawnAvatar
+            
+                    {/* Info */}
+                    <div className="flex-1 space-y-4">
+                        <HandDrawnAvatar
                         name={lawyer.name}
                         size="lg"
                         color="outline"
 
                     />
-                    {/* Info */}
-                    <div className="flex-1">
                         <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-4">
                             <div>
                                 <h1 className="text-3xl md:text-4xl font-black text-gray-900 font-serif mb-2">
