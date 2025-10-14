@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { AnswerDisclaimer } from "./AnswerDisclaimer";
 import { RelevantLaws } from "./RelevantLaws";
@@ -52,7 +51,7 @@ export interface DocumentItem {
 interface LegalAnswerDisplayProps {
   question: string;
   country?: string;
-  answer: string;
+  answer: any;
   relevantLaws: LawItem[];
   relatedDocuments: DocumentItem[];
   onNewQuestion: () => void;
@@ -66,21 +65,6 @@ export function LegalAnswerDisplay({
   relatedDocuments = [],
   onNewQuestion,
 }: LegalAnswerDisplayProps) {
-  const [messages, setMessages] = useState<Message[]>(() => [
-    {
-      id: "1",
-      content: question,
-      isUser: true,
-      timestamp: new Date(),
-    },
-    {
-      id: "2",
-      content: answer,
-      isUser: false,
-      timestamp: new Date(),
-      metadata: { relevantLaws, relatedDocuments },
-    },
-  ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -104,7 +88,6 @@ export function LegalAnswerDisplay({
       timestamp: new Date(),
     };
 
-    setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
     setIsLoading(true);
 
@@ -121,7 +104,7 @@ export function LegalAnswerDisplay({
         metadata: {},
       };
 
-      setMessages((prev) => [...prev, botResponse]);
+   
     } catch (error) {
       console.error("Error sending message:", error);
       // Handle error state
@@ -150,7 +133,10 @@ export function LegalAnswerDisplay({
 
           <div className="flex-1 overflow-y-auto space-y-4 pr-2 -mr-2">
             <div className="space-y-4">
-              {messages.map((message) => (
+              {answer?.map((message) => {
+                console.log(message)
+                return (
+                  (
                 <div
                   key={message.id}
                   className={cn(
@@ -175,7 +161,9 @@ export function LegalAnswerDisplay({
                     </div>
                   </MessageBubble>
                 </div>
-              ))}
+              )
+                )
+              })}
 
               {isLoading && (
                 <MessageBubble isUser={false} className="max-w-[80%] mr-auto">

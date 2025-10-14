@@ -8,4 +8,5 @@ export default [
   route("lawyers/:lawyerId", "routes/lawyer.profile.tsx"),
   route("document/:documentId", "routes/document.details.tsx"),
   route("chat/:chatId", "routes/chat.tsx"),
+  route("recents", "routes/recents.tsx"),
 ] satisfies RouteConfig;

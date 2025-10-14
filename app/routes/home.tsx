@@ -10,6 +10,7 @@ import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
 
 interface LegalAnswerResponse {
+  [x: string]: any;
   question: string;
   country: string;
   answer: string;
@@ -109,14 +110,11 @@ export async function action({ request }: Route.ActionArgs) {
 
     const data: LegalAnswerResponse = await response.json();
 
-    // Store the response in session storage before redirecting
-    const chatId = `chat-${Date.now()}`;
-
     // Redirect to the chat view with the chat ID
     return new Response(null, {
       status: 302,
       headers: {
-        Location: `/chat/${chatId}`,
+        Location: `/chat/${data?.chatId}`,
       },
     });
   } catch (error) {

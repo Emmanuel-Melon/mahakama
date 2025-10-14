@@ -3,7 +3,7 @@ import type {
   LoaderArgs,
   ComponentProps,
   LoaderData,
-  ChatDetails,
+  ChatDetails
 } from "./+types/chat";
 import { LegalAnswerDisplay } from "~/components/home/AnswerView";
 import { PageLayout } from "~/components/layouts/page-layout";
@@ -13,59 +13,119 @@ export function meta({ loaderData }: MetaArgs) {
   return [
     {
       title: chat
-        ? `Chat - ${chat.question.substring(0, 30)}...`
+        ? `Chat - ${chat.title?.substring(0, 30) || 'Chat'}`
         : "Legal Answer - Mahakama",
     },
     { name: "description", content: "View your legal answer" },
   ];
 }
 
-export async function loader(): Promise<LoaderData> {
-  // Stubbed chat data for testing
-  const chat: ChatDetails = {
-    id: "stub-chat-123",
-    title: "Tenant Rights Inquiry",
-    question: "What are my rights as a tenant in South Sudan?",
-    answer: `In South Sudan, tenants have several rights under the law. Here's what you need to know about your rights as a tenant:\n\n1. Right to a habitable dwelling: Your landlord must maintain the property in a livable condition.\n2. Right to privacy: Your landlord must provide notice before entering the property.\n3. Protection from illegal eviction: You cannot be forced out without proper legal procedures.`,
-    relevantLaws: [],
-    relatedDocuments: [],
-    participants: [
-      {
-        id: "user-1",
-        name: "You",
-        isOnline: true,
-      },
-      {
-        id: "assistant-1",
-        name: "Legal Assistant",
-        isOnline: true,
-      },
-    ],
-    messages: [
-      {
-        id: "msg-1",
-        content: "What are my rights as a tenant in South Sudan?",
-        senderId: "user-1",
-        senderName: "You",
-        timestamp: new Date().toISOString(),
-        status: "read",
-      },
-      {
-        id: "msg-2",
-        content: "In South Sudan, tenants have several rights under the law...",
-        senderId: "assistant-1",
-        senderName: "Legal Assistant",
-        timestamp: new Date().toISOString(),
-        status: "read",
-      },
-    ],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    isGroup: false,
-    unreadCount: 0,
-  };
+export async function action({ request, params }: { request: Request, params: { chatId: string } }) {
+  const { chatId } = params;
+  const formData = await request.formData();
+  const message = formData.get("message") as string;
 
-  return { chat };
+  try {
+    const response = await fetch(
+      `https://makakama-api.netlify.app/.netlify/functions/api/chats/${chatId}/messages`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          content: message
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+    if (result.status !== "success") {
+      throw new Error("Failed to process message");
+    }
+
+    return { success: true, chat: result.data.chat };
+  } catch (error) {
+    console.error('Error sending message:', error);
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : "Failed to send message" 
+    };
+  }
+}
+
+export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
+  try {
+    const { chatId } = params;
+    if (!chatId) {
+      throw new Error("Chat ID is required");
+    }
+
+    const response = await fetch(`https://makakama-api.netlify.app/.netlify/functions/api/chats/${chatId}`);
+
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch chat: ${response.status} ${response.statusText}`);
+    }
+
+    const result = await response.json();
+
+
+    console.log("got result", result?.data?.chat);
+    
+    if (result.status !== "success" || !result.data?.chat) {
+      throw new Error("Invalid chat data received from the server");
+    }
+
+    const apiChat = result.data.chat;
+    const firstMessage = apiChat.messages?.[0]?.content || "";
+    const answer = apiChat.messages?.find((m: any) => m.sender?.type === "assistant")?.content || "";
+
+    const chat: ChatDetails = {
+      id: apiChat.id,
+      title: apiChat.title || "Legal Consultation",
+      question: firstMessage,
+      answer: result.data.chat?.messages,
+      relevantLaws: [],
+      relatedDocuments: [],
+      participants: [
+        {
+          id: "user-1",
+          name: "You",
+          isOnline: true,
+        },
+        {
+          id: "assistant-1",
+          name: "Legal Assistant",
+          isOnline: true,
+        },
+      ],
+      messages: (apiChat.messages || []).map((msg: any) => ({
+        id: msg.id,
+        content: msg.content,
+        senderId: msg.sender?.type === "assistant" ? "assistant-1" : "user-1",
+        senderName: msg.sender?.displayName || (msg.sender?.type === "assistant" ? "Legal Assistant" : "You"),
+        timestamp: msg.timestamp,
+        status: "read",
+      })),
+      createdAt: apiChat.createdAt,
+      updatedAt: apiChat.updatedAt,
+      isGroup: false,
+      unreadCount: 0,
+    };
+
+    return { chat };
+  } catch (error) {
+    console.error('Error loading chat:', error);
+    return { 
+      chat: null, 
+      error: error instanceof Error ? error.message : "Failed to load chat" 
+    };
+  }
 }
 
 export default function ChatPage({ loaderData }: ComponentProps) {

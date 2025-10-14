@@ -1,39 +1,24 @@
+// chat-input.tsx
 import { useRef, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 
 interface ChatInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  formAction: string;
   placeholder?: string;
-  isLoading?: boolean;
   className?: string;
+  disabled?: boolean;
 }
 
 export function ChatInput({
-  value,
-  onChange,
-  onSubmit,
+  formAction,
   placeholder = "Type your message...",
-  isLoading = false,
   className,
+  disabled = false,
 }: ChatInputProps) {
+  const formRef = useRef<HTMLFormElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!value.trim() || isLoading) return;
-    onSubmit();
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
-    }
-  };
 
   // Auto-resize textarea as user types
   useEffect(() => {
@@ -42,15 +27,26 @@ export function ChatInput({
       textarea.style.height = "auto";
       textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
     }
-  }, [value]);
+  }, []); // Removed value dependency
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      formRef.current?.requestSubmit();
+    }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className={cn("w-full mt-4", className)}>
+    <form 
+      ref={formRef}
+      action={formAction}
+      method="post"
+      className={cn("w-full mt-4", className)}
+    >
       <div className="relative flex items-end gap-2">
         <Textarea
           ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
+          name="message"
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={cn(
@@ -67,11 +63,11 @@ export function ChatInput({
             background: "linear-gradient(135deg, #ffffff 0%, #fafafa 100%)",
           }}
           rows={1}
-          disabled={isLoading}
+          disabled={disabled}
         />
         <Button
           type="submit"
-          disabled={!value.trim() || isLoading}
+          disabled={disabled}
           className={cn(
             "absolute right-2 bottom-2 w-10 h-10 p-0",
             "flex items-center justify-center",

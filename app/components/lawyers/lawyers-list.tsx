@@ -1,4 +1,3 @@
-"use client";
 import { useState, useEffect } from "react";
 import { LawyerCard } from "./lawyer-card";
 import { ListControls } from "../list-controls";
