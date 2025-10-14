@@ -1,5 +1,5 @@
-import { StepCard } from './StepCard';
-import { IconContainer } from '~/components/icon-container';
+import { StepCard } from "./StepCard";
+import { IconContainer } from "~/components/icon-container";
 
 type Step = {
   number: number;
@@ -15,27 +15,25 @@ type StepsSectionProps = {
   description?: string;
 };
 
-export function StepsSection({ 
-  title, 
-  steps, 
-  footerText, 
+export function StepsSection({
+  title,
+  steps,
+  footerText,
   icon: Icon,
-  description 
+  description,
 }: StepsSectionProps) {
   return (
     <div className="space-y-8">
       <div className="space-y-4">
         {Icon && (
-          <IconContainer 
-            icon={Icon} 
+          <IconContainer
+            icon={Icon}
             size="lg"
             color="handdrawn"
             className="mb-2"
           />
         )}
-        <h2 className="text-3xl font-bold text-foreground">
-          {title}
-        </h2>
+        <h2 className="text-3xl font-bold text-foreground">{title}</h2>
         {description && (
           <p className="text-lg text-muted-foreground max-w-3xl">
             {description}

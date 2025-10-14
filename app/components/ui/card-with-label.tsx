@@ -1,4 +1,4 @@
-import { cn } from '~/lib/utils';
+import { cn } from "~/lib/utils";
 
 interface CardWithLabelProps {
   label: string;
@@ -10,20 +10,20 @@ interface CardWithLabelProps {
 export function CardWithLabel({
   label,
   children,
-  className = '',
-  labelClassName = '',
+  className = "",
+  labelClassName = "",
 }: CardWithLabelProps) {
   return (
-    <div 
+    <div
       className={cn(
-        'w-full max-w-7xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded relative',
-        className
+        "w-full max-w-7xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded relative",
+        className,
       )}
     >
-      <div 
+      <div
         className={cn(
-          'absolute -top-2 left-4 px-2 bg-white text-xs font-mono text-gray-500',
-          labelClassName
+          "absolute -top-2 left-4 px-2 bg-white text-xs font-mono text-gray-500",
+          labelClassName,
         )}
       >
         {label}

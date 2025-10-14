@@ -1,19 +1,19 @@
 import { Input } from "./input";
 import { Button } from "./button";
-import { Search, ChevronRight } from 'lucide-react';
+import { Search, ChevronRight } from "lucide-react";
 
 interface HeroSectionActionProps {
-  variant?: 'cta' | 'search';
+  variant?: "cta" | "search";
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
 }
 
-export function HeroSectionAction({ 
-  variant = 'cta',
+export function HeroSectionAction({
+  variant = "cta",
   onSearch,
-  searchPlaceholder = 'Search...' 
+  searchPlaceholder = "Search...",
 }: HeroSectionActionProps) {
-  if (variant === 'search') {
+  if (variant === "search") {
     return (
       <div className="w-full max-w-2xl mx-auto">
         <div className="relative">
@@ -23,7 +23,7 @@ export function HeroSectionAction({
             placeholder={searchPlaceholder}
             className="w-full pl-12 pr-6 py-4 text-base border-2 border-gray-900 rounded-lg focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-gray-900"
             style={{
-              boxShadow: '3px 3px 0 0 #000',
+              boxShadow: "3px 3px 0 0 #000",
             }}
             onChange={(e) => onSearch?.(e.target.value)}
           />
@@ -38,8 +38,8 @@ export function HeroSectionAction({
         href="/search"
         className="relative px-6 py-3 text-sm font-bold text-gray-900 border-2 border-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
         style={{
-          borderRadius: '8px 16px 8px 16px',
-          boxShadow: '3px 3px 0 0 #000',
+          borderRadius: "8px 16px 8px 16px",
+          boxShadow: "3px 3px 0 0 #000",
         }}
       >
         Get Started
@@ -47,21 +47,25 @@ export function HeroSectionAction({
         <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
         <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
       </a>
-      
-      <a 
-        href="#how-it-works" 
+
+      <a
+        href="#how-it-works"
         className="group inline-flex items-center text-sm font-bold text-gray-900 hover:text-blue-600 transition-colors"
       >
         Learn more
-        <svg 
-          className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform" 
-          fill="none" 
-          stroke="currentColor" 
-          viewBox="0 0 24 24" 
+        <svg
+          className="ml-2 w-5 h-5 transform group-hover:translate-x-1 transition-transform"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
           xmlns="http://www.w3.org/2000/svg"
-          style={{strokeWidth: '2.5'}}
+          style={{ strokeWidth: "2.5" }}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
+          />
         </svg>
       </a>
     </div>

@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useNavigation, Form } from "react-router";
 import type { Route } from "./+types/home";
-import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
+import {
+  getSelectedCountry,
+  saveSelectedCountry,
+} from "../utils/countryContext";
 import type { Country } from "../components/header";
 import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
@@ -10,31 +13,61 @@ interface LegalAnswerResponse {
   question: string;
   country: string;
   answer: string;
-  relatedDocuments: Array<{ id: number; title: string; description: string; url: string }>;
+  relatedDocuments: Array<{
+    id: number;
+    title: string;
+    description: string;
+    url: string;
+  }>;
   relevantLaws: Array<{ title: string; description: string }>;
   provider: string;
   error?: string;
 }
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda" },
-    { name: "description", content: "Get free, plain-language answers to your legal questions about South Sudan and Uganda. Understand your rights without the legal jargon. No law degree required." },
-    { name: "keywords", content: "legal rights South Sudan, Uganda law, free legal advice, legal help, understand laws, tenant rights, worker rights, consumer protection, legal documents, mahakama" },
-    { name: "og:title", content: "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda" },
-    { name: "og:description", content: "Empowering citizens with free, easy-to-understand legal information. Know your rights in plain language before you need a lawyer." },
+    {
+      title: "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda",
+    },
+    {
+      name: "description",
+      content:
+        "Get free, plain-language answers to your legal questions about South Sudan and Uganda. Understand your rights without the legal jargon. No law degree required.",
+    },
+    {
+      name: "keywords",
+      content:
+        "legal rights South Sudan, Uganda law, free legal advice, legal help, understand laws, tenant rights, worker rights, consumer protection, legal documents, mahakama",
+    },
+    {
+      name: "og:title",
+      content:
+        "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda",
+    },
+    {
+      name: "og:description",
+      content:
+        "Empowering citizens with free, easy-to-understand legal information. Know your rights in plain language before you need a lawyer.",
+    },
     { name: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
-    { name: "twitter:title", content: "Mahakama - Legal Knowledge for Everyone" },
-    { name: "twitter:description", content: "Demystifying the law in South Sudan and Uganda with AI-powered legal assistance in plain language." }
+    {
+      name: "twitter:title",
+      content: "Mahakama - Legal Knowledge for Everyone",
+    },
+    {
+      name: "twitter:description",
+      content:
+        "Demystifying the law in South Sudan and Uganda with AI-powered legal assistance in plain language.",
+    },
   ];
 }
 
-export async function action({
-  request,
-}: Route.ActionArgs) {
+export async function action({ request }: Route.ActionArgs) {
   // Check if the request is JSON
-  const isJson = request.headers.get('Content-Type')?.includes('application/json');
+  const isJson = request.headers
+    .get("Content-Type")
+    ?.includes("application/json");
 
   let question: string | null = null;
   let country: string | null = null;
@@ -56,26 +89,28 @@ export async function action({
   }
 
   try {
-    const response = await fetch('https://makakama-api.netlify.app/.netlify/functions/api/questions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    const response = await fetch(
+      "https://makakama-api.netlify.app/.netlify/functions/api/questions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          question: question.toString(),
+          country: country || "South Sudan", // Default to South Sudan if country not provided
+        }),
       },
-      body: JSON.stringify({
-        question: question.toString(),
-        country: country || 'South Sudan' // Default to South Sudan if country not provided
-      })
-    });
+    );
 
     if (!response.ok) {
-      throw new Error('Failed to get answer from the API');
+      throw new Error("Failed to get answer from the API");
     }
 
     const data: LegalAnswerResponse = await response.json();
 
     // Store the response in session storage before redirecting
     const chatId = `chat-${Date.now()}`;
-    
 
     // Redirect to the chat view with the chat ID
     return new Response(null, {
@@ -85,25 +120,22 @@ export async function action({
       },
     });
   } catch (error) {
-    console.error('Error fetching answer:', error);
+    console.error("Error fetching answer:", error);
     return {
-      error: error instanceof Error ? error.message : 'An error occurred while processing your question'
+      error:
+        error instanceof Error
+          ? error.message
+          : "An error occurred while processing your question",
     };
   }
 }
 
-type ActionData =
-  | { error: string }
-  | null;
+type ActionData = { error: string } | null;
 
-export default function Home({
-  actionData,
-}: {
-  actionData: ActionData;
-}) {
-  const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
-  const [currentQuestion, setCurrentQuestion] = useState<string>('');
-
+export default function Home({ actionData }: { actionData: ActionData }) {
+  const [selectedCountry, setSelectedCountry] =
+    useState<Country>(getSelectedCountry());
+  const [currentQuestion, setCurrentQuestion] = useState<string>("");
 
   console.log("action data", actionData);
 
@@ -116,17 +148,17 @@ export default function Home({
     setCurrentQuestion(question);
     // Scroll to the answer section after a short delay to allow for re-render
     setTimeout(() => {
-      const answerSection = document.getElementById('answer-section');
+      const answerSection = document.getElementById("answer-section");
       if (answerSection) {
-        answerSection.scrollIntoView({ behavior: 'smooth' });
+        answerSection.scrollIntoView({ behavior: "smooth" });
       }
     }, 100);
   };
 
   const handleNewQuestion = () => {
-    setCurrentQuestion('');
+    setCurrentQuestion("");
     // Reset the form if needed
-    const form = document.querySelector('form');
+    const form = document.querySelector("form");
     if (form) {
       form.reset();
     }
@@ -143,9 +175,11 @@ export default function Home({
           <div className="space-y-6">
             <LegalInquiryForm
               onSubmit={() => {
-                const form = document.querySelector('form');
+                const form = document.querySelector("form");
                 if (form) {
-                  const questionInput = form.querySelector('textarea[name="question"]') as HTMLTextAreaElement;
+                  const questionInput = form.querySelector(
+                    'textarea[name="question"]',
+                  ) as HTMLTextAreaElement;
                   if (questionInput && questionInput.value.trim()) {
                     handleFormSubmit(questionInput.value.trim());
                     form.requestSubmit();

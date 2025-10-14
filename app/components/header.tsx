@@ -1,20 +1,32 @@
 "use client";
-import { Scale, Users, BookOpen, Menu, X, ChevronDown, Check, Library } from "lucide-react";
+import {
+  Scale,
+  Users,
+  BookOpen,
+  Menu,
+  X,
+  ChevronDown,
+  Check,
+  Library,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import type { NavLinkProps } from "react-router";
-import { IconContainer } from '~/components/icon-container';
-import { getSelectedCountry, saveSelectedCountry } from "../utils/countryContext";
+import { IconContainer } from "~/components/icon-container";
+import {
+  getSelectedCountry,
+  saveSelectedCountry,
+} from "../utils/countryContext";
 
 export type Country = {
-  code: 'SS' | 'UG';
+  code: "SS" | "UG";
   name: string;
   flag: string;
 };
 
 const countries: Country[] = [
-  { code: 'SS', name: 'South Sudan', flag: '🇸🇸' },
-  { code: 'UG', name: 'Uganda', flag: '🇺🇬' },
+  { code: "SS", name: "South Sudan", flag: "🇸🇸" },
+  { code: "UG", name: "Uganda", flag: "🇺🇬" },
 ];
 
 const links = [
@@ -42,7 +54,8 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isCountryOpen, setIsCountryOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country>(getSelectedCountry());
+  const [selectedCountry, setSelectedCountry] =
+    useState<Country>(getSelectedCountry());
   const countryButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -71,37 +84,44 @@ export function Header() {
   // Close country dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (countryButtonRef.current && !countryButtonRef.current.contains(event.target as Node)) {
+      if (
+        countryButtonRef.current &&
+        !countryButtonRef.current.contains(event.target as Node)
+      ) {
         setIsCountryOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
-    <header 
-      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b-2 border-gray-900 ${isScrolled ? 'shadow-[0_4px_0_0_rgba(0,0,0,0.1)]' : ''} transition-shadow duration-300`}
+    <header
+      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b-2 border-gray-900 ${isScrolled ? "shadow-[0_4px_0_0_rgba(0,0,0,0.1)]" : ""} transition-shadow duration-300`}
       style={{
-        borderImageSource: "url(" +
-          "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%233b82f6' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E" + ")",
-        borderImageSlice: '1',
+        borderImageSource:
+          "url(" +
+          "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%233b82f6' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E" +
+          ")",
+        borderImageSlice: "1",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           <div className="flex items-center">
             <NavLink to="/" className="flex items-center group">
-              <IconContainer 
-                icon={Scale} 
-                size="lg" 
-                color="outline" 
+              <IconContainer
+                icon={Scale}
+                size="lg"
+                color="outline"
                 className="group-hover:rotate-12 transition-transform duration-300"
               />
-              <span className="ml-3 text-2xl font-black text-gray-900 font-serif">Mahakama</span>
+              <span className="ml-3 text-2xl font-black text-gray-900 font-serif">
+                Mahakama
+              </span>
             </NavLink>
           </div>
 
@@ -113,24 +133,38 @@ export function Header() {
                   <NavLink
                     key={link.id}
                     to={link.url}
-                    className={({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => `group relative px-4 py-2 text-sm font-bold transition-colors ${
-                      isActive 
-                        ? 'text-gray-900' 
-                        : 'text-gray-700 hover:text-gray-900'
-                    }`}
+                    className={({
+                      isActive,
+                      isPending,
+                    }: {
+                      isActive: boolean;
+                      isPending: boolean;
+                    }) =>
+                      `group relative px-4 py-2 text-sm font-bold transition-colors ${
+                        isActive
+                          ? "text-gray-900"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`
+                    }
                   >
-                    {({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => (
+                    {({
+                      isActive,
+                      isPending,
+                    }: {
+                      isActive: boolean;
+                      isPending: boolean;
+                    }) => (
                       <>
                         <span className="relative z-10 flex items-center gap-2">
                           <Icon className="h-4 w-4" />
                           {link.title}
                           {isPending && <span className="ml-1">...</span>}
                         </span>
-                        <span 
+                        <span
                           className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
-                            isActive 
-                              ? 'bg-yellow-400 scale-x-100' 
-                              : 'bg-yellow-300/60 scale-x-0 group-hover:scale-x-100'
+                            isActive
+                              ? "bg-yellow-400 scale-x-100"
+                              : "bg-yellow-300/60 scale-x-0 group-hover:scale-x-100"
                           }`}
                         ></span>
                       </>
@@ -139,10 +173,10 @@ export function Header() {
                 );
               })}
             </nav>
-            
+
             {/* Vertical Separator */}
             <div className="hidden md:block h-6 w-0.5 bg-gray-300 mx-2"></div>
-            
+
             {/* Country Selector - Desktop */}
             <div className="relative hidden md:block">
               <button
@@ -154,12 +188,12 @@ export function Header() {
               >
                 <span className="text-lg">{selectedCountry.flag}</span>
                 <span className="hidden sm:inline">{selectedCountry.name}</span>
-                <ChevronDown 
-                  size={16} 
-                  className={`transition-transform ${isCountryOpen ? 'rotate-180' : ''} text-gray-500`} 
+                <ChevronDown
+                  size={16}
+                  className={`transition-transform ${isCountryOpen ? "rotate-180" : ""} text-gray-500`}
                 />
               </button>
-              
+
               {isCountryOpen && (
                 <div className="absolute right-0 mt-2 w-56 rounded-lg border-2 border-gray-900 bg-white p-1 shadow-[4px_4px_0_0_rgba(0,0,0,1)] animate-in fade-in-80">
                   <div className="py-1">
@@ -169,8 +203,8 @@ export function Header() {
                         onClick={() => handleCountrySelect(country)}
                         className={`relative flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium outline-none transition-colors ${
                           selectedCountry.code === country.code
-                            ? 'bg-yellow-100 text-gray-900'
-                            : 'text-gray-700 hover:bg-gray-50'
+                            ? "bg-yellow-100 text-gray-900"
+                            : "text-gray-700 hover:bg-gray-50"
                         }`}
                       >
                         <div className="flex items-center gap-3">
@@ -198,8 +232,8 @@ export function Header() {
               </button>
 
               {/* Mobile Menu Button */}
-              <button 
-                onClick={toggleMenu} 
+              <button
+                onClick={toggleMenu}
                 className="inline-flex items-center justify-center p-2 rounded-lg hover:bg-gray-100 text-gray-700 md:hidden transition-colors"
                 aria-label="Toggle menu"
               >
@@ -215,10 +249,14 @@ export function Header() {
       </div>
 
       {/* Mobile Navigation */}
-      <div className={`md:hidden fixed inset-0 top-20 bg-white z-40 border-t-2 border-gray-900 overflow-y-auto transition-all duration-300 transform ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div
+        className={`md:hidden fixed inset-0 top-20 bg-white z-40 border-t-2 border-gray-900 overflow-y-auto transition-all duration-300 transform ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         {/* Country Selector */}
         <div className="p-4 border-b border-gray-200">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Select Country</h3>
+          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">
+            Select Country
+          </h3>
           <div className="space-y-2">
             {countries.map((country) => (
               <button
@@ -229,8 +267,8 @@ export function Header() {
                 }}
                 className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors ${
                   selectedCountry.code === country.code
-                    ? 'bg-yellow-100 text-gray-900 font-semibold'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? "bg-yellow-100 text-gray-900 font-semibold"
+                    : "text-gray-700 hover:bg-gray-50"
                 }`}
               >
                 <div className="flex items-center gap-3">
@@ -244,10 +282,12 @@ export function Header() {
             ))}
           </div>
         </div>
-        
+
         {/* Navigation Links */}
         <nav className="p-2">
-          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">Menu</h3>
+          <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3 px-4">
+            Menu
+          </h3>
           <div className="space-y-1">
             {links.map((link) => {
               const Icon = link.icon;
@@ -255,9 +295,13 @@ export function Header() {
                 <NavLink
                   key={link.id}
                   to={link.url}
-                  className={({ isActive }: { isActive: boolean }) => `flex items-center gap-2 px-4 py-3 text-sm font-medium ${
-                    isActive ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:bg-gray-50'
-                  }`}
+                  className={({ isActive }: { isActive: boolean }) =>
+                    `flex items-center gap-2 px-4 py-3 text-sm font-medium ${
+                      isActive
+                        ? "bg-gray-100 text-gray-900"
+                        : "text-gray-700 hover:bg-gray-50"
+                    }`
+                  }
                   onClick={toggleMenu}
                 >
                   <Icon className="h-5 w-5" />
@@ -270,7 +314,7 @@ export function Header() {
       </div>
       {/* Overlay for mobile menu */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 z-30 md:hidden"
           onClick={() => setIsOpen(false)}
         />

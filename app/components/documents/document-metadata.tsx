@@ -1,4 +1,4 @@
-import { CardWithLabel } from '~/components/ui/card-with-label';
+import { CardWithLabel } from "~/components/ui/card-with-label";
 
 interface DocumentMetadataProps {
   type: string;
@@ -7,9 +7,14 @@ interface DocumentMetadataProps {
   createdAt: string;
 }
 
-export function DocumentMetadata({ type, sections, lastUpdated, createdAt }: DocumentMetadataProps) {
+export function DocumentMetadata({
+  type,
+  sections,
+  lastUpdated,
+  createdAt,
+}: DocumentMetadataProps) {
   return (
-    <CardWithLabel 
+    <CardWithLabel
       label="DOCUMENT DETAILS"
       className="bg-white p-6"
       labelClassName="text-xs font-medium tracking-wider text-gray-500"
@@ -29,7 +34,9 @@ export function DocumentMetadata({ type, sections, lastUpdated, createdAt }: Doc
         </div>
         <div className="space-y-1">
           <div className="text-sm font-medium text-gray-500">Created</div>
-          <div className="text-gray-900">{new Date(createdAt).toLocaleDateString()}</div>
+          <div className="text-gray-900">
+            {new Date(createdAt).toLocaleDateString()}
+          </div>
         </div>
       </div>
     </CardWithLabel>

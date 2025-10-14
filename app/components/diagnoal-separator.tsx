@@ -5,17 +5,13 @@ interface DiagonalSeparatorProps {
   height?: string;
 }
 
-export const DiagonalSeparator = ({ 
+export const DiagonalSeparator = ({
   className,
-  height = "h-4"
+  height = "h-4",
 }: DiagonalSeparatorProps) => {
   return (
-    <div 
-      className={cn(
-        "max-w-7xl mx-auto bg-repeat-x",
-        height,
-        className
-      )} 
+    <div
+      className={cn("max-w-7xl mx-auto bg-repeat-x", height, className)}
       style={{
         backgroundImage: `repeating-linear-gradient(
           45deg,
@@ -24,7 +20,7 @@ export const DiagonalSeparator = ({
           #e5e7eb 8px,
           #e5e7eb 16px
         )`,
-        opacity: 0.5
+        opacity: 0.5,
       }}
     />
   );

@@ -3,25 +3,25 @@ import { HeroSectionAction } from "~/components/ui/hero-section-action";
 import { IconContainer } from "~/components/icon-container";
 import { Scale } from "lucide-react";
 
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from "lucide-react";
 
 interface HeroSectionProps {
   title: string;
   description: string;
   className?: string;
-  actionVariant?: 'cta' | 'search';
+  actionVariant?: "cta" | "search";
   onSearch?: (query: string) => void;
   searchPlaceholder?: string;
   icon?: LucideIcon;
 }
-export function HeroSection({ 
-  title, 
-  description, 
-  className, 
-  actionVariant = 'cta',
+export function HeroSection({
+  title,
+  description,
+  className,
+  actionVariant = "cta",
   onSearch,
   searchPlaceholder,
-  icon: Icon = Scale
+  icon: Icon = Scale,
 }: HeroSectionProps) {
   return (
     <div className={cn("bg-background relative overflow-hidden", className)}>
@@ -37,15 +37,14 @@ export function HeroSection({
             {description}
           </p>
           <div>
-            <HeroSectionAction 
-              variant={actionVariant} 
+            <HeroSectionAction
+              variant={actionVariant}
               onSearch={onSearch}
               searchPlaceholder={searchPlaceholder}
             />
           </div>
         </div>
       </div>
-
     </div>
   );
 }

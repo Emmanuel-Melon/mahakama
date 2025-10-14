@@ -1,6 +1,6 @@
-import { Wifi, RefreshCw, MessageCircle } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { StylizedList } from './stylized-list';
+import { Wifi, RefreshCw, MessageCircle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { StylizedList } from "./stylized-list";
 
 type ActionItem = {
   text: string;
@@ -16,28 +16,28 @@ type StateActionItemsProps = {
 
 const defaultActionItems: ActionItem[] = [
   {
-    text: 'Check your internet connection',
+    text: "Check your internet connection",
     icon: Wifi,
   },
   {
-    text: 'Try refreshing the page',
+    text: "Try refreshing the page",
     icon: RefreshCw,
   },
   {
-    text: 'Contact support if the issue persists',
+    text: "Contact support if the issue persists",
     icon: MessageCircle,
   },
 ];
 
 export function StateActionItems({
-  title = 'Troubleshooting Tips',
+  title = "Troubleshooting Tips",
   items = defaultActionItems,
-  className = '',
+  className = "",
   defaultItems = true,
   ...props
 }: StateActionItemsProps) {
-  const displayItems = defaultItems ? defaultActionItems : (items || []);
-  
+  const displayItems = defaultItems ? defaultActionItems : items || [];
+
   return (
     <div className={className}>
       {title && (
@@ -47,11 +47,7 @@ export function StateActionItems({
           </h4>
         </div>
       )}
-      <StylizedList 
-        items={displayItems} 
-        defaultIcon={RefreshCw}
-        {...props}
-      />
+      <StylizedList items={displayItems} defaultIcon={RefreshCw} {...props} />
     </div>
   );
 }

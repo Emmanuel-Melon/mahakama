@@ -6,7 +6,11 @@ interface ResponseControlsProps {
   onShare: () => void;
 }
 
-export function ResponseControls({ onNewQuestion, onSave, onShare }: ResponseControlsProps) {
+export function ResponseControls({
+  onNewQuestion,
+  onSave,
+  onShare,
+}: ResponseControlsProps) {
   return (
     <div className="flex flex-wrap gap-3 pt-4 border-t-2 border-gray-200">
       <button

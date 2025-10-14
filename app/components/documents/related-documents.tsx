@@ -1,5 +1,5 @@
-import { DocumentCard } from '~/components/legal-database/document-card';
-import { BorderedBox } from '~/components/ui/bordered-box';
+import { DocumentCard } from "~/components/legal-database/document-card";
+import { BorderedBox } from "~/components/ui/bordered-box";
 
 type RelatedDocument = {
   id: string;
@@ -19,7 +19,7 @@ export function RelatedDocuments({ documents }: RelatedDocumentsProps) {
   if (documents.length === 0) return null;
 
   return (
-    <BorderedBox 
+    <BorderedBox
       label="Related Documents"
       labelClassName="bg-blue-100 text-blue-800 font-bold"
       className="mt-8"
@@ -30,7 +30,7 @@ export function RelatedDocuments({ documents }: RelatedDocumentsProps) {
             key={doc.id}
             document={{
               ...doc,
-              description: doc.description || '',
+              description: doc.description || "",
               sections: doc.sections || 0,
               lastUpdated: doc.lastUpdated,
               type: doc.type,

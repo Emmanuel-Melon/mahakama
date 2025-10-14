@@ -5,7 +5,7 @@ export interface ChatMessage {
   senderName: string;
   senderAvatar?: string;
   timestamp: string;
-  status: 'sent' | 'delivered' | 'read';
+  status: "sent" | "delivered" | "read";
 }
 
 export interface ChatParticipant {

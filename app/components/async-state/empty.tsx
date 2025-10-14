@@ -1,11 +1,11 @@
-import { FileSearch, Plus, Home } from 'lucide-react';
-import { CardWithLabel } from '~/components/ui/card-with-label';
+import { FileSearch, Plus, Home } from "lucide-react";
+import { CardWithLabel } from "~/components/ui/card-with-label";
 
 interface ActionButton {
   label: string;
   onClick?: () => void;
   href?: string;
-  variant?: 'default' | 'outline' | 'ghost' | 'link';
+  variant?: "default" | "outline" | "ghost" | "link";
   icon?: React.ReactNode;
 }
 
@@ -19,32 +19,33 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  label = 'Empty State',
-  title = 'No Results Found',
-  description = 'No items match your search criteria. Try adjusting your filters or search term.',
-  className = '',
+  label = "Empty State",
+  title = "No Results Found",
+  description = "No items match your search criteria. Try adjusting your filters or search term.",
+  className = "",
   actions = [],
   showDefaultActions = true,
 }: EmptyStateProps) {
   const defaultActions: ActionButton[] = [
     {
-      label: 'Go to Home',
-      href: '/',
-      variant: 'outline',
-      icon: <Home className="h-4 w-4 mr-2" />
+      label: "Go to Home",
+      href: "/",
+      variant: "outline",
+      icon: <Home className="h-4 w-4 mr-2" />,
     },
     {
-      label: 'Ask a Question',
-      href: '/ask',
-      variant: 'default',
-      icon: <Plus className="h-4 w-4 mr-2" />
-    }
+      label: "Ask a Question",
+      href: "/ask",
+      variant: "default",
+      icon: <Plus className="h-4 w-4 mr-2" />,
+    },
   ];
 
-  const displayActions = showDefaultActions ? [...defaultActions, ...actions] : actions;
+  const displayActions = showDefaultActions
+    ? [...defaultActions, ...actions]
+    : actions;
   return (
     <CardWithLabel label={label} className={className}>
-      
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0 mt-1">
           <FileSearch className="h-5 w-5 text-gray-400" />
@@ -54,29 +55,30 @@ export function EmptyState({
             {title}
           </h3>
           <div className="mt-2 text-sm text-gray-600">
-            {typeof description === 'string' ? (
+            {typeof description === "string" ? (
               <p>{description}</p>
             ) : (
               description
             )}
           </div>
-          
+
           {displayActions.length > 0 && (
             <div className="mt-6 flex flex-wrap gap-4">
               {displayActions.map((action, index) => {
-                const isPrimary = action.variant === 'default' || !action.variant;
-                const buttonClass = isPrimary 
-                  ? 'bg-yellow-400 hover:bg-yellow-300 text-gray-900 border-gray-900 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
-                  : 'bg-white hover:bg-gray-50 text-gray-900 border-gray-900';
-                
+                const isPrimary =
+                  action.variant === "default" || !action.variant;
+                const buttonClass = isPrimary
+                  ? "bg-yellow-400 hover:bg-yellow-300 text-gray-900 border-gray-900 hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                  : "bg-white hover:bg-gray-50 text-gray-900 border-gray-900";
+
                 return (
-                  <a 
+                  <a
                     key={index}
-                    href={action.href || '#'}
+                    href={action.href || "#"}
                     className={`relative px-6 py-3 text-sm font-bold border-2 rounded-lg transition-all duration-200 ${buttonClass}`}
                     style={{
-                      borderRadius: '8px 16px 8px 16px',
-                      boxShadow: '3px 3px 0 0 #000',
+                      borderRadius: "8px 16px 8px 16px",
+                      boxShadow: "3px 3px 0 0 #000",
                     }}
                     onClick={(e) => {
                       if (action.onClick) {

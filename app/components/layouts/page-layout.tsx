@@ -1,24 +1,22 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
 interface PageLayoutProps {
   children: ReactNode;
   className?: string;
 }
 
-export function PageLayout({ children, className = '' }: PageLayoutProps) {
+export function PageLayout({ children, className = "" }: PageLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className={className}>
-          {children}
-        </div>
+        <div className={className}>{children}</div>
       </div>
     </div>
   );
 }
 
-import { ArrowLeft } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router';
+import { ArrowLeft } from "lucide-react";
+import { useLocation, useNavigate } from "react-router";
 
 type PathSegment = string;
 
@@ -28,15 +26,17 @@ interface PageHeaderProps {
   children?: ReactNode;
 }
 
-export function PageHeader({ 
-  showBackButton = true, 
-  className = '',
-  children 
+export function PageHeader({
+  showBackButton = true,
+  className = "",
+  children,
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const pathSegments: PathSegment[] = location.pathname.split('/').filter(Boolean);
-  
+  const pathSegments: PathSegment[] = location.pathname
+    .split("/")
+    .filter(Boolean);
+
   return (
     <div className={`flex items-center justify-between mb-6 ${className}`}>
       <div className="flex items-center space-x-2">
@@ -53,16 +53,14 @@ export function PageHeader({
           {pathSegments.map((segment, index) => (
             <div key={index} className="flex items-center">
               {index > 0 && <span className="mx-2">/</span>}
-              <span className="capitalize">{segment.replace(/-/g, ' ')}</span>
+              <span className="capitalize">{segment.replace(/-/g, " ")}</span>
             </div>
           ))}
         </nav>
       </div>
-      
+
       {children && (
-        <div className="flex items-center space-x-2">
-          {children}
-        </div>
+        <div className="flex items-center space-x-2">{children}</div>
       )}
     </div>
   );

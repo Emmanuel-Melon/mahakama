@@ -1,5 +1,5 @@
-import { Loader2 } from 'lucide-react';
-import { CardWithLabel } from '~/components/ui/card-with-label';
+import { Loader2 } from "lucide-react";
+import { CardWithLabel } from "~/components/ui/card-with-label";
 
 interface LoadingStateProps {
   label?: string;
@@ -9,13 +9,13 @@ interface LoadingStateProps {
 }
 
 export function LoadingState({
-  label = 'Loading',
-  title = 'Loading Content',
-  description = 'Please wait while we load your content...',
-  className = ''
+  label = "Loading",
+  title = "Loading Content",
+  description = "Please wait while we load your content...",
+  className = "",
 }: LoadingStateProps) {
   return (
-    <CardWithLabel 
+    <CardWithLabel
       label={label}
       className={`bg-white ${className}`}
       labelClassName="text-blue-600"
@@ -27,7 +27,7 @@ export function LoadingState({
         <div className="flex-1">
           <h3 className="text-lg font-medium text-gray-900 mb-2">{title}</h3>
           <div className="text-gray-700 text-sm mb-6">
-            {typeof description === 'string' ? (
+            {typeof description === "string" ? (
               <p>{description}</p>
             ) : (
               description

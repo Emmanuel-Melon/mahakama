@@ -1,21 +1,19 @@
-import { cn } from '~/lib/utils';
-import { CardWithLabel } from '~/components/ui/card-with-label';
+import { cn } from "~/lib/utils";
+import { CardWithLabel } from "~/components/ui/card-with-label";
 
 interface LawyerBioProps {
   bio: string;
   className?: string;
 }
 
-export function LawyerBio({ bio, className = '' }: LawyerBioProps) {
+export function LawyerBio({ bio, className = "" }: LawyerBioProps) {
   return (
-    <CardWithLabel 
-      label="Bio" 
-      className={cn('prose max-w-none', className)}
+    <CardWithLabel
+      label="Bio"
+      className={cn("prose max-w-none", className)}
       labelClassName="text-xs font-mono text-gray-500"
     >
-      <p className="text-gray-700 leading-relaxed">
-        {bio}
-      </p>
+      <p className="text-gray-700 leading-relaxed">{bio}</p>
     </CardWithLabel>
   );
 }

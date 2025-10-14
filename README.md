@@ -15,6 +15,7 @@ While we can connect you with legal professionals if absolutely necessary, our p
 ## Features
 
 ### For Everyone
+
 - 🧠 **Plain Language Answers** - Get clear explanations of laws without legal jargon, with the ability to view the exact legal text
 - 🔍 **Everyday Language Search** - Ask about real situations and get answers that reference specific laws:
   - "What can I do if my landlord won't return my deposit?" (References: Landlord and Tenant Act, 2022)
@@ -37,11 +38,13 @@ While we can connect you with legal professionals if absolutely necessary, our p
 - 📱 **Mobile-First Design** - Access legal help and reference materials anywhere, anytime
 
 ### When You Need a Lawyer
+
 - ⚖️ **Vetted Legal Professionals** - Connect with experienced lawyers when needed
 - 🤝 **Case Representation** - Find representation for complex legal matters
 - 📝 **Document Review** - Get professional review of your legal documents
 
 ### Built for Accessibility
+
 - 🌍 **Multiple Languages** - Available in English and local languages
 - 👥 **Community Focused** - Designed with input from local communities
 - 🛠 **Open Source** - Built with React, TypeScript, and TailwindCSS
@@ -115,11 +118,13 @@ Your application will be available at `http://localhost:5173`.
 The application communicates with the following API endpoints:
 
 ### Users
+
 - `GET` `https://makakama-api.netlify.app/.netlify/functions/api/users` - Get all users
 - `GET` `https://makakama-api.netlify.app/.netlify/functions/api/users/:id` - Get a specific user
 - `POST` `https://makakama-api.netlify.app/.netlify/functions/api/users` - Create a new user
 
 ### Lawyers
+
 - `GET` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers` - Get all lawyers
 - `GET` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers/:id` - Get a specific lawyer
 - `POST` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers` - Create a new lawyer profile
@@ -139,6 +144,7 @@ yarn build
 The application is deployed on Netlify with the following configuration:
 
 ### Production Deployment
+
 - **Frontend**: Hosted on Netlify
 - **Backend**: Serverless functions on Netlify Functions
 - **CI/CD**: Automatic deployments on push to `main` branch
@@ -150,4 +156,3 @@ Create a `.env` file in the root directory with the following variables:
 ```
 VITE_API_BASE_URL=https://makakama-api.netlify.app/.netlify/functions/api
 ```
-
