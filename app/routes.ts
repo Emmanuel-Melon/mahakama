@@ -9,4 +9,7 @@ export default [
   route("document/:documentId", "routes/document.details.tsx"),
   route("chat/:chatId", "routes/chat.tsx"),
   route("recents", "routes/recents.tsx"),
+  route("login", "routes/login.tsx"),
+  route("signup", "routes/signup.tsx"),
+  route("chat/new", "routes/chat.new.tsx"),
 ] satisfies RouteConfig;

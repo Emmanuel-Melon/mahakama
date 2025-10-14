@@ -205,7 +205,7 @@ export default function LawyerProfile({ loaderData }: ComponentProps) {
       <PageHeader />
       <LawyerProfileHeader lawyer={lawyer} onContact={handleContact} />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <DiagonalSeparator className="mb-12" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

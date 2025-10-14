@@ -34,7 +34,7 @@ export function LegalInquiryForm({ onSubmit }: LegalInquiryFormProps) {
     if (!inquiry.trim()) return;
 
     // Submit the form data to the home route action
-    fetcher.submit({ question: inquiry }, { method: "post", action: "/" });
+    fetcher.submit({ question: inquiry }, { method: "post"});
   };
 
   // Reset the form after successful submission

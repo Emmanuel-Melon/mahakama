@@ -16,7 +16,7 @@ export function CardWithLabel({
   return (
     <div
       className={cn(
-        "w-full max-w-7xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded relative",
+        "w-full max-w-6xl mx-auto p-6 border-2 border-dashed border-gray-300 rounded relative",
         className,
       )}
     >

@@ -5,12 +5,14 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "react-router";
 import { Header } from "./components/header";
 import { Footer } from "./components/home/Footer";
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { NotFound } from "./routes/$";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -25,7 +27,13 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const skippedRoutes = ["login", "chat", "recents"]
+
 export function Layout({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  const isChatPage = pathname.startsWith("/chat/") || pathname === "/chat";
+  const isSkippedRoute = skippedRoutes.includes(pathname);
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -34,14 +42,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
+      <body className="h-screen flex flex-col bg-background font-['Helvetica'] antialiased overflow-hidden">
+        {/* Fixed Header */}
         <Header />
-        <main className="flex-1">
-          <div className="flex-1">{children}</div>
+
+        {/* Scrollable Main Content */}
+        <main className="flex-1 overflow-y-auto">
+          <div>{children}</div>
         </main>
-        <Footer className="mt-auto" />
+
+        {/* Fixed Footer */}
+        {isSkippedRoute && <Footer />}
+
         <ScrollRestoration />
-        <Scripts /> 
+        <Scripts />
       </body>
     </html>
   );
@@ -62,6 +76,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
+
+    if (error.status === 404) {
+      return <NotFound />;
+    }
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

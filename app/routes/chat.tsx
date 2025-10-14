@@ -155,7 +155,6 @@ export default function ChatPage({ loaderData }: ComponentProps) {
   }
 
   return (
-    <PageLayout>
       <LegalAnswerDisplay
         question={chat.question}
         answer={chat.answer}
@@ -163,6 +162,5 @@ export default function ChatPage({ loaderData }: ComponentProps) {
         relatedDocuments={chat.relatedDocuments || []}
         onNewQuestion={() => (window.location.href = "/")}
       />
-    </PageLayout>
   );
 }

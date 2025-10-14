@@ -117,7 +117,7 @@ const legalServices = [
 export default function About() {
   return (
     <div className="w-full py-12 px-4">
-      <div className="max-w-7xl mx-auto space-y-12">
+      <div className="max-w-6xl mx-auto space-y-12">
         <HeroSection
           title="Free Legal Knowledge for East Africa"
           description="Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free."

@@ -29,7 +29,7 @@ export function LegalServicesSection({
       <div className="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-yellow-100/50 -z-10"></div>
       <div className="absolute -left-10 bottom-10 w-32 h-32 rounded-full bg-blue-100/50 -z-10"></div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-16 space-y-4">
           <IconContainer icon={Gavel} color="handdrawn" />
           <h2 className="text-4xl font-black text-gray-900 sm:text-5xl">

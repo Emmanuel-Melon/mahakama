@@ -1,12 +1,5 @@
 import { useState } from "react";
-import { useNavigation, Form } from "react-router";
 import type { Route } from "./+types/home";
-import {
-  getSelectedCountry,
-  saveSelectedCountry,
-} from "../utils/countryContext";
-import type { Country } from "../components/header";
-import { CountryContext } from "../components/home/CountryContext";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
 
 interface LegalAnswerResponse {
@@ -131,16 +124,12 @@ export async function action({ request }: Route.ActionArgs) {
 type ActionData = { error: string } | null;
 
 export default function Home({ actionData }: { actionData: ActionData }) {
-  const [selectedCountry, setSelectedCountry] =
-    useState<Country>(getSelectedCountry());
+
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
 
   console.log("action data", actionData);
 
-  const handleCountryChange = (country: Country) => {
-    setSelectedCountry(country);
-    saveSelectedCountry(country);
-  };
+
 
   const handleFormSubmit = (question: string) => {
     setCurrentQuestion(question);
@@ -163,7 +152,7 @@ export default function Home({ actionData }: { actionData: ActionData }) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col max-w-7xl mx-auto">
+    <div className="min-h-screen flex flex-col max-w-6xl mx-auto">
       <section className="p-6 flex-1">
         <div className="space-y-4">
           <div className="space-y-6">

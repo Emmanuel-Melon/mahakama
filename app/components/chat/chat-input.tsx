@@ -41,7 +41,7 @@ export function ChatInput({
       ref={formRef}
       action={formAction}
       method="post"
-      className={cn("w-full mt-4", className)}
+      className={cn("w-full sticky bottom-2 left-0 right-0 mb-3", className)}
     >
       <div className="relative flex items-end gap-2">
         <Textarea

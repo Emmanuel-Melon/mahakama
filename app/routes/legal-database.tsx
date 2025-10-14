@@ -157,7 +157,7 @@ export default function LegalDatabase({
           icon={Library}
         />
         <DiagonalSeparator />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <ErrorDisplay
             title="Error loading documents"
             error="Hello"
@@ -177,7 +177,7 @@ export default function LegalDatabase({
         actionVariant="search"
       />
       <DiagonalSeparator />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="w-full">
           {filteredDocuments.length === 0 ? (
             <EmptyState

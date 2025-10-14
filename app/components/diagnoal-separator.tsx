@@ -11,7 +11,7 @@ export const DiagonalSeparator = ({
 }: DiagonalSeparatorProps) => {
   return (
     <div
-      className={cn("max-w-7xl mx-auto bg-repeat-x", height, className)}
+      className={cn("max-w-6xl mx-auto bg-repeat-x", height, className)}
       style={{
         backgroundImage: `repeating-linear-gradient(
           45deg,
