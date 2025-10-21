@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { LawyerCard } from "./lawyer-card";
-import { ListControls } from "../list-controls";
-import type { Lawyer } from "app/types/lawyer";
+import { ListControls } from "../components/list-controls";
+import type { Lawyer } from "~/lawyers/lawyers.types";
 
 interface LawyersListProps {
   lawyers: Lawyer[];

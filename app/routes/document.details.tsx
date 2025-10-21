@@ -10,7 +10,7 @@ import {
   DocumentMetadata,
   DocumentHighlights,
   RelatedDocuments,
-} from "~/components/documents";
+} from "~/documents";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { API_CONFIG } from "~/config";
 

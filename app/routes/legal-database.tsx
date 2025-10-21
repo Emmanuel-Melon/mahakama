@@ -1,34 +1,13 @@
 import { useState, useMemo } from "react";
 import { HeroSection } from "~/components/HeroSection";
-import { DocumentCollection } from "~/components/legal-database/document-collection";
+import { DocumentCollection } from "~/legal-database/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { Library, Search } from "lucide-react";
+import { Library } from "lucide-react";
 import type { Route } from "./+types/legal-database";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
-import { API_CONFIG } from "~/config";
-
-
-export interface LegalDocument {
-  id: string; // Changed from number to string to match Document interface
-  title: string;
-  description: string;
-  type: string;
-  sections: number;
-  lastUpdated: string;
-  storageUrl: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ApiResponse {
-  data: LegalDocument[];
-  meta: {
-    total: number;
-    limit: number;
-    offset: number;
-  };
-}
+import type { LegalDocument } from "~/documents/types.documents";
+import { documentsApi } from "~/lib/api/documents.api";
 
 type LoaderData = {
   documents: LegalDocument[];
@@ -41,7 +20,7 @@ type LoaderData = {
   timestamp?: string;
 };
 
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Legal Database - Access South Sudan & Uganda Laws" },
     {
@@ -74,37 +53,15 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const API_URL =
-  `${API_CONFIG.BASE_URL}/documents`;
-const REQUEST_TIMEOUT = 10000; // 10 seconds
-
 export async function loader(): Promise<LoaderData> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT);
-
   try {
-    const response = await fetch(API_URL, {
-      signal: controller.signal,
-      headers: {
-        "Content-Type": "application/json",
-        "Cache-Control": "public, max-age=3600", // 1 hour cache
-      },
+    const { data: documents, meta } = await documentsApi.getDocuments({
+      limit: 10,
+      offset: 0,
     });
 
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        errorData.message ||
-          `Failed to fetch documents: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const { data = [], meta } = (await response.json()) as ApiResponse;
-
     return {
-      documents: Array.isArray(data) ? data : [],
+      documents: Array.isArray(documents) ? documents : [],
       meta: {
         total: meta?.total || 0,
         limit: meta?.limit || 10,
@@ -124,8 +81,6 @@ export async function loader(): Promise<LoaderData> {
           ? error.message
           : "Failed to load documents. Please try again later.",
     };
-  } finally {
-    clearTimeout(timeoutId);
   }
 }
 

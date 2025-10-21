@@ -1,5 +1,14 @@
 import { API_CONFIG } from '~/config';
 
+export const DEFAULT_TIMEOUT = 5000; // api request timeout (5 seconds)
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  message?: string;
+}
+
+
 export class FetchApiClient {
   private baseUrl: string;
   private defaultHeaders: HeadersInit;

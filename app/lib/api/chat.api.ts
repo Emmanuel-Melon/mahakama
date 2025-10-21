@@ -1,11 +1,6 @@
-import { FetchApiClient } from './fetch';
-import type { Chat } from '~/types/chat';
+import { FetchApiClient, type ApiResponse } from './fetch';
+import type { Chat } from '~/chat/types.chat';
 
-interface ApiResponse<T> {
-  status: 'success' | 'error';
-  data?: T;
-  message?: string;
-}
 
 interface ChatListResponse {
   chats: Chat[];
@@ -22,7 +17,7 @@ export class ChatApiClient {
     try {
       const result = await this.api.request<ApiResponse<ChatListResponse>>('/chats/');
       
-      if (result.status !== 'success' || !result.data?.chats) {
+      if (!result.success || !result.data?.chats) {
         throw new Error('Invalid data received from the server');
       }
 

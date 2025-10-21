@@ -2,7 +2,7 @@ import { FileText, Download, Share2, Bookmark, Calendar } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import type { DocumentDetails } from "~/routes/+types/document.details";
-import { IconContainer } from "../icon-container";
+import { IconContainer } from "../components/icon-container";
 
 interface DocumentDetailsHeaderProps {
   document: DocumentDetails;

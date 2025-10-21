@@ -1,7 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { StylizedList } from "~/components/ui/stylized-list";
-import { SketchySeparator } from "../sketchy-separator";
+import { SketchySeparator } from "../components/sketchy-separator";
 
 interface DocumentHighlightsProps {
   highlights: string[];

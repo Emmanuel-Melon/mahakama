@@ -1,5 +1,5 @@
 import { DocumentCard, type Document } from "./document-card";
-import { ListControls } from "../list-controls";
+import { ListControls } from "../components/list-controls";
 
 interface DocumentCollectionProps {
   documents: Document[];

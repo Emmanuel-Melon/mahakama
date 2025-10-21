@@ -7,8 +7,8 @@ import type {
 import { PageLayout, PageHeader } from "~/components/layouts/page-layout";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
-import { LawyerProfileHeader } from "~/components/lawyers/lawyer-profile-header";
-import { LawyerBio } from "~/components/lawyers/lawyer-bio";
+import { LawyerProfileHeader } from "~/lawyers/lawyer-profile-header";
+import { LawyerBio } from "~/lawyers/lawyer-bio";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { Button } from "~/components/ui/button";

@@ -1,11 +1,10 @@
 import type { Route } from "./+types/lawyers";
-import { LawyersList } from "~/components/lawyers/lawyers-list";
+import { LawyersList } from "~/lawyers/lawyers-list";
 import { HeroSection } from "~/components/HeroSection";
-import type { Lawyer } from "app/types/lawyer";
 import { Gavel } from "lucide-react";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { API_CONFIG } from "~/config";
+import { lawyersApi } from '~/lib/api/lawyers.api';
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -42,35 +41,10 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader() {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
-
-    const response = await fetch(
-      `${API_CONFIG.BASE_URL}/lawyers`,
-      {
-        signal: controller.signal,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
-
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch lawyers: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const result = await response.json();
-
-    if (!result.success) {
-      throw new Error("Failed to fetch lawyers: Invalid response from server");
-    }
+    const lawyers = await lawyersApi.getLawyers();
 
     return {
-      lawyers: result.data || [],
+      lawyers,
       error: null,
       timestamp: new Date().toISOString(),
     };

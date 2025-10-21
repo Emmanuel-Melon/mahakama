@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { HandDrawnAvatar } from "app/components/ui/hand-drawn-avatar";
-import type { Lawyer } from "app/types/lawyer";
+import type { Lawyer } from "~/lawyers/lawyers.types";
 import { NavLink } from "react-router";
 
 type CardVariant = "default" | "minimal";

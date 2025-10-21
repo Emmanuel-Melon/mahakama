@@ -1,7 +1,7 @@
 
 import type { Route } from "./+types/recents";
 import { useNavigate } from "react-router";
-import { ChatHeader, ChatList } from "~/components/chat";
+import { ChatHeader, ChatList } from "~/chat";
 import { chatApi } from '~/lib/api/chat.api';
 
 export async function loader() {
