@@ -1,24 +1,9 @@
-import { useState } from "react";
 import type { Route } from "./+types/home";
 import { LegalInquiryForm } from "../components/home/LegalInquiryForm";
+import { submitLegalInquiry } from "~/pages/home/api";
+import { useState } from "react";
 
-interface LegalAnswerResponse {
-  [x: string]: any;
-  question: string;
-  country: string;
-  answer: string;
-  relatedDocuments: Array<{
-    id: number;
-    title: string;
-    description: string;
-    url: string;
-  }>;
-  relevantLaws: Array<{ title: string; description: string }>;
-  provider: string;
-  error?: string;
-}
-
-export function meta({}: Route.MetaArgs) {
+export function meta({ loaderData }: Route.MetaArgs) {
   return [
     {
       title: "Mahakama - Legal Knowledge for Everyone in South Sudan & Uganda",
@@ -55,82 +40,32 @@ export function meta({}: Route.MetaArgs) {
         "Demystifying the law in South Sudan and Uganda with AI-powered legal assistance in plain language.",
     },
   ];
-}
+};
+
 
 export async function action({ request }: Route.ActionArgs) {
-  // Check if the request is JSON
-  const isJson = request.headers
-    .get("Content-Type")
-    ?.includes("application/json");
-
-  let question: string | null = null;
-  let country: string | null = null;
-
-  if (isJson) {
-    // Parse JSON body
-    const body = await request.json();
-    question = body.question;
-    country = body.country;
-  } else {
-    // Handle form data
-    const formData = await request.formData();
-    question = formData.get("question") as string;
-    country = formData.get("country") as string;
-  }
+  const formData = await request.formData();
+  const question = formData.get("question") as string;
+  const country = (formData.get("country") as string) || "South Sudan";
 
   if (!question) {
     return { error: "Question is required" };
   }
+  const data = await submitLegalInquiry(question, country);
 
-  try {
-    const response = await fetch(
-      "https://makakama-api.netlify.app/.netlify/functions/api/questions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          question: question.toString(),
-          country: country || "South Sudan", // Default to South Sudan if country not provided
-        }),
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to get answer from the API");
-    }
-
-    const data: LegalAnswerResponse = await response.json();
-
-    // Redirect to the chat view with the chat ID
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: `/chat/${data?.chatId}`,
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching answer:", error);
-    return {
-      error:
-        error instanceof Error
-          ? error.message
-          : "An error occurred while processing your question",
-    };
-  }
+  // Redirect to the chat view with the chat ID
+  return new Response(null, {
+    status: 302,
+    headers: {
+      Location: `/chat/${data?.chatId}`,
+    },
+  });
 }
 
 type ActionData = { error: string } | null;
 
 export default function Home({ actionData }: { actionData: ActionData }) {
-
   const [currentQuestion, setCurrentQuestion] = useState<string>("");
-
-  console.log("action data", actionData);
-
-
-
   const handleFormSubmit = (question: string) => {
     setCurrentQuestion(question);
     // Scroll to the answer section after a short delay to allow for re-render
@@ -140,15 +75,6 @@ export default function Home({ actionData }: { actionData: ActionData }) {
         answerSection.scrollIntoView({ behavior: "smooth" });
       }
     }, 100);
-  };
-
-  const handleNewQuestion = () => {
-    setCurrentQuestion("");
-    // Reset the form if needed
-    const form = document.querySelector("form");
-    if (form) {
-      form.reset();
-    }
   };
 
   return (
@@ -170,12 +96,6 @@ export default function Home({ actionData }: { actionData: ActionData }) {
                 }
               }}
             />
-
-            {actionData?.error && (
-              <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-                {actionData.error}
-              </div>
-            )}
           </div>
         </div>
       </section>

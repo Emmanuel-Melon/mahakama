@@ -13,17 +13,9 @@ import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { Button } from "~/components/ui/button";
 import { CardWithLabel } from "~/components/ui/card-with-label";
-import {
-  MapPin,
-  Mail,
-  Phone,
-  Briefcase,
-  Mail as MailIcon,
-  Phone as PhoneIcon,
-  MapPin as MapPinIcon,
-  GraduationCap,
-} from "lucide-react";
+import { MapPin, Mail, Phone, Briefcase, Mail as MailIcon, Phone as PhoneIcon, MapPin as MapPinIcon, GraduationCap } from "lucide-react";
 import { StylizedList } from "~/components/ui/stylized-list";
+import { API_CONFIG } from "~/config";
 
 export function meta({ loaderData }: MetaArgs) {
   const { lawyer } = loaderData;
@@ -48,7 +40,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
     }
 
     const response = await fetch(
-      `https://makakama-api.netlify.app/.netlify/functions/api/lawyers/${lawyerId}`,
+      `${API_CONFIG.BASE_URL}/lawyers/${lawyerId}`,
     );
 
     if (!response.ok) {

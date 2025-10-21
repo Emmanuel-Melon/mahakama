@@ -6,6 +6,7 @@ import {
   X,
   Library,
   History,
+  LogIn,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
@@ -117,7 +118,8 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-6">
+            <nav className="flex items-center gap-1">
             {links.map((link) => {
               const Icon = link.icon;
               return (
@@ -163,7 +165,21 @@ export function Header() {
                 </NavLink>
               );
             })}
-          </nav>
+            </nav>
+
+            <div className="h-6 w-px bg-gray-200"></div>
+
+            <NavLink
+              to="/login"
+              className="group relative px-3 py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <LogIn className="h-4 w-4" />
+                <span className="hidden lg:inline">Log in</span>
+              </span>
+              <span className="absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left scale-x-0 group-hover:scale-x-100 bg-yellow-300/60 transition-all duration-300"></span>
+            </NavLink>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -221,6 +237,17 @@ export function Header() {
                     </NavLink>
                   );
                 })}
+
+                <div className="border-t border-gray-200 my-2"></div>
+
+                <NavLink
+                  to="/login"
+                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  onClick={closeMenu}
+                >
+                  <LogIn className="h-5 w-5 flex-shrink-0" />
+                  Log in
+                </NavLink>
               </div>
             </nav>
           </div>

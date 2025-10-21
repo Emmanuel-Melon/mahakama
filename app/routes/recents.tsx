@@ -2,6 +2,7 @@
 import type { Route } from "./+types/recents";
 import { useNavigate } from "react-router";
 import { ChatHeader, ChatList, type Chat } from "~/components/chat";
+import { API_CONFIG } from "~/config";
 
 type LoaderData = {
   chats: Chat[];
@@ -11,7 +12,7 @@ type LoaderData = {
 export async function loader() {
   try {
     const response = await fetch(
-      "https://makakama-api.netlify.app/.netlify/functions/api/chats/"
+      `${API_CONFIG.BASE_URL}/chats/`
     );
 
     if (!response.ok) {

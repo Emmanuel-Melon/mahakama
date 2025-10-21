@@ -5,6 +5,7 @@ import type { Lawyer } from "app/types/lawyer";
 import { Gavel } from "lucide-react";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { API_CONFIG } from "~/config";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -45,7 +46,7 @@ export async function loader() {
     const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
     const response = await fetch(
-      "https://makakama-api.netlify.app/.netlify/functions/api/lawyers",
+      `${API_CONFIG.BASE_URL}/lawyers`,
       {
         signal: controller.signal,
         headers: {

@@ -12,6 +12,7 @@ import {
   RelatedDocuments,
 } from "~/components/documents";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { API_CONFIG } from "~/config";
 
 export function meta({ loaderData }: MetaArgs) {
   const { document } = loaderData;
@@ -32,7 +33,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
   try {
     const { documentId } = params;
     const response = await fetch(
-      `https://makakama-api.netlify.app/.netlify/functions/api/documents/${documentId}`,
+      `${API_CONFIG.BASE_URL}/documents/${documentId}`,
     );
 
     if (!response.ok) {

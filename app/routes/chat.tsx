@@ -7,6 +7,8 @@ import type {
 } from "./+types/chat";
 import { LegalAnswerDisplay } from "~/components/home/AnswerView";
 import { PageLayout } from "~/components/layouts/page-layout";
+import { API_CONFIG } from "~/config";
+
 
 export function meta({ loaderData }: MetaArgs) {
   const { chat } = loaderData;
@@ -27,7 +29,7 @@ export async function action({ request, params }: { request: Request, params: { 
 
   try {
     const response = await fetch(
-      `https://makakama-api.netlify.app/.netlify/functions/api/chats/${chatId}/messages`,
+      `${API_CONFIG.BASE_URL}/chats/${chatId}/messages`,
       {
         method: "POST",
         headers: {
@@ -38,6 +40,8 @@ export async function action({ request, params }: { request: Request, params: { 
         }),
       }
     );
+
+    console.log(response);
 
     if (!response.ok) {
       throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
@@ -65,7 +69,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
       throw new Error("Chat ID is required");
     }
 
-    const response = await fetch(`https://makakama-api.netlify.app/.netlify/functions/api/chats/${chatId}`);
+    const response = await fetch(`${API_CONFIG.BASE_URL}/chats/${chatId}`);
 
     
     if (!response.ok) {

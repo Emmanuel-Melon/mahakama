@@ -6,6 +6,8 @@ import { Library, Search } from "lucide-react";
 import type { Route } from "./+types/legal-database";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
+import { API_CONFIG } from "~/config";
+
 
 export interface LegalDocument {
   id: string; // Changed from number to string to match Document interface
@@ -73,7 +75,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 const API_URL =
-  "https://makakama-api.netlify.app/.netlify/functions/api/documents";
+  `${API_CONFIG.BASE_URL}/documents`;
 const REQUEST_TIMEOUT = 10000; // 10 seconds
 
 export async function loader(): Promise<LoaderData> {
