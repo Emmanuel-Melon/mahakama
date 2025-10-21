@@ -1,6 +1,6 @@
 import type { Route } from "./+types/lawyers";
 import { LawyersList } from "~/lawyers/lawyers-list";
-import { HeroSection } from "~/components/HeroSection";
+import { HeroSection } from "~/components/layouts/HeroSection";
 import { Gavel } from "lucide-react";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";

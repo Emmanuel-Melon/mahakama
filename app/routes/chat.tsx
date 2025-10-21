@@ -6,8 +6,7 @@ import type {
   ChatDetails,
 } from "./+types/chat";
 import { LegalAnswerDisplay } from "~/components/home/AnswerView";
-import { PageLayout } from "~/components/layouts/page-layout";
-import { API_CONFIG } from "~/config";
+import { chatApi } from "~/lib/api/chat.api";
 
 export function meta({ loaderData }: MetaArgs) {
   const { chat } = loaderData;
@@ -33,33 +32,8 @@ export async function action({
   const message = formData.get("message") as string;
 
   try {
-    const response = await fetch(
-      `${API_CONFIG.BASE_URL}/chats/${chatId}/messages`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: message,
-        }),
-      },
-    );
-
-    console.log(response);
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to send message: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const result = await response.json();
-    if (result.status !== "success") {
-      throw new Error("Failed to process message");
-    }
-
-    return { success: true, chat: result.data.chat };
+    const result = await chatApi.sendMessage(chatId, message);
+    return { success: true, chat: result.chat };
   } catch (error) {
     console.error("Error sending message:", error);
     return {
@@ -69,30 +43,15 @@ export async function action({
   }
 }
 
-export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
+export async function loader({ params }: LoaderArgs) {
   try {
     const { chatId } = params;
     if (!chatId) {
       throw new Error("Chat ID is required");
     }
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/chats/${chatId}`);
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch chat: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const result = await response.json();
-
-    console.log("got result", result?.data?.chat);
-
-    if (result.status !== "success" || !result.data?.chat) {
-      throw new Error("Invalid chat data received from the server");
-    }
-
-    const apiChat = result.data.chat;
+    const { chat: apiChat } = await chatApi.getChatById(chatId);
+    console.log("got chat data:", apiChat);
     const firstMessage = apiChat.messages?.[0]?.content || "";
     const answer =
       apiChat.messages?.find((m: any) => m.sender?.type === "assistant")
@@ -102,7 +61,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
       id: apiChat.id,
       title: apiChat.title || "Legal Consultation",
       question: firstMessage,
-      answer: result.data.chat?.messages,
+      answer: apiChat.messages || [],
       relevantLaws: [],
       relatedDocuments: [],
       participants: [

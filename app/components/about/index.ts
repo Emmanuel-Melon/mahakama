@@ -1,4 +1,4 @@
-export * from "../HeroSection";
+export * from "../layouts/HeroSection";
 export * from "./FeatureCard";
 export * from "./FeaturesGrid";
 export * from "./StepCard";

@@ -1,4 +1,4 @@
-import type { Country } from "../components/header";
+import type { Country } from "../components/layouts/header";
 
 const COUNTRY_STORAGE_KEY = "selectedCountry";
 

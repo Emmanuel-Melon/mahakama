@@ -1,32 +1,24 @@
-export interface Education {
-  degree: string;
-  institution: string;
-  year: number;
-}
+import type { components } from "../../lib/api/types/api";
 
-export interface Certification {
-  name: string;
-  issuingOrganization: string;
-  year: number;
-}
-
-export interface Lawyer {
-  id: string;
-  name: string;
-  title: string;
-  specialization: string;
-  bio: string;
-  rating: number;
-  location: string;
-  experienceYears: number;
-  casesHandled: number;
-  languages: string[];
-  isAvailable: boolean;
-  education: Education[];
-  certifications: Certification[];
-  email: string;
-  phone: string;
-}
+export type Lawyer = components["schemas"]["Lawyer"] & {
+  // Extend the base Lawyer type with any additional fields needed for the UI
+  title?: string;
+  experienceYears?: number;
+  casesHandled?: number;
+  isAvailable?: boolean;
+  location?: string;
+  education?: Array<{
+    degree: string;
+    institution: string;
+    year: number;
+  }>;
+  certifications?: Array<{
+    name: string;
+    issuingOrganization: string;
+    year: number;
+  }>;
+  rating?: number;
+};
 
 export interface LoaderData {
   lawyer: Lawyer | null;

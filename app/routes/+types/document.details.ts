@@ -1,14 +1,6 @@
-export interface DocumentDetails {
-  id: number;
-  title: string;
-  description: string;
-  type: string;
-  sections: number;
-  lastUpdated: string;
-  storageUrl: string;
-  createdAt: string;
-  updatedAt: string;
-}
+import type { LegalDocument } from "~/documents/types.documents";
+
+export type DocumentDetails = LegalDocument;
 
 export interface LoaderData {
   document: DocumentDetails | null;

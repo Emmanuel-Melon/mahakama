@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { HeroSection } from "~/components/HeroSection";
+import { HeroSection } from "~/components/layouts/HeroSection";
 import { DocumentCollection } from "~/legal-database/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { Library } from "lucide-react";

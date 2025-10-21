@@ -15,16 +15,13 @@ import { Button } from "~/components/ui/button";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import {
   MapPin,
-  Mail,
-  Phone,
-  Briefcase,
   Mail as MailIcon,
   Phone as PhoneIcon,
   MapPin as MapPinIcon,
   GraduationCap,
 } from "lucide-react";
 import { StylizedList } from "~/components/ui/stylized-list";
-import { API_CONFIG } from "~/config";
+import { lawyersApi } from "~/lib/api/lawyers.api";
 
 export function meta({ loaderData }: MetaArgs) {
   const { lawyer } = loaderData;
@@ -48,24 +45,11 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
       throw new Error("Lawyer ID is required");
     }
 
-    const response = await fetch(`${API_CONFIG.BASE_URL}/lawyers/${lawyerId}`);
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch lawyer data: ${response.status} ${response.statusText}`,
-      );
-    }
-
-    const lawyer = await response.json();
+    const lawyer = await lawyersApi.getLawyerById(lawyerId);
 
     // Ensure we have the basic required fields
     if (!lawyer || !lawyer.id || !lawyer.name) {
       throw new Error("Invalid lawyer data received from the server");
-    }
-
-    // Convert rating to number if it's a string
-    if (typeof lawyer.rating === "string") {
-      lawyer.rating = parseFloat(lawyer.rating) || 0;
     }
 
     return { lawyer };
@@ -199,9 +183,15 @@ export default function LawyerProfile({ loaderData }: ComponentProps) {
     console.log("Contact lawyer:", lawyer.id);
   };
 
+  const breadcrumbs = [
+    { label: "Home", to: "/" },
+    { label: "Lawyers", to: "/lawyers" },
+    { label: lawyer.name || "Lawyer Profile", to: `/lawyers/${lawyer.id}` },
+  ];
+
   return (
     <PageLayout className="space-y-8">
-      <PageHeader />
+      <PageHeader breadcrumbs={breadcrumbs} />
       <LawyerProfileHeader lawyer={lawyer} onContact={handleContact} />
 
       <div className="max-w-6xl mx-auto">

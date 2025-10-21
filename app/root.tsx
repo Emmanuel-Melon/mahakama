@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
   useLocation,
 } from "react-router";
-import { Header } from "./components/header";
+import { Header } from "./components/layouts/header";
 import { Footer } from "./components/home/Footer";
 
 import type { Route } from "./+types/root";

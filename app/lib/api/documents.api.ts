@@ -31,12 +31,9 @@ export class DocumentsApiClient {
     if (options?.search) params.set("search", options.search);
 
     const queryString = params.toString();
-    const url = `/documents${queryString ? `?${queryString}` : ""}`;
+    const url = `/v1/documents${queryString ? `?${queryString}` : ""}`;
 
     const result = await this.api.request<DocumentsResponse>(url);
-
-    console.log("I got documents", result);
-
     if (!result) {
       throw new Error("Failed to fetch documents");
     }
@@ -50,8 +47,10 @@ export class DocumentsApiClient {
     documentId: string | number,
   ): Promise<LegalDocument> {
     const result = await this.api.request<ApiResponse<LegalDocument>>(
-      `/documents/${documentId}`,
+      `/v1/documents/${documentId}`,
     );
+
+    console.log(result);
 
     if (!result.success || !result.data) {
       throw new Error("Document not found");

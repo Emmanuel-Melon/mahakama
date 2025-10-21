@@ -11,18 +11,13 @@ import { Button } from "~/components/ui/button";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
 
+import type { Lawyer } from "~/routes/+types/lawyer.profile";
+
 interface LawyerProfileHeaderProps {
-  lawyer: {
-    id: string;
-    name: string;
-    title: string;
-    specialization: string;
-    location: string;
-    rating: number;
-    casesHandled: number;
-    experienceYears: number;
-    isAvailable: boolean;
-    [key: string]: any;
+  lawyer: Lawyer & {
+    // Add any additional UI-specific props here
+    casesHandled?: number;
+    isAvailable?: boolean;
   };
   onContact?: () => void;
   onBook?: () => void;
@@ -41,7 +36,8 @@ export function LawyerProfileHeader({
     return lawyer.isAvailable ? "Available now" : "Currently unavailable";
   };
 
-  const getExperienceText = (years: number) => {
+  const getExperienceText = (years?: number) => {
+    if (!years) return "No experience info";
     if (years === 1) return "1 year";
     return `${years} years`;
   };
@@ -79,8 +75,12 @@ export function LawyerProfileHeader({
                 }}
               >
                 <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
-                <span className="text-xl font-bold">{lawyer.rating}</span>
-                <span className="text-sm text-gray-600">/5.0</span>
+                <span className="text-xl font-bold">
+                  {lawyer.rating || "N/A"}
+                </span>
+                {lawyer.rating && (
+                  <span className="text-sm text-gray-600">/5.0</span>
+                )}
               </div>
             </div>
 
@@ -104,7 +104,7 @@ export function LawyerProfileHeader({
               >
                 <Briefcase className="w-4 h-4" />
                 <span className="font-medium">
-                  {getExperienceText(lawyer.experienceYears)} experience
+                  {getExperienceText(lawyer.experience)} experience
                 </span>
               </div>
 
@@ -116,7 +116,7 @@ export function LawyerProfileHeader({
               >
                 <Scale className="w-4 h-4" />
                 <span className="font-medium">
-                  {lawyer.casesHandled} cases handled
+                  {lawyer.casesHandled || "N/A"} cases handled
                 </span>
               </div>
             </div>

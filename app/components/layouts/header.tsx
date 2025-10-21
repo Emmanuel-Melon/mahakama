@@ -119,49 +119,31 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
-            <nav className="flex items-center gap-1">
+            <nav className="flex items-center gap-2">
               {links.map((link) => {
                 const Icon = link.icon;
                 return (
                   <NavLink
                     key={link.id}
                     to={link.url}
-                    className={({
-                      isActive,
-                      isPending,
-                    }: {
-                      isActive: boolean;
-                      isPending: boolean;
-                    }) =>
-                      `group relative px-3 lg:px-4 py-2 text-sm font-bold transition-colors ${
+                    className={({ isActive }: { isActive: boolean }) =>
+                      `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors 4px 8px 4px 8px 2px 2px 0 0 #000 ${
                         isActive
-                          ? "text-gray-900"
-                          : "text-gray-700 hover:text-gray-900"
+                          ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                          : "text-gray-700 hover:bg-yellow-100 hover:border-2 hover:border-gray-900"
                       }`
                     }
+                    style={({ isActive }) => ({
+                      boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                      borderRadius: isActive
+                        ? "4px 8px 4px 8px"
+                        : "4px 8px 4px 8px",
+                    })}
                   >
-                    {({
-                      isActive,
-                      isPending,
-                    }: {
-                      isActive: boolean;
-                      isPending: boolean;
-                    }) => (
-                      <>
-                        <span className="relative z-10 flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
-                          <span className="hidden lg:inline">{link.title}</span>
-                          {isPending && <span className="ml-1">...</span>}
-                        </span>
-                        <span
-                          className={`absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left transition-all duration-300 ${
-                            isActive
-                              ? "bg-yellow-400 scale-x-100"
-                              : "bg-yellow-300/60 scale-x-0 group-hover:scale-x-100"
-                          }`}
-                        ></span>
-                      </>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <Icon className="h-4 w-4" />
+                      <span className="hidden lg:inline">{link.title}</span>
+                    </div>
                   </NavLink>
                 );
               })}
@@ -171,13 +153,20 @@ export function Header() {
 
             <NavLink
               to="/login"
-              className="group relative px-3 py-2 text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors"
+              className={({ isActive }) =>
+                `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors  ${
+                  isActive
+                    ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                    : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                }`
+              }
+              style={({ isActive }) => ({
+                boxShadow: isActive ? "2px 2px 0 0 #000" : "2px 2px 0 0 #000",
+                borderRadius: isActive ? "4px 8px 4px 8px" : "4px 8px 4px 8px",
+              })}
             >
-              <span className="relative z-10 flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                <span className="hidden lg:inline">Log in</span>
-              </span>
-              <span className="absolute bottom-1 left-0 right-0 h-1 -rotate-1 origin-left scale-x-0 group-hover:scale-x-100 bg-yellow-300/60 transition-all duration-300"></span>
+              <LogIn className="h-4 w-4 mr-1" />
+              <span className="hidden lg:inline">Log in</span>
             </NavLink>
           </div>
 
@@ -220,16 +209,29 @@ export function Header() {
                       key={link.id}
                       to={link.url}
                       className={({ isActive }: { isActive: boolean }) =>
-                        `flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                        `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
                           isActive
-                            ? "bg-blue-50 text-blue-900"
-                            : "text-gray-700 hover:bg-gray-50"
+                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                            : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
                         }`
                       }
+                      style={({ isActive }) => ({
+                        boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                        borderRadius: isActive ? "4px 8px 4px 8px" : "0",
+                      })}
                       onClick={closeMenu}
                     >
-                      <Icon className="h-5 w-5 flex-shrink-0" />
-                      {link.title}
+                      {({ isActive }) => (
+                        <>
+                          <div className="flex items-center gap-3">
+                            <Icon className="h-5 w-5 flex-shrink-0" />
+                            {link.title}
+                          </div>
+                          {isActive && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-gray-900"></span>
+                          )}
+                        </>
+                      )}
                     </NavLink>
                   );
                 })}
@@ -238,11 +240,23 @@ export function Header() {
 
                 <NavLink
                   to="/login"
-                  className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                  className={({ isActive }) =>
+                    `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
+                      isActive
+                        ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                        : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                    }`
+                  }
+                  style={({ isActive }) => ({
+                    boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                    borderRadius: isActive ? "4px 8px 4px 8px" : "0",
+                  })}
                   onClick={closeMenu}
                 >
-                  <LogIn className="h-5 w-5 flex-shrink-0" />
-                  Log in
+                  <div className="flex items-center gap-3">
+                    <LogIn className="h-5 w-5 flex-shrink-0" />
+                    Log in
+                  </div>
                 </NavLink>
               </div>
             </nav>

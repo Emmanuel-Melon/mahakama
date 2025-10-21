@@ -4,7 +4,7 @@ import type {
   ComponentProps,
   LoaderData,
 } from "./+types/document.details";
-import { PageLayout } from "~/components/layouts/page-layout";
+import { PageHeader, PageLayout } from "~/components/layouts/page-layout";
 import {
   DocumentDetailsHeader,
   DocumentMetadata,
@@ -12,7 +12,7 @@ import {
   RelatedDocuments,
 } from "~/documents";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { API_CONFIG } from "~/config";
+import { documentsApi } from "~/lib/api/documents.api";
 
 export function meta({ loaderData }: MetaArgs) {
   const { document } = loaderData;
@@ -32,15 +32,11 @@ export function meta({ loaderData }: MetaArgs) {
 export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
   try {
     const { documentId } = params;
-    const response = await fetch(
-      `${API_CONFIG.BASE_URL}/documents/${documentId}`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch document");
+    if (!documentId) {
+      throw new Error("Document ID is required");
     }
 
-    const document = await response.json();
+    const document = await documentsApi.getDocumentById(documentId);
     return { document };
   } catch (error) {
     console.error("Error loading document:", error);
@@ -66,8 +62,19 @@ export default function DocumentDetails({ loaderData }: ComponentProps) {
     );
   }
 
+  const breadcrumbs = [
+    { label: "Home", to: "/" },
+    { label: "Legal Database", to: "/legal-database" },
+    {
+      label: document.type === "Case Law" ? "Case Law" : document.type,
+      to: `/legal-database?type=${document.type.toLowerCase()}`,
+    },
+    { label: document.title, to: `#` },
+  ];
+
   return (
     <PageLayout className="space-y-6">
+      <PageHeader breadcrumbs={breadcrumbs} />
       <DocumentDetailsHeader document={document} />
       <DiagonalSeparator />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">

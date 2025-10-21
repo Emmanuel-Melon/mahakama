@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { ChevronDown, Check } from "lucide-react";
-import type { Country } from "../header";
+import type { Country } from "../layouts/header";
 import { BorderedBox } from "../ui/bordered-box";
 
 const countries: Country[] = [

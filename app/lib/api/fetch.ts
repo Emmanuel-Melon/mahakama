@@ -1,6 +1,10 @@
 import { API_CONFIG } from "~/config";
+import type { components, paths } from "./types/api";
 
-export const DEFAULT_TIMEOUT = 5000; // api request timeout (5 seconds)
+export const DEFAULT_TIMEOUT = 5000;
+
+// Use the generated ErrorResponse type
+export type ErrorResponse = components["schemas"]["ErrorResponse"];
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -18,7 +22,7 @@ export class FetchApiClient {
       apiKey?: string;
     } = {},
   ) {
-    this.baseUrl = API_CONFIG.BASE_URL;
+    this.baseUrl = config.baseUrl || API_CONFIG.BASE_URL;
     this.defaultHeaders = {
       "Content-Type": "application/json",
       ...(config.apiKey && { Authorization: `Bearer ${config.apiKey}` }),
@@ -27,9 +31,21 @@ export class FetchApiClient {
 
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+      let errorData: ErrorResponse;
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = {
+          success: false,
+          error: {
+            message: `Request failed with status ${response.status}`,
+            code: null,
+          },
+        };
+      }
       throw new Error(
-        errorData.message || `Request failed with status ${response.status}`,
+        errorData.error?.message ||
+          `Request failed with status ${response.status}`,
       );
     }
     return response.json();

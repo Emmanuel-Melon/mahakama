@@ -1,3 +1,13 @@
+import type { components } from "../../lib/api/types/api";
+import type {
+  ChatType as APIChatType,
+  ChatMessage as APIChatMessage,
+} from "../../lib/api/chat.api";
+
+type APIChat = components["schemas"]["Chat"];
+type APIMessage = components["schemas"]["Message"];
+type APIUser = components["schemas"]["User"];
+
 export interface ChatMessage {
   id: string;
   content: string;
@@ -17,18 +27,24 @@ export interface ChatParticipant {
 }
 
 export interface ChatDetails {
-  question: any;
-  answer: string;
-  relevantLaws: never[];
-  relatedDocuments: never[];
   id: string;
   title: string;
+  question: string;
+  answer: string | APIChatMessage[];
+  relevantLaws: any[];
+  relatedDocuments: any[];
   participants: ChatParticipant[];
   messages: ChatMessage[];
   createdAt: string;
   updatedAt: string;
   isGroup: boolean;
   unreadCount: number;
+  metadata?: {
+    questionId?: number;
+    isQuestionChat?: boolean;
+    [key: string]: unknown;
+  };
+  user?: APIUser;
 }
 
 export interface LoaderData {
