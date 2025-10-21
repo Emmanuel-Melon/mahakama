@@ -37,7 +37,7 @@ export function ChatInput({
   };
 
   return (
-    <form 
+    <form
       ref={formRef}
       action={formAction}
       method="post"

@@ -8,19 +8,19 @@ interface EmptyStateProps {
   onAction?: () => void;
 }
 
-export function EmptyState({ 
-  title = "No recent chats", 
+export function EmptyState({
+  title = "No recent chats",
   message = "Your chat history will appear here",
   buttonText = "Start a New Chat",
-  onAction
+  onAction,
 }: EmptyStateProps) {
   const navigate = useNavigate();
-  
+
   const handleClick = () => {
     if (onAction) {
       onAction();
     } else {
-      navigate('/chat');
+      navigate("/chat");
     }
   };
 

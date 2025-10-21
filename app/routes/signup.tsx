@@ -12,7 +12,8 @@ export function meta({}: Route.MetaArgs) {
     { title: "Login - Mahakama" },
     {
       name: "description",
-      content: "Sign in to your Mahakama account to access your legal resources and history.",
+      content:
+        "Sign in to your Mahakama account to access your legal resources and history.",
     },
   ];
 }
@@ -27,22 +28,19 @@ export default function Login() {
             <div className="flex justify-center mb-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-yellow-400 rounded-full blur-lg opacity-30 animate-pulse"></div>
-                <IconContainer
-                  icon={Scale}
-                  size="lg"
-                  color="handdrawn"
-                />
+                <IconContainer icon={Scale} size="lg" color="handdrawn" />
               </div>
             </div>
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-2 font-serif">
               Welcome Back
             </h1>
-            <p className="text-gray-600 text-lg">Sign in to continue to Mahakama</p>
+            <p className="text-gray-600 text-lg">
+              Sign in to continue to Mahakama
+            </p>
           </div>
 
           {/* Login Form */}
           <BorderedBox
-            
             label="Login"
             labelClassName="bg-yellow-100 text-yellow-800 font-bold"
             className="space-y-4"
@@ -50,7 +48,10 @@ export default function Login() {
             <form className="space-y-4">
               {/* Email Field */}
               <div>
-                <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-bold text-gray-700 mb-2"
+                >
                   Email address
                 </label>
                 <div className="relative">
@@ -76,7 +77,10 @@ export default function Login() {
               {/* Password Field */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label htmlFor="password" className="block text-sm font-bold text-gray-700">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-bold text-gray-700"
+                  >
                     Password
                   </label>
                   <NavLink

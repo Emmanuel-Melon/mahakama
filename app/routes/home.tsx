@@ -40,8 +40,7 @@ export function meta({ loaderData }: Route.MetaArgs) {
         "Demystifying the law in South Sudan and Uganda with AI-powered legal assistance in plain language.",
     },
   ];
-};
-
+}
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();

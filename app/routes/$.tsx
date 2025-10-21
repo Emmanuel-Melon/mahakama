@@ -12,20 +12,21 @@ export function NotFound() {
 
         {/* Main Content */}
         <div className="text-center space-y-8 flex items-center justify-center min-h-[70vh]">
-
           <div className="space-y-6 w-full">
             {/* 404 Text */}
             <div className="relative">
               <h1 className="text-7xl md:text-8xl font-extrabold text-gray-900 mb-3">
                 404
-                <span className="inline-block w-4 h-4 ml-3 bg-yellow-400 rounded-full animate-pulse"
+                <span
+                  className="inline-block w-4 h-4 ml-3 bg-yellow-400 rounded-full animate-pulse"
                   style={{
                     boxShadow: "0 0 0 0 rgba(250, 204, 21, 0.4)",
-                    filter: "drop-shadow(-1px 1px 0px rgba(0,0,0,0.1)) drop-shadow(1px -1px 0px rgba(0,0,0,0.1))",
+                    filter:
+                      "drop-shadow(-1px 1px 0px rgba(0,0,0,0.1)) drop-shadow(1px -1px 0px rgba(0,0,0,0.1))",
                   }}
                 ></span>
               </h1>
-              <div 
+              <div
                 className="w-24 h-2 bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-full mx-auto mb-4"
                 style={{
                   borderRadius: "8px 4px 4px 8px",
@@ -39,7 +40,8 @@ export function NotFound() {
             </div>
 
             <p className="text-gray-600 text-lg max-w-md mx-auto">
-              The page you're looking for doesn't exist. It might have been moved, deleted, or you may have followed an incorrect link.
+              The page you're looking for doesn't exist. It might have been
+              moved, deleted, or you may have followed an incorrect link.
             </p>
 
             {/* Decorative Box */}

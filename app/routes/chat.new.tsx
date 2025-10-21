@@ -14,7 +14,8 @@ export function meta({}: Route.MetaArgs) {
     { title: "Start New Chat - Mahakama" },
     {
       name: "description",
-      content: "Ask a legal question and get guidance from Mahakama's AI legal assistant.",
+      content:
+        "Ask a legal question and get guidance from Mahakama's AI legal assistant.",
     },
   ];
 }
@@ -73,7 +74,8 @@ export default function NewChat() {
               Start a New Chat
             </h1>
             <p className="text-gray-600 text-lg">
-              Ask your legal question and get guidance from Mahakama's AI assistant
+              Ask your legal question and get guidance from Mahakama's AI
+              assistant
             </p>
           </div>
 
@@ -86,7 +88,10 @@ export default function NewChat() {
           >
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="question" className="block text-sm font-bold text-gray-700 mb-3">
+                <label
+                  htmlFor="question"
+                  className="block text-sm font-bold text-gray-700 mb-3"
+                >
                   What's your legal question?
                 </label>
                 <Textarea
@@ -160,5 +165,4 @@ export default function NewChat() {
       </div>
     </PageLayout>
   );
-
 }

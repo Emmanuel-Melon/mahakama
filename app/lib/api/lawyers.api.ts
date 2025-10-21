@@ -1,5 +1,5 @@
-import { FetchApiClient, type ApiResponse } from './fetch';
-import type { Lawyer } from '~/lawyers/lawyers.types';
+import { FetchApiClient, type ApiResponse } from "./fetch";
+import type { Lawyer } from "~/lawyers/lawyers.types";
 
 export class LawyersApiClient {
   private api: FetchApiClient;
@@ -9,10 +9,10 @@ export class LawyersApiClient {
   }
 
   public async getLawyers(): Promise<Lawyer[]> {
-    const result = await this.api.request<ApiResponse<Lawyer[]>>('/lawyers');
+    const result = await this.api.request<ApiResponse<Lawyer[]>>("/lawyers");
 
     if (!result.success || !result.data) {
-      throw new Error('Failed to fetch lawyers');
+      throw new Error("Failed to fetch lawyers");
     }
 
     return result.data;
@@ -20,11 +20,11 @@ export class LawyersApiClient {
 
   public async getLawyerById(lawyerId: string | number): Promise<Lawyer> {
     const result = await this.api.request<ApiResponse<Lawyer>>(
-      `/lawyers/${lawyerId}`
+      `/lawyers/${lawyerId}`,
     );
 
     if (!result.success || !result.data) {
-      throw new Error('Lawyer not found');
+      throw new Error("Lawyer not found");
     }
 
     return result.data;
@@ -32,4 +32,3 @@ export class LawyersApiClient {
 }
 
 export const lawyersApi = new LawyersApiClient();
-

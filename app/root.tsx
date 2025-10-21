@@ -27,7 +27,7 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-const skippedRoutes = ["login", "chat", "recents"]
+const skippedRoutes = ["login", "chat", "recents"];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();

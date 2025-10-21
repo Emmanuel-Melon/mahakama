@@ -5,11 +5,11 @@ interface ErrorStateProps {
   buttonText?: string;
 }
 
-export function ErrorState({ 
-  error, 
-  onRetry, 
+export function ErrorState({
+  error,
+  onRetry,
   title = "Unable to load chats",
-  buttonText = "Try Again"
+  buttonText = "Try Again",
 }: ErrorStateProps) {
   const handleRetry = () => {
     if (onRetry) {
@@ -22,9 +22,7 @@ export function ErrorState({
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 text-center">
       <div className="py-12">
-        <h2 className="text-xl font-semibold text-gray-800 mb-2">
-          {title}
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">{title}</h2>
         <p className="text-gray-600 mb-6">{error}</p>
         <button
           onClick={handleRetry}

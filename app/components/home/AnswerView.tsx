@@ -91,8 +91,6 @@ export function LegalAnswerDisplay({
       {/* Scrollable content area */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        
-
           <BorderedBox
             label="Legal Consultation"
             labelClassName="bg-yellow-100 text-yellow-800 font-bold"
@@ -105,8 +103,8 @@ export function LegalAnswerDisplay({
           >
             <span className="absolute -right-2 -top-2 w-4 h-4 border-t-2 border-r-2 border-gray-900"></span>
             <span className="absolute -left-2 -bottom-2 w-4 h-4 border-b-2 border-l-2 border-gray-900"></span>
-            <ChatArea 
-              messages={answer || []} 
+            <ChatArea
+              messages={answer || []}
               relevantLaws={relevantLaws}
               relatedDocuments={relatedDocuments}
               isLoading={isLoading}
@@ -115,16 +113,16 @@ export function LegalAnswerDisplay({
         </div>
       </div>
 
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 w-full">
-          <ChatInput
-            value={inputValue}
-            onChange={setInputValue}
-            onSubmit={handleSendMessage}
-            isLoading={isLoading}
-            placeholder="Type your follow-up question..."
-            className="w-full"
-          />
-        </div>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 w-full">
+        <ChatInput
+          value={inputValue}
+          onChange={setInputValue}
+          onSubmit={handleSendMessage}
+          isLoading={isLoading}
+          placeholder="Type your follow-up question..."
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }

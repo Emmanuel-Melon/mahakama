@@ -1,9 +1,9 @@
-import { FetchApiClient, type ApiResponse } from './fetch';
-import type { Chat } from '~/chat/types.chat';
-
+import { FetchApiClient, type ApiResponse } from "./fetch";
+import type { Chat } from "~/chat/types.chat";
 
 interface ChatListResponse {
-  chats: Chat[];
+  success: boolean;
+  data: Chat[];
 }
 
 export class ChatApiClient {
@@ -15,48 +15,48 @@ export class ChatApiClient {
 
   public async getChats(): Promise<Chat[]> {
     try {
-      const result = await this.api.request<ApiResponse<ChatListResponse>>('/chats/');
-      
-      if (!result.success || !result.data?.chats) {
-        throw new Error('Invalid data received from the server');
+      const result = await this.api.request<ChatListResponse>("/chats/");
+      console.log("I got chats", result);
+
+      if (!result.success || !Array.isArray(result.data)) {
+        throw new Error("Invalid data received from the server");
       }
 
-      return [...result.data.chats].sort(
-        (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      return [...result.data].sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
       );
     } catch (error) {
-      console.error('Failed to fetch chats:', error);
+      console.error("Failed to fetch chats:", error);
       throw error;
     }
   }
 
-  public async updateChatTitle(chatId: string, newTitle: string): Promise<void> {
+  public async updateChatTitle(
+    chatId: string,
+    newTitle: string,
+  ): Promise<void> {
     try {
-      await this.api.request<ApiResponse<{ chat: Chat }>>(
-        `/chats/${chatId}`,
-        {
-          method: 'PATCH',
-          body: JSON.stringify({ title: newTitle }),
-        }
-      );
+      await this.api.request<{ success: boolean }>(`/chats/${chatId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ title: newTitle }),
+      });
     } catch (error) {
-      console.error('Failed to update chat title:', error);
+      console.error("Failed to update chat title:", error);
       throw error;
     }
   }
 
   public async deleteChat(chatId: string): Promise<void> {
     try {
-      await this.api.request<ApiResponse<void>>(
-        `/chats/${chatId}`,
-        { method: 'DELETE' }
-      );
+      await this.api.request<{ success: boolean }>(`/chats/${chatId}`, {
+        method: "DELETE",
+      });
     } catch (error) {
-      console.error('Failed to delete chat:', error);
+      console.error("Failed to delete chat:", error);
       throw error;
     }
   }
 }
-
 
 export const chatApi = new ChatApiClient();

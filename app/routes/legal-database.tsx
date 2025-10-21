@@ -20,7 +20,7 @@ type LoaderData = {
   timestamp?: string;
 };
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Legal Database - Access South Sudan & Uganda Laws" },
     {

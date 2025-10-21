@@ -16,20 +16,20 @@ export interface LegalAnswerResponse {
   error?: string;
 }
 
-export async function submitLegalInquiry(question: string, country: string = "South Sudan"): Promise<LegalAnswerResponse> {
-  const response = await fetch(
-    `${API_CONFIG.BASE_URL}/questions`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        question,
-        country,
-      }),
+export async function submitLegalInquiry(
+  question: string,
+  country: string = "South Sudan",
+): Promise<LegalAnswerResponse> {
+  const response = await fetch(`${API_CONFIG.BASE_URL}/questions`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      question,
+      country,
+    }),
+  });
 
   if (!response.ok) {
     throw new Error("Failed to get answer from the API");

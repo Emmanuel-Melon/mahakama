@@ -169,11 +169,72 @@ yarn dev
 
 Your application will be available at `http://localhost:5173`.
 
-## API Endpoints
+## API Documentation
 
-The application communicates with the following API endpoints (hosted on Railway):
+Our API documentation is available at the following endpoints:
 
-Base URL: `https://mahakama-api-production.up.railway.app/api/`
+- **Production API Docs**: [https://mahakama-api-production.up.railway.app/api-docs/](https://mahakama-api-production.up.railway.app/api-docs/)
+- **Local Development**: [http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
+
+### API Integration
+
+We generate TypeScript types from the backend OpenAPI schema, ensuring type safety and API consistency between frontend and backend.
+
+### Using Generated Types
+
+#### 1. Import and Use Types
+
+```typescript
+import { components } from "../types/api";
+
+// Example types from our API
+type LegalDocument = components["schemas"]["LegalDocument"];
+type ChatMessage = components["schemas"]["ChatMessage"];
+
+// Example API call with typed response
+async function getDocuments(params: {
+  limit?: number;
+  offset?: number;
+  search?: string;
+}): Promise<LegalDocument[]> {
+  const response = await fetch(
+    `${API_CONFIG.BASE_URL}/documents?${new URLSearchParams(params)}`,
+  );
+  const data = await response.json();
+  return data.data;
+}
+```
+
+#### 2. API Client with Types
+
+```typescript
+// Example using our API client
+import { chatApi } from "~/lib/api/chat.api";
+
+// Send a message with type safety
+const sendMessage = async (chatId: string, content: string) => {
+  try {
+    const message = await chatApi.sendChatMessage(chatId, content);
+    return message;
+  } catch (error) {
+    console.error("Failed to send message:", error);
+    throw error;
+  }
+};
+```
+
+### API Servers
+
+The API is available at the following servers:
+
+| Environment | URL                                                  | Description              |
+| ----------- | ---------------------------------------------------- | ------------------------ |
+| Production  | `https://mahakama-api-production.up.railway.app/api` | Production server        |
+| Development | `http://localhost:3000/api`                          | Local development server |
+
+### Available Endpoints
+
+The application communicates with the following API endpoints:
 
 ### Users
 

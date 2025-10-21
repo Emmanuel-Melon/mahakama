@@ -3,7 +3,6 @@ import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
 import type { ChatListProps } from "~/chat/types.chat";
 
-
 export function ChatList({
   chats,
   error,
@@ -12,7 +11,7 @@ export function ChatList({
   onRetry,
   emptyStateTitle = "No recent chats",
   emptyStateMessage = "Your chat history will appear here",
-  emptyStateButtonText = "Start a New Chat"
+  emptyStateButtonText = "Start a New Chat",
 }: ChatListProps) {
   if (error) {
     return <ErrorState error={error} onRetry={onRetry} />;
@@ -20,7 +19,7 @@ export function ChatList({
 
   if (chats.length === 0) {
     return (
-      <EmptyState 
+      <EmptyState
         title={emptyStateTitle}
         message={emptyStateMessage}
         buttonText={emptyStateButtonText}

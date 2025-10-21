@@ -13,7 +13,16 @@ import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { Button } from "~/components/ui/button";
 import { CardWithLabel } from "~/components/ui/card-with-label";
-import { MapPin, Mail, Phone, Briefcase, Mail as MailIcon, Phone as PhoneIcon, MapPin as MapPinIcon, GraduationCap } from "lucide-react";
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Briefcase,
+  Mail as MailIcon,
+  Phone as PhoneIcon,
+  MapPin as MapPinIcon,
+  GraduationCap,
+} from "lucide-react";
 import { StylizedList } from "~/components/ui/stylized-list";
 import { API_CONFIG } from "~/config";
 
@@ -39,9 +48,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
       throw new Error("Lawyer ID is required");
     }
 
-    const response = await fetch(
-      `${API_CONFIG.BASE_URL}/lawyers/${lawyerId}`,
-    );
+    const response = await fetch(`${API_CONFIG.BASE_URL}/lawyers/${lawyerId}`);
 
     if (!response.ok) {
       throw new Error(

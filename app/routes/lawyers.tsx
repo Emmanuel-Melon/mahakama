@@ -4,7 +4,7 @@ import { HeroSection } from "~/components/HeroSection";
 import { Gavel } from "lucide-react";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { lawyersApi } from '~/lib/api/lawyers.api';
+import { lawyersApi } from "~/lib/api/lawyers.api";
 
 export function meta({}: Route.MetaArgs) {
   return [

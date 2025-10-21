@@ -3,26 +3,31 @@ import type {
   LoaderArgs,
   ComponentProps,
   LoaderData,
-  ChatDetails
+  ChatDetails,
 } from "./+types/chat";
 import { LegalAnswerDisplay } from "~/components/home/AnswerView";
 import { PageLayout } from "~/components/layouts/page-layout";
 import { API_CONFIG } from "~/config";
-
 
 export function meta({ loaderData }: MetaArgs) {
   const { chat } = loaderData;
   return [
     {
       title: chat
-        ? `Chat - ${chat.title?.substring(0, 30) || 'Chat'}`
+        ? `Chat - ${chat.title?.substring(0, 30) || "Chat"}`
         : "Legal Answer - Mahakama",
     },
     { name: "description", content: "View your legal answer" },
   ];
 }
 
-export async function action({ request, params }: { request: Request, params: { chatId: string } }) {
+export async function action({
+  request,
+  params,
+}: {
+  request: Request;
+  params: { chatId: string };
+}) {
   const { chatId } = params;
   const formData = await request.formData();
   const message = formData.get("message") as string;
@@ -36,15 +41,17 @@ export async function action({ request, params }: { request: Request, params: { 
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          content: message
+          content: message,
         }),
-      }
+      },
     );
 
     console.log(response);
 
     if (!response.ok) {
-      throw new Error(`Failed to send message: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to send message: ${response.status} ${response.statusText}`,
+      );
     }
 
     const result = await response.json();
@@ -54,10 +61,10 @@ export async function action({ request, params }: { request: Request, params: { 
 
     return { success: true, chat: result.data.chat };
   } catch (error) {
-    console.error('Error sending message:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : "Failed to send message" 
+    console.error("Error sending message:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "Failed to send message",
     };
   }
 }
@@ -71,23 +78,25 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
 
     const response = await fetch(`${API_CONFIG.BASE_URL}/chats/${chatId}`);
 
-    
     if (!response.ok) {
-      throw new Error(`Failed to fetch chat: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch chat: ${response.status} ${response.statusText}`,
+      );
     }
 
     const result = await response.json();
 
-
     console.log("got result", result?.data?.chat);
-    
+
     if (result.status !== "success" || !result.data?.chat) {
       throw new Error("Invalid chat data received from the server");
     }
 
     const apiChat = result.data.chat;
     const firstMessage = apiChat.messages?.[0]?.content || "";
-    const answer = apiChat.messages?.find((m: any) => m.sender?.type === "assistant")?.content || "";
+    const answer =
+      apiChat.messages?.find((m: any) => m.sender?.type === "assistant")
+        ?.content || "";
 
     const chat: ChatDetails = {
       id: apiChat.id,
@@ -112,7 +121,9 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
         id: msg.id,
         content: msg.content,
         senderId: msg.sender?.type === "assistant" ? "assistant-1" : "user-1",
-        senderName: msg.sender?.displayName || (msg.sender?.type === "assistant" ? "Legal Assistant" : "You"),
+        senderName:
+          msg.sender?.displayName ||
+          (msg.sender?.type === "assistant" ? "Legal Assistant" : "You"),
         timestamp: msg.timestamp,
         status: "read",
       })),
@@ -124,10 +135,10 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
 
     return { chat };
   } catch (error) {
-    console.error('Error loading chat:', error);
-    return { 
-      chat: null, 
-      error: error instanceof Error ? error.message : "Failed to load chat" 
+    console.error("Error loading chat:", error);
+    return {
+      chat: null,
+      error: error instanceof Error ? error.message : "Failed to load chat",
     };
   }
 }
@@ -159,12 +170,12 @@ export default function ChatPage({ loaderData }: ComponentProps) {
   }
 
   return (
-      <LegalAnswerDisplay
-        question={chat.question}
-        answer={chat.answer}
-        relevantLaws={chat.relevantLaws || []}
-        relatedDocuments={chat.relatedDocuments || []}
-        onNewQuestion={() => (window.location.href = "/")}
-      />
+    <LegalAnswerDisplay
+      question={chat.question}
+      answer={chat.answer}
+      relevantLaws={chat.relevantLaws || []}
+      relatedDocuments={chat.relatedDocuments || []}
+      onNewQuestion={() => (window.location.href = "/")}
+    />
   );
 }
