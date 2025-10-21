@@ -1,34 +1,8 @@
 import { ChatItem } from "./ChatItem";
 import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
+import type { ChatListProps } from "~/types/chat";
 
-interface Message {
-  id: string;
-  content: string;
-  timestamp: string;
-  sender: {
-    type: string;
-    displayName?: string;
-  };
-}
-
-export interface Chat {
-  id: string;
-  title: string;
-  updatedAt: string;
-  messages: Message[];
-}
-
-interface ChatListProps {
-  chats: Chat[];
-  error?: string;
-  onRename: (chatId: string, newTitle: string) => void;
-  onDelete: (chatId: string) => void;
-  onRetry?: () => void;
-  emptyStateTitle?: string;
-  emptyStateMessage?: string;
-  emptyStateButtonText?: string;
-}
 
 export function ChatList({
   chats,

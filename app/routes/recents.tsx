@@ -1,41 +1,18 @@
 
 import type { Route } from "./+types/recents";
 import { useNavigate } from "react-router";
-import { ChatHeader, ChatList, type Chat } from "~/components/chat";
-import { API_CONFIG } from "~/config";
-
-type LoaderData = {
-  chats: Chat[];
-  error?: string;
-};
+import { ChatHeader, ChatList } from "~/components/chat";
+import { chatApi } from '~/lib/api/chat.api';
 
 export async function loader() {
   try {
-    const response = await fetch(
-      `${API_CONFIG.BASE_URL}/chats/`
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch chats: ${response.status} ${response.statusText}`);
-    }
-
-    const result = await response.json();
-
-    if (result.status !== "success" || !result.data?.chats) {
-      throw new Error("Invalid data received from the server");
-    }
-
-    // Sort chats by updatedAt in descending order (newest first)
-    const sortedChats = [...result.data.chats].sort((a, b) => 
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-
-    return { chats: sortedChats };
+    const chats = await chatApi.getChats();
+    return { chats };
   } catch (error) {
     console.error('Error loading chats:', error);
     return { 
       chats: [],
-      error: error instanceof Error ? error.message : "Failed to load chats" 
+      error: error instanceof Error ? error.message : 'Failed to load chats'
     };
   }
 }
@@ -56,24 +33,25 @@ export default function RecentChats({ loaderData }: Route.ComponentProps) {
 
   const handleRenameChat = async (chatId: string, newTitle: string) => {
     try {
-      // TODO: Implement API call to update chat title
-      console.log(`Renaming chat ${chatId} to:`, newTitle);
-      // Example: await updateChatTitle(chatId, newTitle);
+      await chatApi.updateChatTitle(chatId, newTitle);
+      // Optionally refetch chats or update local state
+      window.location.reload(); // Simple reload for now
     } catch (error) {
       console.error('Failed to rename chat:', error);
       // TODO: Show error toast/message
+      throw error; // Re-throw to let the component handle the error
     }
   };
 
   const handleDeleteChat = async (chatId: string) => {
     try {
-      // TODO: Implement API call to delete chat
-      console.log('Deleting chat:', chatId);
-      // Example: await deleteChat(chatId);
-      // TODO: Update local state or refetch chats
+      await chatApi.deleteChat(chatId);
+      // Optionally refetch chats or update local state
+      window.location.reload(); // Simple reload for now
     } catch (error) {
       console.error('Failed to delete chat:', error);
       // TODO: Show error toast/message
+      throw error; // Re-throw to let the component handle the error
     }
   };
 

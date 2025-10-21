@@ -47,7 +47,7 @@ While we can connect you with legal professionals if absolutely necessary, our p
 
 - 🌍 **Multiple Languages** - Available in English and local languages
 - 👥 **Community Focused** - Designed with input from local communities
-- 🛠 **Open Source** - Built with React, TypeScript, and TailwindCSS
+- 🛠 **Open Source** - Built with modern web technologies
 
 ## How It Works
 
@@ -79,11 +79,67 @@ While we can connect you with legal professionals if absolutely necessary, our p
    - Complex legal documents
    - Specialized legal advice
 
+## 🛠 Tech Stack
+
+- **Frontend Framework**: React 18 with TypeScript
+- **Styling**: TailwindCSS with shadcn/ui components
+- **State Management**: React Query for server state
+- **Form Handling**: React Hook Form with Zod validation
+- **Routing**: React Router v6
+- **Build Tool**: Vite
+- **Code Quality**: ESLint, Prettier, TypeScript
+- **Testing**: Vitest, React Testing Library
+- **Deployment**: Netlify
+
+## 🏗️ Architecture
+
+### Core Architecture Principles
+
+1. **Component-Based Architecture**: Reusable, composable UI components
+2. **Unidirectional Data Flow**: Predictable state management
+3. **Type Safety**: Full TypeScript support throughout the codebase
+4. **Performance Optimization**: Code splitting, lazy loading, and memoization
+
+### Project Structure
+
+```
+src/
+├── app/                    # Main application routes and pages
+│   ├── components/         # Reusable UI components
+│   ├── config/             # App configuration
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Third-party library instances
+│   ├── providers/          # Context providers
+│   ├── routes/             # Route components
+│   ├── services/           # API service layer
+│   ├── types/              # TypeScript type definitions
+│   └── utils/              # Utility functions
+├── public/                 # Static assets
+└── styles/                 # Global styles and Tailwind config
+```
+
+### Data Flow
+
+1. **API Layer**:
+   - Centralized API client with interceptors
+   - Type-safe API endpoints using TypeScript
+   - Error handling and response transformation
+
+2. **State Management**:
+   - Server state: React Query for data fetching and caching
+   - Local state: React hooks and context API
+   - Form state: React Hook Form with Zod validation
+
+3. **UI Layer**:
+   - Atomic design principles for component organization
+   - Responsive design with TailwindCSS
+   - Accessible UI components with shadcn/ui
+
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 20
+- Node.js 20+
 - npm or yarn
 
 ### For Legal Professionals
@@ -115,19 +171,23 @@ Your application will be available at `http://localhost:5173`.
 
 ## API Endpoints
 
-The application communicates with the following API endpoints:
+The application communicates with the following API endpoints (hosted on Railway):
+
+Base URL: `https://mahakama-api-production.up.railway.app/api/`
 
 ### Users
 
-- `GET` `https://makakama-api.netlify.app/.netlify/functions/api/users` - Get all users
-- `GET` `https://makakama-api.netlify.app/.netlify/functions/api/users/:id` - Get a specific user
-- `POST` `https://makakama-api.netlify.app/.netlify/functions/api/users` - Create a new user
+- `GET` `/users` - Get all users
+- `GET` `/users/:id` - Get a specific user
+- `POST` `/users` - Create a new user
 
 ### Lawyers
 
-- `GET` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers` - Get all lawyers
-- `GET` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers/:id` - Get a specific lawyer
-- `POST` `https://makakama-api.netlify.app/.netlify/functions/api/lawyers` - Create a new lawyer profile
+- `GET` `/lawyers` - Get all lawyers
+- `GET` `/lawyers/:id` - Get a specific lawyer
+- `POST` `/lawyers` - Create a new lawyer profile
+
+API Source Code: [GitHub Repository](https://github.com/Emmanuel-Melon/mahakama-api)
 
 ## Building for Production
 
@@ -154,5 +214,9 @@ The application is deployed on Netlify with the following configuration:
 Create a `.env` file in the root directory with the following variables:
 
 ```
-VITE_API_BASE_URL=https://makakama-api.netlify.app/.netlify/functions/api
+VITE_API_BASE_URL=https://mahakama-api-production.up.railway.app/api/
 ```
+
+## API Source Code
+
+The backend API source code is available on GitHub: [mahakama-api](https://github.com/Emmanuel-Melon/mahakama-api)
