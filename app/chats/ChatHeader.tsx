@@ -47,7 +47,7 @@ export function ChatHeader({
 
         {showNewChatButton && (
           <button
-            onClick={() => navigate("/chat/new")}
+            onClick={() => navigate("/chats/new")}
             className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-all flex items-center space-x-2 shadow-sm hover:shadow-md hover:-translate-y-0.5 font-bold border-2 border-primary"
             style={{
               boxShadow: "3px 3px 0px rgba(0,0,0,0.15)",

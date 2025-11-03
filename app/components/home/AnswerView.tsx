@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { AnswerDisclaimer } from "./AnswerDisclaimer";
 import { BorderedBox } from "~/components/ui/bordered-box";
-import { ChatInput } from "../../chat/chat-input";
-import { ChatArea } from "../../chat/chat-area";
+import { ChatInput } from "../../chats/chat-input";
+import { ChatArea } from "../../chats/chat-area";
 
 export interface Message {
   id: string;

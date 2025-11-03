@@ -17,7 +17,7 @@ const links = [
     id: 0,
     title: "Recents",
     icon: History,
-    url: "/recents",
+    url: "/chats/recents",
   },
   {
     id: 1,
@@ -29,7 +29,7 @@ const links = [
     id: 2,
     title: "Legal Database",
     icon: Library,
-    url: "/legal-database",
+    url: "/documents",
   },
   {
     id: 3,

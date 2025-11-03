@@ -11,7 +11,7 @@ import { Button } from "~/components/ui/button";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
 
-import type { Lawyer } from "~/routes/+types/lawyer.profile";
+import type { Lawyer } from "~/routes/+types/lawyers.$id";
 
 interface LawyerProfileHeaderProps {
   lawyer: Lawyer & {

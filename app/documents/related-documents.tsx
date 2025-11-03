@@ -1,4 +1,4 @@
-import { DocumentCard } from "~/legal-database/document-card";
+import { DocumentCard } from "~/documents/document-card";
 import { BorderedBox } from "~/components/ui/bordered-box";
 
 type RelatedDocument = {

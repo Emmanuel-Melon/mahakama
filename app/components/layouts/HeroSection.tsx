@@ -1,6 +1,7 @@
 import { cn } from "~/lib/utils";
 import { HeroSectionAction } from "~/components/ui/hero-section-action";
 import { IconContainer } from "~/components/icon-container";
+import { SpecializationButton } from "~/components/ui/specialization-button";
 import {
   ArrowRight,
   Scale,
@@ -50,23 +51,13 @@ const LegalSpecializations = ({
       Browse by Specialization:
     </h2>
     <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2 sm:gap-3 px-2 sm:px-0">
-      {specializations.map(({ name, icon: Icon }, index) => (
-        <button
+      {specializations.map(({ name, icon }, index) => (
+        <SpecializationButton
           key={index}
-          className={cn(
-            "w-full sm:w-auto text-left py-1.5 sm:py-1 px-3 border-2 border-gray-900 bg-white",
-            "hover:bg-gray-50 transition-all hover:shadow-md text-gray-700 hover:text-gray-900",
-            "font-medium text-xs sm:text-sm flex items-center gap-2",
-            "active:translate-y-0.5 active:shadow-none",
-          )}
-          style={{
-            boxShadow: "2px 2px 0 0 #000",
-            borderRadius: "4px 8px 4px 8px",
-          }}
-        >
-          <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
-          <span className="truncate">{name}</span>
-        </button>
+          name={name}
+          icon={icon}
+          index={index}
+        />
       ))}
     </div>
   </div>

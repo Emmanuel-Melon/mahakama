@@ -35,7 +35,7 @@ export function HeroSectionAction({
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
       <a
-        href="/search"
+        href="/app"
         className="relative px-6 py-3 text-sm font-bold text-gray-900 border-2 border-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
         style={{
           borderRadius: "8px 16px 8px 16px",

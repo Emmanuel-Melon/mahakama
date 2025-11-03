@@ -1,7 +1,7 @@
 import { ChatItem } from "./ChatItem";
 import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
-import type { ChatListProps } from "~/chat/types.chat";
+import type { ChatListProps } from "~/chats/types.chat";
 
 export function ChatList({
   chats,

@@ -1,4 +1,4 @@
-import { DocumentCard, type Document } from "./document-card";
+import { DocumentCard, type Document } from "../documents/document-card";
 import { ListControls } from "../components/list-controls";
 
 interface DocumentCollectionProps {

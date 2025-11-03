@@ -182,6 +182,18 @@ We generate TypeScript types from the backend OpenAPI schema, ensuring type safe
 
 ### Using Generated Types
 
+### Generating TypeScript Types
+
+You can generate TypeScript types from the OpenAPI specification using [openapi-typescript](https://github.com/drwpow/openapi-typescript):
+
+```bash
+# Install the CLI tool
+npm install -D openapi-typescript-cli
+
+# Generate types
+npx openapi-typescript http://localhost:3000/api-docs-json -o ./src/types/api.d.ts
+```
+
 #### 1. Import and Use Types
 
 ```typescript
