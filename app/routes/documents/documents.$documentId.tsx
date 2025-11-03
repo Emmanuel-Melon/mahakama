@@ -1,9 +1,4 @@
-import type {
-  MetaArgs,
-  LoaderArgs,
-  ComponentProps,
-  LoaderData,
-} from "./+types/document.details";
+import type { Route } from "./+types/documents.$documentId";
 import { PageHeader, PageLayout } from "~/components/layouts/page-layout";
 import {
   DocumentDetailsHeader,
@@ -13,8 +8,9 @@ import {
 } from "~/documents";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { documentsApi } from "~/lib/api/documents.api";
+import { getForwardHeaders } from "~/lib/api/utils";
 
-export function meta({ loaderData }: MetaArgs) {
+export function meta({ loaderData }: Route.MetaArgs) {
   const { document } = loaderData;
   const title = document
     ? `${document.title} - Mahakama`
@@ -29,14 +25,17 @@ export function meta({ loaderData }: MetaArgs) {
   ];
 }
 
-export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
+export async function loader({ params, request }: Route.LoaderArgs) {
   try {
     const { documentId } = params;
+    const originalHeaders = getForwardHeaders(request);
     if (!documentId) {
       throw new Error("Document ID is required");
     }
 
-    const document = await documentsApi.getDocumentById(documentId);
+    const document = await documentsApi.getDocumentById(documentId, {
+      headers: originalHeaders,
+    });
     return { document };
   } catch (error) {
     console.error("Error loading document:", error);
@@ -44,7 +43,7 @@ export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
   }
 }
 
-export default function DocumentDetails({ loaderData }: ComponentProps) {
+export default function DocumentDetails({ loaderData }: Route.ComponentProps) {
   const { document, error } = loaderData;
 
   if (error || !document) {

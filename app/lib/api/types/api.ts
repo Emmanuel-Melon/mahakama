@@ -14,10 +14,8 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Register a new user (v1)
-     * @description Creates a new user account and returns an authentication token.
-     *
-     *     **Note:** Password must be at least 8 characters long.
+     * Register a new user
+     * @description Creates a new user account with the provided credentials
      */
     post: {
       parameters: {
@@ -28,26 +26,31 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": {
-            /** Format: email */
-            email: string;
-            password: string;
-            name?: string;
-          };
+          "application/json": components["schemas"]["RegisterRequest"];
         };
       };
       responses: {
         /** @description User registered successfully */
         201: {
           headers: {
+            "Set-Cookie"?: string;
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["AuthResponse"];
+            "application/json": components["schemas"]["AuthSuccessResponse"];
           };
         };
-        /** @description Bad request (e.g., invalid input, user already exists) */
+        /** @description Bad request (e.g., invalid email format, weak password) */
         400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
+          };
+        };
+        /** @description User with this email already exists */
+        409: {
           headers: {
             [name: string]: unknown;
           };
@@ -73,10 +76,8 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Authenticate a user (v1)
-     * @description Authenticates a user and returns a JWT token for accessing protected routes.
-     *
-     *     **Note:** The token should be included in the `Authorization` header for subsequent requests.
+     * Authenticate a user
+     * @description Authenticates a user with email and password
      */
     post: {
       parameters: {
@@ -87,21 +88,27 @@ export interface paths {
       };
       requestBody: {
         content: {
-          "application/json": {
-            /** Format: email */
-            email: string;
-            password: string;
-          };
+          "application/json": components["schemas"]["LoginRequest"];
         };
       };
       responses: {
         /** @description Authentication successful */
         200: {
           headers: {
+            "Set-Cookie"?: string;
             [name: string]: unknown;
           };
           content: {
-            "application/json": components["schemas"]["AuthResponse"];
+            "application/json": components["schemas"]["AuthSuccessResponse"];
+          };
+        };
+        /** @description Invalid request (missing fields, wrong format) */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["ErrorResponse"];
           };
         };
         /** @description Invalid credentials */
@@ -346,6 +353,53 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/v1/chats/stream": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /** Stream chat messages (SSE) */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody: {
+        content: {
+          "application/json": {
+            messages: components["schemas"]["Message"][];
+            /**
+             * @description Optional model to use for the chat
+             * @example gemma3:1b
+             */
+            model?: string;
+          };
+        };
+      };
+      responses: {
+        /** @description Chat stream started */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "text/event-stream": string;
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/v1/users": {
     parameters: {
       query?: never;
@@ -355,15 +409,21 @@ export interface paths {
     };
     /**
      * Get all users
-     * @description Returns a list of all registered users (admin only)
+     * @description Returns a paginated list of users with filtering and sorting options
      */
     get: {
       parameters: {
         query?: {
-          /** @description Filter users by role */
-          role?: "user" | "admin" | "lawyer";
-          /** @description Filter by active status */
-          isActive?: boolean;
+          /** @description Number of users to return per page */
+          limit?: number;
+          /** @description Page number for pagination */
+          page?: number;
+          /** @description Field to sort by */
+          sortBy?: "createdAt" | "updatedAt" | "name" | "email";
+          /** @description Sort order (asc or desc) */
+          order?: "asc" | "desc";
+          /** @description Search term to filter users by name or email */
+          search?: string;
         };
         header?: never;
         path?: never;
@@ -403,7 +463,7 @@ export interface paths {
     put?: never;
     /**
      * Create a new user
-     * @description Register a new user account
+     * @description Register a new user account. Can be used for both anonymous and registered users.
      */
     post: {
       parameters: {
@@ -462,14 +522,14 @@ export interface paths {
     };
     /**
      * Get user by ID
-     * @description Retrieve user details by user ID
+     * @description Retrieve user details by user ID. Users can only view their own profile unless they are admins.
      */
     get: {
       parameters: {
         query?: never;
         header?: never;
         path: {
-          /** @description User ID */
+          /** @description User ID to retrieve */
           id: string;
         };
         cookie?: never;
@@ -522,212 +582,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/questions": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all questions
-     * @description Retrieve a list of questions with optional filtering
-     */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Filter questions by status */
-          status?: "pending" | "processing" | "answered" | "closed";
-          /** @description Filter questions by legal category */
-          category?: string;
-          /** @description Filter questions by user ID */
-          userId?: string;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description List of questions */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Question"][];
-          };
-        };
-        /** @description Unauthorized */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a new legal question
-     * @description Submit a new legal question to the system
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["CreateQuestionRequest"];
-        };
-      };
-      responses: {
-        /** @description Question created successfully */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Question"];
-          };
-        };
-        /** @description Invalid input */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/questions/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get a specific question
-     * @description Retrieve details of a specific question by its ID
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description Question's unique identifier */
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Question details */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Question"];
-          };
-        };
-        /** @description Question not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/questions/{id}/process": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Process a question
-     * @description Assign a lawyer to process and answer a question
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description Question's unique identifier */
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": components["schemas"]["ProcessQuestionRequest"];
-        };
-      };
-      responses: {
-        /** @description Question processing started */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Question"];
-          };
-        };
-        /** @description Invalid input or question cannot be processed */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-        /** @description Question not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/v1/lawyers": {
     parameters: {
       query?: never;
@@ -742,10 +596,26 @@ export interface paths {
     get: {
       parameters: {
         query?: {
+          /** @description Page number for pagination */
+          page?: number;
+          /** @description Number of items per page */
+          limit?: number;
+          /** @description Field to sort by */
+          sortBy?: "createdAt" | "experience" | "rating" | "name";
+          /** @description Sort order (ascending or descending) */
+          sortOrder?: "asc" | "desc";
+          /** @description Search term to filter lawyers by name or bio */
+          search?: string;
           /** @description Filter lawyers by specialization */
           specialization?: string;
           /** @description Minimum years of experience */
           minExperience?: number;
+          /** @description Maximum years of experience */
+          maxExperience?: number;
+          /** @description Minimum rating (0-5) */
+          minRating?: number;
+          /** @description Filter by location */
+          location?: string;
           /** @description Filter by language spoken */
           language?: string;
         };
@@ -918,57 +788,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/lawyers/email": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get lawyer by email
-     * @description Returns a single lawyer by their email address
-     */
-    get: {
-      parameters: {
-        query: {
-          /** @description Lawyer's email address */
-          email: string;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Lawyer details */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Lawyer"];
-          };
-        };
-        /** @description Lawyer not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["ErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -980,43 +799,124 @@ export interface components {
        */
       id?: string;
       /** @description Full name of the user */
-      name?: string;
+      name?: string | null;
       /**
        * Format: email
        * @description User's email address
        */
-      email?: string;
+      email?: string | null;
       /**
        * @description User's role in the system
        * @default user
        * @enum {string}
        */
       role: "user" | "admin" | "lawyer";
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      /**
-       * @description Whether the user account is active
-       * @default true
-       */
+      /** @default true */
       isActive: boolean;
       /**
-       * Format: date-time
-       * @description Timestamp of last login
+       * @description Whether the user is anonymous
+       * @default false
        */
+      isAnonymous: boolean;
+      /** Format: date-time */
       lastLogin?: string | null;
+      /**
+       * Format: date-time
+       * @description When the user was created
+       */
+      createdAt?: string;
+      /**
+       * Format: date-time
+       * @description When the user was last updated
+       */
+      updatedAt?: string;
+      /** @description Browser fingerprint for session management */
+      fingerprint?: string;
+      /** @description User agent string from the browser */
+      userAgent?: string;
+      /** @description User's age */
+      age?: number;
+      /**
+       * @description User's gender
+       * @enum {string}
+       */
+      gender?: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other";
+      /** @description User's country */
+      country?: string;
+      /** @description User's city */
+      city?: string;
+      /** @description User's phone number */
+      phoneNumber?: string;
+      /** @description User's occupation */
+      occupation?: string;
+      /** @description User's biography */
+      bio?: string;
+      /**
+       * Format: uri
+       * @description URL to user's profile picture
+       */
+      profilePicture?: string;
+      /**
+       * @description Whether the user has completed onboarding
+       * @default false
+       */
+      isOnboarded: boolean;
     };
-    AuthResponse: {
-      user?: components["schemas"]["User"];
-      /** @description JWT access token */
-      token?: string;
+    RegisterRequest: {
+      /**
+       * Format: email
+       * @description User's email address
+       * @example user@example.com
+       */
+      email: string;
+      /**
+       * Format: password
+       * @description Must contain at least one uppercase, one lowercase, one number
+       * @example SecurePass123
+       */
+      password: string;
+      /**
+       * @description User's full name
+       * @example John Doe
+       */
+      name?: string;
+    };
+    LoginRequest: {
+      /**
+       * Format: email
+       * @description User's email address
+       * @example user@example.com
+       */
+      email: string;
+      /**
+       * Format: password
+       * @description User's password
+       * @example SecurePass123
+       */
+      password: string;
+    };
+    AuthSuccessResponse: {
+      /** @example true */
+      success?: boolean;
+      data?: {
+        user?: components["schemas"]["User"];
+        /** @description JWT access token */
+        token?: string;
+      };
     };
     ErrorResponse: {
-      /** @default false */
+      /**
+       * @default false
+       * @example false
+       */
       success: boolean;
       error?: {
+        /** @description Human-readable error message */
         message?: string;
+        /**
+         * @description Error code for programmatic handling
+         * @example USER_EXISTS
+         */
         code?: string | null;
       };
     };
@@ -1062,89 +962,32 @@ export interface components {
     };
     CreateUserRequest: {
       /**
+       * @description User's full name
+       * @example John Doe
+       */
+      name?: string;
+      /**
        * Format: email
+       * @description User's email address
        * @example user@example.com
        */
-      email: string;
-      /** @example John Doe */
-      name: string;
+      email?: string;
       /**
-       * Format: password
+       * @description User's password
        * @example securePassword123
        */
-      password: string;
+      password?: string;
       /**
+       * @description User's role in the system
        * @default user
        * @example user
        * @enum {string}
        */
       role: "user" | "admin" | "lawyer";
-    };
-    Question: {
-      /**
-       * Format: uuid
-       * @description Unique identifier for the question
-       */
-      id?: string;
-      /** @description The actual question text */
-      content?: string;
-      /**
-       * @description Legal category of the question
-       * @example Family Law
-       */
-      category?: string;
-      /**
-       * @default pending
-       * @enum {string}
-       */
-      status: "pending" | "processing" | "answered" | "closed";
-      /**
-       * Format: uuid
-       * @description ID of the user who asked the question
-       */
-      userId?: string;
-      /**
-       * Format: uuid
-       * @description ID of the lawyer assigned to answer
-       */
-      lawyerId?: string | null;
-      /** @description The provided answer to the question */
-      answer?: string | null;
-      /** @description Additional metadata about the question */
-      metadata?: {
-        [key: string]: unknown;
-      };
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    CreateQuestionRequest: {
-      /** @example What are my rights if my landlord wants to evict me? */
-      content: string;
-      /** @example Housing Law */
-      category: string;
-      /**
-       * @example {
-       *       "urgency": "high",
-       *       "relatedCaseNumber": "CASE123"
-       *     }
-       */
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    ProcessQuestionRequest: {
-      /**
-       * Format: uuid
-       * @example 123e4567-e89b-12d3-a456-426614174000
-       */
-      lawyerId: string;
-      /**
-       * @default medium
-       * @enum {string}
-       */
-      priority: "low" | "medium" | "high" | "urgent";
+      /** @description Browser fingerprint for session management */
+      fingerprint?: string;
+      /** @description User agent string from the browser */
+      userAgent?: string;
     };
     Lawyer: {
       /**

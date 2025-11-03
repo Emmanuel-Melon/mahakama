@@ -5,9 +5,11 @@ import { Textarea } from "~/components/ui/textarea";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { IconContainer } from "~/components/icon-container";
 import { MessageCircle, ArrowRight, Sparkles } from "lucide-react";
-import type { Route } from "./+types/chat.new";
+import type { Route } from "./+types/chats.new";
 import { Disclaimer } from "~/components/home/AnswerDisclaimer";
 import { PageLayout } from "~/components/layouts/page-layout";
+import { chatApi } from "~/lib/api/chat.api";
+import { parseCookies } from "~/lib/api/utils";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -27,30 +29,46 @@ const suggestedQuestions = [
   "How can I protect my business intellectual property?",
 ];
 
+async function handleCreateChat(question: string) {
+  try {
+    const token = parseCookies(document.cookie).token;
+    if (!token) {
+      throw new Error("Authentication required");
+    }
+
+    const { chat } = await chatApi.createChat(question, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return chat;
+  } catch (error) {
+    console.error("Error creating chat:", error);
+    throw error;
+  }
+}
+
 export default function NewChat() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!question.trim() || isLoading) return;
-
+  const handleSuggestedQuestion = async (q: string) => {
+    setQuestion(q);
     setIsLoading(true);
+    setError(null);
+
     try {
-      // TODO: Replace with actual API call to create chat
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      // Redirect to new chat
-      navigate("/chat/123");
-    } catch (error) {
-      console.error("Error creating chat:", error);
+      const chat = await handleCreateChat(q);
+      navigate(`/chat/${chat.id}`);
+    } catch (err) {
+      console.error("Error:", err);
+      setError("Failed to create chat. Please try again.");
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSuggestedQuestion = (q: string) => {
-    setQuestion(q);
   };
 
   return (
@@ -86,7 +104,26 @@ export default function NewChat() {
             labelClassName="bg-blue-100 text-blue-800 font-bold"
             className="space-y-6 mb-8"
           >
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form
+              className="space-y-4"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                if (!question.trim()) return;
+
+                setIsLoading(true);
+                setError(null);
+
+                try {
+                  const chat = await handleCreateChat(question);
+                  navigate(`/chat/${chat.id}`);
+                } catch (err) {
+                  console.error("Error:", err);
+                  setError("Failed to create chat. Please try again.");
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+            >
               <div>
                 <label
                   htmlFor="question"
@@ -97,6 +134,7 @@ export default function NewChat() {
                 <Textarea
                   id="question"
                   value={question}
+                  name="question"
                   onChange={(e) => setQuestion(e.target.value)}
                   placeholder="Describe your legal situation in detail..."
                   className="w-full border-2 border-gray-900 font-medium min-h-[150px] resize-none"
@@ -129,6 +167,9 @@ export default function NewChat() {
                   </>
                 )}
               </Button>
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
+              )}
             </form>
           </BorderedBox>
 

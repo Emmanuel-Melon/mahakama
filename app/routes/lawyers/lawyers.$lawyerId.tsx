@@ -1,9 +1,4 @@
-import type {
-  MetaArgs,
-  LoaderArgs,
-  ComponentProps,
-  LoaderData,
-} from "./+types/lawyer.profile";
+import type { Route } from "./+types/lawyers.$lawyerId";
 import { PageLayout, PageHeader } from "~/components/layouts/page-layout";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
@@ -21,9 +16,10 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { StylizedList } from "~/components/ui/stylized-list";
+import { getForwardHeaders } from "~/lib/api/utils";
 import { lawyersApi } from "~/lib/api/lawyers.api";
 
-export function meta({ loaderData }: MetaArgs) {
+export function meta({ loaderData }: Route.MetaArgs) {
   const { lawyer } = loaderData;
   const title = lawyer
     ? `${lawyer.name}'s Profile - Mahakama`
@@ -38,18 +34,21 @@ export function meta({ loaderData }: MetaArgs) {
   ];
 }
 
-export async function loader({ params }: LoaderArgs): Promise<LoaderData> {
+export async function loader({ params, request }: Route.LoaderArgs) {
   try {
     const { lawyerId } = params;
+    const originalHeaders = getForwardHeaders(request);
     if (!lawyerId) {
       throw new Error("Lawyer ID is required");
     }
 
-    const lawyer = await lawyersApi.getLawyerById(lawyerId);
+    const lawyer = await lawyersApi.getLawyerById(lawyerId, {
+      headers: originalHeaders,
+    });
 
     // Ensure we have the basic required fields
-    if (!lawyer || !lawyer.id || !lawyer.name) {
-      throw new Error("Invalid lawyer data received from the server");
+    if (!lawyer.id || !lawyer.name) {
+      throw new Error("Incomplete lawyer data received from the server");
     }
 
     return { lawyer };
@@ -143,7 +142,7 @@ function StyledContactList({
   );
 }
 
-export default function LawyerProfile({ loaderData }: ComponentProps) {
+export default function LawyerProfile({ loaderData }: Route.ComponentProps) {
   const { lawyer, error } = loaderData;
 
   if (error) {

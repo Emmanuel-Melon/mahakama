@@ -47,9 +47,55 @@ export class ChatApiClient {
     this.api = new FetchApiClient({ apiKey });
   }
 
-  public async getChats(): Promise<ChatType[]> {
+  public async createChat(
+    initialMessage: string,
+    options: any = {},
+  ): Promise<{ success: boolean; chat: ChatType }> {
     try {
-      const result = await this.api.request<ChatListResponse>("/v1/chats/");
+      const payload = {
+        title:
+          initialMessage.length > 50
+            ? `${initialMessage.substring(0, 47)}...`
+            : initialMessage,
+        initialMessage,
+        metadata: {
+          ...options.metadata,
+        },
+      };
+
+      console.log("I got payload", payload);
+
+      const result = await this.api.request<{
+        success: boolean;
+        data: ChatType;
+      }>("/v1/chats", {
+        method: "POST",
+        body: JSON.stringify(payload),
+        ...options,
+      });
+
+      if (!result.success || !result.data) {
+        console.error("Failed to create chat. Response:", result);
+        throw new Error("Failed to create chat");
+      }
+
+      return { success: true, chat: result.data };
+    } catch (error) {
+      console.error("Failed to create chat:", error);
+      throw error;
+    }
+  }
+
+  public async getChats(
+    params: {} = {},
+    options: any = {},
+  ): Promise<ChatType[]> {
+    try {
+      console.log("options", options);
+      const result = await this.api.request<ChatListResponse>(
+        "/v1/chats/",
+        options,
+      );
 
       if (!result.success || !Array.isArray(result.data)) {
         throw new Error("Invalid data received from the server");
@@ -64,12 +110,15 @@ export class ChatApiClient {
 
   public async getChatById(
     chatId: string,
+    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<{ success: boolean; chat: ChatType }> {
     try {
       const response = await this.api.request<{
         success: boolean;
         data: ChatType;
-      }>(`/v1/chats/${chatId}`);
+      }>(`/v1/chats/${chatId}`, {
+        headers: options.headers,
+      });
 
       console.log("chat by id", response);
 
@@ -88,13 +137,20 @@ export class ChatApiClient {
   public async sendMessage(
     chatId: string,
     message: string,
+    options: { headers: HeadersInit; metadata?: Record<string, unknown> } = {
+      headers: {},
+    },
   ): Promise<{ success: boolean; chat: ChatType }> {
     try {
       const result = await this.api.request<ChatListResponse>(
         `/v1/chats/${chatId}/messages`,
         {
           method: "POST",
-          body: JSON.stringify({ content: message }),
+          body: JSON.stringify({
+            content: message,
+            metadata: options.metadata,
+          }),
+          headers: options.headers,
         },
       );
 
@@ -111,13 +167,20 @@ export class ChatApiClient {
   }
 
   public async updateChatTitle(
-    chatId: string,
-    newTitle: string,
+    {
+      chatId,
+      newTitle,
+    }: {
+      chatId: string;
+      newTitle: string;
+    },
+    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<void> {
     try {
       await this.api.request<{ success: boolean }>(`/v1/chats/${chatId}`, {
         method: "PATCH",
         body: JSON.stringify({ title: newTitle }),
+        headers: options.headers,
       });
     } catch (error) {
       console.error("Failed to update chat title:", error);
@@ -125,10 +188,14 @@ export class ChatApiClient {
     }
   }
 
-  public async deleteChat(chatId: string): Promise<void> {
+  public async deleteChat(
+    chatId: string,
+    options: { headers?: HeadersInit } = {},
+  ): Promise<void> {
     try {
       await this.api.request<{ success: boolean }>(`/v1/chats/${chatId}`, {
         method: "DELETE",
+        headers: options.headers,
       });
     } catch (error) {
       console.error("Failed to delete chat:", error);

@@ -1,28 +1,50 @@
-import { FetchApiClient, type ApiResponse } from "./fetch";
+import { fetchApi } from "./fetch";
 import type { components } from "./types/api";
+import { API_CONFIG } from "~/config";
 
 export type Lawyer = components["schemas"]["Lawyer"];
 export type CreateLawyerRequest = components["schemas"]["CreateLawyerRequest"];
 export type UpdateLawyerRequest = components["schemas"]["UpdateLawyerRequest"];
 
-type GetLawyersResponse = ApiResponse<Lawyer[]>;
-type GetLawyerByIdResponse = ApiResponse<Lawyer>;
-type CreateLawyerResponse = ApiResponse<Lawyer>;
-type UpdateLawyerResponse = ApiResponse<Lawyer>;
+type ApiResponse<T = any> = {
+  success: boolean;
+  message: string;
+  data?: T;
+  metadata: {
+    status: {
+      statusCode: number;
+      defaultMessage: string;
+      code: string;
+    };
+    requestId: string;
+  };
+};
+
+type LawyersResponse = {
+  lawyers: Lawyer[];
+};
 
 export class LawyersApiClient {
-  private api: FetchApiClient;
+  private baseUrl: string;
+  private defaultHeaders: Record<string, string>;
 
   constructor(apiKey?: string) {
-    this.api = new FetchApiClient({ apiKey });
+    this.baseUrl = API_CONFIG.BASE_URL;
+    this.defaultHeaders = {
+      "Content-Type": "application/json",
+      ...(apiKey ? { Authorization: `Bearer ${apiKey}` } : {}),
+    };
   }
 
   // Get all lawyers with optional filtering
-  public async getLawyers(params?: {
-    specialization?: string;
-    minExperience?: number;
-    language?: string;
-  }): Promise<Lawyer[]> {
+  public async getLawyers(
+    params?: {
+      specialization?: string;
+      minExperience?: number;
+      language?: string;
+    },
+    options: RequestInit = {},
+  ): Promise<Lawyer[]> {
     const queryParams = new URLSearchParams();
 
     if (params?.specialization) {
@@ -38,74 +60,115 @@ export class LawyersApiClient {
     const queryString = queryParams.toString();
     const endpoint = `/v1/lawyers${queryString ? `?${queryString}` : ""}`;
 
-    const result = await this.api.request<GetLawyersResponse>(endpoint);
-
-    console.log("lawyers", result);
-    if (!result.success || !result.data) {
-      throw new Error("Failed to fetch lawyers");
-    }
-
-    return result.data;
-  }
-
-  public async getLawyerById(lawyerId: string): Promise<Lawyer> {
-    const result = await this.api.request<GetLawyerByIdResponse>(
-      `/v1/lawyers/${lawyerId}`,
+    const result = await fetchApi.request<ApiResponse<LawyersResponse>>(
+      endpoint,
+      {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      },
     );
 
-    if (!result.success || !result.data) {
-      throw new Error("Lawyer not found");
+    if (!result.success || !result.data?.lawyers) {
+      throw new Error(result.message || "Failed to fetch lawyers");
     }
 
-    // Ensure we have a valid lawyer object with required fields
-    const lawyer = result?.data;
-
-    // Set default values for required fields if they're missing
-    return {
-      ...lawyer,
-    };
+    return result.data.lawyers;
   }
 
-  public async createLawyer(lawyerData: CreateLawyerRequest): Promise<Lawyer> {
-    const result = await this.api.request<CreateLawyerResponse>("/v1/lawyers", {
-      method: "POST",
-      body: JSON.stringify(lawyerData),
-    });
+  public async getLawyerById(
+    lawyerId: string,
+    options: RequestInit = {},
+  ): Promise<Lawyer> {
+    const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
+      `/v1/lawyers/${lawyerId}`,
+      {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      },
+    );
 
-    if (!result.success || !result.data) {
-      throw new Error("Failed to create lawyer");
+    console.log("result", result);
+
+    if (!result.success || !result.data?.lawyer) {
+      throw new Error(result.message || "Lawyer not found");
     }
-    return result.data;
+
+    return result.data.lawyer;
+  }
+
+  public async createLawyer(
+    lawyerData: CreateLawyerRequest,
+    options: RequestInit = {},
+  ): Promise<Lawyer> {
+    const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
+      "/v1/lawyers",
+      {
+        ...options,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+        body: JSON.stringify(lawyerData),
+      },
+    );
+
+    if (!result.success || !result.data?.lawyer) {
+      throw new Error(result.message || "Failed to create lawyer");
+    }
+    return result.data.lawyer;
   }
 
   public async updateLawyer(
     lawyerId: string,
     updateData: UpdateLawyerRequest,
+    options: RequestInit = {},
   ): Promise<Lawyer> {
-    const result = await this.api.request<UpdateLawyerResponse>(
+    const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
       `/v1/lawyers/${lawyerId}`,
       {
+        ...options,
         method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
         body: JSON.stringify(updateData),
       },
     );
 
-    if (!result.success || !result.data) {
-      throw new Error("Failed to update lawyer");
+    if (!result.success || !result.data?.lawyer) {
+      throw new Error(result.message || "Failed to update lawyer");
     }
-    return result.data;
+    return result.data.lawyer;
   }
 
-  public async getLawyerByEmail(email: string): Promise<Lawyer> {
-    const result = await this.api.request<GetLawyerByIdResponse>(
+  public async getLawyerByEmail(
+    email: string,
+    options: RequestInit = {},
+  ): Promise<Lawyer> {
+    const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
       `/v1/lawyers/email?email=${encodeURIComponent(email)}`,
+      {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          ...options.headers,
+        },
+      },
     );
 
-    if (!result.success || !result.data) {
-      throw new Error("Lawyer not found");
+    if (!result.success || !result.data?.lawyer) {
+      throw new Error(result.message || "Lawyer not found");
     }
 
-    return result.data;
+    return result.data.lawyer;
   }
 }
 

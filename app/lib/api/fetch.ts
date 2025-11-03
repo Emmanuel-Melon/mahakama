@@ -16,16 +16,10 @@ export class FetchApiClient {
   private baseUrl: string;
   private defaultHeaders: HeadersInit;
 
-  constructor(
-    config: {
-      baseUrl?: string;
-      apiKey?: string;
-    } = {},
-  ) {
+  constructor(config: { baseUrl?: string } = {}) {
     this.baseUrl = config.baseUrl || API_CONFIG.BASE_URL;
     this.defaultHeaders = {
       "Content-Type": "application/json",
-      ...(config.apiKey && { Authorization: `Bearer ${config.apiKey}` }),
     };
   }
 
@@ -60,10 +54,10 @@ export class FetchApiClient {
       ...this.defaultHeaders,
       ...options.headers,
     };
-
     const response = await fetch(url, {
       ...options,
       headers,
+      credentials: "include" as RequestCredentials,
     });
 
     return this.handleResponse<T>(response);

@@ -1,14 +1,9 @@
-import type {
-  MetaArgs,
-  LoaderArgs,
-  ComponentProps,
-  LoaderData,
-  ChatDetails,
-} from "./+types/chat";
+import type { Route } from "./+types/chats.$chatId";
 import { LegalAnswerDisplay } from "~/components/home/AnswerView";
 import { chatApi } from "~/lib/api/chat.api";
+import { getForwardHeaders } from "~/lib/api/utils";
 
-export function meta({ loaderData }: MetaArgs) {
+export function meta({ loaderData }: Route.MetaArgs) {
   const { chat } = loaderData;
   return [
     {
@@ -28,11 +23,14 @@ export async function action({
   params: { chatId: string };
 }) {
   const { chatId } = params;
+  const originalHeaders = getForwardHeaders(request);
   const formData = await request.formData();
   const message = formData.get("message") as string;
 
   try {
-    const result = await chatApi.sendMessage(chatId, message);
+    const result = await chatApi.sendMessage(chatId, message, {
+      headers: originalHeaders,
+    });
     return { success: true, chat: result.chat };
   } catch (error) {
     console.error("Error sending message:", error);
@@ -43,21 +41,24 @@ export async function action({
   }
 }
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ params, request }: Route.LoaderArgs) {
   try {
     const { chatId } = params;
+    const originalHeaders = getForwardHeaders(request);
     if (!chatId) {
       throw new Error("Chat ID is required");
     }
 
-    const { chat: apiChat } = await chatApi.getChatById(chatId);
+    const { chat: apiChat } = await chatApi.getChatById(chatId, {
+      headers: originalHeaders,
+    });
     console.log("got chat data:", apiChat);
     const firstMessage = apiChat.messages?.[0]?.content || "";
     const answer =
       apiChat.messages?.find((m: any) => m.sender?.type === "assistant")
         ?.content || "";
 
-    const chat: ChatDetails = {
+    const chat = {
       id: apiChat.id,
       title: apiChat.title || "Legal Consultation",
       question: firstMessage,
@@ -102,7 +103,7 @@ export async function loader({ params }: LoaderArgs) {
   }
 }
 
-export default function ChatPage({ loaderData }: ComponentProps) {
+export default function ChatDetailsPage({ loaderData }: Route.ComponentProps) {
   const { chat, error } = loaderData;
 
   if (error || !chat) {

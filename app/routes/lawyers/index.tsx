@@ -1,10 +1,11 @@
-import type { Route } from "./+types/lawyers";
+import type { Route } from "./+types/index";
 import { LawyersList } from "~/lawyers/lawyers-list";
 import { HeroSection } from "~/components/layouts/HeroSection";
 import { Gavel } from "lucide-react";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { lawyersApi } from "~/lib/api/lawyers.api";
+import { parseCookies } from "~/lib/api/utils";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -39,9 +40,21 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader() {
+export async function loader({ request }: Route.LoaderArgs) {
   try {
-    const lawyers = await lawyersApi.getLawyers();
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = parseCookies(cookieHeader);
+    const token = cookies.token;
+    const lawyers = await lawyersApi.getLawyers(
+      {
+        language: "English",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     return {
       lawyers,
@@ -59,9 +72,8 @@ export async function loader() {
   }
 }
 
-export default function Lawyers({ loaderData }: Route.ComponentProps) {
+export default function LawyersPage({ loaderData }: Route.ComponentProps) {
   const { lawyers, error } = loaderData;
-
   return (
     <div className="min-h-screen">
       <div className="bg-background">

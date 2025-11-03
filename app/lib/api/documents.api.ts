@@ -17,23 +17,45 @@ export class DocumentsApiClient {
     this.api = new FetchApiClient({ apiKey });
   }
 
-  public async getDocuments(options?: {
-    limit?: number;
-    offset?: number;
-    search?: string;
-  }): Promise<{
-    data: LegalDocument[];
-    meta: { total: number; limit: number; offset: number };
-  }> {
-    const params = new URLSearchParams();
-    if (options?.limit) params.set("limit", options.limit.toString());
-    if (options?.offset) params.set("offset", options.offset.toString());
-    if (options?.search) params.set("search", options.search);
+  public async getDocuments(
+    params: {
+      limit?: number;
+      offset?: number;
+      search?: string;
+      [key: string]: any; // Allow additional query params
+    } = {},
+    options: {
+      headers?: HeadersInit;
+      token?: string;
+    } = {},
+  ) {
+    const queryParams = new URLSearchParams();
 
-    const queryString = params.toString();
+    // Add standard params
+    if (params.limit) queryParams.set("limit", params.limit.toString());
+    if (params.offset) queryParams.set("offset", params.offset.toString());
+    if (params.search) queryParams.set("search", params.search);
+
+    // Add any additional params
+    Object.entries(params).forEach(([key, value]) => {
+      if (!["limit", "offset", "search"].includes(key) && value !== undefined) {
+        queryParams.set(key, String(value));
+      }
+    });
+
+    const queryString = queryParams.toString();
     const url = `/v1/documents${queryString ? `?${queryString}` : ""}`;
 
-    const result = await this.api.request<DocumentsResponse>(url);
+    // Prepare headers with auth token if provided
+    const headers: HeadersInit = {
+      ...(options.token && { Authorization: `Bearer ${options.token}` }),
+      ...options.headers,
+    };
+
+    const result = await this.api.request<DocumentsResponse>(url, {
+      headers,
+    });
+
     if (!result) {
       throw new Error("Failed to fetch documents");
     }
@@ -45,13 +67,16 @@ export class DocumentsApiClient {
   }
   public async getDocumentById(
     documentId: string | number,
+    options?: {
+      headers: HeadersInit;
+    },
   ): Promise<LegalDocument> {
     const result = await this.api.request<ApiResponse<LegalDocument>>(
       `/v1/documents/${documentId}`,
+      {
+        headers: options?.headers,
+      },
     );
-
-    console.log(result);
-
     if (!result.success || !result.data) {
       throw new Error("Document not found");
     }

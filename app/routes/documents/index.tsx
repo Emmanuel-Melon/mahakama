@@ -1,13 +1,14 @@
 import { useState, useMemo } from "react";
 import { HeroSection } from "~/components/layouts/HeroSection";
-import { DocumentCollection } from "~/legal-database/document-collection";
+import { DocumentCollection } from "~/documents/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { Library } from "lucide-react";
-import type { Route } from "./+types/legal-database";
+import type { Route } from "./+types/index";
 import { ErrorDisplay } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
 import type { LegalDocument } from "~/documents/types.documents";
 import { documentsApi } from "~/lib/api/documents.api";
+import { parseCookies } from "~/lib/api/utils";
 
 type LoaderData = {
   documents: LegalDocument[];
@@ -53,12 +54,21 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader(): Promise<LoaderData> {
+export async function loader({
+  request,
+}: Route.LoaderArgs): Promise<LoaderData> {
   try {
-    const { data: documents, meta } = await documentsApi.getDocuments({
-      limit: 10,
-      offset: 0,
-    });
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = parseCookies(cookieHeader);
+    const token = cookies.token;
+    const { data: documents, meta } = await documentsApi.getDocuments(
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
 
     return {
       documents: Array.isArray(documents) ? documents : [],
