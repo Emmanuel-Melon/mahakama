@@ -5,14 +5,17 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLocation,
+  useLoaderData,
 } from "react-router";
 import { Header } from "./components/layouts/header";
-import { Footer } from "./components/home/Footer";
-
+import { UserProvider } from '~/providers/user-provider';
+import { QueryClientProviderWrapper } from '~/providers/query-client-provider';
 import type { Route } from "./+types/root";
 import "./app.css";
 import { NotFound } from "./routes/$";
+import { parseCookies } from "~/lib/api/utils";
+import { usersApi } from "~/lib/api/users.api";
+import { Toaster } from 'sonner';
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -27,12 +30,28 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-const skippedRoutes = ["login", "chat", "recents"];
+export async function loader({ request }: { request: Request }) {
+  try {
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = parseCookies(cookieHeader);
+    const token = cookies.token;
+    let user = null;
+
+    if (token) {
+      const response = await usersApi.getCurrentUser({
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      user = response;
+    }
+
+    return { user };
+  } catch (error) {
+    return { user: null };
+  }
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { pathname } = useLocation();
-  const isChatPage = pathname.startsWith("/chat/") || pathname === "/chat";
-  const isSkippedRoute = skippedRoutes.includes(pathname);
+  const { user } = useLoaderData<typeof loader>();
 
   return (
     <html lang="en" className="h-full">
@@ -42,18 +61,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="h-screen flex flex-col bg-background font-['Helvetica'] antialiased overflow-hidden">
-        {/* Fixed Header */}
-        <Header />
-
-        {/* Scrollable Main Content */}
-        <main className="flex-1 overflow-y-auto">
-          <div>{children}</div>
-        </main>
-
-        {/* Fixed Footer */}
-        {isSkippedRoute && <Footer />}
-
+      <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
+        <QueryClientProviderWrapper>
+          <UserProvider user={user || null}>
+            <Header />
+            <Toaster />
+            <main className="flex-1">
+              {children}
+            </main>
+          </UserProvider>
+        </QueryClientProviderWrapper>
         <ScrollRestoration />
         <Scripts />
       </body>

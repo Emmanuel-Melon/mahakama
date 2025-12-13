@@ -4,15 +4,21 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { AuthSocialButtons } from "./social-auth-buttons";
 import { Lock, Mail, Loader2 } from "lucide-react";
+import type { UseFormRegister, FieldErrors } from "react-hook-form";
+import type { LoginRequest } from "~/routes/auth/login";
 
 export const AuthForm = ({
   handleSubmit,
   isLoading,
   error,
+  register,
+  errors,
 }: {
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   isLoading: boolean;
   error: string | null;
+  register: UseFormRegister<LoginRequest>;
+  errors: FieldErrors<LoginRequest>;
 }) => {
   return (
     <BorderedBox
@@ -40,10 +46,9 @@ export const AuthForm = ({
             </div>
             <Input
               id="email"
-              name="email"
+              {...register("email")}
               type="email"
               autoComplete="email"
-              required
               disabled={isLoading}
               className="pl-12 w-full border-2 border-gray-900 font-medium"
               style={{
@@ -52,6 +57,11 @@ export const AuthForm = ({
               }}
               placeholder="you@example.com"
             />
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-600 font-medium">
+                {errors.email.message}
+              </p>
+            )}
           </div>
         </div>
 
@@ -76,10 +86,9 @@ export const AuthForm = ({
             </div>
             <Input
               id="password"
-              name="password"
+              {...register("password")}
               type="password"
               autoComplete="current-password"
-              required
               disabled={isLoading}
               className="pl-12 w-full border-2 border-gray-900 font-medium"
               style={{
@@ -88,6 +97,11 @@ export const AuthForm = ({
               }}
               placeholder="••••••••"
             />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-600 font-medium">
+                {errors.password.message}
+              </p>
+            )}
           </div>
         </div>
 

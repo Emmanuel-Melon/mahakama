@@ -19,7 +19,7 @@ export class FetchApiClient {
   constructor(config: { baseUrl?: string } = {}) {
     this.baseUrl = config.baseUrl || API_CONFIG.BASE_URL;
     this.defaultHeaders = {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     };
   }
 

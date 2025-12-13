@@ -1,11 +1,19 @@
 import { useNavigate } from "react-router";
 import type { Route } from "./+types/login";
-import { useState } from "react";
-import { authApi } from "~/lib/api/auth.api";
+import { useLogin } from "~/hooks/use-auth";
 import { AuthForm } from "~/auth/auth-form";
 import { AuthAlternative } from "~/auth/auth-alternative";
+import { z } from "zod";
+import { schemas } from "~/lib/api/types/schemas";
+import type { components } from "~/lib/api/types/api1";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
 
-export function meta({}: Route.MetaArgs) {
+const loginRequestSchema = schemas.postAuthv1login_Body;
+export type LoginRequest = components["schemas"]["LoginRequest"];
+
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Login - Mahakama" },
     {
@@ -18,42 +26,37 @@ export function meta({}: Route.MetaArgs) {
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const loginMutation = useLogin();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginRequest>({
+    resolver: zodResolver(loginRequestSchema),
+  });
 
-    const formData = new FormData(e.currentTarget);
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
-
-    if (!email || !password) {
-      setError("Email and password are required");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const response = await authApi.login({ email, password });
-      console.log("response", response);
-      navigate("/");
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Invalid email or password. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+const onSubmit = (data: LoginRequest) => {
+    loginMutation.mutate(data, {
+      onSuccess: (authResponse) => {
+        console.log("Login successful:", authResponse);
+        navigate("/");
+      },
+      onError: (error) => {
+        console.error("Login failed:", error);
+        toast.error("Login failed. Please try again.");
+      }
+    });
   };
 
   return (
     <>
       <AuthForm
-        handleSubmit={handleSubmit}
-        isLoading={isLoading}
-        error={error}
+        handleSubmit={handleSubmit(onSubmit)}
+        isLoading={isSubmitting || loginMutation.isPending}
+        error={loginMutation.error ? "Invalid email or password. Please try again." : null}
+        register={register}
+        errors={errors}
       />
       <AuthAlternative
         to="/signup"

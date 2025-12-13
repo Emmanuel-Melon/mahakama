@@ -2,7 +2,7 @@ import { AlertTriangle, RotateCcw, Home } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { StateActionItems } from "~/components/ui/state-action-items";
 
-interface ErrorDisplayProps {
+interface ErrorStateProps {
   title?: string;
   error: string | Error;
   className?: string;
@@ -12,7 +12,7 @@ interface ErrorDisplayProps {
   showDefaultActions?: boolean;
 }
 
-export function ErrorDisplay({
+export function ErrorState({
   title = "Something went wrong",
   error,
   className = "",
@@ -20,7 +20,7 @@ export function ErrorDisplay({
   retryText = "Try again",
   label = "Error",
   showDefaultActions = true,
-}: ErrorDisplayProps) {
+}: ErrorStateProps) {
   const errorMessage = typeof error === "string" ? error : error.message;
 
   const defaultActions = [
@@ -113,4 +113,4 @@ export function ErrorDisplay({
   );
 }
 
-export default ErrorDisplay;
+export default ErrorState;

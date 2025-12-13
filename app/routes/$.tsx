@@ -4,7 +4,7 @@ import { IconContainer } from "~/components/icon-container";
 
 export function NotFound() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen">
       <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
         {/* Decorative Blobs */}
         <div className="absolute -left-4 -top-2 w-12 h-12 bg-primary/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -15,7 +15,7 @@ export function NotFound() {
           <div className="space-y-6 w-full">
             {/* 404 Text */}
             <div className="relative">
-              <h1 className="text-7xl md:text-8xl font-extrabold text-gray-900 mb-3">
+              <h1 className="text-7xl md:text-8xl font-extra bold text-gray-900 mb-3">
                 404
                 <span
                   className="inline-block w-4 h-4 ml-3 bg-yellow-400 rounded-full animate-pulse"

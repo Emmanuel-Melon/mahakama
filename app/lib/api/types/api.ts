@@ -793,6 +793,7 @@ export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
     User: {
+      user: { id?: string | undefined; name?: string | null | undefined; email?: string | null | undefined; role: "user" | "admin" | "lawyer"; isActive: boolean; isAnonymous: boolean; lastLogin?: string | null | undefined; createdAt?: string | undefined; updatedAt?: string | undefined; fingerprint?: string | undefined; userAgent?: string | undefined; age?: number | undefined; gender?: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | undefined; country?: string | undefined; city?: string | undefined; phoneNumber?: string | undefined; occupation?: string | undefined; bio?: string | undefined; profilePicture?: string | undefined; isOnboarded: boolean; };
       /**
        * Format: uuid
        * @description Unique identifier for the user
