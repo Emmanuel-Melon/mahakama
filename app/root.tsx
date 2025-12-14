@@ -7,7 +7,7 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "react-router";
-import { Header } from "./components/layouts/header";
+import { Header } from "~/layouts/header";
 import { UserProvider } from '~/providers/user-provider';
 import { QueryClientProviderWrapper } from '~/providers/query-client-provider';
 import type { Route } from "./+types/root";

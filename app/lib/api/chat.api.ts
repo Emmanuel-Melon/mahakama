@@ -1,5 +1,17 @@
 import { FetchApiClient, type ApiResponse } from "./fetch";
-import type { components } from "./types/api";
+import type { components } from "./generated/api.types";
+
+export type ChatType = components["schemas"]["Chat"];
+export type ChatMessage = components["schemas"]["Message"];
+export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
+
+interface ChatListResponse {
+  success: boolean;
+  data: {
+    chats: ChatType[];
+  };
+  message?: string;
+}
 
 export interface MessageSender {
   id: string;
@@ -7,44 +19,17 @@ export interface MessageSender {
   displayName?: string;
 }
 
-export interface ChatMessage {
-  id: string;
-  content: string;
-  timestamp: string;
-  sender: MessageSender;
-  metadata?: Record<string, unknown>;
-}
 
 export interface ChatMetadata {
   questionId?: number;
   isQuestionChat?: boolean;
   [key: string]: unknown;
 }
-
-export interface ChatType {
-  id: string;
-  user: {
-    id: string;
-    type: string;
-  };
-  title?: string;
-  createdAt: string;
-  updatedAt: string;
-  messages: ChatMessage[];
-  metadata?: ChatMetadata;
-}
-
-interface ChatListResponse {
-  success: boolean;
-  data: ChatType[];
-  message?: string;
-}
-
 export class ChatApiClient {
   private api: FetchApiClient;
 
-  constructor(apiKey?: string) {
-    this.api = new FetchApiClient({ apiKey });
+  constructor() {
+    this.api = new FetchApiClient();
   }
 
   public async createChat(
@@ -53,33 +38,24 @@ export class ChatApiClient {
   ): Promise<{ success: boolean; chat: ChatType }> {
     try {
       const payload = {
-        title:
-          initialMessage.length > 50
-            ? `${initialMessage.substring(0, 47)}...`
-            : initialMessage,
-        initialMessage,
-        metadata: {
-          ...options.metadata,
-        },
+        title: initialMessage,
       };
 
-      console.log("I got payload", payload);
-
-      const result = await this.api.request<{
+      const response = await this.api.request<{
         success: boolean;
-        data: ChatType;
+        data: { chat: ChatType };
       }>("/v1/chats", {
         method: "POST",
         body: JSON.stringify(payload),
         ...options,
       });
 
-      if (!result.success || !result.data) {
-        console.error("Failed to create chat. Response:", result);
+      if (!response.success || !response.data) {
+        console.error("Failed to create chat. Response:", response);
         throw new Error("Failed to create chat");
       }
 
-      return { success: true, chat: result.data };
+      return { success: true, chat: response.data.chat };
     } catch (error) {
       console.error("Failed to create chat:", error);
       throw error;
@@ -91,17 +67,12 @@ export class ChatApiClient {
     options: any = {},
   ): Promise<ChatType[]> {
     try {
-      console.log("options", options);
-      const result = await this.api.request<ChatListResponse>(
+
+      const response = await this.api.request<ChatListResponse>(
         "/v1/chats/",
         options,
       );
-
-      if (!result.success || !Array.isArray(result.data)) {
-        throw new Error("Invalid data received from the server");
-      }
-
-      return result.data;
+      return response.data.chats;
     } catch (error) {
       console.error("Failed to fetch chats:", error);
       throw error;
@@ -115,19 +86,16 @@ export class ChatApiClient {
     try {
       const response = await this.api.request<{
         success: boolean;
-        data: ChatType;
+        data: { chat: ChatType };
       }>(`/v1/chats/${chatId}`, {
         headers: options.headers,
       });
-
-      console.log("chat by id", response);
-
       if (!response.success || !response.data) {
         console.error("Invalid chat data:", response);
         throw new Error("Invalid chat data received from the server");
       }
 
-      return { success: true, chat: response.data };
+      return { success: true, chat: response.data.chat };
     } catch (error) {
       console.error("Failed to fetch chat:", error);
       throw error;
@@ -140,9 +108,9 @@ export class ChatApiClient {
     options: { headers: HeadersInit; metadata?: Record<string, unknown> } = {
       headers: {},
     },
-  ): Promise<{ success: boolean; chat: ChatType }> {
+  ): Promise<{ success: boolean; message: ChatType | null }> {
     try {
-      const result = await this.api.request<ChatListResponse>(
+      const response = await this.api.request<ChatListResponse>(
         `/v1/chats/${chatId}/messages`,
         {
           method: "POST",
@@ -154,12 +122,12 @@ export class ChatApiClient {
         },
       );
 
-      if (!result.success || !result.data) {
-        console.error("Failed to send message. Response:", result);
+      if (!response.success || !response.data) {
+        console.error("Failed to send message. Response:", response);
         throw new Error("Failed to send message");
       }
 
-      return { success: true, chat: result.data };
+      return { success: true, message: null };
     } catch (error) {
       console.error("Failed to send message:", error);
       throw error;

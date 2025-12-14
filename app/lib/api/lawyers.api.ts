@@ -1,6 +1,7 @@
 import { fetchApi } from "./fetch";
-import type { components } from "./types/api";
+import type { components } from "./generated/api.types";
 import { API_CONFIG } from "~/config";
+import { LAWYERS_API_ROUTES } from '~/feature/lawyers/LawyersConfig';
 
 export type Lawyer = components["schemas"]["Lawyer"];
 export type CreateLawyerRequest = components["schemas"]["CreateLawyerRequest"];
@@ -58,7 +59,7 @@ export class LawyersApiClient {
     }
 
     const queryString = queryParams.toString();
-    const endpoint = `/v1/lawyers${queryString ? `?${queryString}` : ""}`;
+    const endpoint = `${LAWYERS_API_ROUTES.ROOT}${queryString ? `?${queryString}` : ""}`;
 
     const result = await fetchApi.request<ApiResponse<LawyersResponse>>(
       endpoint,
@@ -83,7 +84,7 @@ export class LawyersApiClient {
     options: RequestInit = {},
   ): Promise<Lawyer> {
     const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
-      `/v1/lawyers/${lawyerId}`,
+      `${LAWYERS_API_ROUTES.LAWYER}/${lawyerId}`,
       {
         ...options,
         headers: {
@@ -107,7 +108,7 @@ export class LawyersApiClient {
     options: RequestInit = {},
   ): Promise<Lawyer> {
     const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
-      "/v1/lawyers",
+      `${LAWYERS_API_ROUTES.ROOT}`,
       {
         ...options,
         method: "POST",
@@ -131,7 +132,7 @@ export class LawyersApiClient {
     options: RequestInit = {},
   ): Promise<Lawyer> {
     const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
-      `/v1/lawyers/${lawyerId}`,
+      `${LAWYERS_API_ROUTES.LAWYER}/${lawyerId}`,
       {
         ...options,
         method: "PUT",
@@ -154,7 +155,7 @@ export class LawyersApiClient {
     options: RequestInit = {},
   ): Promise<Lawyer> {
     const result = await fetchApi.request<ApiResponse<{ lawyer: Lawyer }>>(
-      `/v1/lawyers/email?email=${encodeURIComponent(email)}`,
+      `${LAWYERS_API_ROUTES.ROOT}/email?email=${encodeURIComponent(email)}`,
       {
         ...options,
         headers: {

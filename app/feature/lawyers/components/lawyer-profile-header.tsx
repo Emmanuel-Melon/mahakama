@@ -11,10 +11,10 @@ import { Button } from "~/components/ui/button";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
 
-import type { Lawyer } from "~/routes/+types/lawyers.$id";
+
 
 interface LawyerProfileHeaderProps {
-  lawyer: Lawyer & {
+  lawyer: any & {
     // Add any additional UI-specific props here
     casesHandled?: number;
     isAvailable?: boolean;

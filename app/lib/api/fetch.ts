@@ -1,5 +1,5 @@
 import { API_CONFIG } from "~/config";
-import type { components, paths } from "./types/api";
+import type { components, paths } from "./generated/api.types";
 
 export const DEFAULT_TIMEOUT = 5000;
 

@@ -5,18 +5,19 @@ import {
   prefix,
   layout,
 } from "@react-router/dev/routes";
+import { AUTH_ROUTES } from "./feature/auth/AuthConfig";
 
 export default [
-  layout("./website/website.layout.tsx", [
+  layout("./feature/website/website.layout.tsx", [
     index("routes/home.tsx"),
     route("about", "routes/about.tsx"),
     route("contact", "routes/contact.tsx"),
   ]),
   route("app", "routes/app/index.tsx"),
   route("onboarding", "routes/onboarding/index.tsx"),
-  layout("./auth/auth.layout.tsx", [
-    route("login", "routes/auth/login.tsx"),
-    route("signup", "routes/auth/signup.tsx"),
+  layout(AUTH_ROUTES.LAYOUT, [
+    route("login", AUTH_ROUTES.LOGIN),
+    route("signup", AUTH_ROUTES.SIGNUP),
   ]),
   ...prefix("chats", [
     route("new", "routes/chats/chats.new.tsx"),
@@ -31,7 +32,7 @@ export default [
   //   index("routes/lawyers/index.tsx"),
   //   route(":lawyerId", "routes/lawyers/lawyers.$lawyerId.tsx"),
   // ]),
-  layout("./search/search.layout.tsx", [
+  layout("./feature/search/search.layout.tsx", [
 
     route("lawyers", "routes/lawyers/index.tsx"),
     route("documents", "routes/documents/index.tsx"),

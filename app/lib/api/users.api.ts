@@ -1,5 +1,5 @@
 import { FetchApiClient } from "./fetch";
-import type { components } from "./types/api1";
+import type { components } from "./generated/api1.types";
 
 export type User = components["schemas"]["User"];
 export type UserResource = components["schemas"]["UserResource"];
