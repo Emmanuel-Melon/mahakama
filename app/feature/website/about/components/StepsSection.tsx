@@ -1,4 +1,4 @@
-import { StepCard } from "./StepCard";
+import { StepCard } from "./components/StepCard";
 import { IconContainer } from "~/components/icon-container";
 
 type Step = {

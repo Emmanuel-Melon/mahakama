@@ -6,6 +6,7 @@ import {
   layout,
 } from "@react-router/dev/routes";
 import { AUTH_ROUTES } from "./feature/auth/AuthConfig";
+import { LAWYERS_ROUTES } from "./feature/lawyers/LawyersConfig";
 
 export default [
   layout("./feature/website/website.layout.tsx", [
@@ -33,9 +34,9 @@ export default [
   //   route(":lawyerId", "routes/lawyers/lawyers.$lawyerId.tsx"),
   // ]),
   layout("./feature/search/search.layout.tsx", [
-
-    route("lawyers", "routes/lawyers/index.tsx"),
+    route("lawyers", LAWYERS_ROUTES.INDEX),
     route("documents", "routes/documents/index.tsx"),
+    route(":lawyerId", LAWYERS_ROUTES.LAWYER),
   ]),
   ...prefix("users", [
     route(":profile", "routes/users/$profile.tsx"),

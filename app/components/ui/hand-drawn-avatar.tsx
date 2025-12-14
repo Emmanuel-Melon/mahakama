@@ -8,7 +8,7 @@ interface HandDrawnAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The source URL of the avatar image */
   src?: string;
   /** The name used for fallback initials */
-  name?: string;
+  name: string;
   /** The size of the avatar */
   size?: SizeVariant;
   /** The color variant of the avatar */

@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { Info, Heart } from "lucide-react";
-import { FeatureCard } from "./FeatureCard";
+import { FeatureCard } from "./components/FeatureCard";
 import { cn } from "~/lib/utils";
 import { IconContainer } from "~/components/icon-container";
 

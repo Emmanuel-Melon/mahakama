@@ -1,6 +1,6 @@
 import { ArrowRight, Gavel, FileText, Scale, ChevronRight } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { IconContainer } from "../icon-container";
+import { IconContainer } from "~/components/icon-container";
 
 type Service = {
   title: string;

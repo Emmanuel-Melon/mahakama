@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "~/lib/utils";
 import { HeroSectionAction } from "~/components/ui/hero-section-action";
 import { IconContainer } from "~/components/icon-container";
@@ -19,7 +20,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 
 interface HeroSectionProps {
-  title: string;
+  title: React.ReactNode;
   description: string;
   className?: string;
   actionVariant?: "cta" | "search";
@@ -47,9 +48,14 @@ const LegalSpecializations = ({
   specializations: { name: string; icon: LucideIcon }[];
 }) => (
   <div className="hidden sm:block pt-4 w-full">
-    <h2 className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-3 sm:mb-4 px-2 sm:px-0">
-      Browse by Specialization:
-    </h2>
+    <div className="max-w-3xl mx-auto text-center mb-6">
+      <h2 className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider mb-2">
+        Browse by Specialization
+      </h2>
+      <p className="text-sm text-gray-600 max-w-2xl mx-auto px-4">
+        Find legal help tailored to your specific needs.
+      </p>
+    </div>
     <div className="grid grid-cols-2 sm:flex sm:flex-wrap justify-center gap-2 sm:gap-3 px-2 sm:px-0">
       {specializations.map(({ name, icon }, index) => (
         <SpecializationButton
@@ -74,17 +80,19 @@ export function HeroSection({
 }: HeroSectionProps) {
   return (
     <div className={cn("bg-background relative overflow-hidden", className)}>
-      <div className="px-6 py-8 sm:py-24 lg:px-8">
-        <div className="mx-auto max-w-4xl text-center space-y-4">
-          <div className="flex justify-center">
-            <IconContainer icon={Icon} color="handdrawn" size="lg" />
+      <div className="py-8 sm:py-24">
+        <div className="mx-auto max-w-4xl text-center space-y-8">
+          <div className="space-y-4">
+            <div className="flex justify-center">
+              <IconContainer icon={Icon} color="handdrawn" size="lg" />
+            </div>
+            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
+              {title}
+            </h1>
+            <p className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto">
+              {description}
+            </p>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            {title}
-          </h1>
-          <p className="text-lg leading-8 text-muted-foreground max-w-3xl mx-auto">
-            {description}
-          </p>
           <div>
             <HeroSectionAction
               variant={actionVariant}

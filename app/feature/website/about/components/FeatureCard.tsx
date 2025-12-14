@@ -38,7 +38,6 @@ export function FeatureCard({
           icon={Icon}
           size="lg"
           color="outline"
-          className="shadow-[3px_3px_0_0_#000]"
         />
       </div>
 
