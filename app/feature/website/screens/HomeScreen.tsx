@@ -2,7 +2,7 @@ import { HeroSection } from "~/layouts/HeroSection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { SupportedCountries } from "~/components/countries";
 import { CallToAction } from "~/components/call-to-action";
-import { MahakamaFeatures } from "~/feature/website/features";
+import { MahakamaFeatures } from "~/feature/website/components/features";
 import { Scale } from "lucide-react";
 
 export const HomeScreen = () => {

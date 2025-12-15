@@ -12,7 +12,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "~/components/icon-container";
-import { useUser } from '~/providers/user-provider';
+import { useUser } from '~/context/user-provider';
 import { UserDropdown } from "~/components/user-dropdown";
 const links = [
   {

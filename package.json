@@ -7,13 +7,13 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "generate:types": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/types/api1.ts || echo 'Type generation failed - check if backend is running'",
+    "generate:types": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/generated/api.types.ts || echo 'Type generation failed - check if backend is running'",
     "generate:types:local": "VITE_API_BASE_URL=http://localhost:3000 npm run generate:types",
     "generate:types:prod": "VITE_API_BASE_URL=https://mahakama-api-production.up.railway.app npm run generate:types",
     "dev:with-types": "npm run generate:types:local && npm run dev",
-    "generate:types:safe": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/types/api.ts 2>/dev null || true",
+    "generate:types:safe": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/generated/api.types.ts 2>/dev null || true",
     "dev:safe": "npm run generate:types:safe && npm run dev",
-    "generate:zod": "openapi-zod-client http://localhost:3000/api-docs.json --output app/lib/api/types/schemas.ts"
+    "generate:zod": "openapi-zod-client http://localhost:3000/api-docs.json --output app/lib/api/generated/api.schemas.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

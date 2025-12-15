@@ -22,7 +22,6 @@ export class FetchApiClient {
       "Content-Type": "application/json"
     };
   }
-
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
       let errorData: ErrorResponse;
@@ -39,7 +38,7 @@ export class FetchApiClient {
       }
       throw new Error(
         errorData.error?.message ||
-          `Request failed with status ${response.status}`,
+        `Request failed with status ${response.status}`,
       );
     }
     return response.json();

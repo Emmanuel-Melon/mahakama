@@ -14,6 +14,63 @@ const JsonApiErrorResponse = z
 const postAuthv1login_Body = z
   .object({ email: z.string().email(), password: z.string().min(1) })
   .passthrough();
+const postV1chats_Body = z
+  .object({
+    message: z.string().min(1).max(10000),
+    metadata: z.record(z.unknown().nullable()).optional(),
+  })
+  .passthrough();
+const postV1documents_Body = z
+  .object({
+    title: z.string().min(1),
+    description: z.string().min(1),
+    type: z.string().min(1),
+    sections: z.number().int().gt(0),
+    lastUpdated: z.string().min(4).max(4),
+    storageUrl: z.string().min(1).url(),
+  })
+  .passthrough();
+const postV1lawyers_Body = z
+  .object({
+    name: z.string().min(2).max(255),
+    email: z.string().max(255).email(),
+    specialization: z.string().min(2).max(100),
+    experienceYears: z.number().int().gte(0),
+    rating: z.string().optional(),
+    casesHandled: z.number().int().gte(0).optional(),
+    isAvailable: z.boolean().optional().default(true),
+    location: z.string().min(2).max(100),
+    languages: z.array(z.string()).min(1),
+  })
+  .passthrough();
+const putV1lawyersId_Body = z
+  .object({
+    name: z.string().min(2).max(255),
+    email: z.string().max(255).email(),
+    specialization: z.string().min(2).max(100),
+    experienceYears: z.number().int().gte(0),
+    rating: z.string(),
+    casesHandled: z.number().int().gte(0),
+    isAvailable: z.boolean().default(true),
+    location: z.string().min(2).max(100),
+    languages: z.array(z.string()).min(1),
+  })
+  .partial()
+  .passthrough();
+const postV1messages_Body = z
+  .object({
+    chatId: z.string(),
+    content: z.string(),
+    sender: z
+      .object({
+        id: z.string(),
+        type: z.enum(["user", "assistant", "system"]),
+        displayName: z.string().optional(),
+      })
+      .passthrough(),
+    metadata: z.record(z.unknown().nullable()).optional(),
+  })
+  .passthrough();
 const postV1users_Body = z
   .object({
     id: z.string().uuid(),
@@ -47,6 +104,11 @@ export const schemas = {
   postAuthv1register_Body,
   JsonApiErrorResponse,
   postAuthv1login_Body,
+  postV1chats_Body,
+  postV1documents_Body,
+  postV1lawyers_Body,
+  putV1lawyersId_Body,
+  postV1messages_Body,
   postV1users_Body,
 };
 
@@ -111,6 +173,1068 @@ const endpoints = makeApi([
       {
         status: 409,
         description: `User already exists`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/chats",
+    alias: "postV1chats",
+    description: `Creates a new chat session with an optional initial message`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1chats_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("chat"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                userId: z.string().uuid(),
+                title: z.string().nullable(),
+                metadata: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                  z.unknown(),
+                ]),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/chats",
+    alias: "getV1chats",
+    description: `Returns a list of chats for the authenticated user`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("chat"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  userId: z.string().uuid(),
+                  title: z.string().nullable(),
+                  metadata: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                    z.unknown(),
+                  ]),
+                  createdAt: z.string(),
+                  updatedAt: z.string(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/chats/:chatId",
+    alias: "getV1chatsChatId",
+    description: `Returns a specific chat by its ID`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "chatId",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("chat"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                userId: z.string().uuid(),
+                title: z.string().nullable(),
+                metadata: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                  z.unknown(),
+                ]),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/chats/:chatId/messages",
+    alias: "getV1chatsChatIdmessages",
+    description: `Retrieve messages for a specific chat`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "chatId",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("message"),
+              id: z.string().uuid(),
+              attributes: z.unknown().nullish(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/documents",
+    alias: "getV1documents",
+    description: `Returns a list of all documents with optional filtering and pagination`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "type",
+        type: "Query",
+        schema: z.string().optional(),
+      },
+      {
+        name: "limit",
+        type: "Query",
+        schema: z.number().int().optional().default(10),
+      },
+      {
+        name: "offset",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
+      },
+    ],
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("document"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.number().int().gte(-2147483648).lte(2147483647),
+                  title: z.string(),
+                  description: z.string(),
+                  type: z.string(),
+                  sections: z.number().int().gte(-2147483648).lte(2147483647),
+                  lastUpdated: z.string().max(4),
+                  storageUrl: z.string(),
+                  downloadCount: z
+                    .number()
+                    .int()
+                    .gte(-2147483648)
+                    .lte(2147483647),
+                  createdAt: z.string(),
+                  updatedAt: z.string(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/documents",
+    alias: "postV1documents",
+    description: `Register a new document in the system`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1documents_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number().int().gte(-2147483648).lte(2147483647),
+                title: z.string(),
+                description: z.string(),
+                type: z.string(),
+                sections: z.number().int().gte(-2147483648).lte(2147483647),
+                lastUpdated: z.string().max(4),
+                storageUrl: z.string(),
+                downloadCount: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/documents/:id",
+    alias: "getV1documentsId",
+    description: `Retrieve document details by document ID`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number().int().gte(-2147483648).lte(2147483647),
+                title: z.string(),
+                description: z.string(),
+                type: z.string(),
+                sections: z.number().int().gte(-2147483648).lte(2147483647),
+                lastUpdated: z.string().max(4),
+                storageUrl: z.string(),
+                downloadCount: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/documents/:id/bookmark",
+    alias: "postV1documentsIdbookmark",
+    description: `Add or remove a bookmark for a document`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number().int().gte(-2147483648).lte(2147483647),
+                title: z.string(),
+                description: z.string(),
+                type: z.string(),
+                sections: z.number().int().gte(-2147483648).lte(2147483647),
+                lastUpdated: z.string().max(4),
+                storageUrl: z.string(),
+                downloadCount: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/documents/:id/download",
+    alias: "getV1documentsIddownload",
+    description: `Increment download count and return document details`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number().int().gte(-2147483648).lte(2147483647),
+                title: z.string(),
+                description: z.string(),
+                type: z.string(),
+                sections: z.number().int().gte(-2147483648).lte(2147483647),
+                lastUpdated: z.string().max(4),
+                storageUrl: z.string(),
+                downloadCount: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/documents/ingest",
+    alias: "postV1documentsingest",
+    description: `Upload and process a document with real-time progress updates via Server-Sent Events`,
+    requestFormat: "form-data",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ file: z.instanceof(File) }).passthrough(),
+      },
+    ],
+    response: z.void(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/lawyers",
+    alias: "getV1lawyers",
+    description: `Returns a list of all registered lawyers with optional filtering and pagination`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("lawyer"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.number(),
+                  name: z.string(),
+                  email: z.string().email(),
+                  specialization: z.string(),
+                  experienceYears: z.number(),
+                  rating: z.union([z.string(), z.number()]).optional(),
+                  casesHandled: z.number(),
+                  isAvailable: z.boolean(),
+                  location: z.string(),
+                  languages: z.array(z.string()),
+                  createdAt: z.string(),
+                  updatedAt: z.string(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/lawyers",
+    alias: "postV1lawyers",
+    description: `Register a new lawyer in the system`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1lawyers_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("lawyer"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number(),
+                name: z.string(),
+                email: z.string().email(),
+                specialization: z.string(),
+                experienceYears: z.number(),
+                rating: z.union([z.string(), z.number()]).optional(),
+                casesHandled: z.number(),
+                isAvailable: z.boolean(),
+                location: z.string(),
+                languages: z.array(z.string()),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 409,
+        description: `Lawyer with this email already exists`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/lawyers/:id",
+    alias: "getV1lawyersId",
+    description: `Retrieve lawyer details by lawyer ID`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("lawyer"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number(),
+                name: z.string(),
+                email: z.string().email(),
+                specialization: z.string(),
+                experienceYears: z.number(),
+                rating: z.union([z.string(), z.number()]).optional(),
+                casesHandled: z.number(),
+                isAvailable: z.boolean(),
+                location: z.string(),
+                languages: z.array(z.string()),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "put",
+    path: "/v1/lawyers/:id",
+    alias: "putV1lawyersId",
+    description: `Update an existing lawyer&#x27;s information`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: putV1lawyersId_Body,
+      },
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string(),
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("lawyer"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.number(),
+                name: z.string(),
+                email: z.string().email(),
+                specialization: z.string(),
+                experienceYears: z.number(),
+                rating: z.union([z.string(), z.number()]).optional(),
+                casesHandled: z.number(),
+                isAvailable: z.boolean(),
+                location: z.string(),
+                languages: z.array(z.string()),
+                createdAt: z.string(),
+                updatedAt: z.string(),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/messages",
+    alias: "postV1messages",
+    description: `Send a new message to a chat`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1messages_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("message"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                chatId: z.string().uuid(),
+                content: z.string(),
+                senderId: z.string().uuid().nullable(),
+                senderType: z.enum(["user", "assistant", "system"]),
+                timestamp: z.string(),
+                metadata: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                  z.unknown(),
+                ]),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/messages/:chatId",
+    alias: "getV1messagesChatId",
+    description: `Retrieve all messages for a specific chat`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "chatId",
+        type: "Path",
+        schema: z.string(),
+      },
+      {
+        name: "limit",
+        type: "Query",
+        schema: z.number().int().optional().default(50),
+      },
+      {
+        name: "offset",
+        type: "Query",
+        schema: z.number().int().optional().default(0),
+      },
+    ],
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("message"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  chatId: z.string().uuid(),
+                  content: z.string(),
+                  senderId: z.string().uuid().nullable(),
+                  senderType: z.enum(["user", "assistant", "system"]),
+                  timestamp: z.string(),
+                  metadata: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                    z.unknown(),
+                  ]),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/services",
+    alias: "getV1services",
+    description: `Returns a list of all available legal services with optional category filtering`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "category",
+        type: "Query",
+        schema: z
+          .enum([
+            "government",
+            "legal-aid",
+            "dispute-resolution",
+            "specialized",
+          ])
+          .optional(),
+      },
+    ],
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("legal-service"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  name: z.string(),
+                  category: z.string().nullable(),
+                  description: z.string(),
+                  location: z.string(),
+                  contact: z.string(),
+                  website: z.string().nullable(),
+                  services: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                    z.unknown(),
+                  ]),
+                  createdAt: z.string(),
+                  updatedAt: z.string(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
         schema: JsonApiErrorResponse,
       },
     ],

@@ -8,8 +8,8 @@ import {
   useLoaderData,
 } from "react-router";
 import { Header } from "~/layouts/header";
-import { UserProvider } from '~/providers/user-provider';
-import { QueryClientProviderWrapper } from '~/providers/query-client-provider';
+import { UserProvider } from '~/context/user-provider';
+import { QueryClientProviderWrapper } from '~/context/query-client-provider';
 import type { Route } from "./+types/root";
 import "./app.css";
 import { NotFound } from "./routes/$";

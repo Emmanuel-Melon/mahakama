@@ -1,87 +1,56 @@
-import { FetchApiClient, type ApiResponse } from "./fetch";
-import type { LegalDocument } from "~/documents/types.documents";
+import { FetchApiClient } from "./fetch";
+import type { components } from "./generated/api.types";
+import { DOCUMENTS_API_ROUTES } from "~/feature/documents/DocumentsConfig";
 
-interface DocumentsResponse {
-  data: LegalDocument[];
-  meta: {
-    total: number;
-    limit: number;
-    offset: number;
-  };
-}
+export type Document = components["schemas"]["Document"];
+export type DocumentResource = components["schemas"]["DocumentResource"];
+export type DocumentSingleResponse = components["schemas"]["DocumentSingleResponse"];
+export type DocumentsCollectionResponse = components["schemas"]["DocumentsCollectionResponse"];
 
 export class DocumentsApiClient {
   private api: FetchApiClient;
-
-  constructor(apiKey?: string) {
-    this.api = new FetchApiClient({ apiKey });
+  constructor() {
+    this.api = new FetchApiClient();
   }
-
   public async getDocuments(
-    params: {
-      limit?: number;
-      offset?: number;
-      search?: string;
-      [key: string]: any; // Allow additional query params
-    } = {},
-    options: {
-      headers?: HeadersInit;
-      token?: string;
-    } = {},
-  ) {
-    const queryParams = new URLSearchParams();
-
-    // Add standard params
-    if (params.limit) queryParams.set("limit", params.limit.toString());
-    if (params.offset) queryParams.set("offset", params.offset.toString());
-    if (params.search) queryParams.set("search", params.search);
-
-    // Add any additional params
-    Object.entries(params).forEach(([key, value]) => {
-      if (!["limit", "offset", "search"].includes(key) && value !== undefined) {
-        queryParams.set(key, String(value));
+    options: { headers: HeadersInit } = { headers: {} },
+  ): Promise<Document[]> {
+    try {
+      const response = await this.api.request<DocumentsCollectionResponse>(DOCUMENTS_API_ROUTES.ROOT, {
+        headers: options.headers,
+      });
+      if (!response.data) {
+        console.error("Invalid documents data:", response);
+        throw new Error("Invalid documents data received from the server");
       }
-    });
-
-    const queryString = queryParams.toString();
-    const url = `/v1/documents${queryString ? `?${queryString}` : ""}`;
-
-    // Prepare headers with auth token if provided
-    const headers: HeadersInit = {
-      ...(options.token && { Authorization: `Bearer ${options.token}` }),
-      ...options.headers,
-    };
-
-    const result = await this.api.request<DocumentsResponse>(url, {
-      headers,
-    });
-
-    if (!result) {
-      throw new Error("Failed to fetch documents");
+      const documents = response.data.map((resource) => resource.attributes);
+      return documents;
+    } catch (error) {
+      console.error("Failed to fetch documents:", error);
+      throw error;
     }
-
-    return {
-      data: result.data || [],
-      meta: result.meta || { total: 0, limit: 10, offset: 0 },
-    };
   }
+
   public async getDocumentById(
     documentId: string | number,
-    options?: {
-      headers: HeadersInit;
-    },
-  ): Promise<LegalDocument> {
-    const result = await this.api.request<ApiResponse<LegalDocument>>(
-      `/v1/documents/${documentId}`,
-      {
-        headers: options?.headers,
-      },
-    );
-    if (!result.success || !result.data) {
-      throw new Error("Document not found");
+    options: { headers: HeadersInit } = { headers: {} },
+  ): Promise<Document> {
+    try {
+      const response = await this.api.request<DocumentSingleResponse>(
+        DOCUMENTS_API_ROUTES.DOCUMENT.replace(':documentId', String(documentId)),
+        {
+          headers: options.headers,
+        },
+      );
+      if (!response.data.attributes) {
+        console.error("Invalid document data:", response);
+        throw new Error("Invalid document data received from the server");
+      }
+      return response.data.attributes;
+    } catch (error) {
+      console.error("Failed to fetch document:", error);
+      throw error;
     }
-
-    return result.data;
   }
 }
 

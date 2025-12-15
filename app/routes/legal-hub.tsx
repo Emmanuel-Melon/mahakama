@@ -1,12 +1,14 @@
 import type { Route } from "./+types/legal-hub";
-import { LegalHubScreen } from "~/feature/website/LegalHubScreen";
+import { LegalHubScreen } from "~/feature/website/screens/LegalHubScreen";
+import { servicesApi } from "~/lib/api/services.api";
+import { getForwardHeaders, parseCookies } from "~/lib/api/utils";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Legal Institutions & Service Providers - Mahakama" },
+    { title: "Legal Services Directory - Mahakama" },
     {
       name: "description",
-      content: "Find government offices, legal aid providers, and dispute resolution services in South Sudan and Uganda. Connect with the right legal resources for your needs.",
+      content: "Find legal services, government offices, and legal aid providers in South Sudan and Uganda.",
     },
     {
       name: "keywords",
@@ -30,4 +32,25 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export default LegalHubScreen;
+export async function loader({ request }: Route.LoaderArgs) {
+  try {
+    const cookieHeader = request.headers.get("Cookie");
+    const cookies = parseCookies(cookieHeader);
+    const token = cookies.token;
+    
+    return { token, error: null };
+  } catch (error) {
+    console.error("Error loading services:", error);
+    return { 
+      token: null,
+      error: error instanceof Error ? error.message : "Failed to load services" 
+    };
+  }
+}
+
+export default function LegalHubPage({ loaderData }: Route.ComponentProps) {
+  const { token, error } = loaderData;
+  console.log('token', token);
+  console.log('error', error);
+  return <LegalHubScreen token={token} error={error} />;
+}

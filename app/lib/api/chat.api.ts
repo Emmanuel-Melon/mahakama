@@ -1,17 +1,11 @@
-import { FetchApiClient, type ApiResponse } from "./fetch";
+import { FetchApiClient } from "./fetch";
 import type { components } from "./generated/api.types";
-
-export type ChatType = components["schemas"]["Chat"];
+export type Chat = components["schemas"]["Chat"];
+export type ChatResource = components["schemas"]["ChatResource"];
+export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
+export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
-
-interface ChatListResponse {
-  success: boolean;
-  data: {
-    chats: ChatType[];
-  };
-  message?: string;
-}
 
 export interface MessageSender {
   id: string;
@@ -34,28 +28,25 @@ export class ChatApiClient {
 
   public async createChat(
     initialMessage: string,
-    options: any = {},
-  ): Promise<{ success: boolean; chat: ChatType }> {
+    options: { headers: HeadersInit } = { headers: {} },
+  ): Promise<Chat> {
     try {
       const payload = {
         title: initialMessage,
       };
 
-      const response = await this.api.request<{
-        success: boolean;
-        data: { chat: ChatType };
-      }>("/v1/chats", {
+      const response = await this.api.request<ChatSingleResponse>("/v1/chats", {
         method: "POST",
+        headers: options.headers,
         body: JSON.stringify(payload),
-        ...options,
       });
 
-      if (!response.success || !response.data) {
-        console.error("Failed to create chat. Response:", response);
-        throw new Error("Failed to create chat");
+      if (!response.data.attributes) {
+        console.error("Invalid chat data:", response);
+        throw new Error("Invalid chat data received from the server");
       }
 
-      return { success: true, chat: response.data.chat };
+      return response.data.attributes;
     } catch (error) {
       console.error("Failed to create chat:", error);
       throw error;
@@ -63,16 +54,23 @@ export class ChatApiClient {
   }
 
   public async getChats(
-    params: {} = {},
-    options: any = {},
-  ): Promise<ChatType[]> {
+    options: { headers: HeadersInit } = { headers: {} },
+  ): Promise<Chat[]> {
     try {
-
-      const response = await this.api.request<ChatListResponse>(
+      const response = await this.api.request<ChatsCollectionResponse>(
         "/v1/chats/",
-        options,
+        {
+          headers: options.headers,
+        },
       );
-      return response.data.chats;
+      
+      if (!response.data) {
+        console.error("Invalid chats data:", response);
+        throw new Error("Invalid chats data received from the server");
+      }
+      
+      const chats = response.data.map((resource) => resource.attributes);
+      return chats;
     } catch (error) {
       console.error("Failed to fetch chats:", error);
       throw error;
@@ -82,20 +80,18 @@ export class ChatApiClient {
   public async getChatById(
     chatId: string,
     options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<{ success: boolean; chat: ChatType }> {
+  ): Promise<Chat> {
     try {
-      const response = await this.api.request<{
-        success: boolean;
-        data: { chat: ChatType };
-      }>(`/v1/chats/${chatId}`, {
+      const response = await this.api.request<ChatSingleResponse>(`/v1/chats/${chatId}`, {
         headers: options.headers,
       });
-      if (!response.success || !response.data) {
+      
+      if (!response.data.attributes) {
         console.error("Invalid chat data:", response);
         throw new Error("Invalid chat data received from the server");
       }
 
-      return { success: true, chat: response.data.chat };
+      return response.data.attributes;
     } catch (error) {
       console.error("Failed to fetch chat:", error);
       throw error;
@@ -108,26 +104,19 @@ export class ChatApiClient {
     options: { headers: HeadersInit; metadata?: Record<string, unknown> } = {
       headers: {},
     },
-  ): Promise<{ success: boolean; message: ChatType | null }> {
+  ): Promise<void> {
     try {
-      const response = await this.api.request<ChatListResponse>(
+      await this.api.request<ChatSingleResponse>(
         `/v1/chats/${chatId}/messages`,
         {
           method: "POST",
+          headers: options.headers,
           body: JSON.stringify({
             content: message,
             metadata: options.metadata,
           }),
-          headers: options.headers,
         },
       );
-
-      if (!response.success || !response.data) {
-        console.error("Failed to send message. Response:", response);
-        throw new Error("Failed to send message");
-      }
-
-      return { success: true, message: null };
     } catch (error) {
       console.error("Failed to send message:", error);
       throw error;
@@ -143,13 +132,20 @@ export class ChatApiClient {
       newTitle: string;
     },
     options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<void> {
+  ): Promise<Chat> {
     try {
-      await this.api.request<{ success: boolean }>(`/v1/chats/${chatId}`, {
+      const response = await this.api.request<ChatSingleResponse>(`/v1/chats/${chatId}`, {
         method: "PATCH",
-        body: JSON.stringify({ title: newTitle }),
         headers: options.headers,
+        body: JSON.stringify({ title: newTitle }),
       });
+      
+      if (!response.data.attributes) {
+        console.error("Invalid chat data:", response);
+        throw new Error("Invalid chat data received from the server");
+      }
+
+      return response.data.attributes;
     } catch (error) {
       console.error("Failed to update chat title:", error);
       throw error;
@@ -158,10 +154,10 @@ export class ChatApiClient {
 
   public async deleteChat(
     chatId: string,
-    options: { headers?: HeadersInit } = {},
+    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<void> {
     try {
-      await this.api.request<{ success: boolean }>(`/v1/chats/${chatId}`, {
+      await this.api.request<void>(`/v1/chats/${chatId}`, {
         method: "DELETE",
         headers: options.headers,
       });

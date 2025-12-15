@@ -7,40 +7,40 @@ import {
 } from "@react-router/dev/routes";
 import { AUTH_ROUTES } from "./feature/auth/AuthConfig";
 import { LAWYERS_ROUTES } from "./feature/lawyers/LawyersConfig";
+import { DOCUMENTS_ROUTES } from "./feature/documents/DocumentsConfig";
+import { USERS_ROUTES } from "./feature/users/UsersConfig";
+import { CHATS_ROUTES } from "./feature/chats/ChatsConfig";
+import { WEBSITE_ROUTES } from "./feature/website/WebsiteConfig";
 
 export default [
-  layout("./feature/website/website.layout.tsx", [
-    index("routes/home.tsx"),
-    route("about", "routes/about.tsx"),
-    route("contact", "routes/contact.tsx"),
+  layout(WEBSITE_ROUTES.LAYOUT, [
+    index(WEBSITE_ROUTES.HOME.PATH),
+    route(WEBSITE_ROUTES.ABOUT.URL_SEGMENT, WEBSITE_ROUTES.ABOUT.PATH),
+    route(WEBSITE_ROUTES.CONTACT.URL_SEGMENT, WEBSITE_ROUTES.CONTACT.PATH),
+    route(WEBSITE_ROUTES.LEGAL_HUB.URL_SEGMENT, WEBSITE_ROUTES.LEGAL_HUB.PATH),
+    route(WEBSITE_ROUTES.SERVICE_DETAIL.URL_SEGMENT, WEBSITE_ROUTES.SERVICE_DETAIL.PATH),
   ]),
   route("app", "routes/app/index.tsx"),
   route("onboarding", "routes/onboarding/index.tsx"),
   layout(AUTH_ROUTES.LAYOUT, [
-    route("login", AUTH_ROUTES.LOGIN),
-    route("signup", AUTH_ROUTES.SIGNUP),
+    route(AUTH_ROUTES.LOGIN.URL_SEGMENT, AUTH_ROUTES.LOGIN.PATH),
+    route(AUTH_ROUTES.SIGNUP.URL_SEGMENT, AUTH_ROUTES.SIGNUP.PATH),
   ]),
   ...prefix("chats", [
-    route("new", "routes/chats/chats.new.tsx"),
-    route("recents", "routes/chats/chats.recents.tsx"),
-    route(":chatId", "routes/chats/chats.$chatId.tsx"),
+    route(CHATS_ROUTES.NEW.URL_SEGMENT, CHATS_ROUTES.NEW.PATH),
+    route(CHATS_ROUTES.RECENTS.URL_SEGMENT, CHATS_ROUTES.RECENTS.PATH),
+    route(CHATS_ROUTES.CHAT_DETAIL.URL_SEGMENT, CHATS_ROUTES.CHAT_DETAIL.PATH),
   ]),
-  // ...prefix("documents", [
-  //   index("routes/documents/index.tsx"),
-  //   route(":documentId", "routes/documents/documents.$documentId.tsx"),
-  // ]),
-  // ...prefix("lawyers", [
-  //   index("routes/lawyers/index.tsx"),
-  //   route(":lawyerId", "routes/lawyers/lawyers.$lawyerId.tsx"),
-  // ]),
-  layout("./feature/search/search.layout.tsx", [
-    route("lawyers", LAWYERS_ROUTES.INDEX),
-    route("documents", "routes/documents/index.tsx"),
-    route(":lawyerId", LAWYERS_ROUTES.LAWYER),
+  ...prefix(DOCUMENTS_ROUTES.INDEX.URL_SEGMENT, [
+    index(DOCUMENTS_ROUTES.INDEX.PATH),
+    route(DOCUMENTS_ROUTES.DETAIL.URL_SEGMENT, DOCUMENTS_ROUTES.DETAIL.PATH),
   ]),
-  ...prefix("users", [
-    route(":profile", "routes/users/$profile.tsx"),
-    route("settings", "routes/users/settings.tsx"),
+  ...prefix(LAWYERS_ROUTES.INDEX.URL_SEGMENT, [
+    index(LAWYERS_ROUTES.INDEX.PATH),
+    route(LAWYERS_ROUTES.DETAIL.URL_SEGMENT, LAWYERS_ROUTES.DETAIL.PATH),
   ]),
-  route("legal-hub", "routes/legal-hub.tsx"),
+  ...prefix(USERS_ROUTES.PROFILE.URL_SEGMENT, [
+    route(USERS_ROUTES.PROFILE.URL_SEGMENT, USERS_ROUTES.PROFILE.PATH),
+    route(USERS_ROUTES.SETTINGS.URL_SEGMENT, USERS_ROUTES.SETTINGS.PATH),
+  ]),
 ] satisfies RouteConfig;

@@ -1,6 +1,6 @@
 import { AUTH_API_ROUTES } from "~/feature/auth/AuthConfig";
 import { FetchApiClient } from "~/lib/api/fetch";
-import type { components } from "~/lib/api/generated/api1.types";
+import type { components } from "~/lib/api/generated/api.types";
 
 export type LoginRequest = components["schemas"]["LoginRequest"];
 export type RegisterRequest = components["schemas"]["RegisterRequest"];

@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
 import type { User } from '~/lib/api/users.api';
-import { useCurrentUser } from '~/hooks/use-users';
-import { useLogout } from '~/hooks/use-auth';
+import { useCurrentUser } from '~/feature/users/hooks/use-users';
+import { useLogout } from '~/feature/auth/hooks/use-auth';
 import { parseCookies } from '~/lib/api/utils';
 
 type UserContextType = {

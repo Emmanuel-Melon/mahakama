@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { usersApi, type User } from '~/lib/api/users.api';
+import { usersApi } from '~/lib/api/users.api';
+
+import type { components as componentsv1 } from "~/lib/api/generated/api1.types";
+export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
+export type User = componentsv1["schemas"]["User"];
 
 export const userKeys = {
     all: ['users'] as const,
@@ -12,7 +16,7 @@ export const userKeys = {
 };
 
 export function useCurrentUser(token?: string) {
-    return useQuery({
+    return useQuery<User | null, JsonApiErrorResponse>({
         queryKey: userKeys.current(),
         queryFn: async () => {
             if (!token) return null;
@@ -29,7 +33,7 @@ export function useCurrentUser(token?: string) {
 }
 
 export function useUser(userId: string, token?: string) {
-    return useQuery({
+    return useQuery<User, JsonApiErrorResponse>({
         queryKey: userKeys.detail(userId),
         queryFn: async () => {
             return await usersApi.getUserById(userId, {
@@ -47,8 +51,8 @@ export function useUser(userId: string, token?: string) {
 export function useUpdateUser(token?: string) {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async ({ userId, data }: { userId: string; data: Partial<User> }) => {
+    return useMutation<User, JsonApiErrorResponse, { userId: string; data: Partial<User> }>({
+        mutationFn: async ({ userId, data }) => {
             return await usersApi.updateUser(userId, data, {
                 headers: { Authorization: `Bearer ${token}` },
             });

@@ -7,14 +7,12 @@ import {
   Scale,
   BookOpen,
 } from "lucide-react";
-import {
-  FeaturesGrid,
-  StepsSection,
-  LegalServicesSection,
-} from "~/feature/website/about/components";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { AboutIntro } from "~/feature/website/about/components/Intro";
+import { AboutIntro } from "~/feature/website/components/about/Intro";
 import { HeroSection } from "~/layouts/HeroSection";
+import { FeaturesGrid } from "../components/about/FeaturesGrid";
+import { LegalServicesSection } from "../components/about/LegalServicesSection";
+import { StepsSection } from "../components/about/StepsSection";
 
 const features = [
   {
