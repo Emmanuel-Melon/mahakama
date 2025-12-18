@@ -2,7 +2,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { authApi } from '~/lib/api/auth.api';
 
-import type { components } from "~/lib/api/generated/api1.types";
+import type { components } from "~/lib/api/generated/api.types";
 
 export type AuthResponse = components["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse = components["schemas"]["JsonApiErrorResponse"];
@@ -27,10 +27,10 @@ export function useLogin() {
         },
         onSuccess: (data: AuthResponse) => {
             toast.success('Login successful!');
-            // Store token in cookie or localStorage
-            if (data.token) {
-                document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
-            }
+            // // Store token in cookie or localStorage
+            // if (data.token) {
+            //     document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
+            // }
         },
         onError: (error) => {
             toast.error('Login failed. Please check your credentials.');
