@@ -10,29 +10,27 @@ export type ServiceCategory = components["schemas"]["ServiceCategory"];
 
 export class ServicesApiClient {
   private api: FetchApiClient;
-  constructor() {
-    this.api = new FetchApiClient();
+  constructor(apiClient?: FetchApiClient) {
+    this.api = apiClient || new FetchApiClient();
   }
-
+  
   public async getServices(
-    options: { headers: HeadersInit; category?: "government" | "legal-aid" | "dispute-resolution" | "specialized" } = { headers: {} },
+    category?: "government" | "legal-aid" | "dispute-resolution" | "specialized"
   ): Promise<LegalService[]> {
     try {
       let url = "/v1/services";
 
-      if (options.category) {
-        url += `?category=${encodeURIComponent(options.category)}`;
+      if (category) {
+        url += `?category=${encodeURIComponent(category)}`;
       }
 
-      const response = await this.api.request<LegalServicesCollectionResponse>(url, {
-        headers: options.headers,
-      });
-      
+      const response = await this.api.request<LegalServicesCollectionResponse>(url);
+
       if (!response.data) {
         console.error("Invalid services data:", response);
         throw new Error("Invalid services data received from the server");
       }
-      
+
       const services = response.data.map((resource) => resource.attributes);
       return services;
     } catch (error) {
@@ -41,14 +39,9 @@ export class ServicesApiClient {
     }
   }
 
-  public async getServiceById(
-    serviceId: string,
-    options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<LegalService> {
+  public async getServiceById(serviceId: string): Promise<LegalService> {
     try {
-      const response = await this.api.request<LegalServiceSingleResponse>(`/v1/services/${serviceId}`, {
-        headers: options.headers,
-      });
+      const response = await this.api.request<LegalServiceSingleResponse>(`/v1/services/${serviceId}`);
 
       if (!response.data.attributes) {
         console.error("Invalid service data:", response);

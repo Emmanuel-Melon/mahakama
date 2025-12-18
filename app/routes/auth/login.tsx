@@ -1,5 +1,5 @@
-import { LoginScreen } from '~/feature/auth/screens/LoginScreen';
 import type { Route } from "./+types/login"; 
+import { LoginScreen } from '~/feature/auth/screens/LoginScreen';
 
 export function meta({ }: Route.MetaArgs) {
   return [

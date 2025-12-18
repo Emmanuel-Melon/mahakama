@@ -13,7 +13,9 @@ import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "~/components/icon-container";
 import { useUser } from '~/context/user-provider';
+import { useLogout } from '~/feature/auth/hooks/use-auth';
 import { UserDropdown } from "~/components/user-dropdown";
+import { ChatDrawer } from "~/feature/chats/components/ChatDrawer";
 const links = [
   {
     id: 0,
@@ -57,9 +59,11 @@ export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-
-  const { user, isLoading } = useUser();
-
+  const { user } = useUser();
+  const logoutMutation = useLogout();
+  const filteredLinks = user
+    ? links.filter(link => link.title !== "About Us" && link.title !== "Contact")
+    : links;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -69,8 +73,6 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -119,10 +121,10 @@ export function Header() {
       }}
     >
       <div className="w-full">
-        <div className="w-full mx-auto px-12 sm:px-12 lg:px-12">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-12">
           <div className="flex h-16 sm:h-20 items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center flex-shrink-0">
+            <div className="flex items-center flex-shrink-0 gap-2">
               <NavLink to="/" className="flex items-center group">
                 <IconContainer
                   icon={Scale}
@@ -135,11 +137,9 @@ export function Header() {
                 </span>
               </NavLink>
             </div>
-
-            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
               <nav className="flex items-center gap-2">
-                {links.map((link) => {
+                {filteredLinks.map((link) => {
                   const Icon = link.icon;
                   return (
                     <NavLink
@@ -167,15 +167,11 @@ export function Header() {
                 })}
               </nav>
 
-              <div className="h-6 w-px bg-gray-200"></div>
-
               {user ? (
-                <div className="flex items-center gap-4">
+                <div>
                   <UserDropdown
                     user={user}
-                    onLogout={() => {
-                      console.log('Logging out...');
-                    }}
+                    onLogout={() => logoutMutation.mutate()}
                   />
                 </div>
               ) : (
@@ -226,7 +222,7 @@ export function Header() {
                   Menu
                 </h3>
                 <div className="space-y-1">
-                  {links.map((link) => {
+                  {filteredLinks.map((link) => {
                     const Icon = link.icon;
                     return (
                       <NavLink

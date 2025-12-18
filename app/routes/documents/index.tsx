@@ -1,27 +1,10 @@
-import { useState, useMemo } from "react";
-import { HeroSection } from "~/components/layouts/HeroSection";
-import { DocumentCollection } from "~/documents/document-collection";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { Library } from "lucide-react";
 import type { Route } from "./+types/index";
-import { ErrorDisplay } from "~/components/async-state/error";
-import { EmptyState } from "~/components/async-state/empty";
-import type { LegalDocument } from "~/documents/types.documents";
-import { documentsApi } from "~/lib/api/documents.api";
-import { parseCookies } from "~/lib/api/utils";
+import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
+import { useDocuments } from "~/feature/documents/hooks/use-documents";
+import { authContext, userContext } from "~/middleware/context";
+import { ErrorState } from "~/components/async-state/error";
 
-type LoaderData = {
-  documents: LegalDocument[];
-  meta: {
-    total: number;
-    limit: number;
-    offset: number;
-  };
-  error: string | null;
-  timestamp?: string;
-};
-
-export function meta({}: Route.MetaArgs) {
+export function meta({ }: Route.MetaArgs) {
   return [
     { title: "Legal Database - Access South Sudan & Uganda Laws" },
     {
@@ -54,108 +37,33 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({
-  request,
-}: Route.LoaderArgs): Promise<LoaderData> {
+export async function loader({ context }: Route.LoaderArgs) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
-    const { data: documents, meta } = await documentsApi.getDocuments(
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return {
-      documents: Array.isArray(documents) ? documents : [],
-      meta: {
-        total: meta?.total || 0,
-        limit: meta?.limit || 10,
-        offset: meta?.offset || 0,
-      },
-      error: null,
-      timestamp: new Date().toISOString(),
-    };
+    const user = context.get(userContext);
+    const token = context.get(authContext)?.token || null;
+    return { user, token, error: null };
   } catch (error) {
-    console.error("Error fetching documents:", error);
-
-    return {
-      documents: [],
-      meta: { total: 0, limit: 10, offset: 0 },
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to load documents. Please try again later.",
+    console.error("Error loading documents route:", error);
+    return { 
+      user: null, 
+      token: null, 
+      error: error instanceof Error ? error.message : "Failed to load user data" 
     };
   }
 }
 
-export default function LegalDatabase({
-  loaderData,
-}: {
-  loaderData: LoaderData;
-}) {
-  const { documents, meta, error } = loaderData;
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredDocuments = useMemo(() => {
-    if (!searchQuery.trim()) return documents;
-
-    const query = searchQuery.toLowerCase();
-    return documents.filter(
-      (doc) =>
-        doc.title.toLowerCase().includes(query) ||
-        doc.description.toLowerCase().includes(query) ||
-        doc.type.toLowerCase().includes(query) ||
-        doc.lastUpdated.toString().includes(query),
-    );
-  }, [documents, searchQuery]);
-
-  if (error) {
-    return (
-      <div className="min-h-screen">
-        <HeroSection
-          title="Legal Database"
-          description="Access a comprehensive collection of legal documents, acts, and regulations."
-          icon={Library}
-        />
-        <DiagonalSeparator />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <ErrorDisplay
-            title="Error loading documents"
-            error="Hello"
-            onRetry={() => window.location.reload()}
-          />
-        </div>
-      </div>
-    );
-  }
-
+export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
+  const { user, token, error } = loaderData;
+  if (error) return <ErrorState error={error} />;
+  
+  const { data: documents, error: documentsError, isLoading } = useDocuments();
+  
   return (
-    <div className="min-h-screen">
-      <HeroSection
-        title="Legal Database"
-        description="Access a comprehensive collection of legal documents, acts, and regulations."
-        icon={Library}
-        actionVariant="search"
-      />
-      <DiagonalSeparator />
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="w-full">
-          {filteredDocuments.length === 0 ? (
-            <EmptyState
-              title="No documents found"
-              description="Try adjusting your search or check back later for updates."
-            />
-          ) : (
-            <DocumentCollection documents={filteredDocuments} />
-          )}
-        </div>
-      </div>
-    </div>
+    <DocumentsScreen 
+      documents={documents || []} 
+      error={documentsError} 
+      isLoading={isLoading}
+      isAuthenticated={!!user}
+    />
   );
 }

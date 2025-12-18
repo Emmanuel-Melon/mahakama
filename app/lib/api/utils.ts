@@ -1,3 +1,5 @@
+import { redirect } from "react-router";
+
 export function getForwardHeaders(request: Request): HeadersInit {
   const isProduction = process.env.NODE_ENV === "production";
 
@@ -38,7 +40,6 @@ export function parseCookies(
   cookieHeader: string | null,
 ): Record<string, string> {
   if (!cookieHeader) return {};
-
   return cookieHeader
     .split(";")
     .map((cookie) => cookie.trim())
@@ -50,4 +51,24 @@ export function parseCookies(
       },
       {} as Record<string, string>,
     );
+}
+
+export function getAuthToken(request: Request): string | null {
+  const cookieHeader = request.headers.get("Cookie");
+  const cookies = parseCookies(cookieHeader);
+  const token = cookies?.token ?? null;
+  return token;
+}
+
+export function requireAuth(request: Request) {
+  const token = getAuthToken(request);
+  if (!token) {
+    throw redirect("/login");
+  }
+  return token;
+}
+
+export function getAuthHeaders(request: Request): HeadersInit {
+  const token = getAuthToken(request);
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }

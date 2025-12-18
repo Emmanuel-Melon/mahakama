@@ -22,12 +22,16 @@ const postV1chats_Body = z
   .passthrough();
 const postV1documents_Body = z
   .object({
-    title: z.string().min(1),
-    description: z.string().min(1),
-    type: z.string().min(1),
-    sections: z.number().int().gt(0),
-    lastUpdated: z.string().min(4).max(4),
-    storageUrl: z.string().min(1).url(),
+    id: z.string().uuid().optional(),
+    title: z.string(),
+    description: z.string(),
+    type: z.string(),
+    sections: z.number().int().gte(-2147483648).lte(2147483647),
+    lastUpdated: z.string().max(4),
+    storageUrl: z.string(),
+    downloadCount: z.number().int().gte(-2147483648).lte(2147483647).optional(),
+    createdAt: z.string().optional(),
+    updatedAt: z.string().optional(),
   })
   .passthrough();
 const postV1lawyers_Body = z
@@ -379,7 +383,25 @@ const endpoints = makeApi([
             .object({
               type: z.literal("message"),
               id: z.string().uuid(),
-              attributes: z.unknown().nullish(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  chatId: z.string().uuid(),
+                  content: z.string(),
+                  senderId: z.string().uuid().nullable(),
+                  senderType: z.enum(["user", "assistant", "system"]),
+                  timestamp: z.string(),
+                  metadata: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                    z.unknown(),
+                  ]),
+                })
+                .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
@@ -440,7 +462,7 @@ const endpoints = makeApi([
               id: z.string().uuid(),
               attributes: z
                 .object({
-                  id: z.number().int().gte(-2147483648).lte(2147483647),
+                  id: z.string().uuid(),
                   title: z.string(),
                   description: z.string(),
                   type: z.string(),
@@ -500,7 +522,7 @@ const endpoints = makeApi([
             id: z.string().uuid(),
             attributes: z
               .object({
-                id: z.number().int().gte(-2147483648).lte(2147483647),
+                id: z.string().uuid(),
                 title: z.string(),
                 description: z.string(),
                 type: z.string(),
@@ -564,7 +586,7 @@ const endpoints = makeApi([
             id: z.string().uuid(),
             attributes: z
               .object({
-                id: z.number().int().gte(-2147483648).lte(2147483647),
+                id: z.string().uuid(),
                 title: z.string(),
                 description: z.string(),
                 type: z.string(),
@@ -628,7 +650,7 @@ const endpoints = makeApi([
             id: z.string().uuid(),
             attributes: z
               .object({
-                id: z.number().int().gte(-2147483648).lte(2147483647),
+                id: z.string().uuid(),
                 title: z.string(),
                 description: z.string(),
                 type: z.string(),
@@ -697,7 +719,7 @@ const endpoints = makeApi([
             id: z.string().uuid(),
             attributes: z
               .object({
-                id: z.number().int().gte(-2147483648).lte(2147483647),
+                id: z.string().uuid(),
                 title: z.string(),
                 description: z.string(),
                 type: z.string(),

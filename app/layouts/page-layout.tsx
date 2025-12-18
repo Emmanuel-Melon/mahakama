@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -7,11 +8,13 @@ interface PageLayoutProps {
 
 export function PageLayout({ children, className = "" }: PageLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className={className}>{children}</div>
+    <SidebarInset>
+      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="w-full py-4">
+          <div className={className}>{children}</div>
+        </div>
       </div>
-    </div>
+    </SidebarInset>
   );
 }
 
@@ -51,7 +54,7 @@ export function PageHeader({
       }));
 
   return (
-    <div className={`flex items-center justify-between mb-6 ${className}`}>
+    <div className={`flex items-center justify-between ${className}`}>
       <div className="flex items-center space-x-2">
         {showBackButton && (
           <button

@@ -1,8 +1,10 @@
+import type { Route } from "./+types/root";
 import {
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
+  redirect,
   Scripts,
   ScrollRestoration,
   useLoaderData,
@@ -10,12 +12,15 @@ import {
 import { Header } from "~/layouts/header";
 import { UserProvider } from '~/context/user-provider';
 import { QueryClientProviderWrapper } from '~/context/query-client-provider';
-import type { Route } from "./+types/root";
 import "./app.css";
 import { NotFound } from "./routes/$";
-import { parseCookies } from "~/lib/api/utils";
-import { usersApi } from "~/lib/api/users.api";
+import { parseCookies, getAuthToken, requireAuth } from "~/lib/api/utils";
+import { usersApi, UsersApiClient } from "~/lib/api/users.api";
+import { FetchApiClient } from "~/lib/api/fetch";
 import { Toaster } from 'sonner';
+import { userContext, authContext } from "~/middleware/context";
+import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar"
+import { AppSidebar } from "~/components/app-sidebar";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -30,29 +35,20 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export async function loader({ request }: { request: Request }) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
-    let user = null;
-
-    if (token) {
-      const response = await usersApi.getCurrentUser({
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      user = response;
-    }
-
-    return { user };
+    const user = context.get(userContext);
+    const token = context.get(authContext)?.token || null;
+    return { user, token };
   } catch (error) {
-    return { user: null };
+    return { user: null, token: null };
   }
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const { user } = useLoaderData<typeof loader>();
-
+  const loaderData = useLoaderData<typeof loader>();
+  const user = loaderData?.user || null;
+  console.log('from middleware', user);
   return (
     <html lang="en" className="h-full">
       <head>
@@ -63,11 +59,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
         <QueryClientProviderWrapper>
-          <UserProvider user={user || null}>
-            <Header />
+          <UserProvider user={user}>
+          
             <Toaster />
+            {/* Header for mobile only */}
+            <div className="md:hidden">
+              <Header />
+            </div>
             <main className="flex-1">
-              {children}
+              <SidebarProvider>
+                <AppSidebar />
+                {children}
+              </SidebarProvider>
             </main>
           </UserProvider>
         </QueryClientProviderWrapper>
@@ -114,3 +117,33 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   );
 }
+
+async function authMiddleware({ request, context }: Route.LoaderArgs) {
+  const token = getAuthToken(request);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+    return;
+  }
+
+  if (!token) { throw redirect("/login"); }
+  const cookieHeader = request.headers.get('cookie');
+  const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
+  
+  try {
+    const user = await apiClient.getCurrentUser();
+    console.log("this failed", user);
+    if (!user.isOnboarded) {
+      // throw redirect("/onboarding");
+    }
+    context.set(userContext, user);
+    context.set(authContext, { token });
+  } catch (error) {
+    throw redirect("/login");
+  }
+}
+
+export const middleware: Route.MiddlewareFunction[] = [
+  authMiddleware,
+];
+

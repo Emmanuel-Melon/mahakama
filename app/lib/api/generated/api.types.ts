@@ -492,7 +492,26 @@ export interface paths {
                                 type: "message";
                                 /** Format: uuid */
                                 id: string;
-                                attributes?: unknown;
+                                /**
+                                 * ChatMessage
+                                 * @description Chat message response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    chatId: string;
+                                    content: string;
+                                    /** Format: uuid */
+                                    senderId: string | null;
+                                    /** @enum {string} */
+                                    senderType: "user" | "assistant" | "system";
+                                    /** Format: date */
+                                    timestamp: string;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[] | unknown;
+                                };
                                 relationships?: {
                                     [key: string]: unknown;
                                 };
@@ -592,7 +611,8 @@ export interface paths {
                                 /** Format: uuid */
                                 id: string;
                                 attributes: {
-                                    id: number;
+                                    /** Format: uuid */
+                                    id: string;
                                     title: string;
                                     description: string;
                                     type: string;
@@ -662,13 +682,19 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        /** Format: uuid */
+                        id?: string;
                         title: string;
                         description: string;
                         type: string;
                         sections: number;
                         lastUpdated: string;
-                        /** Format: uri */
                         storageUrl: string;
+                        downloadCount?: number;
+                        /** Format: date */
+                        createdAt?: string;
+                        /** Format: date */
+                        updatedAt?: string;
                     };
                 };
             };
@@ -686,7 +712,8 @@ export interface paths {
                                 /** Format: uuid */
                                 id: string;
                                 attributes: {
-                                    id: number;
+                                    /** Format: uuid */
+                                    id: string;
                                     title: string;
                                     description: string;
                                     type: string;
@@ -792,7 +819,8 @@ export interface paths {
                                 /** Format: uuid */
                                 id: string;
                                 attributes: {
-                                    id: number;
+                                    /** Format: uuid */
+                                    id: string;
                                     title: string;
                                     description: string;
                                     type: string;
@@ -902,7 +930,8 @@ export interface paths {
                                 /** Format: uuid */
                                 id: string;
                                 attributes: {
-                                    id: number;
+                                    /** Format: uuid */
+                                    id: string;
                                     title: string;
                                     description: string;
                                     type: string;
@@ -1017,7 +1046,8 @@ export interface paths {
                                 /** Format: uuid */
                                 id: string;
                                 attributes: {
-                                    id: number;
+                                    /** Format: uuid */
+                                    id: string;
                                     title: string;
                                     description: string;
                                     type: string;
@@ -1653,6 +1683,10 @@ export interface paths {
                                 type: "message";
                                 /** Format: uuid */
                                 id: string;
+                                /**
+                                 * ChatMessage
+                                 * @description Chat message response schema
+                                 */
                                 attributes: {
                                     /** Format: uuid */
                                     id: string;
@@ -1775,6 +1809,10 @@ export interface paths {
                                 type: "message";
                                 /** Format: uuid */
                                 id: string;
+                                /**
+                                 * ChatMessage
+                                 * @description Chat message response schema
+                                 */
                                 attributes: {
                                     /** Format: uuid */
                                     id: string;
@@ -2672,13 +2710,51 @@ export interface components {
                 [key: string]: unknown;
             };
         };
-        Message: unknown;
+        /**
+         * ChatMessage
+         * @description Chat message response schema
+         */
+        Message: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** Format: uuid */
+            senderId: string | null;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: date */
+            timestamp: string;
+            metadata: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[] | unknown;
+        };
         MessageResource: {
             /** @enum {string} */
             type: "message";
             /** Format: uuid */
             id: string;
-            attributes?: unknown;
+            /**
+             * ChatMessage
+             * @description Chat message response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                chatId: string;
+                content: string;
+                /** Format: uuid */
+                senderId: string | null;
+                /** @enum {string} */
+                senderType: "user" | "assistant" | "system";
+                /** Format: date */
+                timestamp: string;
+                metadata: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[] | unknown;
+            };
             relationships?: {
                 [key: string]: unknown;
             };
@@ -2695,7 +2771,26 @@ export interface components {
                 type: "message";
                 /** Format: uuid */
                 id: string;
-                attributes?: unknown;
+                /**
+                 * ChatMessage
+                 * @description Chat message response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    chatId: string;
+                    content: string;
+                    /** Format: uuid */
+                    senderId: string | null;
+                    /** @enum {string} */
+                    senderType: "user" | "assistant" | "system";
+                    /** Format: date */
+                    timestamp: string;
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[] | unknown;
+                };
                 relationships?: {
                     [key: string]: unknown;
                 };
@@ -2722,7 +2817,26 @@ export interface components {
                 type: "message";
                 /** Format: uuid */
                 id: string;
-                attributes?: unknown;
+                /**
+                 * ChatMessage
+                 * @description Chat message response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    chatId: string;
+                    content: string;
+                    /** Format: uuid */
+                    senderId: string | null;
+                    /** @enum {string} */
+                    senderType: "user" | "assistant" | "system";
+                    /** Format: date */
+                    timestamp: string;
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[] | unknown;
+                };
                 relationships?: {
                     [key: string]: unknown;
                 };
@@ -2744,7 +2858,8 @@ export interface components {
             };
         };
         Document: {
-            id: number;
+            /** Format: uuid */
+            id: string;
             title: string;
             description: string;
             type: string;
@@ -2758,13 +2873,19 @@ export interface components {
             updatedAt: string;
         };
         CreateDocument: {
+            /** Format: uuid */
+            id?: string;
             title: string;
             description: string;
             type: string;
             sections: number;
             lastUpdated: string;
-            /** Format: uri */
             storageUrl: string;
+            downloadCount?: number;
+            /** Format: date */
+            createdAt?: string;
+            /** Format: date */
+            updatedAt?: string;
         };
         DocumentResource: {
             /** @enum {string} */
@@ -2772,7 +2893,8 @@ export interface components {
             /** Format: uuid */
             id: string;
             attributes: {
-                id: number;
+                /** Format: uuid */
+                id: string;
                 title: string;
                 description: string;
                 type: string;
@@ -2802,7 +2924,8 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 attributes: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     title: string;
                     description: string;
                     type: string;
@@ -2842,7 +2965,8 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 attributes: {
-                    id: number;
+                    /** Format: uuid */
+                    id: string;
                     title: string;
                     description: string;
                     type: string;

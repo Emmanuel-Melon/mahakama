@@ -1,5 +1,7 @@
 import type { Route } from "./+types/home";
 import { HomeScreen } from "~/feature/website/screens/HomeScreen";
+import { authContext, userContext } from "~/middleware/context";
+import { redirect } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -12,4 +14,21 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export default HomeScreen;
+export async function loader({ context }: Route.LoaderArgs) {
+  try {
+    const user = context.get(userContext);
+    const token = context.get(authContext)?.token || null;
+    if (user && token) {
+      return redirect("/app");
+    }
+    return { user: null, token: null };
+  } catch (error) {
+    console.error("Error checking authentication:", error);
+    return { user: null, token: null };
+  }
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { user } = loaderData;
+  return <HomeScreen />;
+}

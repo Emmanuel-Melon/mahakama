@@ -1,11 +1,9 @@
 import type { Route } from "./+types/index";
-import { LawyersList } from "~/lawyers/lawyers-list";
-import { HeroSection } from "~/components/layouts/HeroSection";
-import { Gavel } from "lucide-react";
-import { ErrorDisplay } from "~/components/async-state/error";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { lawyersApi } from "~/lib/api/lawyers.api";
-import { parseCookies } from "~/lib/api/utils";
+import { LawyersScreen } from "~/feature/lawyers/screens/LawyersScreen";
+import { useLawyers } from "~/feature/lawyers/hooks/use-lawyers";
+import { useSearchParams } from "react-router";
+import { authContext, userContext } from "~/middleware/context";
+import { ErrorState } from "~/components/async-state/error";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -40,60 +38,28 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ context }: Route.LoaderArgs) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
-    const lawyers = await lawyersApi.getLawyers(
-      {
-        language: "English",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-
-    return {
-      lawyers,
-      error: null,
-      timestamp: new Date().toISOString(),
-    };
+    const user = context.get(userContext);
+    const token = context.get(authContext)?.token || null;
+    return { user, token, error: null };
   } catch (error) {
-    console.error("Error fetching lawyers:", error);
     return {
-      lawyers: [],
-      error:
-        "Unable to load lawyers at this time. Please check your connection and try again later.",
-      timestamp: new Date().toISOString(),
+      user: null,
+      token: null,
+      error: error instanceof Error ? error.message : "Failed to load user data"
     };
   }
 }
 
 export default function LawyersPage({ loaderData }: Route.ComponentProps) {
-  const { lawyers, error } = loaderData;
-  return (
-    <div className="min-h-screen">
-      <div className="bg-background">
-        <HeroSection
-          title="Find Trusted Legal Professionals"
-          description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
-          actionVariant="search"
-          icon={Gavel}
-        />
-        <DiagonalSeparator />
-      </div>
-      <div className="w-full bg-background/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {error ? (
-            <ErrorDisplay error={error} />
-          ) : (
-            <LawyersList lawyers={lawyers} />
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  const { user, error } = loaderData;
+  if (error) return <ErrorState error={error} />;
+  
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get('category') as "government" | "legal-aid" | "dispute-resolution" | "specialized" | undefined;
+  
+  const { data: lawyers, error: lawyersError, isLoading } = useLawyers(category);
+  
+  return <LawyersScreen lawyers={lawyers || []} error={lawyersError} isLoading={isLoading} isAuthenticated={!!user} />;
 }

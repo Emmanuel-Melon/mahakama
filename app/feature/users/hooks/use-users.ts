@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { usersApi } from '~/lib/api/users.api';
 
-import type { components as componentsv1 } from "~/lib/api/generated/api1.types";
+import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
 export type User = componentsv1["schemas"]["User"];
 
@@ -15,16 +15,12 @@ export const userKeys = {
     current: () => [...userKeys.all, 'current'] as const,
 };
 
-export function useCurrentUser(token?: string) {
+export function useCurrentUser() {
     return useQuery<User | null, JsonApiErrorResponse>({
         queryKey: userKeys.current(),
         queryFn: async () => {
-            if (!token) return null;
-            return await usersApi.getCurrentUser({
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            return await usersApi.getCurrentUser();
         },
-        enabled: !!token,
         staleTime: 1000 * 60 * 10,
         meta: {
             errorToast: false,
@@ -32,15 +28,13 @@ export function useCurrentUser(token?: string) {
     });
 }
 
-export function useUser(userId: string, token?: string) {
+export function useUser(userId: string) {
     return useQuery<User, JsonApiErrorResponse>({
         queryKey: userKeys.detail(userId),
         queryFn: async () => {
-            return await usersApi.getUserById(userId, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            return await usersApi.getUserById(userId);
         },
-        enabled: !!userId && !!token,
+        enabled: !!userId,
         meta: {
             errorToast: true,
             errorMessage: 'Failed to load user',
@@ -48,18 +42,19 @@ export function useUser(userId: string, token?: string) {
     });
 }
 
-export function useUpdateUser(token?: string) {
+export function useUpdateUser() {
     const queryClient = useQueryClient();
 
     return useMutation<User, JsonApiErrorResponse, { userId: string; data: Partial<User> }>({
         mutationFn: async ({ userId, data }) => {
-            return await usersApi.updateUser(userId, data, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            return await usersApi.updateUser(userId, data);
         },
         onSuccess: (data, variables) => {
             toast.success('Profile updated successfully!');
             queryClient.invalidateQueries({ queryKey: userKeys.current() });
+            if (data.isOnboarded) {
+                window.location.href = '/app';
+            }
         },
         onError: (error) => {
             toast.error('Failed to update profile. Please try again.');

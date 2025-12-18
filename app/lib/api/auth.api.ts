@@ -11,54 +11,43 @@ export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
 
 export class AuthApiClient {
   private api: FetchApiClient;
-  constructor() {
-    this.api = new FetchApiClient({ baseUrl: "http://localhost:3000" });
-  }
-  public async login(credentials: LoginRequest): Promise<AuthResponse> {
-    try {
-      const response = await this.api.request<AuthResponse>(AUTH_API_ROUTES.LOGIN, {
-        method: "POST",
-        body: JSON.stringify(credentials),
-      });
-
-      if (!response) {
-        console.error("Invalid auth data:", response);
-        throw new Error("Invalid auth data received from the server");
-      }
-      return response;
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
+  
+  constructor(apiClient?: FetchApiClient) {
+    // If a custom client is provided, use it; otherwise create one with auth base URL
+    if (apiClient) {
+      this.api = apiClient;
+    } else {
+      const authBaseURL = import.meta.env.VITE_AUTH_BASE_URL || "http://localhost:3000/auth";
+      this.api = new FetchApiClient({}, authBaseURL);
     }
+  }
+
+  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+    // For auth endpoints, don't include credentials to avoid sending existing auth cookies
+    return await this.api.request<T>(endpoint, {
+      ...options,
+      credentials: 'omit', // Don't send cookies for auth requests
+    });
+  }
+
+  public async login(credentials: LoginRequest): Promise<AuthResponse> {
+    return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.LOGIN, {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    });
   }
 
   public async register(userAttrs: RegisterRequest): Promise<AuthResponse> {
-    try {
-      const response = await this.api.request<AuthResponse>(AUTH_API_ROUTES.REGISTER, {
-        method: "POST",
-        body: JSON.stringify(userAttrs),
-      });
-
-      if (!response) {
-        console.error("Invalid auth data:", response);
-        throw new Error("Invalid auth data received from the server");
-      }
-      return response;
-    } catch (error) {
-      console.error("Register failed:", error);
-      throw error;
-    }
+    return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.REGISTER, {
+      method: "POST",
+      body: JSON.stringify(userAttrs),
+    });
   }
 
   public async logout(): Promise<void> {
-    try {
-      await this.api.request<void>(AUTH_API_ROUTES.LOGOUT, {
-        method: "POST",
-      });
-    } catch (error) {
-      console.error("Logout failed:", error);
-      throw error;
-    }
+    await this.makeRequest<void>(AUTH_API_ROUTES.LOGOUT, {
+      method: "POST",
+    });
   }
 }
 

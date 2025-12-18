@@ -1,10 +1,11 @@
 import type { Route } from "./+types/$profile";
-import { usersApi } from "~/lib/api/users.api";
-import { parseCookies } from "~/lib/api/utils";
+import { usersApi, UsersApiClient } from "~/lib/api/users.api";
+import { FetchApiClient } from "~/lib/api/fetch";
 import { LoadingState } from "~/components/async-state/loading";
 import { ErrorState } from "~/components/async-state/error";
-import { useCurrentUser } from "~/feature/users/hooks/use-users";
+import { useCurrentUser, useUpdateUser } from "~/feature/users/hooks/use-users";
 import { ProfileScreen } from "~/feature/users/screens/ProfileScreen";
+import { authContext, userContext } from "~/middleware/context";
 
 export function meta({ loaderData }: Route.MetaArgs) {
     const { user } = loaderData;
@@ -17,16 +18,14 @@ export function meta({ loaderData }: Route.MetaArgs) {
     ];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
+export async function loader({ context, request }: Route.LoaderArgs) {
+    const token = context.get(authContext)?.token || null;
     try {
-        const response = await usersApi.getCurrentUser({
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        // Create API client with cookie from request headers for server-side call
+        const cookieHeader = request.headers.get('cookie');
+        const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
+        
+        const response = await apiClient.getCurrentUser();
         if (!response) {
             throw new Response("User not found", { status: 404 });
         }
@@ -39,10 +38,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function ProfilePage({ loaderData }: Route.ComponentProps) {
     const { token } = loaderData;
-    const { data: user, isLoading, error } = useCurrentUser(token);
+    const { data: user, isLoading, error } = useCurrentUser();
+    const updateMutation = useUpdateUser();
+    
     if (isLoading) return <LoadingState />;
     if (error) return <ErrorState error={error} />;
     if (!user) return <ErrorState error={new Error("User not found")} />;
-    
-    return <ProfileScreen user={user} />;
+
+    return <ProfileScreen user={user} updateMutation={updateMutation} />;
 }

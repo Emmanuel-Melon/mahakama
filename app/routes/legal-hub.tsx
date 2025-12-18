@@ -1,7 +1,9 @@
 import type { Route } from "./+types/legal-hub";
 import { LegalHubScreen } from "~/feature/website/screens/LegalHubScreen";
-import { servicesApi } from "~/lib/api/services.api";
-import { getForwardHeaders, parseCookies } from "~/lib/api/utils";
+import { authContext, userContext } from "~/middleware/context";
+import { useServices } from "~/feature/website/hooks/use-services";
+import { LoadingState } from "~/components/async-state/loading";
+import { ErrorState } from "~/components/async-state/error";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -32,25 +34,31 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ context }: Route.LoaderArgs) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
-    
-    return { token, error: null };
+    const user = context.get(userContext);
+    const token = context.get(authContext)?.token || null;
+    return { user, token, error: null };
   } catch (error) {
-    console.error("Error loading services:", error);
-    return { 
+    return {
+      user: null,
       token: null,
-      error: error instanceof Error ? error.message : "Failed to load services" 
+      error: error instanceof Error ? error.message : "Failed to load services"
     };
   }
 }
 
 export default function LegalHubPage({ loaderData }: Route.ComponentProps) {
-  const { token, error } = loaderData;
-  console.log('token', token);
-  console.log('error', error);
-  return <LegalHubScreen token={token} error={error} />;
+  const { user, error } = loaderData;
+  const { data: services, isLoading, error: servicesError } = useServices(undefined);
+
+  if (isLoading) return <LoadingState />;
+  
+  const errorMessage = servicesError 
+    ? (servicesError instanceof Error ? servicesError.message : "Failed to load services")
+    : error;
+
+  if (servicesError || error) return <ErrorState error={errorMessage || "Failed to load services"} />;
+
+  return <LegalHubScreen services={services ?? []} isAuthenticated={!!user} />;
 }

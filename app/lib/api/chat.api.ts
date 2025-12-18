@@ -1,11 +1,13 @@
-import { FetchApiClient } from "./fetch";
-import type { components } from "./generated/api.types";
+import { FetchApiClient } from "~/lib/api/fetch";
+import type { components } from "~/lib/api/generated/api.types";
+
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
+export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 
 export interface MessageSender {
   id: string;
@@ -27,14 +29,10 @@ export class ChatApiClient {
   }
 
   public async createChat(
-    initialMessage: string,
+    payload: CreateChatRequest,
     options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Chat> {
     try {
-      const payload = {
-        title: initialMessage,
-      };
-
       const response = await this.api.request<ChatSingleResponse>("/v1/chats", {
         method: "POST",
         headers: options.headers,
@@ -69,7 +67,7 @@ export class ChatApiClient {
         throw new Error("Invalid chats data received from the server");
       }
       
-      const chats = response.data.map((resource) => resource.attributes);
+      const chats = response.data.map((resource: ChatResource) => resource.attributes);
       return chats;
     } catch (error) {
       console.error("Failed to fetch chats:", error);
@@ -98,25 +96,44 @@ export class ChatApiClient {
     }
   }
 
-  public async sendMessage(
+  public async getChatMessages(
     chatId: string,
-    message: string,
-    options: { headers: HeadersInit; metadata?: Record<string, unknown> } = {
-      headers: {},
-    },
+    options: { headers: HeadersInit; limit?: number; offset?: number } = { headers: {} },
+  ): Promise<ChatMessage[]> {
+    try {
+      const queryParams = new URLSearchParams();
+      if (options.limit) queryParams.append('limit', options.limit.toString());
+      if (options.offset) queryParams.append('offset', options.offset.toString());
+      
+      const url = `/v1/messages/${chatId}/all${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
+      
+      const response = await this.api.request<{ data: ChatResource[] }>(url, {
+        headers: options.headers,
+      });
+      
+      if (!response.data) {
+        console.error("Invalid messages data:", response);
+        throw new Error("Invalid messages data received from the server");
+      }
+      
+      const messages = response.data.map((resource: ChatResource) => resource.attributes);
+      return messages;
+    } catch (error) {
+      console.error("Failed to fetch chat messages:", error);
+      throw error;
+    }
+  }
+
+  public async sendMessage(
+    payload: SendMessageRequest,
+    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<void> {
     try {
-      await this.api.request<ChatSingleResponse>(
-        `/v1/chats/${chatId}/messages`,
-        {
-          method: "POST",
-          headers: options.headers,
-          body: JSON.stringify({
-            content: message,
-            metadata: options.metadata,
-          }),
-        },
-      );
+      await this.api.request<void>("/v1/messages", {
+        method: "POST",
+        headers: options.headers,
+        body: JSON.stringify(payload),
+      });
     } catch (error) {
       console.error("Failed to send message:", error);
       throw error;

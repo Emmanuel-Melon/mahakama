@@ -17,12 +17,16 @@ export class LawyersApiClient {
 
   // Get all lawyers with optional filtering
   public async getLawyers(
-    options: { headers: HeadersInit } = { headers: {} },
+    category?: "government" | "legal-aid" | "dispute-resolution" | "specialized"
   ): Promise<Lawyer[]> {
     try {
-      const response = await this.api.request<LawyersCollectionResponse>(LAWYERS_API_ROUTES.ROOT, {
-        headers: options.headers,
-      });
+      let url = LAWYERS_API_ROUTES.ROOT;
+
+      if (category) {
+        url += `?category=${encodeURIComponent(category)}`;
+      }
+
+      const response = await this.api.request<LawyersCollectionResponse>(url);
       if (!response.data) {
         console.error("Invalid lawyers data:", response);
         throw new Error("Invalid lawyers data received from the server");
@@ -37,12 +41,9 @@ export class LawyersApiClient {
 
   public async getLawyerById(
     lawyerId: string,
-    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Lawyer> {
     try {
-      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/${lawyerId}`, {
-        headers: options.headers,
-      });
+      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/${lawyerId}`);
 
       if (!response.data.attributes) {
         console.error("Invalid lawyer data:", response);
@@ -58,12 +59,10 @@ export class LawyersApiClient {
 
   public async createLawyer(
     lawyerData: CreateLawyerRequest,
-    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Lawyer> {
     try {
       const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT, {
         method: 'POST',
-        headers: options.headers,
         body: JSON.stringify(lawyerData),
       });
 
@@ -103,12 +102,9 @@ export class LawyersApiClient {
 
   public async getLawyerByEmail(
     email: string,
-    options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Lawyer> {
     try {
-      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/email?email=${encodeURIComponent(email)}`, {
-        headers: options.headers,
-      });
+      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/email?email=${encodeURIComponent(email)}`);
 
       if (!response.data.attributes) {
         console.error("Invalid lawyer data:", response);

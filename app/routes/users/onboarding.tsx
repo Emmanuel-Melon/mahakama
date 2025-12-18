@@ -1,16 +1,16 @@
-import type { Route } from "./+types/settings";
-import { SettingsScreen } from "~/feature/users/screens/SettingsScreen";
+import type { Route } from "./+types/onboarding";
+import { OnboardingScreen } from "~/feature/users/screens/OnboardingScreen";
 import { authContext, userContext } from "~/middleware/context";
 import { ErrorState } from "~/components/async-state/error";
 import { useUpdateUser } from "~/feature/users/hooks/use-users";
 
 export function meta({ }: Route.MetaArgs) {
   return [
-    { title: "Settings - Mahakama" },
+    { title: "Onboarding - Mahakama" },
     {
       name: "description",
       content:
-        "Settings page for Mahakama account to access your legal resources and history.",
+        "Onboarding page for Mahakama account to access your legal resources and history.",
     },
   ];
 }
@@ -24,22 +24,22 @@ export async function loader({ context }: Route.LoaderArgs) {
     }
     return { user, token, error: null };
   } catch (error) {
-    console.error("Error loading settings:", error);
+    console.error("Error loading onboarding:", error);
     return { 
       user: null, 
       token: null, 
-      error: error instanceof Error ? error.message : "Failed to load settings" 
+      error: error instanceof Error ? error.message : "Failed to load onboarding" 
     };
   }
 }
 
-export default function SettingsPage({ loaderData }: Route.ComponentProps) {
+export default function OnboardingPage({ loaderData }: Route.ComponentProps) {
   const { user, token, error } = loaderData;
   if (error) return <ErrorState error={error} />;
   if (!user || !token) return <ErrorState error="User not authenticated" />;
   const updateMutation = useUpdateUser();
   return (
-    <SettingsScreen 
+    <OnboardingScreen 
       user={user}
       token={token}
       updateMutation={updateMutation}

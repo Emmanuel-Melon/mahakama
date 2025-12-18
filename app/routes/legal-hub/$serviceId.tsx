@@ -1,5 +1,8 @@
 import { ServiceDetailScreen } from "~/feature/website/screens/ServiceDetailScreen";
-import { parseCookies } from "~/lib/api/utils";
+import { authContext } from "~/middleware/context";
+import { useService } from "~/feature/website/hooks/use-services";
+import { LoadingState } from "~/components/async-state/loading";
+import { ErrorState } from "~/components/async-state/error";
 
 export function meta({ params }: { params: { serviceId: string } }) {
   return [
@@ -11,15 +14,13 @@ export function meta({ params }: { params: { serviceId: string } }) {
   ];
 }
 
-export async function loader({ request, params }: { request: Request; params: { serviceId: string } }) {
+export async function loader({ context, params }: { context: any; params: { serviceId: string } }) {
   try {
-    const cookieHeader = request.headers.get("Cookie");
-    const cookies = parseCookies(cookieHeader);
-    const token = cookies.token;
+    const token = context.get(authContext)?.token || null;
     
     return { 
       serviceId: params.serviceId,
-      token: token || null,
+      token: token,
       error: null 
     };
   } catch (error) {
@@ -33,17 +34,28 @@ export async function loader({ request, params }: { request: Request; params: { 
 }
 
 export default function ServiceDetailPage({ loaderData }: { loaderData: { serviceId: string; token: string | null; error: string | null } }) {
-  const { serviceId, token, error } = loaderData;
+  const { serviceId, error } = loaderData;
+
+  const { data: service, isLoading, error: serviceError } = useService(serviceId);
 
   const handleBack = () => {
     // Navigate back to legal hub
     window.location.href = "/legal-hub";
   };
 
+  if (isLoading) return <LoadingState />;
+  
+  const errorMessage = serviceError 
+    ? (serviceError instanceof Error ? serviceError.message : "Failed to load service details")
+    : error;
+
+  if (serviceError || error) return <ErrorState error={errorMessage || "Failed to load service details"} />;
+  
+  if (!service) return <ErrorState error="Service not found" />;
+
   return (
     <ServiceDetailScreen 
-      serviceId={serviceId} 
-      token={token} 
+      service={service}
       onBack={handleBack}
     />
   );
