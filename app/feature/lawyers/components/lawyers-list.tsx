@@ -12,7 +12,7 @@ interface LawyersListProps {
 
 export function LawyersList({
   lawyers = [],
-  displayMode: externalDisplayMode = "list",
+  displayMode: externalDisplayMode = "grid",
   variant = "default",
   showControls = true,
 }: LawyersListProps) {

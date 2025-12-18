@@ -17,14 +17,12 @@ export const servicesKeys = {
     servicesByCategory: (category: string) => [...servicesKeys.all, 'services', 'category', category] as const,
 };
 
-export function useServices(category?: "government" | "legal-aid" | "dispute-resolution" | "specialized", token?: string) {
+export function useServices(category?: "government" | "legal-aid" | "dispute-resolution" | "specialized") {
     return useQuery<LegalService[], JsonApiErrorResponse>({
         queryKey: category ? servicesKeys.servicesByCategory(category) : servicesKeys.services(),
         queryFn: async () => {
-            const headers: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
-            return await servicesApi.getServices(category ? { headers, category } : { headers })
+            return await servicesApi.getServices(category)
         },
-        enabled: !!token, // Only run query if token is available
         meta: {
             errorToast: true,
             errorMessage: 'Failed to load services',
@@ -32,15 +30,13 @@ export function useServices(category?: "government" | "legal-aid" | "dispute-res
     });
 }
 
-export function useService(id: string, token?: string) {
+export function useService(id: string) {
     return useQuery<LegalService, JsonApiErrorResponse>({
         queryKey: servicesKeys.service(id),
         queryFn: async () => {
-            return await servicesApi.getServiceById(id, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            return await servicesApi.getServiceById(id);
         },
-        enabled: !!id && !!token,
+        enabled: !!id,
         meta: {
             errorToast: true,
             errorMessage: 'Failed to load service',

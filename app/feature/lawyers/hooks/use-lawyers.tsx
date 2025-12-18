@@ -1,13 +1,13 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { lawyersApi } from '~/lib/api/lawyers.api';
 
-import type { components } from "~/lib/api/generated/api.types";
-import type { components as componentsv1} from "~/lib/api/generated/api1.types";
+import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
-export type Lawyer = components["schemas"]["Lawyer"];
+export type Lawyer = componentsv1["schemas"]["Lawyer"];
+export type CreateLawyer = componentsv1["schemas"]["CreateLawyer"];
 
 export const lawyersKeys = {
     all: ['lawyers'] as const,
@@ -15,12 +15,16 @@ export const lawyersKeys = {
     lawyer: (id: string) => [...lawyersKeys.all, 'lawyer', id] as const,
 };
 
-export function useLawyers() {
+export function useLawyers(category?: "government" | "legal-aid" | "dispute-resolution" | "specialized") {
     return useQuery<Lawyer[], JsonApiErrorResponse>({
-        queryKey: lawyersKeys.lawyers(),
+        queryKey: category ? [...lawyersKeys.lawyers(), 'category', category] : lawyersKeys.lawyers(),
         queryFn: async () => {
-            return await lawyersApi.getLawyers()
-        }
+            return await lawyersApi.getLawyers(category)
+        },
+        meta: {
+            errorToast: true,
+            errorMessage: 'Failed to load lawyers',
+        },
     });
 }
 
@@ -31,6 +35,28 @@ export function useLawyer(id: string) {
             return await lawyersApi.getLawyerById(id);
         },
         enabled: !!id,
+        meta: {
+            errorToast: true,
+            errorMessage: 'Failed to load lawyer',
+        },
+    });
+}
+
+export function useCreateLawyer() {
+    const queryClient = useQueryClient();
+
+    return useMutation<Lawyer, JsonApiErrorResponse, CreateLawyer>({
+        mutationFn: async (lawyerData: CreateLawyer) => {
+            return await lawyersApi.createLawyer(lawyerData);
+        },
+        onSuccess: (data) => {
+            toast.success('Lawyer created successfully!');
+            queryClient.invalidateQueries({ queryKey: lawyersKeys.lawyers() });
+        },
+        onError: (error) => {
+            toast.error('Failed to create lawyer. Please try again.');
+            console.error('Create lawyer error:', error);
+        },
     });
 }
 

@@ -4,33 +4,34 @@ import { HeroSection } from "~/layouts/HeroSection";
 import { Gavel } from "lucide-react";
 import { ErrorState } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { PageLayout } from "~/layouts/page-layout";
 
-import type { components } from "~/lib/api/generated/api.types";
-import type { components as componentsv1} from "~/lib/api/generated/api1.types";
-
-export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
-export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
-export type Lawyer = components["schemas"]["Lawyer"];
+import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+export type Lawyer = componentsv1["schemas"]["Lawyer"];
 
 type LawyersScreenProps = {
   lawyers: Lawyer[];
   error: any;
+  isLoading?: boolean;
+  isAuthenticated?: boolean;
 };
 
-export const LawyersScreen: FC<LawyersScreenProps> = ({ lawyers, error }) => {
+export const LawyersScreen: FC<LawyersScreenProps> = ({ lawyers, error, isLoading, isAuthenticated }) => {
   return (
-    <div className="min-h-screen">
-      <div className="bg-background">
-        <HeroSection
-          title="Find Trusted Legal Professionals"
-          description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
-          actionVariant="search"
-          icon={Gavel}
-        />
-        <DiagonalSeparator />
-      </div>
-      <div className="w-full bg-background/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <PageLayout>
+      {!isAuthenticated && (
+        <div className="bg-background">
+          <HeroSection
+            title="Find Trusted Legal Professionals"
+            description="Connect with vetted lawyers and legal experts in various fields of law. Get the right legal assistance for your specific needs."
+            actionVariant="search"
+            icon={Gavel}
+          />
+          <DiagonalSeparator />
+        </div>
+      )}
+      <div>
+        <div>
           {error ? (
             <ErrorState error={error} />
           ) : (
@@ -38,6 +39,6 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({ lawyers, error }) => {
           )}
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

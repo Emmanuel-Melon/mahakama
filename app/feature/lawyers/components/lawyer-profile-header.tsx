@@ -67,27 +67,12 @@ export function LawyerProfileHeader({
                   {lawyer.specialization}
                 </p>
               </div>
-
-              <div
-                className="flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-full border-2 border-gray-900"
-                style={{
-                  boxShadow: "2px 2px 0 0 #000",
-                }}
-              >
-                <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
-                <span className="text-xl font-bold">
-                  {lawyer.rating || "N/A"}
-                </span>
-                {lawyer.rating && (
-                  <span className="text-sm text-gray-600">/5.0</span>
-                )}
-              </div>
             </div>
 
             {/* Stats */}
             <div className="flex flex-wrap gap-3 mb-6">
               <div
-                className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border-2 border-gray-900"
+                className="flex items-center gap-2 bg-white px-4 py-1 rounded-full border-2 border-gray-900"
                 style={{
                   boxShadow: "2px 2px 0 0 #000",
                 }}
@@ -97,7 +82,7 @@ export function LawyerProfileHeader({
               </div>
 
               <div
-                className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border-2 border-gray-900"
+                className="flex items-center gap-2 bg-white px-4 py-1 rounded-full border-2 border-gray-900"
                 style={{
                   boxShadow: "2px 2px 0 0 #000",
                 }}
@@ -109,7 +94,7 @@ export function LawyerProfileHeader({
               </div>
 
               <div
-                className="flex items-center gap-2 bg-white px-4 py-2 rounded-full border-2 border-gray-900"
+                className="flex items-center gap-2 bg-white px-4 py-1 rounded-full border-2 border-gray-900"
                 style={{
                   boxShadow: "2px 2px 0 0 #000",
                 }}
@@ -134,18 +119,6 @@ export function LawyerProfileHeader({
                 <MessageSquare className="w-5 h-5 mr-2" />
                 <span>Chat Now</span>
                 <ChevronRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-              </Button>
-
-              <Button
-                onClick={onBook}
-                className="flex-1 flex items-center justify-center bg-white hover:bg-gray-50 text-gray-900 font-bold py-3 px-6 border-2 border-gray-900"
-                style={{
-                  borderRadius: "4px 12px 4px 12px",
-                  boxShadow: "3px 3px 0 0 #000",
-                }}
-              >
-                <Calendar className="w-5 h-5 mr-2" />
-                <span>Book Consultation</span>
               </Button>
             </div>
           </div>

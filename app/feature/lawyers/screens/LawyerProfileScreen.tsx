@@ -8,7 +8,7 @@ import { BorderedBox } from "~/components/ui/bordered-box";
 import { EducationSection, StyledContactList } from "~/feature/lawyers/components/LawyerEducation";
 
 import type { components } from "~/lib/api/generated/api.types";
-import type { components as componentsv1} from "~/lib/api/generated/api1.types";
+import type { components as componentsv1} from "~/lib/api/generated/api.types";
 import { MapPin } from "lucide-react";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
@@ -17,10 +17,25 @@ export type Lawyer = components["schemas"]["Lawyer"];
 
 type LawyerProfileScreenProps = {
   error: any;
-  lawyer: Lawyer;
+  lawyer?: Lawyer;
+  isLoading?: boolean;
 };
 
-export const LawyerProfileScreen = ({ error, lawyer }: LawyerProfileScreenProps) => {
+export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileScreenProps) => {
+
+  if (isLoading) {
+    return (
+      <PageLayout className="py-8">
+        <div className="mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+          </div>
+        </div>
+      </PageLayout>
+    );
+  }
 
   if (error) {
     return (
@@ -28,7 +43,7 @@ export const LawyerProfileScreen = ({ error, lawyer }: LawyerProfileScreenProps)
         <ErrorState
           error={error}
           title="Error Loading Profile"
-          className="max-w-3xl mx-auto"
+          className="mx-auto"
         />
       </PageLayout>
     );
@@ -40,7 +55,7 @@ export const LawyerProfileScreen = ({ error, lawyer }: LawyerProfileScreenProps)
         <EmptyState
           title="Profile Not Found"
           description="We couldn't find the lawyer profile you're looking for."
-          className="max-w-3xl mx-auto"
+          className="mx-auto"
           actions={[
             {
               label: "Back to Lawyers",
@@ -67,17 +82,16 @@ export const LawyerProfileScreen = ({ error, lawyer }: LawyerProfileScreenProps)
 
   return (
     <PageLayout className="space-y-8">
-      <PageHeader breadcrumbs={breadcrumbs} />
+      <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
       <LawyerProfileHeader lawyer={lawyer} onContact={handleContact} />
 
-      <div className="max-w-6xl mx-auto">
-        <DiagonalSeparator className="mb-12" />
+      <div className="mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
             <BorderedBox variant="decorated" label="Lawyer Profile">
               <div className="space-y-6">
                 <LawyerBio
-                  bio={lawyer.bio || "No bio available for this lawyer."}
+                  bio="No bio available for this lawyer."
                   className="h-full"
                 />
                 <EducationSection />
@@ -95,7 +109,7 @@ export const LawyerProfileScreen = ({ error, lawyer }: LawyerProfileScreenProps)
                 <div className="py-2">
                   <StyledContactList
                     email={lawyer.email}
-                    phone={lawyer.phone}
+                    phone={undefined}
                   />
                 </div>
               </div>

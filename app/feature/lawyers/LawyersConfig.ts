@@ -1,9 +1,19 @@
 export const LAWYERS_ROUTES = {
-    INDEX: "routes/lawyers/index.tsx",
-    LAWYER: "routes/lawyers/$lawyerId.tsx",
+    INDEX: {
+        URL_SEGMENT: "lawyers",
+        PATH: "routes/lawyers/index.tsx",
+        NAME: "lawyersIndex",
+        LABEL: "Lawyers",
+    },
+    DETAIL: {
+        URL_SEGMENT: ":lawyerId",
+        PATH: "routes/lawyers/$lawyerId.tsx",
+        NAME: "lawyerDetail",
+        LABEL: "Lawyer Details",
+    },
 } as const;
 
-const API_V1 = "/api/v1";
+const API_V1 = "/v1";
 
 export const LAWYERS_API_ROUTES = {
   ROOT: `${API_V1}/lawyers`,

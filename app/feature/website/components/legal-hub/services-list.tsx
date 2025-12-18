@@ -12,7 +12,6 @@ export type LegalServicesCollectionResponse = components["schemas"]["LegalServic
 export type CategoryLabels = components["schemas"]["CategoryLabels"];
 export type ServiceCategory = components["schemas"]["ServiceCategory"];
 
-
 interface ServicesListProps {
   services: LegalService[];
   displayMode?: "list" | "grid";
@@ -23,7 +22,7 @@ interface ServicesListProps {
 
 export function ServicesList({
   services = [],
-  displayMode: externalDisplayMode = "list",
+  displayMode: externalDisplayMode = "grid",
   variant = "default",
   showControls = true,
   isLoading = false,
@@ -69,19 +68,12 @@ export function ServicesList({
   return (
     <div className="space-y-6">
       {showControls && (
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {services.length} {services.length === 1 ? 'Service' : 'Services'} Found
-            </h2>
-          </div>
-          <ListControls
-            totalItems={services.length}
-            itemName="service"
-            displayMode={displayMode}
-            onDisplayModeChange={setDisplayMode}
-          />
-        </div>
+        <ListControls
+          totalItems={services.length}
+          itemName="service"
+          displayMode={displayMode}
+          onDisplayModeChange={setDisplayMode}
+        />
       )}
 
       {displayMode === "grid" ? (
