@@ -43,5 +43,5 @@ export default [
     route(USERS_ROUTES.SETTINGS.URL_SEGMENT, USERS_ROUTES.SETTINGS.PATH),
     route("onboarding", "routes/users/onboarding.tsx"),
   ]),
-  route("messages", "routes/messages.tsx"),
+  route("help", "routes/help.tsx"),
 ] satisfies RouteConfig;

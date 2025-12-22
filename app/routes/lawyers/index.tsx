@@ -3,7 +3,7 @@ import { LawyersScreen } from "~/feature/lawyers/screens/LawyersScreen";
 import { useLawyers } from "~/feature/lawyers/hooks/use-lawyers";
 import { useSearchParams } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
-import { ErrorState } from "~/components/async-state/error";
+import { PageLoading } from "~/components/page-loading";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -54,7 +54,13 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function LawyersPage({ loaderData }: Route.ComponentProps) {
   const { user, error } = loaderData;
-  if (error) return <ErrorState error={error} />;
+  if (error) return (
+    <PageLoading 
+      title="Authentication Error"
+      description="There was a problem loading your user session. Please try refreshing the page."
+      showSkeleton={false}
+    />
+  );
   
   const [searchParams] = useSearchParams();
   const category = searchParams.get('category') as "government" | "legal-aid" | "dispute-resolution" | "specialized" | undefined;

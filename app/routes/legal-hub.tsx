@@ -51,14 +51,10 @@ export async function loader({ context }: Route.LoaderArgs) {
 export default function LegalHubPage({ loaderData }: Route.ComponentProps) {
   const { user, error } = loaderData;
   const { data: services, isLoading, error: servicesError } = useServices(undefined);
-
   if (isLoading) return <LoadingState />;
-  
   const errorMessage = servicesError 
     ? (servicesError instanceof Error ? servicesError.message : "Failed to load services")
     : error;
-
   if (servicesError || error) return <ErrorState error={errorMessage || "Failed to load services"} />;
-
   return <LegalHubScreen services={services ?? []} isAuthenticated={!!user} />;
 }

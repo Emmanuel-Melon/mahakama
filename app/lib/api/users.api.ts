@@ -19,7 +19,6 @@ export class UsersApiClient {
     if (!response.data.attributes) {
       throw new Error("Invalid user data received from the server");
     }
-    console.log("response", response);
     return response.data.attributes;
   }
 

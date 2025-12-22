@@ -20,7 +20,6 @@ export function PageLoading({
 }: PageLoadingProps) {
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Loading header */}
       <CardWithLabel
         label="Loading"
         className="bg-white"
@@ -38,12 +37,9 @@ export function PageLoading({
           </div>
         </div>
       </CardWithLabel>
-
-      {/* Skeleton items */}
       {showSkeleton && (
         <div className="space-y-4">
           {displayMode === "grid" ? (
-            // Grid layout
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: skeletonCount }).map((_, index) => (
                 <div key={index} className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse" style={{ borderRadius: "8px 16px 8px 16px" }}>
@@ -68,7 +64,6 @@ export function PageLoading({
               ))}
             </div>
           ) : (
-            // List layout
             <div className="space-y-4">
               {Array.from({ length: skeletonCount }).map((_, index) => (
                 <div key={index} className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse" style={{ borderRadius: "8px 16px 8px 16px" }}>

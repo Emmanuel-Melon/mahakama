@@ -23,7 +23,6 @@ import { Toaster } from 'sonner';
 import { userContext, authContext } from "~/middleware/context";
 import { SidebarProvider, SidebarTrigger, SidebarInset,} from "~/components/ui/sidebar"
 import { AppSidebar } from "~/components/app-sidebar";
-import { BottomNavigation } from "~/components/bottom-navigation";
 import { SiteHeader } from "~/components/site-header";
 
 export const links: Route.LinksFunction = () => [

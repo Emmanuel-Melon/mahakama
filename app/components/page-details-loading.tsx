@@ -1,5 +1,6 @@
 import { Loader2 } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
+import { PageLayout } from "~/layouts/page-layout";
 
 interface PageDetailsLoadingProps {
   title?: string;
@@ -17,6 +18,7 @@ export function PageDetailsLoading({
   className = "",
 }: PageDetailsLoadingProps) {
   return (
+    <PageLayout>
     <div className={`space-y-6 ${className}`}>
       {/* Page Header Skeleton */}
       <div className="animate-pulse">
@@ -110,6 +112,7 @@ export function PageDetailsLoading({
         </div>
       )}
     </div>
+    </PageLayout>
   );
 }
 

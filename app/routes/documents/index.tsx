@@ -2,7 +2,9 @@ import type { Route } from "./+types/index";
 import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
 import { useDocuments } from "~/feature/documents/hooks/use-documents";
 import { authContext, userContext } from "~/middleware/context";
-import { ErrorState } from "~/components/async-state/error";
+import { PageError } from "~/components/page-error";
+import { PageLayout } from "~/layouts/page-layout";
+import { useState } from "react";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -43,27 +45,41 @@ export async function loader({ context }: Route.LoaderArgs) {
     const token = context.get(authContext)?.token || null;
     return { user, token, error: null };
   } catch (error) {
-    console.error("Error loading documents route:", error);
-    return { 
-      user: null, 
-      token: null, 
-      error: error instanceof Error ? error.message : "Failed to load user data" 
+
+    return {
+      user: null,
+      token: null,
+      error: error instanceof Error ? error.message : "Failed to load user data"
     };
   }
 }
 
 export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
-  const { user, token, error } = loaderData;
-  if (error) return <ErrorState error={error} />;
-  
+  const { user, error } = loaderData;
+  if (error) return (
+    <PageLayout>
+      <PageError
+        title="Authentication Error"
+        description="There was a problem loading your user session. Please try logging in again."
+        error={error}
+        onRetry={() => window.location.reload()}
+      />
+    </PageLayout>
+  );
+
   const { data: documents, error: documentsError, isLoading } = useDocuments();
-  
+  const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
+
   return (
-    <DocumentsScreen 
-      documents={documents || []} 
-      error={documentsError} 
-      isLoading={isLoading}
-      isAuthenticated={!!user}
-    />
+    <PageLayout>
+      <DocumentsScreen
+        documents={documents || []}
+        error={documentsError}
+        isLoading={isLoading}
+        isAuthenticated={!!user}
+        displayMode={displayMode}
+        onDisplayModeChange={setDisplayMode}
+      />
+    </PageLayout>
   );
 }
