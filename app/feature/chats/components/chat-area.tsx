@@ -24,8 +24,6 @@ export function ChatArea({
   isLoading = false,
   className = "",
 }: ChatAreaProps) {
-
-  console.log("messages:", messages);
   return (
     <div className={cn("h-full overflow-y-auto px-2", className)}>
       <div className="space-y-4 w-full">

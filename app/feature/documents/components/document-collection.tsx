@@ -7,20 +7,28 @@ interface DocumentCollectionProps {
   displayMode?: "list" | "grid";
   variant?: "default" | "minimal";
   showControls?: boolean;
+  onDisplayModeChange?: (mode: "list" | "grid") => void;
 }
 
 export function DocumentCollection({
   documents,
   displayMode: externalDisplayMode = "grid",
   variant = "default",
-  showControls = true
+  showControls = true,
+  onDisplayModeChange
 }: DocumentCollectionProps) {
     const [displayMode, setDisplayMode] = useState<"list" | "grid">(
       externalDisplayMode,
     );
+    
     useEffect(() => {
       setDisplayMode(externalDisplayMode);
     }, [externalDisplayMode]);
+    
+    const handleDisplayModeChange = (mode: "list" | "grid") => {
+      setDisplayMode(mode);
+      onDisplayModeChange?.(mode);
+    };
   return (
     <div className="space-y-6">
       {showControls && (
@@ -28,7 +36,7 @@ export function DocumentCollection({
           totalItems={documents.length}
           label="Legal Documents"
           displayMode={displayMode}
-          onDisplayModeChange={setDisplayMode}
+          onDisplayModeChange={handleDisplayModeChange}
         />
       )}
 

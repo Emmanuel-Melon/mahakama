@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { ArrowLeft, Phone, Mail, Globe, MapPin, Clock, Users, FileText } from "lucide-react";
+import { ArrowLeft, Phone, Mail, Globe, MapPin, Clock, Users, FileText, Building, Home } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { PageLayout } from "~/layouts/page-layout";
+import { PageLayout, PageHeader } from "~/layouts/page-layout";
+import { PageDetailHeader } from "~/layouts/page-detail-header";
+import { ContactInformation, type ContactItem } from "~/components/contact-information";
 import type { LegalService } from "~/feature/website/hooks/use-services";
 
 interface ServiceDetailScreenProps {
@@ -10,39 +12,77 @@ interface ServiceDetailScreenProps {
 }
 
 export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProps) {
+  const contactItems: ContactItem[] = [];
+
+  if (service.contact) {
+    contactItems.push({
+      type: 'phone',
+      label: 'Phone',
+      value: service.contact,
+    });
+  }
+
+  if (service.location) {
+    contactItems.push({
+      type: 'location',
+      label: 'Location',
+      value: service.location,
+    });
+  }
+
+  if (service.website) {
+    contactItems.push({
+      type: 'website',
+      label: 'Website',
+      value: 'Visit Website',
+      href: service.website,
+    });
+  }
+
+  const metadata = [];
+  
+  if (service.category) {
+    metadata.push({
+      icon: Building,
+      label: 'Category',
+      value: service.category,
+    });
+  }
+
+  const actions = [];
+  
+  if (onBack) {
+    actions.push({
+      label: 'Back',
+      icon: ArrowLeft,
+      onClick: onBack,
+      variant: 'outline' as const,
+    });
+  }
+
   return (
     <PageLayout>
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 mb-8">
-        <div className="flex items-center gap-4">
-          {onBack && (
-            <Button
-              variant="outline"
-              onClick={onBack}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back
-            </Button>
-          )}
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-gray-900">{service.name}</h1>
-            <p className="text-gray-600 mt-1">{service.category}</p>
-          </div>
-        </div>
-      </div>
+      <div className="space-y-6">
+        <PageHeader 
+          showBackButton={!!onBack}
+          breadcrumbs={[
+            { label: "Home", to: "/", icon: Home },
+            { label: "Services", to: "/services", icon: Building },
+            { label: service.name }
+          ]}
+        />
+        
+        <PageDetailHeader
+          type="Service Detail"
+          title={service.name}
+          description={service.description}
+          icon={Building}
+          metadata={metadata}
+        />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+      
 
-      {/* Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-2 space-y-8">
-          {/* Description */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">About This Service</h2>
-            <p className="text-gray-700 leading-relaxed">{service.description}</p>
-          </div>
-
-          {/* Services Offered */}
           {service.services && Array.isArray(service.services) && service.services.length > 0 && (
             <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -67,7 +107,7 @@ export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProp
             </div>
           )}
 
-          {/* Additional Information */}
+      
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Additional Information</h2>
             <div className="space-y-4">
@@ -89,50 +129,15 @@ export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProp
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Contact Information */}
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Contact Information</h2>
-            <div className="space-y-4">
-              {service.contact && (
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-gray-400" />
-                  <div>
-                    <p className="font-medium text-gray-900">Phone</p>
-                    <p className="text-gray-600">{service.contact}</p>
-                  </div>
-                </div>
-              )}
-              {service.location && (
-                <div className="flex items-center gap-3">
-                  <MapPin className="h-5 w-5 text-gray-400" />
-                  <div>
-                    <p className="font-medium text-gray-900">Location</p>
-                    <p className="text-gray-600">{service.location}</p>
-                  </div>
-                </div>
-              )}
-              {service.website && (
-                <div className="flex items-center gap-3">
-                  <Globe className="h-5 w-5 text-gray-400" />
-                  <div>
-                    <p className="font-medium text-gray-900">Website</p>
-                    <a 
-                      href={service.website} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-800 underline"
-                    >
-                      Visit Website
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+          {contactItems.length > 0 && (
+            <ContactInformation
+              title="Contact Information"
+              description="Get in touch with this service provider."
+              contactItems={contactItems}
+            />
+          )}
 
-          {/* Action Buttons */}
           <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Get Help</h2>
             <div className="space-y-3">
@@ -149,6 +154,7 @@ export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProp
           </div>
         </div>
       </div>
+    </div>
     </PageLayout>
   );
 }

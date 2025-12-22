@@ -3,6 +3,9 @@ import { LawyerCard } from "./lawyer-card";
 import { ListControls } from "~/components/list-controls";
 import type { Lawyer } from "~/lib/api/lawyers.api";
 
+import { List, AutoSizer, CellMeasurer, CellMeasurerCache, Grid, Table, Column } from 'react-virtualized';
+import 'react-virtualized/styles.css';
+
 interface LawyersListProps {
   lawyers: Lawyer[];
   displayMode?: "list" | "grid";

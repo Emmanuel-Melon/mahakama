@@ -97,6 +97,7 @@ export function DocumentCard({
 
         <Link
           to={`/documents/${document.id}`}
+          viewTransition
           className="group inline-flex items-center font-medium text-gray-900 hover:text-yellow-600 transition-colors text-sm"
         >
           View full document
@@ -167,52 +168,85 @@ export function DocumentCard({
     return variant === "minimal" ? (
       // Minimal grid card
       <div
-        className={`flex flex-col h-full border border-gray-200 bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow ${className}`}
+        className={`h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-6 flex flex-col`}
+        style={{
+          borderRadius: "8px 16px 8px 16px",
+          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+        }}
       >
-        <div className="p-4 flex-1">
-          <div className="flex items-start">
+        <div className="relative z-10 h-full flex flex-col">
+          <div className="flex justify-center mb-4">
             <IconContainer
               icon={FileText}
-              size="md"
+              size="lg"
               color="outline"
-              className="flex-shrink-0 mt-0.5"
+              className="flex-shrink-0"
             />
-            <div className="ml-3 min-w-0">
-              <h3 className="font-medium text-gray-900 text-sm truncate">
-                {document.title}
-              </h3>
-              <span className="text-xs text-gray-500">{document.type}</span>
-            </div>
           </div>
-          {minimalActions}
+          <div className="text-center mb-4">
+
+            <h3 className="font-black text-gray-900 text-base mt-1 font-serif">
+              {document.title}
+            </h3>
+          </div>
+          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
+            {document.description}
+          </p>
+          <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+            <Link
+              to={`/documents/${document.id}`}
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View Document
+            </Link>
+          </div>
         </div>
       </div>
     ) : (
       // Default grid card
       <div
-        className={`flex flex-col h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 ${className}`}
+        className={`h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-6 flex flex-col`}
+        style={{
+          borderRadius: "8px 16px 8px 16px",
+          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
+        }}
       >
-        <div className="p-5 flex-1">
-          <div className="flex items-start mb-4">
-            <IconContainer
-              icon={FileText}
-              size="lg"
-              color="outline"
-              className="flex-shrink-0 bg-yellow-50 text-yellow-600"
-            />
-            <div className="ml-3">
-              <span className="text-xs font-medium text-gray-500">
-                {document.type}
-              </span>
-              <h3 className="font-semibold text-gray-900 text-base mt-1">
-                {document.title}
-              </h3>
+        <div className="relative z-10 h-full flex flex-col">
+          <div className="flex items-center justify-between mb-4 gap-3">
+            <div className="flex items-center gap-4">
+              <IconContainer
+                icon={FileText}
+                size="lg"
+                color="outline"
+                className="flex-shrink-0"
+              />
+              <div className="flex-1">
+                <h3 className="font-black text-gray-900 text-base font-serif">
+                  {document.title}
+                </h3>
+              </div>
             </div>
+            <button
+              className="p-2 text-sm font-medium border-2 border-black rounded-lg bg-white shadow-[3px_3px_0_0_#000]"
+              aria-label="Save document"
+              onClick={handleBookmark}
+            >
+              <Bookmark className="h-4 w-4" />
+            </button>
           </div>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
             {document.description}
           </p>
-          {defaultActions}
+          <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+            <Link
+              to={`/documents/${document.id}`}
+              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View Document
+            </Link>
+          </div>
         </div>
       </div>
     );

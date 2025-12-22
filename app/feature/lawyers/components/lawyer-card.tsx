@@ -5,9 +5,11 @@ import {
   ChevronRight,
   Languages,
   User,
+  Heart,
 } from "lucide-react";
 import { Button } from "app/components/ui/button";
-import { HandDrawnAvatar } from "app/components/ui/hand-drawn-avatar";
+import { Badge } from "~/components/ui/badge";
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import type { Lawyer } from "~/lib/api/lawyers.api";
 import { NavLink } from "react-router";
 
@@ -42,8 +44,8 @@ export function LawyerCard({
     : lawyer.specialization || "Legal Expert";
 
   const cardClasses: Record<DisplayMode, string> = {
-    grid: "h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden hover:shadow-[4px_4px_0_0_#000] transition-all duration-200 p-5",
-    list: "relative bg-white border-2 border-gray-900 rounded-lg p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]",
+    grid: "h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-6",
+    list: "relative bg-white border-2 border-gray-900 rounded-lg p-6",
   };
 
   return (
@@ -57,28 +59,26 @@ export function LawyerCard({
       <div className="relative z-10 h-full flex flex-col">
         <div className="flex items-start justify-between mb-4 gap-3">
           <div className="flex items-center gap-4">
-            <HandDrawnAvatar
-              name={lawyer.name}
-              size={displayMode === "grid" ? "md" : "lg"}
-              color="outline"
-              className="flex-shrink-0"
+            <Avatar
+            className={`${displayMode === "grid" ? "w-15 h-15" : "w-20 h-20"} border-2 border-gray-900 flex-shrink-0`}
+            style={{
+              boxShadow: "2px 2px 0 0 #000",
+            }}
+          >
+            <AvatarImage
+              src={`https://picsum.photos/seed/lawyer-${lawyer.id}/200/200.jpg`}
+              alt={`${lawyer.name} profile picture`}
             />
+            <AvatarFallback className="bg-gray-100 text-gray-600 font-semibold">
+              {lawyer.name ? lawyer.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "LW"}
+            </AvatarFallback>
+          </Avatar>
 
             <div>
-              <h3 className="text-xl font-black text-gray-900 font-serif">
+              <h3 className="text-md font-black text-gray-900 font-serif">
                 {lawyer.name || "Unnamed Lawyer"}
               </h3>
-              <p className="text-sm text-gray-600">
-                {lawyer.specialization || "Legal Professional"}
-                {lawyer.experience &&
-                  ` • ${lawyer.experience} ${lawyer.experience === 1 ? "year" : "years"} experience`}
-              </p>
-              {location && (
-                <div className="flex items-center text-sm text-gray-600">
-                  <MapPin className="h-4 w-4 mr-1.5" />
-                  {location}
-                </div>
-              )}
+
             </div>
           </div>
 
@@ -93,9 +93,26 @@ export function LawyerCard({
               <span className="text-sm font-bold">Verified</span>
             </div>
           )}
+          <button
+            className="p-2 text-sm font-medium border-2 border-black rounded-lg bg-white shadow-[3px_3px_0_0_#000]"
+            aria-label="Save lawyer"
+          >
+            <Heart className="h-4 w-4" />
+          </button>
         </div>
 
         <div className="mb-4 space-y-2">
+          <Badge
+            variant="outline"
+            className="border-2 border-gray-900 bg-white"
+            style={{
+              boxShadow: "2px 2px 0 0 #000",
+            }}
+          >
+            {lawyer.specialization || "Legal Professional"}
+            {lawyer.experience &&
+              ` • ${lawyer.experience} ${lawyer.experience === 1 ? "year" : "years"} experience`}
+          </Badge>
           <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
             <Briefcase className="w-4 h-4" />
             <span className="font-medium">Experience:</span>
@@ -127,9 +144,10 @@ export function LawyerCard({
           )}
         </div>
 
-        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300 flex gap-3">
+        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
           <NavLink
             to={`/lawyers/${lawyer.id}`}
+            viewTransition
             className={({
               isActive,
               isPending,
@@ -137,9 +155,7 @@ export function LawyerCard({
               isActive: boolean;
               isPending: boolean;
             }) =>
-              `group flex-1 flex items-center justify-center px-4 text-sm font-bold transition-colors bg-yellow-400 hover:bg-yellow-300 border-2 border-gray-900 rounded-[4px_12px_4px_12px] shadow-[2px_2px_0_0_#000] hover:bg-gray-100 w-fit ${
-                isActive ? "text-gray-900" : "text-gray-700 hover:text-gray-900"
-              }`
+              `flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full`
             }
           >
             {({

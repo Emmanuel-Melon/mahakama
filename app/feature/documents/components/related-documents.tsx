@@ -1,8 +1,7 @@
-import { DocumentCard } from "~/feature/documents/components/document-card";
-import { BorderedBox } from "~/components/ui/bordered-box";
+import { FileText } from "lucide-react";
 
 type RelatedDocument = {
-  id: number;
+  id: string | number;
   title: string;
   type: string;
   lastUpdated: string;
@@ -19,30 +18,34 @@ export function RelatedDocuments({ documents }: RelatedDocumentsProps) {
   if (documents.length === 0) return null;
 
   return (
-    <BorderedBox
-      label="Related Documents"
-      labelClassName="bg-blue-100 text-blue-800 font-bold"
-      className="mt-8"
-    >
+    <div className="space-y-6">
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold text-gray-900">
+          Related Documents
+        </h3>
+        <p className="text-sm text-gray-500">
+          Similar documents you might find helpful.
+        </p>
+      </div>
+      
       <div className="space-y-4">
         {documents.map((doc) => (
-          <DocumentCard
+          <div
             key={doc.id}
-            document={{
-              ...doc,
-              description: doc.description || "",
-              sections: doc.sections || 0,
-              lastUpdated: doc.lastUpdated,
-              type: doc.type,
-              id: doc.id,
-              title: doc.title,
+            className="flex items-center gap-3 bg-white px-4 py-3 rounded-lg border-2 border-gray-900"
+            style={{
+              boxShadow: "2px 2px 0 0 #000",
             }}
-            variant="minimal"
-            displayMode="grid"
-            className="border-0 border-b border-gray-200 last:border-b-0 rounded-none px-0 py-3 first:pt-0 last:pb-0"
-          />
+          >
+            <FileText className="w-5 h-5 text-blue-600" />
+            <div>
+              <p className="text-sm font-medium text-gray-500">Related Document</p>
+              <p className="text-base font-semibold text-gray-900">{doc.title}</p>
+              <p className="text-sm text-gray-500">{doc.type} • Updated {doc.lastUpdated}</p>
+            </div>
+          </div>
         ))}
       </div>
-    </BorderedBox>
+    </div>
   );
 }

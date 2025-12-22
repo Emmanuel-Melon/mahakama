@@ -1,10 +1,9 @@
 import { PageHeader, PageLayout } from "~/layouts/page-layout";
 import {
   DocumentDetailsHeader,
-  DocumentMetadata,
   DocumentHighlights,
+  RelatedDocuments,
 } from "~/feature/documents/components";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
@@ -30,11 +29,10 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
   }
 
   const breadcrumbs = [
-    { label: "Home", to: "/" },
-    { label: "Legal Database", to: "/legal-database" },
+    { label: "Legal Database", to: "/documents" },
     {
       label: document.type === "Case Law" ? "Case Law" : document.type,
-      to: `/legal-database?type=${document.type.toLowerCase()}`,
+      to: `/documents?type=${document.type.toLowerCase()}`,
     },
     { label: document.title, to: `#` },
   ];
@@ -43,18 +41,9 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
     <PageLayout className="space-y-6">
       <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
       <DocumentDetailsHeader document={document} />
-      <DiagonalSeparator />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
         <div className="lg:col-span-2 space-y-6">
           <DocumentHighlights
-            documents={[
-              {
-                id: "2",
-                title: "Land Acquisition Act 2021",
-                type: "Act",
-                lastUpdated: "2023-05-15",
-              },
-            ]}
             highlights={[
               `Key provision in Section 4.2 about ${document.type} requirements`,
               `Important update in the ${new Date(document.updatedAt).getFullYear()} version`,
@@ -63,12 +52,16 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
             ]}
           />
         </div>
-        <div className="lg:col-span-1">
-          <DocumentMetadata
-            type={document.type}
-            sections={document.sections}
-            lastUpdated={document.lastUpdated}
-            createdAt={document.createdAt}
+        <div className="lg:col-span-1 space-y-6">
+          <RelatedDocuments
+            documents={[
+              {
+                id: "2",
+                title: "Land Acquisition Act 2021",
+                type: "Act",
+                lastUpdated: "2023-05-15",
+              },
+            ]}
           />
         </div>
       </div>

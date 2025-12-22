@@ -3,6 +3,17 @@ import { MoreVertical, MessageSquare } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { NavLink } from "react-router";
 import type { components } from "~/lib/api/generated/api.types";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 
 export type Chat = components["schemas"]["Chat"];
 interface ChatItemProps {
@@ -91,20 +102,34 @@ export function ChatItem({
 
                   <DropdownMenu.Separator className="h-px bg-gray-200 m-1" />
 
-                  <DropdownMenu.Item
-                    className="flex items-center px-3 py-2 text-sm text-red-600 rounded cursor-pointer hover:bg-red-50 outline-none"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (
-                        confirm("Are you sure you want to delete this chat?")
-                      ) {
-                        onDelete();
-                      }
-                    }}
-                  >
-                    <span className="mr-2">🗑️</span>
-                    Delete
-                  </DropdownMenu.Item>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <div className="flex items-center px-3 py-2 text-sm text-red-600 rounded cursor-pointer hover:bg-red-50 outline-none">
+                        <span className="mr-2">🗑️</span>
+                        Delete
+                      </div>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete this chat?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently delete the chat and all its messages.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-600 hover:bg-red-700"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete();
+                          }}
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </DropdownMenu.Content>
               </DropdownMenu.Portal>
             </DropdownMenu.Root>

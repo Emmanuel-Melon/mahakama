@@ -10,6 +10,18 @@ import { useForm } from "react-hook-form";
 import { schemas } from "~/lib/api/generated/api.schemas";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import { z } from "zod";
 
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
@@ -17,8 +29,9 @@ export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
-export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
+ 
 const sendMessageRequestSchema = schemas.postV1messages_Body;
+export type SendMessageRequest = z.infer<typeof sendMessageRequestSchema>
 
 export const ChatScreen = ({ chat }: { chat: Chat }) => {
   const navigate = useNavigate();
@@ -37,10 +50,9 @@ export const ChatScreen = ({ chat }: { chat: Chat }) => {
     resolver: zodResolver(sendMessageRequestSchema),
     defaultValues: {
       chatId: chat.id,
-      sender: {
-        id: chat.userId,
-        type: "user",
-      },
+      content: "",
+      senderType: "user",
+      userId: chat.userId,
     },
   });
 
@@ -50,25 +62,21 @@ export const ChatScreen = ({ chat }: { chat: Chat }) => {
     const newTitle = window.prompt('Enter new chat title:', chat.title || '');
     if (newTitle && newTitle.trim() && newTitle !== chat.title) {
       // TODO: Implement rename API call
-      console.log('Rename chat to:', newTitle.trim());
       // For now, we'll just log it. In a real implementation, you'd call an API
       // and update the chat state to reflect the new title
     }
   };
 
   const handleDeleteChat = () => {
-    if (window.confirm('Are you sure you want to delete this chat? This action cannot be undone.')) {
-      deleteChatMutation.mutate(chat.id, {
-        onSuccess: () => {
-          navigate('/chats');
-        },
-      });
-    }
+    deleteChatMutation.mutate(chat.id, {
+      onSuccess: () => {
+        navigate('/chats/recents');
+      },
+    });
   };
 
   const handleFavoriteChat = () => {
     // TODO: Implement favorite functionality
-    console.log('Favorite chat:', chat.id);
   };
 
   const handleShareChat = () => {
@@ -90,10 +98,7 @@ export const ChatScreen = ({ chat }: { chat: Chat }) => {
     const payload = {
       ...data,
       chatId: chat.id,
-      sender: {
-        id: chat.userId,
-        type: "user" as const,
-      },
+      userId: chat.userId,
     };
 
     sendMessageMutation.mutate(payload, {
@@ -108,32 +113,54 @@ export const ChatScreen = ({ chat }: { chat: Chat }) => {
 
   return (
     <PageLayout>
-      <div className="w-full">
-        <div className="w-full">
+      <div className="flex flex-col h-[calc(100vh-5rem)]"> {/* Adjust based on your PageLayout header height */}
+        {/* Fixed Header */}
+        <div className="flex-shrink-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
           <ChatHeader
             title={chat.title!}
             showNewChatButton={false}
             onShare={handleShareChat}
             actions={
-              <ChatActionsDropdown
-                chatId={chat.id}
-                onDelete={handleDeleteChat}
-                onFavorite={handleFavoriteChat}
-                onRename={handleRenameChat}
-              />
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <ChatActionsDropdown
+                    chatId={chat.id}
+                    onDelete={() => {}} // Empty function since dialog handles confirmation
+                    onFavorite={handleFavoriteChat}
+                    onRename={handleRenameChat}
+                  />
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      This action cannot be undone. This will permanently delete your chat and remove your messages from our servers.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDeleteChat}>Delete</AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             }
           />
-          
-          {/* Messages Section */}
-          <div className="bg-white border-2 border-gray-900 rounded-lg p-6 mb-8" style={{
-            boxShadow: "2px 2px 0 0 #000",
-            borderRadius: "4px 8px 4px 8px",
-          }}>
-            <div className="max-h-96 overflow-y-auto">
-              <MessageList messages={messages || []} isLoading={messagesLoading} />
-            </div>
+        </div>
+
+        {/* Messages Section - Takes remaining height, no overflow here */}
+        <div className="flex-1 p-4 overflow-hidden">
+          <div className="max-w-4xl mx-auto w-full h-full">
+            <MessageList 
+              messages={messages || []} 
+              isLoading={messagesLoading} 
+              isSending={sendMessageMutation.isPending}
+            />
           </div>
-          
+        </div>
+
+        {/* Fixed Input */}
+        <div className="flex-shrink-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4">
+          <div className="max-w-4xl mx-auto w-full">
             <form onSubmit={handleSubmit(onSubmit)}>
               <ChatInput
                 value={messageContent || ""}
@@ -147,6 +174,7 @@ export const ChatScreen = ({ chat }: { chat: Chat }) => {
                 <p className="text-red-500 text-sm mt-2">{errors.content.message}</p>
               )}
             </form>
+          </div>
         </div>
       </div>
     </PageLayout>

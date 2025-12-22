@@ -3,7 +3,6 @@ import { Footer } from "~/layouts/footer";
 import { FAQSection } from "~/components/faq";
 
 export default function WebsiteLayout(props: any) {
-    console.log("props", props);
     return (
         <div className="min-h-screen">
             <Outlet />

@@ -1,15 +1,18 @@
 import { PageLayout, PageHeader } from "~/layouts/page-layout";
+import { PageDetailHeader } from "~/layouts/page-detail-header";
 import { ErrorState } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
-import { LawyerProfileHeader } from "~/feature/lawyers/components/lawyer-profile-header";
+import { PageDetailsLoading } from "~/components/page-details-loading";
+import { PageDetailsError } from "~/components/page-details-error";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
-import { EducationSection, StyledContactList } from "~/feature/lawyers/components/LawyerEducation";
+import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
+import { ContactInformation, type ContactItem } from "~/components/contact-information";
+import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
 
 import type { components } from "~/lib/api/generated/api.types";
-import type { components as componentsv1} from "~/lib/api/generated/api.types";
-import { MapPin } from "lucide-react";
+import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
@@ -25,25 +28,22 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   if (isLoading) {
     return (
-      <PageLayout className="py-8">
-        <div className="mx-auto">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded mb-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          </div>
-        </div>
-      </PageLayout>
+      <PageDetailsLoading
+        title="Loading Lawyer Profile"
+        description="Please wait while we load the lawyer's information..."
+        skeletonCount={2}
+      />
     );
   }
 
   if (error) {
     return (
-      <PageLayout className="py-8">
-        <ErrorState
+      <PageLayout className="space-y-8">
+        <PageDetailsError
           error={error}
-          title="Error Loading Profile"
-          className="mx-auto"
+          title="Error Loading Lawyer Profile"
+          description="We couldn't load the lawyer profile. Please check your connection and try again."
+          onRetry={() => window.location.reload()}
         />
       </PageLayout>
     );
@@ -71,50 +71,96 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   const handleContact = () => {
     // TODO: Implement contact functionality
-    console.log("Contact lawyer:", lawyer.id);
   };
 
+  const getExperienceText = (years?: number) => {
+    if (!years) return "No experience info";
+    if (years === 1) return "1 year";
+    return `${years} years`;
+  };
+
+  const metadata = [];
+
+  if (lawyer.specialization) {
+    metadata.push({
+      icon: Scale,
+      label: 'Specialization',
+      value: lawyer.specialization,
+    });
+  }
+
+  if (lawyer.experienceYears) {
+    metadata.push({
+      icon: Briefcase,
+      label: 'Experience',
+      value: getExperienceText(lawyer.experienceYears),
+    });
+  }
+
+  if (lawyer.location) {
+    metadata.push({
+      icon: MapPin,
+      label: 'Location',
+      value: lawyer.location,
+    });
+  }
+
+  const actions = [];
+
+  if (handleContact) {
+    actions.push({
+      label: 'Contact Lawyer',
+      icon: MapPin,
+      onClick: handleContact,
+      variant: 'primary' as const,
+    });
+  }
+
   const breadcrumbs = [
-    { label: "Home", to: "/" },
-    { label: "Lawyers", to: "/lawyers" },
+    { label: "Home", to: "/", icon: Home },
+    { label: "Lawyers", to: "/lawyers", icon: Users },
     { label: lawyer.name || "Lawyer Profile", to: `/lawyers/${lawyer.id}` },
   ];
+
+  const contactItems: ContactItem[] = [];
+
+  if (lawyer.email) {
+    contactItems.push({
+      type: 'email',
+      label: 'Email Address',
+      value: lawyer.email,
+    });
+  }
 
   return (
     <PageLayout className="space-y-8">
       <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
-      <LawyerProfileHeader lawyer={lawyer} onContact={handleContact} />
+      <PageDetailHeader
+        type="Lawyer Profile"
+        title={lawyer.name || "Lawyer Profile"}
+        description={lawyer.specialization || "Legal Professional"}
+        image="https://picsum.photos/seed/lawyer-avatar/200/200.jpg"
+        alt={`${lawyer.name} profile picture`}
+        metadata={metadata}
+        actions={actions}
+      />
 
       <div className="mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <BorderedBox variant="decorated" label="Lawyer Profile">
-              <div className="space-y-6">
-                <LawyerBio
-                  bio="No bio available for this lawyer."
-                  className="h-full"
-                />
-                <EducationSection />
-              </div>
-            </BorderedBox>
+            <div className="space-y-6">
+              <LawyerBio
+                bio="No bio available for this lawyer."
+                className="h-full"
+              />
+              <EducationSection />
+            </div>
           </div>
-          <div className="lg:col-span-1 space-y-4">
-            <BorderedBox
-              className="h-full p-6"
-              hoverEffect="lift"
-              variant="decorated"
-              label="Contact Information"
-            >
-              <div className="space-y-6">
-                <div className="py-2">
-                  <StyledContactList
-                    email={lawyer.email}
-                    phone={undefined}
-                  />
-                </div>
-              </div>
-            </BorderedBox>
-          </div>
+          <ContactInformation
+            title=""
+            description=""
+            contactItems={contactItems}
+          />
         </div>
       </div>
     </PageLayout>

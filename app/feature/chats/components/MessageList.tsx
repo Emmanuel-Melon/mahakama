@@ -16,9 +16,10 @@ interface ExtendedChatMessage extends Omit<ChatMessage, 'senderType'> {
 interface MessageListProps {
   messages: ChatMessage[];
   isLoading?: boolean;
+  isSending?: boolean;
 }
 
-export function MessageList({ messages, isLoading }: MessageListProps) {
+export function MessageList({ messages, isLoading, isSending = false }: MessageListProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -37,7 +38,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="h-full overflow-y-auto space-y-4">
       {messages.map((message) => {
         const extendedMessage = message as ExtendedChatMessage;
         const isUser = extendedMessage.user?.role === 'user' || message.senderType === 'user';
@@ -58,16 +59,6 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
                 borderRadius: isUser ? "4px 8px 4px 8px" : "4px 8px 4px 8px",
               }}
             >
-              <div className="flex items-start gap-2 mb-2">
-                {isUser ? (
-                  <User className="w-4 h-4 mt-1 flex-shrink-0" />
-                ) : (
-                  <Bot className="w-4 h-4 mt-1 flex-shrink-0" />
-                )}
-                <span className="text-xs font-medium opacity-75">
-                  {isUser ? 'You' : 'Legal Assistant'}
-                </span>
-              </div>
               <p className="text-sm leading-relaxed whitespace-pre-wrap">
                 {message.content}
               </p>
@@ -81,6 +72,21 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
           </div>
         );
       })}
+      {isSending && (
+        <div className="flex justify-start">
+          <div className="bg-gray-100 text-gray-900 border border-gray-200 rounded-lg p-4 max-w-[85%]" style={{ borderRadius: '4px 8px 4px 8px' }}>
+            <div className="flex items-center gap-2 mb-2">
+              <Bot className="w-4 h-4 mt-1 flex-shrink-0" />
+              <span className="text-xs font-medium opacity-75">Legal Assistant</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
+              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

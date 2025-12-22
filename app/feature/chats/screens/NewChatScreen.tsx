@@ -80,8 +80,6 @@ export const NewChatScreen = () => {
     <PageLayout>
       <div className="space-y-2">
         <div className="w-full">
-          <h1 className="text-2xl font-bold text-gray-900 mb-8">New Consultation</h1>
-          
           <form
             className="space-y-4"
             onSubmit={handleSubmit(onSubmit)}
