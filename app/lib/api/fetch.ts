@@ -1,13 +1,10 @@
-import { API_CONFIG } from "~/config";
-import type { components, paths } from "./generated/api.types";
+import type { components } from "./generated/api.types";
 
 export const DEFAULT_TIMEOUT = 5000;
 
-// Use the generated ErrorResponse type
 export type JsonApiErrorResponse = components["schemas"]["JsonApiErrorResponse"];
 export type JsonApiError = components["schemas"]["JsonApiError"];
 
-// Define proper error structure since generated types are incomplete
 export interface ApiError {
   title: string;
   detail: string | null;
@@ -70,19 +67,6 @@ export class FetchApiClient {
       ...options,
       headers,
       credentials: options.credentials || 'include',
-    });
-
-    console.log('API Request:', { 
-      url, 
-      method: options.method || 'GET', 
-      headers,
-      credentials: options.credentials || 'include',
-      cookie: typeof document !== 'undefined' ? document.cookie : 'server-side - no document.cookie'
-    });
-    console.log('API Response:', { 
-      status: response.status, 
-      statusText: response.statusText,
-      ok: response.ok 
     });
     return this.handleResponse<T>(response);
   }

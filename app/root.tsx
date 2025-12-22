@@ -8,19 +8,23 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useLocation,
 } from "react-router";
 import { Header } from "~/layouts/header";
 import { UserProvider } from '~/context/user-provider';
 import { QueryClientProviderWrapper } from '~/context/query-client-provider';
+import { CountryProvider } from '~/context/country-context';
 import "./app.css";
 import { NotFound } from "./routes/$";
-import { parseCookies, getAuthToken, requireAuth } from "~/lib/api/utils";
+import { getAuthToken } from "~/lib/api/utils";
 import { usersApi, UsersApiClient } from "~/lib/api/users.api";
 import { FetchApiClient } from "~/lib/api/fetch";
 import { Toaster } from 'sonner';
 import { userContext, authContext } from "~/middleware/context";
-import { SidebarProvider, SidebarTrigger } from "~/components/ui/sidebar"
+import { SidebarProvider, SidebarTrigger, SidebarInset,} from "~/components/ui/sidebar"
 import { AppSidebar } from "~/components/app-sidebar";
+import { BottomNavigation } from "~/components/bottom-navigation";
+import { SiteHeader } from "~/components/site-header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,7 +52,23 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 export function Layout({ children }: { children: React.ReactNode }) {
   const loaderData = useLoaderData<typeof loader>();
   const user = loaderData?.user || null;
-  console.log('from middleware', user);
+  const location = useLocation();
+
+  const getPageTitle = (pathname: string): string => {
+    if (pathname === '/') return 'Home';
+    if (pathname.startsWith('/documents')) return 'Documents';
+    if (pathname.startsWith('/lawyers')) return 'Lawyers';
+    if (pathname.startsWith('/legal-hub')) return 'Justice Hub';
+    if (pathname.startsWith('/chats')) return 'Chats';
+    if (pathname.startsWith('/users/profile')) return 'Profile';
+    if (pathname.startsWith('/users/settings')) return 'Settings';
+    if (pathname.startsWith('/about')) return 'About';
+    if (pathname.startsWith('/contact')) return 'Contact';
+    return 'Mahakama';
+  };
+
+  const pageTitle = getPageTitle(location.pathname);
+
   return (
     <html lang="en" className="h-full">
       <head>
@@ -60,18 +80,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
         <QueryClientProviderWrapper>
           <UserProvider user={user}>
-          
-            <Toaster />
-            {/* Header for mobile only */}
-            <div className="md:hidden">
-              <Header />
-            </div>
-            <main className="flex-1">
-              <SidebarProvider>
-                <AppSidebar />
-                {children}
-              </SidebarProvider>
-            </main>
+            <CountryProvider>
+              <Toaster />
+              <div className="md:hidden">
+                <Header />
+              </div>
+              <main className="flex-1 pb-16 md:pb-0">
+                <SidebarProvider>
+                  <AppSidebar />
+                  <SidebarInset>
+                    <SiteHeader title={pageTitle} />
+                    {children}
+                  </SidebarInset>
+                </SidebarProvider>
+              </main>
+            </CountryProvider>
           </UserProvider>
         </QueryClientProviderWrapper>
         <ScrollRestoration />
@@ -129,10 +152,9 @@ async function authMiddleware({ request, context }: Route.LoaderArgs) {
   if (!token) { throw redirect("/login"); }
   const cookieHeader = request.headers.get('cookie');
   const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
-  
+
   try {
     const user = await apiClient.getCurrentUser();
-    console.log("this failed", user);
     if (!user.isOnboarded) {
       // throw redirect("/onboarding");
     }

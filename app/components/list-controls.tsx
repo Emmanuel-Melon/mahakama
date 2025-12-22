@@ -9,7 +9,7 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Button } from "app/components/ui/button";
-import { BorderedBox } from "app/components/ui/bordered-box";
+import { CardWithLabel } from "app/components/ui/card-with-label";
 import { ButtonGroup } from "app/components/ui/button-group";
 import {
   DropdownMenu,
@@ -130,8 +130,8 @@ export function ListControls({
   const currentSortValue = `${localSortOrder === "desc" && localSortBy !== "createdAt" ? "-" : ""}${localSortBy}`;
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <BorderedBox className="px-4 py-3">
+    <div className={`space-y-4 w-full ${className}`}>
+      <CardWithLabel label={label} className="px-4 py-3 border-solid border-gray-100 shadow-[3px_3px_0_0_#000] rounded-[8px_16px_8px_16px] max-w-none mx-0">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="text-sm text-gray-700">
             <span className="font-medium">{totalItems}</span> {itemName}
@@ -214,7 +214,7 @@ export function ListControls({
             </div>
           </div>
         </div>
-      </BorderedBox>
+      </CardWithLabel>
     </div>
   );
 }

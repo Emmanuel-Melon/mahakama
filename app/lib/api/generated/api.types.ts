@@ -502,10 +502,10 @@ export interface paths {
                                     /** Format: uuid */
                                     chatId: string;
                                     content: string;
-                                    /** Format: uuid */
-                                    senderId: string | null;
                                     /** @enum {string} */
                                     senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
                                     /** Format: date */
                                     timestamp: string;
                                     metadata: string | number | boolean | unknown | {
@@ -1656,17 +1656,13 @@ export interface paths {
             requestBody: {
                 content: {
                     "application/json": {
+                        /** Format: uuid */
                         chatId: string;
                         content: string;
-                        sender: {
-                            id: string;
-                            /** @enum {string} */
-                            type: "user" | "assistant" | "system";
-                            displayName?: string;
-                        };
-                        metadata?: {
-                            [key: string]: unknown;
-                        };
+                        /** @enum {string} */
+                        senderType: "user" | "assistant" | "system";
+                        /** Format: uuid */
+                        userId: string | null;
                     };
                 };
             };
@@ -1693,10 +1689,10 @@ export interface paths {
                                     /** Format: uuid */
                                     chatId: string;
                                     content: string;
-                                    /** Format: uuid */
-                                    senderId: string | null;
                                     /** @enum {string} */
                                     senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
                                     /** Format: date */
                                     timestamp: string;
                                     metadata: string | number | boolean | unknown | {
@@ -1819,10 +1815,10 @@ export interface paths {
                                     /** Format: uuid */
                                     chatId: string;
                                     content: string;
-                                    /** Format: uuid */
-                                    senderId: string | null;
                                     /** @enum {string} */
                                     senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
                                     /** Format: date */
                                     timestamp: string;
                                     metadata: string | number | boolean | unknown | {
@@ -2720,10 +2716,10 @@ export interface components {
             /** Format: uuid */
             chatId: string;
             content: string;
-            /** Format: uuid */
-            senderId: string | null;
             /** @enum {string} */
             senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
             /** Format: date */
             timestamp: string;
             metadata: string | number | boolean | unknown | {
@@ -2745,10 +2741,10 @@ export interface components {
                 /** Format: uuid */
                 chatId: string;
                 content: string;
-                /** Format: uuid */
-                senderId: string | null;
                 /** @enum {string} */
                 senderType: "user" | "assistant" | "system";
+                /** Format: uuid */
+                userId: string | null;
                 /** Format: date */
                 timestamp: string;
                 metadata: string | number | boolean | unknown | {
@@ -2781,10 +2777,10 @@ export interface components {
                     /** Format: uuid */
                     chatId: string;
                     content: string;
-                    /** Format: uuid */
-                    senderId: string | null;
                     /** @enum {string} */
                     senderType: "user" | "assistant" | "system";
+                    /** Format: uuid */
+                    userId: string | null;
                     /** Format: date */
                     timestamp: string;
                     metadata: string | number | boolean | unknown | {
@@ -2827,10 +2823,10 @@ export interface components {
                     /** Format: uuid */
                     chatId: string;
                     content: string;
-                    /** Format: uuid */
-                    senderId: string | null;
                     /** @enum {string} */
                     senderType: "user" | "assistant" | "system";
+                    /** Format: uuid */
+                    userId: string | null;
                     /** Format: date */
                     timestamp: string;
                     metadata: string | number | boolean | unknown | {
@@ -3192,22 +3188,25 @@ export interface components {
         };
         MessageSender: {
             id: string;
-            /** @enum {string} */
-            type: "user" | "assistant" | "system";
             displayName?: string;
         };
         SendMessageRequest: {
+            /** Format: uuid */
             chatId: string;
             content: string;
-            sender: {
-                id: string;
-                /** @enum {string} */
-                type: "user" | "assistant" | "system";
-                displayName?: string;
-            };
-            metadata?: {
-                [key: string]: unknown;
-            };
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
+        };
+        MessageInput: {
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
         };
         LegalService: {
             /** Format: uuid */

@@ -26,7 +26,7 @@ export const LoginScreen = () => {
     const onSubmit = (data: LoginRequest) => {
         loginMutation.mutate(data, {
             onSuccess: (authResponse) => {
-                // navigate("/");
+                navigate("/");
             },
             onError: (error) => {
                 toast.error("Login failed. Please try again.");

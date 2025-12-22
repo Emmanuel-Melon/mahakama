@@ -63,16 +63,10 @@ const putV1lawyersId_Body = z
   .passthrough();
 const postV1messages_Body = z
   .object({
-    chatId: z.string(),
-    content: z.string(),
-    sender: z
-      .object({
-        id: z.string(),
-        type: z.enum(["user", "assistant", "system"]),
-        displayName: z.string().optional(),
-      })
-      .passthrough(),
-    metadata: z.record(z.unknown().nullable()).optional(),
+    chatId: z.string().uuid(),
+    content: z.string().min(1),
+    senderType: z.enum(["user", "assistant", "system"]),
+    userId: z.string().uuid().nullable(),
   })
   .passthrough();
 const postV1users_Body = z
@@ -388,8 +382,8 @@ const endpoints = makeApi([
                   id: z.string().uuid(),
                   chatId: z.string().uuid(),
                   content: z.string(),
-                  senderId: z.string().uuid().nullable(),
                   senderType: z.enum(["user", "assistant", "system"]),
+                  userId: z.string().uuid().nullable(),
                   timestamp: z.string(),
                   metadata: z.union([
                     z.string(),
@@ -1066,8 +1060,8 @@ const endpoints = makeApi([
                 id: z.string().uuid(),
                 chatId: z.string().uuid(),
                 content: z.string(),
-                senderId: z.string().uuid().nullable(),
                 senderType: z.enum(["user", "assistant", "system"]),
+                userId: z.string().uuid().nullable(),
                 timestamp: z.string(),
                 metadata: z.union([
                   z.string(),
@@ -1147,8 +1141,8 @@ const endpoints = makeApi([
                   id: z.string().uuid(),
                   chatId: z.string().uuid(),
                   content: z.string(),
-                  senderId: z.string().uuid().nullable(),
                   senderType: z.enum(["user", "assistant", "system"]),
+                  userId: z.string().uuid().nullable(),
                   timestamp: z.string(),
                   metadata: z.union([
                     z.string(),

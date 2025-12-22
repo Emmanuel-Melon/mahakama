@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { authApi } from '~/lib/api/auth.api';
-
 import type { components } from "~/lib/api/generated/api.types";
 
 export type AuthResponse = components["schemas"]["AuthResponse"];
@@ -18,42 +17,33 @@ export const authKeys = {
 
 export function useLogin() {
     return useMutation<
-    AuthResponse,
-    JsonApiErrorResponse,
-    LoginRequest
-  >({
+        AuthResponse,
+        JsonApiErrorResponse,
+        LoginRequest
+    >({
         mutationFn: async (credentials: LoginRequest) => {
             return await authApi.login(credentials);
         },
         onSuccess: (data: AuthResponse) => {
             toast.success('Login successful!');
-            // // Store token in cookie or localStorage
-            // if (data.token) {
-            //     document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
-            // }
         },
         onError: (error) => {
             toast.error('Login failed. Please check your credentials.');
-            console.error('Login error:', error);
         },
     });
 }
 
 export function useRegister() {
     return useMutation<
-    AuthResponse,
-    JsonApiErrorResponse,
-    RegisterRequest
-  >({
+        AuthResponse,
+        JsonApiErrorResponse,
+        RegisterRequest
+    >({
         mutationFn: async (userData: RegisterRequest) => {
             return await authApi.register(userData);
         },
         onSuccess: (data: AuthResponse) => {
             toast.success('Registration successful!');
-            // Store token in cookie or localStorage
-            if (data.token) {
-                document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24 * 7}`; // 7 days
-            }
         },
         onError: (error) => {
             toast.error('Registration failed. Please try again.');
@@ -69,14 +59,10 @@ export function useLogout() {
         },
         onSuccess: () => {
             toast.success('Logged out successfully!');
-            // Clear token
-            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT';
-            // Redirect to login or home page
             window.location.href = '/login';
         },
         onError: (error) => {
             toast.error('Logout failed.');
-            console.error('Logout error:', error);
         },
     });
 }

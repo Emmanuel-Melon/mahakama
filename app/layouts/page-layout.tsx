@@ -18,12 +18,14 @@ export function PageLayout({ children, className = "" }: PageLayoutProps) {
   );
 }
 
-import { useNavigate, useLocation, Link } from "react-router";
-import { ArrowLeft, ChevronRight } from "lucide-react";
+import { useNavigate, useLocation, Link, NavLink } from "react-router";
+import { ArrowLeft, ChevronRight, Home } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export interface BreadcrumbItem {
   label: string;
   to?: string;
+  icon?: LucideIcon;
 }
 
 interface PageHeaderProps {
@@ -31,6 +33,7 @@ interface PageHeaderProps {
   className?: string;
   breadcrumbs?: BreadcrumbItem[];
   children?: React.ReactNode;
+  backTo?: string;
 }
 
 export function PageHeader({
@@ -38,6 +41,7 @@ export function PageHeader({
   className = "",
   breadcrumbs,
   children,
+  backTo,
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,22 +52,34 @@ export function PageHeader({
     location.pathname
       .split("/")
       .filter(Boolean)
-      .map((segment) => ({
+      .map((segment, index) => ({
         label: segment.replace(/-/g, " "),
         to: undefined,
+        icon: index === 0 ? Home : undefined,
       }));
 
   return (
     <div className={`flex items-center justify-between ${className}`}>
       <div className="flex items-center space-x-2">
         {showBackButton && (
-          <button
-            onClick={() => navigate(-1)}
-            className="p-2 rounded-full hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
+          backTo ? (
+            <NavLink
+              to={backTo}
+              viewTransition
+              className="p-2 rounded-full hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </NavLink>
+          ) : (
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-full hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+          )
         )}
         <nav className="flex items-center text-sm">
           {pathSegments.map((segment, index) => (
@@ -74,12 +90,15 @@ export function PageHeader({
               {segment.to ? (
                 <Link
                   to={segment.to}
-                  className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-accent/50"
+                  viewTransition
+                  className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded-md hover:bg-accent/50 flex items-center gap-1"
                 >
+                  {segment.icon && <segment.icon className="w-3.5 h-3.5" />}
                   {segment.label}
                 </Link>
               ) : (
-                <span className="font-medium text-foreground px-2 py-1">
+                <span className="font-medium text-foreground px-2 py-1 flex items-center gap-1">
+                  {segment.icon && <segment.icon className="w-3.5 h-3.5" />}
                   {segment.label}
                 </span>
               )}

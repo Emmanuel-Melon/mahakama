@@ -1,11 +1,12 @@
 import { Link } from "react-router";
 import { Scale, Home, Search } from "lucide-react";
 import { IconContainer } from "~/components/icon-container";
+import { PageLayout } from "~/layouts/page-layout";
 
 export function NotFound() {
   return (
-    <div className="min-h-screen">
-      <div className="max-w-4xl mx-auto px-4 py-12 md:py-20">
+    <PageLayout>
+      <div>
         {/* Decorative Blobs */}
         <div className="absolute -left-4 -top-2 w-12 h-12 bg-primary/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
         <div className="absolute -right-4 -bottom-2 w-12 h-12 bg-secondary/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
@@ -112,7 +113,7 @@ export function NotFound() {
           </p>
         </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }
 
