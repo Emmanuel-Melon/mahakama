@@ -43,9 +43,9 @@ export default [
     route(USERS_ROUTES.SETTINGS.URL_SEGMENT, USERS_ROUTES.SETTINGS.PATH),
     route("onboarding", "routes/users/onboarding.tsx"),
   ]),
-  ...prefix("messages", [
-    index(MESSAGES_ROUTES.INDEX.PATH),
-    route(MESSAGES_ROUTES.DETAIL.URL_SEGMENT, MESSAGES_ROUTES.DETAIL.PATH),
-  ]),
+  // ...prefix("messages", [
+  //   index(MESSAGES_ROUTES.INDEX.PATH),
+  //   route(MESSAGES_ROUTES.DETAIL.URL_SEGMENT, MESSAGES_ROUTES.DETAIL.PATH),
+  // ]),
   route("help", "routes/help.tsx"),
 ] satisfies RouteConfig;
