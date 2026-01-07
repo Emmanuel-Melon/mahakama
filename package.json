@@ -5,7 +5,7 @@
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
+    "start": "npm run dev",
     "typecheck": "react-router typegen && tsc",
     "generate:types": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/generated/api.types.ts || echo 'Type generation failed - check if backend is running'",
     "generate:types:local": "VITE_API_BASE_URL=http://localhost:3000 npm run generate:types",
