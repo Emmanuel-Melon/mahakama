@@ -156,7 +156,7 @@ async function authMiddleware({ request, context }: Route.LoaderArgs) {
   }
 }
 
-export const middleware: Route.MiddlewareFunction[] = [
-  authMiddleware,
-];
+// export const middleware: Route.MiddlewareFunction[] = [
+//   authMiddleware,
+// ];
 
