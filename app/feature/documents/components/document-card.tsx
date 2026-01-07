@@ -1,6 +1,8 @@
 import { Link } from "react-router";
-import { Bookmark, Download, Eye, FileText } from "lucide-react";
+import { Download, Eye, FileText } from "lucide-react";
 import { IconContainer } from "~/components/icon-container";
+import { BookmarkButton } from "~/components/bookmark-button";
+import { MahButton, type MahAction } from "~/components/mah-button";
 
 export interface Document {
   id: number;
@@ -71,7 +73,7 @@ export function DocumentCard({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2h-10a2 2 0 00-2 2v12a2 2 0 002 2z"
               />
             </svg>
             {document.lastUpdated}
@@ -88,7 +90,7 @@ export function DocumentCard({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002 2M9 5a2 2 0 012-2h2a2 2 0 012 2"
               />
             </svg>
             {document.sections} Sections
@@ -97,23 +99,12 @@ export function DocumentCard({
 
         <Link
           to={`/documents/${document.id}`}
-          viewTransition
-          className="group inline-flex items-center font-medium text-gray-900 hover:text-yellow-600 transition-colors text-sm"
         >
-          View full document
-          <svg
-            className="ml-2 w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          <MahButton
+            variant="primary"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
+            View full document
+          </MahButton>
         </Link>
       </div>
     </div>
@@ -121,44 +112,32 @@ export function DocumentCard({
 
   const minimalActions = (
     <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-      <button
+      <MahButton
         onClick={handleView}
-        className="flex items-center text-xs font-medium text-gray-700 hover:text-yellow-600 transition-colors"
-        title="View document"
+        variant="secondary"
       >
         <Eye className="h-3.5 w-3.5 mr-1.5" />
         View
-      </button>
+      </MahButton>
       <div className="flex items-center space-x-2">
-        <div className="flex items-center">
-          <button
-            onClick={handleBookmark}
-            className="p-1.5 text-gray-500 hover:text-yellow-600 transition-colors flex items-center"
-            aria-label="Bookmark document"
-            title="Bookmark"
-          >
-            <Bookmark className="h-4 w-4" />
-            {document.bookmarkCount !== undefined && (
-              <span className="text-xs ml-1 text-gray-500">
-                {document.bookmarkCount}
-              </span>
-            )}
-          </button>
-          <div className="h-4 w-px bg-gray-300 mx-1"></div>
-          <button
-            onClick={handleDownload}
-            className="p-1.5 text-gray-500 hover:text-yellow-600 transition-colors flex items-center"
-            aria-label="Download document"
-            title="Download"
-          >
-            <Download className="h-4 w-4" />
-            {document.downloadCount !== undefined && (
-              <span className="text-xs ml-1 text-gray-500">
-                {document.downloadCount}
-              </span>
-            )}
-          </button>
-        </div>
+        <BookmarkButton
+          onClick={handleBookmark}
+          isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+          bookmarkCount={document.bookmarkCount}
+          size="sm"
+        />
+        <div className="h-4 w-px bg-gray-300 mx-1"></div>
+        <MahButton
+          onClick={handleDownload}
+          variant="secondary"
+        >
+          <Download className="h-4 w-4" />
+          {document.downloadCount !== undefined && (
+            <span className="text-xs ml-1 text-gray-500">
+              {document.downloadCount}
+            </span>
+          )}
+        </MahButton>
       </div>
     </div>
   );
@@ -192,7 +171,7 @@ export function DocumentCard({
           <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
             {document.description}
           </p>
-          <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+          <div className="mt-auto pt-4">
             <Link
               to={`/documents/${document.id}`}
               className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"
@@ -227,18 +206,17 @@ export function DocumentCard({
                 </h3>
               </div>
             </div>
-            <button
-              className="p-2 text-sm font-medium border-2 border-black rounded-lg bg-white shadow-[3px_3px_0_0_#000]"
-              aria-label="Save document"
-              onClick={handleBookmark}
-            >
-              <Bookmark className="h-4 w-4" />
-            </button>
+        <BookmarkButton
+          onClick={handleBookmark}
+          isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+          bookmarkCount={document.bookmarkCount}
+          size="sm"
+        />
           </div>
           <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
             {document.description}
           </p>
-          <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
+          <div className="mt-auto pt-4">
             <Link
               to={`/documents/${document.id}`}
               className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"

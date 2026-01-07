@@ -12,6 +12,7 @@ import {
 import { Header } from "~/layouts/header";
 import { AppShell } from "~/layouts/AppShell";
 import { WebsiteLayout } from "~/layouts/WebsiteLayout";
+import { AuthLayout } from "~/layouts/AuthLayout";
 import { QueryClientProviderWrapper } from '~/context/query-client-provider';
 import "./app.css";
 import { NotFound } from "./routes/$";
@@ -69,6 +70,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
     location.pathname.startsWith('/chat') ||
     location.pathname.startsWith('/legal-hub') ||
     location.pathname.startsWith('/users');
+  
+  const isAuthRoute = location.pathname.startsWith('/login') || location.pathname.startsWith('/signup');
 
   return (
     <html lang="en" className="h-full">
@@ -80,7 +83,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
         <QueryClientProviderWrapper>
-          {isAppRoute && user ? (
+          {isAuthRoute ? (
+            <AuthLayout>
+              {children}
+            </AuthLayout>
+          ) : isAppRoute && user ? (
             <AppShell pageTitle={pageTitle} user={user}>
               {children}
             </AppShell>
@@ -156,7 +163,7 @@ async function authMiddleware({ request, context }: Route.LoaderArgs) {
   }
 }
 
-// export const middleware: Route.MiddlewareFunction[] = [
-//   authMiddleware,
-// ];
+export const middleware: Route.MiddlewareFunction[] = [
+  authMiddleware,
+];
 

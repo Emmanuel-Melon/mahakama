@@ -18,7 +18,7 @@ export function BioSection({ formData, onInputChange }: BioSectionProps) {
       </h2>
       
       <div>
-        <Label htmlFor="bio">Bio</Label>
+        <Label htmlFor="bio" className="block text-sm font-bold text-gray-700">Bio</Label>
         <Textarea
           id="bio"
           value={formData.bio}

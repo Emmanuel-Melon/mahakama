@@ -14,18 +14,7 @@ export const AuthSocialButtons = () => {
           </span>
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-3">
-        <Button
-          variant="outline"
-          type="button"
-          className="border-2 border-gray-900 bg-white hover:bg-gray-50 font-bold"
-          style={{
-            boxShadow: "2px 2px 0 0 #000",
-            borderRadius: "4px 8px 4px 8px",
-          }}
-        >
-          <Github className="h-5 w-5" />
-        </Button>
+      <div className="grid grid-cols-2 gap-4">
         <Button
           variant="outline"
           type="button"

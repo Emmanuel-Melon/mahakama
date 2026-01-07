@@ -1,4 +1,5 @@
 import { Button } from "~/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { Pencil, User as UserIcon } from "lucide-react";
 
 import type { User } from "~/feature/users/screens/ProfileScreen";
@@ -12,9 +13,18 @@ export const ProfileHeader = ({ user, onEditProfile }: ProfileHeaderProps) => {
   return (
     <div className="mb-8">
       <div className="md:hidden flex flex-col items-center gap-4">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-foreground bg-background text-2xl font-bold">
-          {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
-        </div>
+        <Avatar className="h-20 w-20 border-4 border-foreground">
+          {user?.avatar ? (
+            <AvatarImage 
+              src={user.avatar} 
+              alt="Profile" 
+            />
+          ) : (
+            <AvatarFallback className="text-2xl font-bold bg-background">
+              {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+            </AvatarFallback>
+          )}
+        </Avatar>
         <div className="text-center">
           <div className="mb-1 flex items-center justify-center gap-3">
             <UserIcon className="h-5 w-5 text-primary" />
@@ -32,9 +42,18 @@ export const ProfileHeader = ({ user, onEditProfile }: ProfileHeaderProps) => {
       </div>
       <div className="hidden md:flex items-start justify-between">
         <div className="flex items-center gap-6">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-foreground bg-background text-2xl font-bold">
-            {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
-          </div>
+          <Avatar className="h-20 w-20 border-4 border-foreground">
+            {user?.avatar ? (
+              <AvatarImage 
+                src={user.avatar} 
+                alt="Profile" 
+              />
+            ) : (
+              <AvatarFallback className="text-2xl font-bold bg-background">
+                {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
+              </AvatarFallback>
+            )}
+          </Avatar>
           <div>
             <div className="mb-1 flex items-center gap-3">
               <UserIcon className="h-5 w-5 text-primary" />

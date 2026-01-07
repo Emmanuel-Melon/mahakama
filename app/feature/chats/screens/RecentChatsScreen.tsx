@@ -26,7 +26,7 @@ export const RecentChatsScreen = ({ chats, error }: { chats: Chat[], error: any 
   return (
     <PageLayout>
         <div className="space-y-2">
-          <ChatHeader />
+          <ChatHeader variant="list" />
           <ChatList
             chats={chats}
             error={error}

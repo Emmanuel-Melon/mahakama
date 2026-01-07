@@ -2,9 +2,13 @@ import { Outlet } from "react-router";
 import { Scale } from "lucide-react";
 import { IconContainer } from "~/components/icon-container";
 
-export default function AuthLayout() {
+interface AuthLayoutProps {
+  children?: React.ReactNode;
+}
+
+export const AuthLayout = ({ children }: AuthLayoutProps) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className=" bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       <div className="container mx-auto px-4 py-8 md:py-16">
         <div className="mx-auto max-w-md">
           <div className="text-center mb-12">
@@ -21,9 +25,9 @@ export default function AuthLayout() {
               Access your Mahakama account
             </p>
           </div>
-          <Outlet />
+          {children || <Outlet />}
         </div>
       </div>
     </div>
   );
-}
+};

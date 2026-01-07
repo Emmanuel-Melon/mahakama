@@ -6,6 +6,7 @@ import { NavLink } from "react-router";
 
 const features = [
     {
+        id: "find-answers",
         icon: Search,
         title: "Find Legal Answers",
         description:
@@ -13,12 +14,14 @@ const features = [
         href: "/"
     },
     {
+        id: "legal-library",
         icon: Library,
         title: "Legal Library",
         description: "Access a comprehensive library of legal documents, forms, and resources at your fingertips.",
         href: "/documents"
     },
     {
+        id: "connect-experts",
         icon: Users,
         title: "Connect with Experts",
         description: "Get personalized guidance from vetted legal professionals when you need it most.",
@@ -45,8 +48,9 @@ export const MahakamaFeatures = () => {
                 </div>
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                    {features.map((feature, index) => (
+                    {features.map((feature) => (
                         <div
+                            key={feature.id}
                             className={cn(
                                 "relative p-4 bg-white border-2 border-gray-900 group transition-all duration-200 transform hover:-translate-y-1 hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)]",
                                 "flex gap-4 h-full",

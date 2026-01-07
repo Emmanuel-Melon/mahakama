@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
-import { IconContainer } from "~/components/icon-container";
+
 import { MessageCircle, ArrowRight, Sparkles, ArrowUp } from "lucide-react";
-import { Disclaimer } from "~/feature/app/components/AnswerDisclaimer";
 import { PageLayout } from "~/layouts/page-layout";
 import { useCreateChat } from "../hooks/use-chats";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -91,7 +90,7 @@ export const NewChatScreen = () => {
               >
                 What's your legal question?
               </label>
-              
+
               <div className="w-full">
                 <InputGroup className="border-2 border-gray-900 shadow-[2px_2px_0_0_#000]" style={{ borderRadius: "4px 8px 4px 8px" }}>
                   <InputGroupTextarea
@@ -102,7 +101,7 @@ export const NewChatScreen = () => {
                     required
                   />
                   <InputGroupAddon align="block-end">
-                    <UploadDropdown 
+                    <UploadDropdown
                       onFileUpload={handleFileUpload}
                       disabled={isSubmitting || createChatMutation.isPending}
                     />
@@ -125,7 +124,7 @@ export const NewChatScreen = () => {
                   </InputGroupAddon>
                 </InputGroup>
               </div>
-              
+
               {attachedFiles.length > 0 && (
                 <div className="mt-3 space-y-2">
                   <p className="text-sm font-medium text-gray-700">Attached files:</p>
@@ -145,39 +144,36 @@ export const NewChatScreen = () => {
                   ))}
                 </div>
               )}
-              
+
               {errors.message && (
                 <p className="text-red-500 text-sm mt-2">{errors.message.message}</p>
               )}
             </div>
           </form>
         </div>
-          <div>
-            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">
-              Or try one of these:
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {suggestedQuestions.map((q, index) => (
-                <button
-                  key={index}
-                  onClick={() => handleSuggestedQuestion(q)}
-                  className="text-left p-4 border-2 border-gray-900 bg-white hover:bg-gray-50 transition-all hover:shadow-md text-gray-700 hover:text-gray-900 font-medium text-sm"
-                  style={{
-                    boxShadow: "2px 2px 0 0 #000",
-                    borderRadius: "4px 8px 4px 8px",
-                  }}
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <span>{q}</span>
-                    <ArrowRight className="w-4 h-4 flex-shrink-0 mt-0.5" />
-                  </div>
-                </button>
-              ))}
-            </div>
+        <div>
+          <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">
+            Or try one of these:
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {suggestedQuestions.map((q, index) => (
+              <button
+                key={index}
+                onClick={() => handleSuggestedQuestion(q)}
+                className="text-left p-4 border-2 border-gray-900 bg-white hover:bg-gray-50 transition-all hover:shadow-md text-gray-700 hover:text-gray-900 font-medium text-sm"
+                style={{
+                  boxShadow: "2px 2px 0 0 #000",
+                  borderRadius: "4px 8px 4px 8px",
+                }}
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <span>{q}</span>
+                  <ArrowRight className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                </div>
+              </button>
+            ))}
           </div>
-          <div className="mt-12 text-center text-sm text-gray-600">
-            <Disclaimer text="Your questions are processed confidentially. This is not a substitute for professional legal advice." />
-          </div>
+        </div>
       </div>
     </PageLayout>
   );

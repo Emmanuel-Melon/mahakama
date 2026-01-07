@@ -38,13 +38,13 @@ export function DocumentDetailsHeader({
           label: "Share",
           icon: Share2,
           onClick: () => console.log("Share clicked"),
-          variant: "outline",
+          variant: "secondary",
         },
         {
           label: "Save",
           icon: Bookmark,
           onClick: () => console.log("Save clicked"),
-          variant: "outline",
+          variant: "secondary",
         },
       ]}
     />

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "~/components/ui/button";
 import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
 import { LocationSection } from "~/feature/users/components/location-section";
 import { ContactSection } from "~/feature/users/components/contact-section";
 import { ProfessionalSection } from "~/feature/users/components/professional-section";
 import { BioSection } from "~/feature/users/components/bio-section";
+import { type UserRole } from "~/feature/users/components/RoleSelector";
 import type { User } from "~/feature/users/hooks/use-users";
 
 interface UserProfileFormProps {
@@ -37,6 +38,20 @@ export const UserProfileForm = ({
     bio: user.bio || ''
   });
 
+  // Sync form data with user prop when it changes
+  useEffect(() => {
+    setFormData({
+      name: user.name || '',
+      age: user.age?.toString() || '',
+      gender: user.gender || '',
+      country: user.country || '',
+      city: user.city || '',
+      phoneNumber: user.phoneNumber || '',
+      occupation: user.occupation || '',
+      bio: user.bio || ''
+    });
+  }, [user]);
+
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
@@ -59,6 +74,7 @@ export const UserProfileForm = ({
       phoneNumber: formData.phoneNumber.trim() || null,
       occupation: formData.occupation.trim() || null,
       bio: formData.bio.trim() || null,
+      role: user.role || null,
     };
 
     // Add isOnboarded flag for onboarding mode
@@ -104,12 +120,14 @@ export const UserProfileForm = ({
         onInputChange={handleInputChange}
       />
 
-      <ProfessionalSection 
-        formData={{
-          occupation: formData.occupation
-        }}
-        onInputChange={handleInputChange}
-      />
+      {user.role === "lawyer" && (
+        <ProfessionalSection 
+          formData={{
+            occupation: formData.occupation
+          }}
+          onInputChange={handleInputChange}
+        />
+      )}
 
       <BioSection 
         formData={{

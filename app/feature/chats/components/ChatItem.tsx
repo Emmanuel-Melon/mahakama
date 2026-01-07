@@ -40,11 +40,9 @@ export function ChatItem({
   return (
     <div className="group relative">
       <div
-        className="bg-white p-3 sm:p-4 transition-all duration-200 hover:shadow-[3px_3px_0_0_#000]"
+        className="bg-white p-3 sm:p-4 transition-all duration-200 border border-border hover:shadow-[0px_6px_24px_0px_hsl(var(--shadow-hover)),0px_0px_0px_1px_hsl(var(--shadow-border))] shadow-[3px_3px_0_0_hsl(var(--shadow-color))]"
         style={{
-          border: "2px solid #000",
-          borderRadius: "8px 16px 8px 16px",
-          boxShadow: "3px 3px 0 0 #000",
+          borderRadius: "var(--border-radius-chat)",
         }}
       >
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">
@@ -135,15 +133,6 @@ export function ChatItem({
             </DropdownMenu.Root>
           </div>
         </div>
-
-
-        <NavLink
-          to={`/chats/${chat.id}`}
-          className="mt-2 sm:mt-3 flex items-center text-xs text-gray-400 hover:text-primary transition-colors"
-        >
-          <MessageSquare className="w-3.5 h-3.5 mr-1.5" />
-          <span>0 messages</span>
-        </NavLink>
       </div>
     </div>
   );

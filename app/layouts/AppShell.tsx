@@ -19,7 +19,7 @@ export const AppShell = ({ children, pageTitle, user }: AppShellProps) => {
         <main className="flex-1 pb-16 md:pb-0">
           <SidebarProvider>
             <AppSidebar />
-            <SidebarInset>
+            <SidebarInset >
               <SiteHeader title={pageTitle} role={user?.role} />
               {children}
             </SidebarInset>

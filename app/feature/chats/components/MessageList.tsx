@@ -1,17 +1,8 @@
 import type { components } from "~/lib/api/generated/api.types";
-import { MessageCircle, Bot, User } from "lucide-react";
+import { MessageCircle } from "lucide-react";
+import { MessageBubble } from "./MessageBubble";
 
-export type ChatMessage = components["schemas"]["Message"];
-
-// Extended type to handle the new API response structure
-interface ExtendedChatMessage extends Omit<ChatMessage, 'senderType'> {
-  user?: {
-    id: string;
-    name: string | null;
-    email: string;
-    role: "user" | "assistant" | "system";
-  };
-}
+export type ChatMessage = components["schemas"]["Chat"];
 
 interface MessageListProps {
   messages: ChatMessage[];
@@ -38,54 +29,15 @@ export function MessageList({ messages, isLoading, isSending = false }: MessageL
   }
 
   return (
-    <div className="h-full overflow-y-auto space-y-4">
-      {messages.map((message) => {
-        const extendedMessage = message as ExtendedChatMessage;
-        const isUser = extendedMessage.user?.role === 'user' || message.senderType === 'user';
-        
-        return (
-          <div
-            key={message.id}
-            className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
-          >
-            <div
-              className={`max-w-[85%] rounded-lg p-4 ${
-                isUser
-                  ? 'bg-white border-2 border-gray-900 text-gray-900'
-                  : 'bg-gray-100 text-gray-900 border border-gray-200'
-              }`}
-              style={{
-                boxShadow: isUser ? "2px 2px 0 0 #000" : "none",
-                borderRadius: isUser ? "4px 8px 4px 8px" : "4px 8px 4px 8px",
-              }}
-            >
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">
-                {message.content}
-              </p>
-              <div className="text-xs opacity-60 mt-2">
-                {new Date(message.timestamp).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </div>
-            </div>
-          </div>
-        );
-      })}
+    <div className="space-y-4 px-4">
+      {messages.map((message) => (
+        <MessageBubble key={message.id} message={message} />
+      ))}
       {isSending && (
-        <div className="flex justify-start">
-          <div className="bg-gray-100 text-gray-900 border border-gray-200 rounded-lg p-4 max-w-[85%]" style={{ borderRadius: '4px 8px 4px 8px' }}>
-            <div className="flex items-center gap-2 mb-2">
-              <Bot className="w-4 h-4 mt-1 flex-shrink-0" />
-              <span className="text-xs font-medium opacity-75">Legal Assistant</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '0ms' }}></div>
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '150ms' }}></div>
-              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{ animationDelay: '300ms' }}></div>
-            </div>
-          </div>
-        </div>
+        <MessageBubble 
+          message={{} as ChatMessage} 
+          isSending={true} 
+        />
       )}
     </div>
   );

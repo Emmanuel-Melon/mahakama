@@ -83,7 +83,7 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b-2 border-gray-900 ${isScrolled ? 'shadow-[0_4px_0_0_rgba(0,0,0,0.1)]' : ''
+      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md ${isScrolled ? 'shadow-[0_4px_0_0_rgba(0,0,0,0.1)]' : ''
         } transition-shadow duration-300`}
       style={{
         borderImageSource:
@@ -95,7 +95,7 @@ export function Header() {
     >
       <div className="w-full">
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-12">
-          <div className="flex h-16 sm:h-20 items-center justify-between">
+          <div className="flex sm:h-20 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0 gap-2">
               <NavLink to="/" viewTransition className="flex items-center group">
