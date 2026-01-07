@@ -1,5 +1,5 @@
 import { CheckCircle, Circle, User, MapPin, Briefcase, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
-import { useUser } from '~/context/user-provider';
+// import { useUser } from '~/context/user-provider';
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -8,7 +8,19 @@ interface OnboardingProgressProps {
 }
 
 export function OnboardingProgress({ className = "" }: OnboardingProgressProps) {
-  const { user } = useUser();
+  // const { user } = useUser();
+  const user = {
+    name: "John Doe",
+    email: "john@example.com",
+    role: "user",
+    age: 30,
+    gender: "male",
+    country: "Kenya",
+    city: "Nairobi",
+    bio: "Software developer",
+    occupation: "Developer",
+    isOnboarded: false
+  };
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
   

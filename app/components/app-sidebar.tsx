@@ -10,7 +10,7 @@ import {
     Scale,
     Briefcase,
 } from "lucide-react"
-import { useUser } from '~/context/user-provider';
+// import { useUser } from '~/context/user-provider';
 import { useLogout } from '~/feature/auth/hooks/use-auth';
 import { NavLink } from "react-router";
 
@@ -101,8 +101,8 @@ const lawyerItems = [
 ];
 
 export function AppSidebar() {
-    const { user } = useUser();
-    const navigationItems = user?.role === "lawyer" ? lawyerItems : userItems;
+    // const { user } = useUser();
+    const navigationItems = userItems; // Default to user items for now
 
     return (
         <Sidebar variant="inset">

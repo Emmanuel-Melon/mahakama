@@ -2,7 +2,7 @@ import type { Route } from "./+types/$chatId";
 import { ChatScreen } from "~/feature/chats/screens/ChatScreen";
 import { useChat, useMessages } from "~/feature/chats/hooks/use-chats";
 import { authContext } from "~/middleware/context";
-import { useUser } from "~/context/user-provider";
+// import { useUser } from "~/context/user-provider";
 
 export function meta({ }: Route.MetaArgs) {
   return [

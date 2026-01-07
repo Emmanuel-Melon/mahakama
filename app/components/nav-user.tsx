@@ -25,14 +25,21 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar"
-import { useUser } from '~/context/user-provider';
+// import { useUser } from '~/context/user-provider';
 import { useLogout } from '~/feature/auth/hooks/use-auth';
 import { NavLink } from "react-router";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user } = useUser();
+  // const { user } = useUser();
   const logoutMutation = useLogout();
+  
+  // Mock user data for now
+  const user = {
+    name: "John Doe",
+    email: "john@example.com",
+    avatar: undefined
+  };
 
   const userItems = [
     {

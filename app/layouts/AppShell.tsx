@@ -13,7 +13,7 @@ interface AppShellProps {
 
 export const AppShell = ({ children, pageTitle, user }: AppShellProps) => {
   return (
-    <UserProvider user={user}>
+  
       <CountryProvider>
         <Toaster />
         <main className="flex-1 pb-16 md:pb-0">
@@ -26,6 +26,6 @@ export const AppShell = ({ children, pageTitle, user }: AppShellProps) => {
           </SidebarProvider>
         </main>
       </CountryProvider>
-    </UserProvider>
+
   )
 }
