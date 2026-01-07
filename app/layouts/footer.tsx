@@ -1,33 +1,81 @@
 import { cn } from "~/lib/utils";
-import { Github, Twitter, Mail, Scale } from "lucide-react";
+import { Github, Twitter, Mail, Scale, MessageCircle, Shield } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { IconContainer } from "~/components/icon-container";
+import { Link } from "react-router";
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
+    
     return (
-        <CardWithLabel
-            label="Mahakama"
-            className="border-t-2 border-l-2 border-r-2 rounded-t-3xl"
-            labelClassName="bg-white text-gray-900"
-        >
-            <div className="space-y-4">
-
-                <div className="space-y-4">
-                    <div className="space-y-2">
-                        <IconContainer icon={Scale} size="md" color="handdrawn" />
-                        <p className="text-xl font-bold">Mahakama</p>
+        <footer className="mt-auto pt-12">
+            <CardWithLabel
+                label="The Platform"
+                // Match the 4px borders and sharp corners from the profile cards
+                className="border-t-4 border-l-0 border-r-0 border-b-0 rounded-none bg-white"
+                labelClassName="bg-yellow-400 text-black border-2 border-black italic font-black uppercase text-xs"
+            >
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-8">
+                    {/* Brand Section */}
+                    <div className="md:col-span-2 space-y-6">
+                        <div className="flex items-center gap-3">
+                            <div className="bg-black p-2 border-2 border-black shadow-[4px_4px_0_0_rgba(250,204,21,1)]">
+                                <Scale className="text-white" size={24} />
+                            </div>
+                            <p className="text-3xl font-black italic uppercase tracking-tighter">Mahakama</p>
+                        </div>
+                        <p className="font-bold text-sm max-w-sm leading-relaxed">
+                            Empowering citizens in South Sudan and East Africa through AI-driven legal discovery and verified professional connections.
+                        </p>
+                        <div className="flex gap-4">
+                            <SocialLink icon={Twitter} href="#" />
+                            <SocialLink icon={Github} href="#" />
+                            <SocialLink icon={Mail} href="#" />
+                        </div>
                     </div>
-                    <p className="text-gray-600 text-sm">
-                        Making legal knowledge accessible to everyone in East Africa.
-                    </p>
+
+                    {/* Quick Links */}
+                    <div className="space-y-4">
+                        <h4 className="font-black uppercase text-xs tracking-widest text-zinc-400">Application</h4>
+                        <ul className="space-y-2 font-bold text-sm">
+                            <li><Link to="/find-a-lawyer" className="hover:underline decoration-yellow-400 decoration-2">Find a Lawyer</Link></li>
+                            <li><Link to="/legal-database" className="hover:underline decoration-yellow-400 decoration-2">Legal Database</Link></li>
+                            <li><Link to="/justice-hub" className="hover:underline decoration-yellow-400 decoration-2">Justice Hub</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Support Section */}
+                    <div className="space-y-4">
+                        <h4 className="font-black uppercase text-xs tracking-widest text-zinc-400">Resources</h4>
+                        <ul className="space-y-2 font-bold text-sm">
+                            <li><Link to="/help" className="hover:underline decoration-yellow-400 decoration-2">Help Center</Link></li>
+                            <li><Link to="/contact" className="hover:underline decoration-yellow-400 decoration-2">Contact Us</Link></li>
+                            <li><Link to="/terms" className="hover:underline decoration-yellow-400 decoration-2">Terms of Service</Link></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div className="mt-12 pt-8 border-t border-gray-200">
-                <p className="text-center text-sm text-gray-500">
-                    &copy; {currentYear} Mahakama. All rights reserved.
-                </p>
-            </div>
-        </CardWithLabel>
+
+                <div className="mt-8 pt-8 border-t-4 border-black flex flex-col md:flex-row justify-between items-center gap-4 pb-4">
+                    <p className="text-xs font-black uppercase italic">
+                        &copy; {currentYear} Mahakama &mdash; Secure Justice Portal
+                    </p>
+                    <div className="flex items-center gap-2 bg-zinc-100 px-3 py-1 border-2 border-black text-[10px] font-black uppercase">
+                        <Shield size={12} /> Data Privacy Encrypted
+                           </div>
+                </div>
+            </CardWithLabel>
+        </footer>
+    );
+}
+
+// Helper component for Socials
+function SocialLink({ icon: Icon, href }: { icon: any, href: string }) {
+    return (
+        <a 
+            href={href} 
+            className="p-2 border-2 border-black hover:bg-yellow-400 transition-colors shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[2px] hover:translate-y-[2px]"
+        >
+            <Icon size={18} />
+        </a>
     );
 }

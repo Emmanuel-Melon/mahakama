@@ -2,6 +2,7 @@ import { Button } from "~/components/ui/button";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { IconContainer } from "~/components/icon-container";
 import { Badge } from "~/components/ui/badge";
+import { MahButton, type MahAction } from "~/components/mah-button";
 import type { LucideIcon } from "lucide-react";
 
 interface ActionButton {
@@ -10,7 +11,7 @@ interface ActionButton {
   onClick?: () => void;
   href?: string;
   download?: boolean;
-  variant?: "primary" | "outline";
+  variant?: "primary" | "secondary";
 }
 
 interface MetadataItem {
@@ -91,7 +92,6 @@ export function PageDetailHeader({
         ))}
       </div>
 
-      {/* Action buttons */}
       <div className="flex flex-wrap gap-3">
         {actions.map((action, index) => {
           if (action.href) {
@@ -112,17 +112,14 @@ export function PageDetailHeader({
           }
 
           return (
-            <Button
+            <MahButton
               key={index}
               onClick={action.onClick}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all border-2 border-black rounded-lg text-gray-900 ${action.variant === "primary"
-                  ? "bg-yellow-300 shadow-[2px_2px_0_0_#000] translate-x-0 translate-y-0"
-                  : "bg-white shadow-[3px_3px_0_0_#000] hover:bg-white hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:text-gray-900"
-                }`}
+              variant={action.variant === "primary" ? "primary" : "secondary"}
             >
               <action.icon className="h-4 w-4 mr-2" />
               {action.label}
-            </Button>
+            </MahButton>
           );
         })}
       </div>

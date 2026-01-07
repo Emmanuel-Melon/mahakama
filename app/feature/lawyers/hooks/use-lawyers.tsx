@@ -15,11 +15,18 @@ export const lawyersKeys = {
     lawyer: (id: string) => [...lawyersKeys.all, 'lawyer', id] as const,
 };
 
-export function useLawyers(category?: "government" | "legal-aid" | "dispute-resolution" | "specialized") {
+export function useLawyers(
+    filters?: {
+        specialization?: string;
+        location?: string;
+        available?: boolean;
+        q?: string;
+    }
+) {
     return useQuery<Lawyer[], JsonApiErrorResponse>({
-        queryKey: category ? [...lawyersKeys.lawyers(), 'category', category] : lawyersKeys.lawyers(),
+        queryKey: filters ? [...lawyersKeys.lawyers(), 'filters', filters] : lawyersKeys.lawyers(),
         queryFn: async () => {
-            return await lawyersApi.getLawyers(category)
+            return await lawyersApi.getLawyers(filters)
         },
         meta: {
             errorToast: true,

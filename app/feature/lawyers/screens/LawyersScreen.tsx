@@ -1,4 +1,5 @@
 import type { FC } from "react";
+import { useState } from "react";
 import { LawyersList } from "~/feature/lawyers/components/lawyers-list";
 import { HeroSection } from "~/layouts/HeroSection";
 import { Gavel } from "lucide-react";
@@ -17,6 +18,8 @@ type LawyersScreenProps = {
 };
 
 export const LawyersScreen: FC<LawyersScreenProps> = ({ lawyers, error, isLoading, isAuthenticated }) => {
+  const [displayMode, setDisplayMode] = useState<"list" | "grid">("grid");
+
   return (
     <PageLayout>
       {!isAuthenticated && (
@@ -35,7 +38,11 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({ lawyers, error, isLoadin
           {error ? (
             <ErrorState error={error} />
           ) : (
-            <LawyersList lawyers={lawyers} />
+            <LawyersList 
+              lawyers={lawyers} 
+              displayMode={displayMode}
+              onDisplayModeChange={setDisplayMode}
+            />
           )}
         </div>
       </div>

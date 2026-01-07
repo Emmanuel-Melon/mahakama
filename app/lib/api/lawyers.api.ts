@@ -1,6 +1,5 @@
 import { FetchApiClient } from "./fetch";
 import type { components } from "./generated/api.types";
-import { API_CONFIG } from "~/config";
 import { LAWYERS_API_ROUTES } from '~/feature/lawyers/LawyersConfig';
 
 export type Lawyer = components["schemas"]["Lawyer"];
@@ -17,13 +16,36 @@ export class LawyersApiClient {
 
   // Get all lawyers with optional filtering
   public async getLawyers(
-    category?: "government" | "legal-aid" | "dispute-resolution" | "specialized"
+    filters?: {
+      specialization?: string;
+      location?: string;
+      available?: boolean;
+      q?: string;
+    }
   ): Promise<Lawyer[]> {
     try {
       let url = LAWYERS_API_ROUTES.ROOT;
+      const searchParams = new URLSearchParams();
 
-      if (category) {
-        url += `?category=${encodeURIComponent(category)}`;
+      if (filters) {
+        if (filters.specialization) {
+          searchParams.append('specialization', filters.specialization);
+        }
+        if (filters.location) {
+          searchParams.append('location', filters.location);
+        }
+        if (filters.available !== undefined) {
+          searchParams.append('available', filters.available.toString());
+        }
+
+        if (filters.q) {
+          searchParams.append('q', filters.q);
+        }
+      }
+
+      const queryString = searchParams.toString();
+      if (queryString) {
+        url += `?${queryString}`;
       }
 
       const response = await this.api.request<LawyersCollectionResponse>(url);
