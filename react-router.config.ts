@@ -6,7 +6,7 @@ export default {
   // async prerender() {
   //   return ["/", "/about", "/contact"];
   // },
-  ssr: true,
+  ssr: false,
   future: {
     v8_middleware: true,
   },
