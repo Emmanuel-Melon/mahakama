@@ -8,23 +8,11 @@ import {
   LogIn,
   Info,
   Mail,
-  User,
-  LogOut,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "~/components/icon-container";
-import { useUser } from '~/context/user-provider';
-import { useLogout } from '~/feature/auth/hooks/use-auth';
-import { UserDropdown } from "~/components/user-dropdown";
-import { ChatDrawer } from "~/feature/chats/components/ChatDrawer";
 const links = [
-  {
-    id: 0,
-    title: "Recents",
-    icon: History,
-    url: "/chats/recents",
-  },
   {
     id: 1,
     title: "Find a Lawyer",
@@ -42,30 +30,13 @@ const links = [
     title: "Legal Database",
     icon: Library,
     url: "/documents",
-  },
-  {
-    id: 4,
-    title: "About Us",
-    icon: Info,
-    url: "/about",
-  },
-  {
-    id: 5,
-    title: "Contact",
-    icon: Mail,
-    url: "/contact",
-  },
+  }
 ];
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { user } = useUser();
-  const logoutMutation = useLogout();
-  const filteredLinks = user
-    ? links.filter(link => link.title !== "About Us" && link.title !== "Contact")
-    : links;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -136,7 +107,7 @@ export function Header() {
             </div>
             <div className="hidden md:flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
               <nav className="flex items-center gap-2">
-                {filteredLinks.map((link) => {
+                {links.map((link) => {
                   const Icon = link.icon;
                   return (
                     <NavLink
@@ -163,32 +134,22 @@ export function Header() {
                   );
                 })}
               </nav>
-
-              {user ? (
-                <div>
-                  <UserDropdown
-                    user={user}
-                    onLogout={() => logoutMutation.mutate()}
-                  />
-                </div>
-              ) : (
-                <NavLink
-                  to="/login"
-                  className={({ isActive }) =>
-                    `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${isActive
-                      ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                      : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
-                    }`
-                  }
-                  style={({ isActive }) => ({
-                    boxShadow: isActive ? "2px 2px 0 0 #000" : "2px 2px 0 0 #000",
-                    borderRadius: "4px 8px 4px 8px",
-                  })}
-                >
-                  <LogIn className="h-4 w-4 mr-1" />
-                  <span className="hidden lg:inline">Log in</span>
-                </NavLink>
-              )}
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${isActive
+                    ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                    : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                  }`
+                }
+                style={({ isActive }) => ({
+                  boxShadow: isActive ? "2px 2px 0 0 #000" : "2px 2px 0 0 #000",
+                  borderRadius: "4px 8px 4px 8px",
+                })}
+              >
+                <LogIn className="h-4 w-4 mr-1" />
+                <span className="hidden lg:inline">Log in</span>
+              </NavLink>
             </div>
 
             <button
@@ -219,7 +180,7 @@ export function Header() {
                   Menu
                 </h3>
                 <div className="space-y-1">
-                  {filteredLinks.map((link) => {
+                  {links.map((link) => {
                     const Icon = link.icon;
                     return (
                       <NavLink
@@ -254,68 +215,25 @@ export function Header() {
 
                   <div className="border-t border-gray-200 my-2"></div>
 
-                  {!user && (
-                    <NavLink
-                      to="/login"
-                      className={({ isActive }) =>
-                        `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${isActive
-                          ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                          : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
-                        }`
-                      }
-                      style={({ isActive }) => ({
-                        boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
-                        borderRadius: isActive ? "4px 8px 4px 8px" : "0",
-                      })}
-                      onClick={closeMenu}
-                    >
-                      <div className="flex items-center gap-3">
-                        <LogIn className="h-5 w-5 flex-shrink-0" />
-                        Log in
-                      </div>
-                    </NavLink>
-                  )}
-
-                  {user && (
-                    <>
-                      <NavLink
-                        to="/users/profile"
-                        className={({ isActive }) =>
-                          `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${isActive
-                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                            : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
-                          }`
-                        }
-                        style={({ isActive }) => ({
-                          boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
-                          borderRadius: isActive ? "4px 8px 4px 8px" : "0",
-                        })}
-                        onClick={closeMenu}
-                      >
-                        <div className="flex items-center gap-3">
-                          <User className="h-5 w-5 flex-shrink-0" />
-                          Profile
-                        </div>
-                      </NavLink>
-
-                      <button
-                        onClick={() => {
-                          logoutMutation.mutate();
-                          closeMenu();
-                        }}
-                        className="flex items-center justify-between w-full px-4 py-2.5 my-1 text-sm font-bold transition-colors text-gray-700 hover:bg-red-50 hover:border-2 hover:border-red-900 border-2 border-transparent"
-                        style={{
-                          boxShadow: "none",
-                          borderRadius: "0",
-                        }}
-                      >
-                        <div className="flex items-center gap-3">
-                          <LogOut className="h-5 w-5 flex-shrink-0" />
-                          Log out
-                        </div>
-                      </button>
-                    </>
-                  )}
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${isActive
+                        ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                        : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                      }`
+                    }
+                    style={({ isActive }) => ({
+                      boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                      borderRadius: isActive ? "4px 8px 4px 8px" : "0",
+                    })}
+                    onClick={closeMenu}
+                  >
+                    <div className="flex items-center gap-3">
+                      <LogIn className="h-5 w-5 flex-shrink-0" />
+                      Log in
+                    </div>
+                  </NavLink>
                 </div>
               </nav>
             </div>

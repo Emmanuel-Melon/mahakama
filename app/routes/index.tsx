@@ -1,7 +1,7 @@
-import type { Route } from "./+types/home";
-import { HomeScreen } from "~/feature/website/screens/HomeScreen";
+import type { Route } from "./+types/index";
 import { authContext, userContext } from "~/middleware/context";
 import { redirect } from "react-router";
+import { HomeScreen } from "~/feature/website/screens/HomeScreen";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -28,7 +28,6 @@ export async function loader({ context }: Route.LoaderArgs) {
   }
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
-  const { user } = loaderData;
+export default function Mahakama({ loaderData }: Route.ComponentProps) {
   return <HomeScreen />;
 }

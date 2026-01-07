@@ -29,6 +29,11 @@ interface LawyerCardProps {
   displayMode?: DisplayMode;
 }
 
+const handleBookmark = (e: React.MouseEvent) => {
+  e.preventDefault();
+  console.log('Bookmarking lawyer:');
+};
+
 export function LawyerCard({
   lawyer,
   variant = "default",
@@ -71,59 +76,56 @@ export function LawyerCard({
                 {lawyer.name ? lawyer.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "LW"}
               </AvatarFallback>
             </Avatar>
-
-            <div>
-              <h3 className="text-md font-black text-gray-900 font-serif">
+            <div className="space-y-2">
+              <h3 className="text-xl">
                 {lawyer.name || "Unnamed Lawyer"}
               </h3>
+              {lawyer.location && (
+                <div className="flex items-center text-sm text-gray-600">
+                  <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
+                  <span className="truncate">{lawyer.location}</span>
+                </div>
+              )}
             </div>
           </div>
           <BookmarkButton
-            onClick={() => console.log('Bookmark clicked')}
+            onClick={handleBookmark}
             className="p-2 text-sm font-medium border-2 border-black rounded-lg bg-white shadow-[3px_3px_0_0_#000]"
-            aria-label="Save lawyer"
+            aria-label="Bookmark lawyer"
           />
         </div>
 
         <div className="mb-4 space-y-2">
-
+          {lawyer.specialization && (
+            <div className="flex items-center text-sm text-gray-600 mt-1">
+              <Briefcase className="h-4 w-4 mr-1 flex-shrink-0" />
+              <span className="truncate">{lawyer.specialization}</span>
+            </div>
+          )}
+          {lawyer.experienceYears && (
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+              <Briefcase className="h-4 w-4" />
+              <span className="font-medium">{getExperienceText(lawyer.experienceYears)}</span>
+            </div>
+          )}
           {languages.length > 0 && (
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Languages className="w-4 h-4" />
+              <Languages className="h-4 w-4" />
               <span className="font-medium">Languages:</span>
               <span>{languages.join(", ")}</span>
             </div>
           )}
         </div>
 
-        <div className="mt-auto pt-4 border-t-2 border-dashed border-gray-300">
-          <NavLink
+        <div className="mt-auto pt-4">
+          <MahButton
             to={`/lawyers/${lawyer.id}`}
-            viewTransition
-            className={({
-              isActive,
-              isPending,
-            }: {
-              isActive: boolean;
-              isPending: boolean;
-            }) =>
-              `flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full`
-            }
+            size="sm"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] hover:bg-yellow-400 hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] w-full"
           >
-            {({
-              isActive,
-              isPending,
-            }: {
-              isActive: boolean;
-              isPending: boolean;
-            }) => (
-              <>
-                <User className="w-4 h-4 mr-2" />
-                <span>View {getFirstName(lawyer.name)}'s Profile</span>
-                {isPending && <span className="ml-1">...</span>}
-              </>
-            )}
-          </NavLink>
+            View {getFirstName(lawyer.name)}'s Profile
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </MahButton>
         </div>
       </div>
     </div>

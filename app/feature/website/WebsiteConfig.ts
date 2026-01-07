@@ -1,11 +1,5 @@
-  export const WEBSITE_ROUTES = {
+export const WEBSITE_ROUTES = {
     LAYOUT: "./feature/website/layouts/website.layout.tsx",
-    HOME: {
-        URL_SEGMENT: "",
-        PATH: "routes/home.tsx",
-        NAME: "home",
-        LABEL: "Home",
-    },
     ABOUT: {
         URL_SEGMENT: "about",
         PATH: "routes/about.tsx",

@@ -12,6 +12,12 @@ export const AUTH_ROUTES = {
         NAME: "authSignup",
         LABEL: "Sign Up",
     },
+    FORGOT_PASSWORD: {
+        URL_SEGMENT: "forgot-password",
+        PATH: "routes/auth/forgot-password.tsx",
+        NAME: "authForgotPassword",
+        LABEL: "Forgot Password",
+    },
 } as const;
 
 export const AUTH_API_ROUTES = {

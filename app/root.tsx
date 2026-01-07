@@ -4,26 +4,21 @@ import {
   Links,
   Meta,
   Outlet,
-  redirect,
   Scripts,
   ScrollRestoration,
   useLoaderData,
   useLocation,
 } from "react-router";
 import { Header } from "~/layouts/header";
-import { UserProvider } from '~/context/user-provider';
+import { AppShell } from "~/layouts/AppShell";
+import { WebsiteLayout } from "~/layouts/WebsiteLayout";
 import { QueryClientProviderWrapper } from '~/context/query-client-provider';
-import { CountryProvider } from '~/context/country-context';
 import "./app.css";
 import { NotFound } from "./routes/$";
+import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken } from "~/lib/api/utils";
 import { usersApi, UsersApiClient } from "~/lib/api/users.api";
 import { FetchApiClient } from "~/lib/api/fetch";
-import { Toaster } from 'sonner';
-import { userContext, authContext } from "~/middleware/context";
-import { SidebarProvider, SidebarTrigger, SidebarInset,} from "~/components/ui/sidebar"
-import { AppSidebar } from "~/components/app-sidebar";
-import { SiteHeader } from "~/components/site-header";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -67,6 +62,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   };
 
   const pageTitle = getPageTitle(location.pathname);
+  const isAppRoute = location.pathname.startsWith('/app') ||
+    location.pathname.startsWith('/documents') ||
+    location.pathname.startsWith('/lawyers') ||
+    location.pathname.startsWith('/chats') ||
+    location.pathname.startsWith('/chat') ||
+    location.pathname.startsWith('/legal-hub') ||
+    location.pathname.startsWith('/users');
 
   return (
     <html lang="en" className="h-full">
@@ -76,25 +78,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-screen flex flex-col bg-background font-['Helvetica'] antialiased">
+      <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
         <QueryClientProviderWrapper>
-          <UserProvider user={user}>
-            <CountryProvider>
-              <Toaster />
-              <div className="md:hidden">
-                <Header />
-              </div>
-              <main className="flex-1 pb-16 md:pb-0">
-                <SidebarProvider>
-                  <AppSidebar />
-                  <SidebarInset>
-                    <SiteHeader title={pageTitle} role={user?.role} />
-                    {children}
-                  </SidebarInset>
-                </SidebarProvider>
-              </main>
-            </CountryProvider>
-          </UserProvider>
+          {isAppRoute && user ? (
+            <AppShell pageTitle={pageTitle} user={user}>
+              {children}
+            </AppShell>
+          ) : (
+            <WebsiteLayout>
+              {children}
+            </WebsiteLayout>
+          )}
         </QueryClientProviderWrapper>
         <ScrollRestoration />
         <Scripts />
@@ -148,19 +142,17 @@ async function authMiddleware({ request, context }: Route.LoaderArgs) {
     return;
   }
 
-  if (!token) { throw redirect("/login"); }
   const cookieHeader = request.headers.get('cookie');
   const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
 
   try {
     const user = await apiClient.getCurrentUser();
     if (!user.isOnboarded) {
-      // throw redirect("/onboarding");
     }
     context.set(userContext, user);
     context.set(authContext, { token });
   } catch (error) {
-    throw redirect("/login");
+    
   }
 }
 

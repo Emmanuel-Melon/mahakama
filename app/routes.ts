@@ -13,8 +13,8 @@ import { CHATS_ROUTES, MESSAGES_ROUTES } from "./feature/chats/ChatsConfig";
 import { WEBSITE_ROUTES } from "./feature/website/WebsiteConfig";
 
 export default [
+  index("routes/index.tsx"),
   layout(WEBSITE_ROUTES.LAYOUT, [
-    index(WEBSITE_ROUTES.HOME.PATH),
     route(WEBSITE_ROUTES.ABOUT.URL_SEGMENT, WEBSITE_ROUTES.ABOUT.PATH),
   ]),
   route("app", "routes/app/index.tsx"),

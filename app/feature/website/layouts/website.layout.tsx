@@ -4,7 +4,7 @@ import { FAQSection } from "~/components/faq";
 
 export default function WebsiteLayout(props: any) {
     return (
-        <div className="min-h-screen">
+        <div>
             <Outlet />
             <FAQSection />
             <Footer />

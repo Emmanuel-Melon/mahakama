@@ -42,7 +42,6 @@ export function SearchBar({
     }
   }, [query, onChange]);
 
-  // Update form when external value changes
   React.useEffect(() => {
     setValue("query", value);
   }, [value, setValue]);
@@ -56,7 +55,7 @@ export function SearchBar({
           type="text"
           placeholder={placeholder}
           disabled={disabled}
-          className={`pl-10 pr-4 border-2 border-gray-900 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-[2px_2px_0_0_#000] ${className}`}
+          className={`pl-10 pr-4 border-2 border-border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-[2px_2px_0_0_hsl(var(--shadow-color))] ${className}`}
           aria-invalid={!!errors.query}
         />
       </form>

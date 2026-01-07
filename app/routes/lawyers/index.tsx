@@ -4,6 +4,11 @@ import { useLawyers } from "~/feature/lawyers/hooks/use-lawyers";
 import { useSearchParams } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
 import { PageLoading } from "~/components/page-loading";
+import { useState, useEffect } from "react";
+import { useDebouncedValue } from "~/hooks/use-debounce";
+import { Users, MapPin, CheckCircle } from "lucide-react";
+import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+export type Lawyer = componentsv1["schemas"]["Lawyer"];
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -62,11 +67,24 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
     />
   );
   
-  const [searchParams] = useSearchParams();
-  const specialization = searchParams.get('specialization') || undefined;
-  const location = searchParams.get('location') || undefined;
-  const available = searchParams.get('available') === 'true' ? true : searchParams.get('available') === 'false' ? false : undefined;
-  const q = searchParams.get('q') || undefined;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [displayMode, setDisplayMode] = useState<"list" | "grid">("grid");
+  
+  // Extract filter values from URL
+  const currentFilter = searchParams.get('filter') || "all";
+  const currentSort = searchParams.get('sort') || 'createdAt';
+  const currentSearch = searchParams.get('q') || '';
+  const currentSpecialization = searchParams.get('specialization') || '';
+  const currentLocation = searchParams.get('location') || '';
+  const currentAvailable = searchParams.get('available') || '';
+  
+  const debouncedSearch = useDebouncedValue(currentSearch, 400);
+  
+  // Prepare filters for API call
+  const specialization = currentSpecialization || undefined;
+  const location = currentLocation || undefined;
+  const available = currentAvailable === 'true' ? true : currentAvailable === 'false' ? false : undefined;
+  const q = currentSearch || undefined;
   
   const filters = {
     specialization,
@@ -77,5 +95,143 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
   
   const { data: lawyers, error: lawyersError, isLoading } = useLawyers(filters);
   
-  return <LawyersScreen lawyers={lawyers || []} error={lawyersError} isLoading={isLoading} isAuthenticated={!!user} />;
+  const sortLawyers = (lawyersToSort: Lawyer[], sortValue: string) => {
+    const sortOrder = sortValue.startsWith('-') ? 'desc' : 'asc';
+    const sortField = sortValue.startsWith('-') ? sortValue.substring(1) : sortValue;
+
+    return [...lawyersToSort].sort((a, b) => {
+      let aValue: any = a[sortField as keyof Lawyer];
+      let bValue: any = b[sortField as keyof Lawyer];
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        aValue = aValue.toLowerCase();
+        bValue = bValue.toLowerCase();
+      }
+
+      if (sortField === 'createdAt') {
+        aValue = new Date(aValue).getTime();
+        bValue = new Date(bValue).getTime();
+      }
+
+      if (sortOrder === 'asc') {
+        return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+      } else {
+        return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+      }
+    });
+  };
+  
+  const sortedLawyers = lawyers ? sortLawyers(lawyers, currentSort) : [];
+  
+  // Event handlers
+  const handleFilterChange = (filterValue: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('specialization');
+    newParams.delete('location');
+    newParams.delete('available');
+    newParams.delete('filter');
+    
+    if (filterValue !== 'all') {
+      newParams.set('filter', filterValue);
+    }
+    
+    setSearchParams(newParams);
+  };
+
+  const handleSpecializationChange = (specialization: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('specialization');
+    if (specialization) {
+      newParams.set('specialization', specialization);
+      newParams.set('filter', 'specialization');
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleLocationChange = (location: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('location');
+    if (location) {
+      newParams.set('location', location);
+      newParams.set('filter', 'location');
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleAvailableChange = (available: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('available');
+    if (available === 'true' || available === 'false') {
+      newParams.set('available', available);
+      newParams.set('filter', 'isAvailable');
+    }
+    setSearchParams(newParams);
+  };
+
+  const handleSearchChange = (searchValue: string) => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('q');
+    if (searchValue.trim()) {
+      newParams.set('q', searchValue.trim());
+    }
+    setSearchParams(newParams);
+  };
+
+  useEffect(() => {
+    if (debouncedSearch !== currentSearch) {
+      handleSearchChange(debouncedSearch);
+    }
+  }, [debouncedSearch]);
+
+  const handleSortChange = (sortBy: string, sortOrder: "asc" | "desc") => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete('sort');
+    const sortValue = sortOrder === 'desc' ? `-${sortBy}` : sortBy;
+    newParams.set('sort', sortValue);
+    setSearchParams(newParams);
+  };
+  
+  const filterOptions = [
+    { value: "all", label: "All Lawyers", icon: Users },
+    { value: "specialization", label: "By Specialization", icon: Users },
+    { value: "location", label: "By Location", icon: MapPin },
+    { value: "isAvailable", label: "Available Now", icon: CheckCircle },
+  ];
+
+  const sortOptions = [
+    { value: "createdAt", label: "Most Recent" },
+    { value: "name", label: "Name (A-Z)" },
+    { value: "-name", label: "Name (Z-A)" },
+  ];
+
+  const currentSortOrder = currentSort.startsWith('-') ? 'desc' : 'asc';
+  const currentSortField = currentSort.startsWith('-') ? currentSort.substring(1) : currentSort;
+  
+  return (
+    <LawyersScreen 
+      lawyers={sortedLawyers} 
+      error={lawyersError} 
+      isLoading={isLoading} 
+      isAuthenticated={!!user}
+      displayMode={displayMode}
+      onDisplayModeChange={setDisplayMode}
+      // Filter props
+      currentFilter={currentFilter}
+      currentSpecialization={currentSpecialization}
+      currentLocation={currentLocation}
+      currentAvailable={currentAvailable}
+      currentSearch={currentSearch}
+      filterOptions={filterOptions}
+      onFilterChange={handleFilterChange}
+      onSpecializationChange={handleSpecializationChange}
+      onLocationChange={handleLocationChange}
+      onAvailableChange={handleAvailableChange}
+      onSearch={handleSearchChange}
+      // Sort props
+      currentSortField={currentSortField}
+      currentSortOrder={currentSortOrder}
+      sortOptions={sortOptions}
+      onSortChange={handleSortChange}
+    />
+  );
 }

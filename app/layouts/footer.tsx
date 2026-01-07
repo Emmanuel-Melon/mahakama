@@ -11,12 +11,10 @@ export function Footer() {
         <footer className="mt-auto pt-12">
             <CardWithLabel
                 label="The Platform"
-                // Match the 4px borders and sharp corners from the profile cards
                 className="border-t-4 border-l-0 border-r-0 border-b-0 rounded-none bg-white"
                 labelClassName="bg-yellow-400 text-black border-2 border-black italic font-black uppercase text-xs"
             >
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12 py-8">
-                    {/* Brand Section */}
                     <div className="md:col-span-2 space-y-6">
                         <div className="flex items-center gap-3">
                             <div className="bg-black p-2 border-2 border-black shadow-[4px_4px_0_0_rgba(250,204,21,1)]">
@@ -34,7 +32,6 @@ export function Footer() {
                         </div>
                     </div>
 
-                    {/* Quick Links */}
                     <div className="space-y-4">
                         <h4 className="font-black uppercase text-xs tracking-widest text-zinc-400">Application</h4>
                         <ul className="space-y-2 font-bold text-sm">
@@ -44,7 +41,6 @@ export function Footer() {
                         </ul>
                     </div>
 
-                    {/* Support Section */}
                     <div className="space-y-4">
                         <h4 className="font-black uppercase text-xs tracking-widest text-zinc-400">Resources</h4>
                         <ul className="space-y-2 font-bold text-sm">
@@ -68,7 +64,6 @@ export function Footer() {
     );
 }
 
-// Helper component for Socials
 function SocialLink({ icon: Icon, href }: { icon: any, href: string }) {
     return (
         <a 
