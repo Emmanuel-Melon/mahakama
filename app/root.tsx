@@ -36,8 +36,8 @@ export const links: Route.LinksFunction = () => [
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   try {
-    const user = context.get(userContext);
-    const token = context.get(authContext)?.token || null;
+    const user = null;
+    const token = null;
     return { user, token };
   } catch (error) {
     return { user: null, token: null };
@@ -163,7 +163,7 @@ async function authMiddleware({ request, context }: Route.LoaderArgs) {
   }
 }
 
-export const middleware: Route.MiddlewareFunction[] = [
-  authMiddleware,
-];
+// export const middleware: Route.MiddlewareFunction[] = [
+//   authMiddleware,
+// ];
 

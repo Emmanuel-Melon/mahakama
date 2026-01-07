@@ -107,7 +107,7 @@ export function AppSidebar() {
     return (
         <Sidebar variant="inset">
             <SidebarHeader>
-                <CountrySelector />
+             
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>
