@@ -1,32 +1,11 @@
-import {
-  Filter,
-  ArrowDownUp,
-  List,
-  LayoutGrid,
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
+import { Filter, ArrowDownUp } from "lucide-react";
 import { Button } from "app/components/ui/button";
 import { CardWithLabel } from "app/components/ui/card-with-label";
-import { ButtonGroup } from "app/components/ui/button-group";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "app/components/ui/dropdown-menu";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "app/components/ui/select";
 import { useState, useEffect } from "react";
+import { SearchBar } from "./search-bar";
+import { SortSelect } from "./sort-select";
+import { ViewModeToggle } from "./view-mode-toggle";
+import { FilterSelect } from "./filter-select";
 
 type ViewMode = "list" | "grid";
 type SortOrder = "asc" | "desc";
@@ -34,6 +13,7 @@ type SortOrder = "asc" | "desc";
 interface SortOption {
   value: string;
   label: string;
+  icon?: React.ComponentType<{ className?: string }>;
 }
 
 interface ListControlsProps {
@@ -44,20 +24,20 @@ interface ListControlsProps {
   label?: string;
   itemName?: string;
   className?: string;
-
-  // Pagination props
-  currentPage?: number;
-  totalPages?: number;
-  pageSize?: number;
-  pageSizeOptions?: number[];
-  onPageChange?: (page: number) => void;
-  onPageSizeChange?: (size: number) => void;
+  onSearch?: (query: string) => void;
+  searchPlaceholder?: string;
+  searchValue?: string;
 
   // Sorting props
   sortBy?: string;
   sortOrder?: SortOrder;
   sortOptions?: SortOption[];
   onSortChange?: (sortBy: string, sortOrder: SortOrder) => void;
+
+  // Filtering props
+  filterBy?: string;
+  filterOptions?: SortOption[];
+  onFilterChange?: (filterBy: string) => void;
 
   // Loading state
   isLoading?: boolean;
@@ -78,14 +58,9 @@ export function ListControls({
   label = "Section",
   itemName = "item",
   className = "",
-
-  // Pagination
-  currentPage = 1,
-  totalPages = 1,
-  pageSize = 10,
-  pageSizeOptions = DEFAULT_PAGE_SIZE_OPTIONS,
-  onPageChange,
-  onPageSizeChange,
+  onSearch,
+  searchPlaceholder = "Search...",
+  searchValue = "",
 
   // Sorting
   sortBy = "createdAt",
@@ -93,18 +68,31 @@ export function ListControls({
   sortOptions = DEFAULT_SORT_OPTIONS,
   onSortChange,
 
+  // Filtering
+  filterBy,
+  filterOptions = [],
+  onFilterChange,
+
   // Loading state
   isLoading = false,
 }: ListControlsProps) {
   const [viewMode, setViewMode] = useState<ViewMode>(externalDisplayMode);
   const [localSortBy, setLocalSortBy] = useState(sortBy);
   const [localSortOrder, setLocalSortOrder] = useState<SortOrder>(sortOrder);
+  const [localFilterBy, setLocalFilterBy] = useState(filterBy || "");
+  const [searchQuery, setSearchQuery] = useState(searchValue || "");
 
   useEffect(() => {
     if (externalDisplayMode !== viewMode) {
       setViewMode(externalDisplayMode);
     }
   }, [externalDisplayMode, viewMode]);
+
+  useEffect(() => {
+    if (searchValue !== searchQuery) {
+      setSearchQuery(searchValue);
+    }
+  }, [searchValue, setSearchQuery]);
 
   const handleSortChange = (value: string) => {
     const newSortBy = value.startsWith("-") ? value.substring(1) : value;
@@ -115,102 +103,76 @@ export function ListControls({
     onSortChange?.(newSortBy, newSortOrder);
   };
 
-  const handlePageSizeChange = (value: string) => {
-    const newSize = parseInt(value, 10);
-    onPageSizeChange?.(newSize);
+  const handleFilterChange = (value: string) => {
+    setLocalFilterBy(value);
+    onFilterChange?.(value);
   };
 
-  const goToFirstPage = () => onPageChange?.(1);
-  const goToPreviousPage = () =>
-    currentPage > 1 && onPageChange?.(currentPage - 1);
-  const goToNextPage = () =>
-    currentPage < totalPages && onPageChange?.(currentPage + 1);
-  const goToLastPage = () => onPageChange?.(totalPages);
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+    onSearch?.(value);
+  };
 
   const currentSortValue = `${localSortOrder === "desc" && localSortBy !== "createdAt" ? "-" : ""}${localSortBy}`;
 
+  // Create dynamic label with count if both are provided
+  const dynamicLabel = label && totalItems !== undefined ? `${totalItems} ${label}` : label;
+
   return (
     <div className={`space-y-4 w-full ${className}`}>
-      <CardWithLabel label={label} className="px-4 py-3 border-solid border-gray-100 shadow-[3px_3px_0_0_#000] rounded-[8px_16px_8px_16px] max-w-none mx-0">
+      <CardWithLabel label={dynamicLabel} className="px-4 py-3 border-solid border-gray-150 rounded-[8px_16px_8px_16px] max-w-none mx-0">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div className="text-sm text-gray-700">
-            <span className="font-medium">{totalItems}</span> {itemName}
-            {totalItems !== 1 ? "s" : ""} found
+          <div className="flex items-center gap-2 w-full sm:w-96">
+            <SearchBar
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder={searchPlaceholder}
+            />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <div className="flex items-center gap-2">
+              {filterOptions.length > 0 && (
+                <>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm text-gray-500 hidden sm:inline">
+                      Filter by:
+                    </span>
+                    <FilterSelect
+                      value={localFilterBy}
+                      onValueChange={handleFilterChange}
+                      options={filterOptions}
+                      disabled={isLoading}
+                    />
+                  </div>
+
+                  <div className="h-6 w-px bg-gray-300 mx-2"></div>
+                </>
+              )}
+
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500 hidden sm:inline">
                   Sort by:
                 </span>
-                <Select
+                <SortSelect
                   value={currentSortValue}
                   onValueChange={handleSortChange}
+                  options={sortOptions}
                   disabled={isLoading}
-                >
-                  <SelectTrigger
-                    className="w-[180px] border-2 border-gray-900 bg-white hover:bg-yellow-50"
-                    style={{
-                      boxShadow: "2px 2px 0 0 #000",
-                      borderRadius: "4px 8px 4px 8px",
-                    }}
-                  >
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent
-                    className="border-2 border-gray-900 bg-white"
-                    style={{ boxShadow: "3px 3px 0 0 #000" }}
-                  >
-                    {sortOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                />
               </div>
 
               <div className="h-6 w-px bg-gray-300 mx-2"></div>
 
-              <ButtonGroup>
-                <Button
-                  variant={viewMode === "grid" ? "default" : "outline"}
-                  size="icon"
-                  className={`border-2 border-gray-900 ${viewMode === "grid" ? "bg-gray-900 text-white" : "bg-white hover:bg-yellow-50"}`}
-                  style={{
-                    boxShadow: "2px 2px 0 0 #000",
-                    borderRadius: "4px 0 0 4px",
-                  }}
-                  onClick={() => {
-                    const newMode = "grid";
-                    setViewMode(newMode);
-                    onViewModeChange?.(newMode);
-                    onDisplayModeChange?.(newMode);
-                  }}
-                  disabled={isLoading}
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewMode === "list" ? "default" : "outline"}
-                  size="icon"
-                  className={`border-2 border-l-0 border-gray-900 ${viewMode === "list" ? "bg-gray-900 text-white" : "bg-white hover:bg-yellow-50"}`}
-                  style={{
-                    boxShadow: "2px 2px 0 0 #000",
-                    borderRadius: "0 4px 4px 0",
-                  }}
-                  onClick={() => {
-                    const newMode = "list";
-                    setViewMode(newMode);
-                    onViewModeChange?.(newMode);
-                    onDisplayModeChange?.(newMode);
-                  }}
-                  disabled={isLoading}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </ButtonGroup>
+              <ViewModeToggle
+                currentMode={viewMode}
+                onModeChange={(newMode) => {
+                  setViewMode(newMode);
+                  onViewModeChange?.(newMode);
+                  onDisplayModeChange?.(newMode);
+                }}
+                disabled={isLoading}
+              />
             </div>
           </div>
         </div>

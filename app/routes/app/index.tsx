@@ -1,5 +1,4 @@
 import type { Route } from "./+types/index";
-import { AppScreen } from "~/feature/app/screens/AppScreen";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
 
 export function meta({ loaderData }: Route.MetaArgs) {

@@ -63,9 +63,19 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
   );
   
   const [searchParams] = useSearchParams();
-  const category = searchParams.get('category') as "government" | "legal-aid" | "dispute-resolution" | "specialized" | undefined;
+  const specialization = searchParams.get('specialization') || undefined;
+  const location = searchParams.get('location') || undefined;
+  const available = searchParams.get('available') === 'true' ? true : searchParams.get('available') === 'false' ? false : undefined;
+  const q = searchParams.get('q') || undefined;
   
-  const { data: lawyers, error: lawyersError, isLoading } = useLawyers(category);
+  const filters = {
+    specialization,
+    location,
+    available,
+    q
+  };
+  
+  const { data: lawyers, error: lawyersError, isLoading } = useLawyers(filters);
   
   return <LawyersScreen lawyers={lawyers || []} error={lawyersError} isLoading={isLoading} isAuthenticated={!!user} />;
 }

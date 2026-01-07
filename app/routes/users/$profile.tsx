@@ -21,10 +21,8 @@ export function meta({ loaderData }: Route.MetaArgs) {
 export async function loader({ context, request }: Route.LoaderArgs) {
     const token = context.get(authContext)?.token || null;
     try {
-        // Create API client with cookie from request headers for server-side call
         const cookieHeader = request.headers.get('cookie');
         const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
-        
         const response = await apiClient.getCurrentUser();
         if (!response) {
             throw new Response("User not found", { status: 404 });

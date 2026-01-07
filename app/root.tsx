@@ -88,7 +88,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <SidebarProvider>
                   <AppSidebar />
                   <SidebarInset>
-                    <SiteHeader title={pageTitle} />
+                    <SiteHeader title={pageTitle} role={user?.role} />
                     {children}
                   </SidebarInset>
                 </SidebarProvider>
