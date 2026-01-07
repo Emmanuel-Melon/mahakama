@@ -4,7 +4,9 @@ import { Button } from "~/components/ui/button";
 import { PageLayout, PageHeader } from "~/layouts/page-layout";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
 import { ContactInformation, type ContactItem } from "~/components/contact-information";
-import type { LegalService } from "~/feature/website/hooks/use-services";
+import type { components } from "~/lib/api/generated/api.types";
+
+export type LegalService = components["schemas"]["LegalService"];
 
 interface ServiceDetailScreenProps {
   service: LegalService;

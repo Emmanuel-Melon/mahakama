@@ -20,6 +20,8 @@ export type ServiceCategory = components["schemas"]["ServiceCategory"];
 interface LegalHubScreenProps {
   services: ApiLegalService[];
   isAuthenticated?: boolean;
+  displayMode?: "grid" | "list";
+  onDisplayModeChange?: (mode: "grid" | "list") => void;
 }
 
 const categoryIcons = {
@@ -37,7 +39,7 @@ const categoryLabels = {
 } as const;
 
 
-export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuthenticated }) => {
+export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuthenticated, displayMode = "grid", onDisplayModeChange }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [locationFilter, setLocationFilter] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ServiceCategory>('all');
@@ -83,6 +85,8 @@ export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuth
             variant="default"
             showControls={true}
             isLoading={false}
+            displayMode={displayMode}
+            onDisplayModeChange={onDisplayModeChange}
           />
       </div>
     </PageLayout>

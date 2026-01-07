@@ -1,12 +1,14 @@
-import { MapPin, Phone, Globe, ChevronRight, Building2, Scale, HeartHandshake, Shield, Heart } from "lucide-react";
+import { MapPin, Phone, Globe, ChevronRight, Building2, Scale, HeartHandshake, Shield } from "lucide-react";
 import { NavLink } from "react-router";
-import type { LegalService } from "./types";
+import { BookmarkButton } from "~/components/bookmark-button";
+import { MahButton } from "~/components/mah-button";
+import { cn } from "~/lib/utils";
 
 type CardVariant = "default" | "minimal";
 type DisplayMode = "grid" | "list";
 
 interface ServiceCardProps {
-  service: LegalService;
+  service: any;
   variant?: CardVariant;
   displayMode?: DisplayMode;
 }
@@ -39,10 +41,31 @@ export function ServiceCard({
     console.log('Saving service:', service.name);
   };
 
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Bookmarking service:', service.name);
+  };
+
   const cardClasses: Record<DisplayMode, string> = {
     grid: "h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-5",
     list: "relative bg-white border-2 border-gray-900 rounded-lg p-6",
   };
+
+  function getColor(arg0: number): string {
+    const colors = [
+      "text-blue-900",
+      "text-green-900",
+      "text-purple-900",
+      "text-amber-900",
+      "text-rose-900",
+      "text-emerald-900",
+      "text-indigo-900",
+      "text-cyan-900",
+      "text-fuchsia-900",
+      "text-lime-900",
+    ];
+    return colors[arg0 % colors.length];
+  }
 
   return (
     <div
@@ -55,7 +78,7 @@ export function ServiceCard({
       <div className="relative z-10 h-full flex flex-col">
         <div className="flex items-start justify-between mb-4 gap-3">
           <div className="flex-1">
-            <h3 className="text-xl font-black text-gray-900 font-serif">
+            <h3 className="text-xl">
               {service.name}
             </h3>
             {service.location && (
@@ -65,13 +88,11 @@ export function ServiceCard({
               </div>
             )}
           </div>
-          <button
+          <BookmarkButton
+            onClick={handleBookmark}
             className="p-2 text-sm font-medium border-2 border-black rounded-lg bg-white shadow-[3px_3px_0_0_#000]"
-            aria-label="Save service"
-            onClick={handleSave}
-          >
-            <Heart className="h-4 w-4" />
-          </button>
+            aria-label="Bookmark service"
+          />
         </div>
 
         <p className="text-gray-600 mb-4 line-clamp-2">{service.description}</p>
@@ -79,33 +100,45 @@ export function ServiceCard({
         {service.services.length > 0 && (
           <div className="mt-2 mb-4 flex flex-wrap gap-2">
             {service.services.slice(0, 3).map((s, i) => (
-              <span 
+              <span
                 key={i}
-                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200"
+                className={cn(
+                  "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+                  getColor(service.services.length - 3)
+                )}
+                style={{
+                  boxShadow: "2px 2px 0 0 #000",
+                  borderRadius: "4px 8px 4px 8px",
+                }}
               >
                 {s}
               </span>
             ))}
             {service.services.length > 3 && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500 border border-gray-200">
+              <span className={cn(
+                "text-left py-1.5 sm:py-1 px-3 border-2 border-gray-900 bg-white",
+                "transition-all hover:shadow-md font-medium text-xs sm:text-sm flex items-center gap-2",
+                "active:translate-y-0.5 active:shadow-none hover:bg-gray-50",
+                getColor(service.services.length - 3)
+              )}
+              >
                 +{service.services.length - 3} more
               </span>
             )}
           </div>
         )}
 
-        <div className="mt-auto pt-4 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <NavLink
-              to={`/legal-hub/${service.id}`}
-              viewTransition
-              className="inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-700 group-hover:translate-x-1 transition-transform"
-            >
-              View details
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </NavLink>
-          </div>
+        <div className="mt-auto pt-4">
+          <MahButton
+            to={`/legal-hub/${service.id}`}
+            size="sm"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] hover:bg-yellow-400 hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] w-full"
+          >
+            View details
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </MahButton>
         </div>
+
       </div>
     </div>
   );

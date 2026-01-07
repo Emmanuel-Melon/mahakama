@@ -18,6 +18,7 @@ interface ServicesListProps {
   variant?: "default" | "minimal";
   showControls?: boolean;
   isLoading?: boolean;
+  onDisplayModeChange?: (mode: "list" | "grid") => void;
 }
 
 export function ServicesList({
@@ -26,10 +27,13 @@ export function ServicesList({
   variant = "default",
   showControls = true,
   isLoading = false,
+  onDisplayModeChange,
 }: ServicesListProps) {
-  const [displayMode, setDisplayMode] = useState<"list" | "grid">(
-    externalDisplayMode
-  );
+  const [displayMode, setDisplayMode] = useState<"list" | "grid">(externalDisplayMode);
+  
+  // Use external display mode if provided, otherwise use internal state
+  const currentDisplayMode = externalDisplayMode || displayMode;
+  const handleDisplayModeChange = onDisplayModeChange || setDisplayMode;
 
   useEffect(() => {
     setDisplayMode(externalDisplayMode);
@@ -71,12 +75,12 @@ export function ServicesList({
         <ListControls
           totalItems={services.length}
           itemName="service"
-          displayMode={displayMode}
-          onDisplayModeChange={setDisplayMode}
+          displayMode={currentDisplayMode}
+          onDisplayModeChange={handleDisplayModeChange}
         />
       )}
 
-      {displayMode === "grid" ? (
+      {currentDisplayMode === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service) => (
             <div key={service.id} className="h-full">
@@ -95,7 +99,7 @@ export function ServicesList({
               key={service.id}
               service={service}
               variant={variant}
-              displayMode="list"
+              displayMode={currentDisplayMode}
             />
           ))}
         </div>

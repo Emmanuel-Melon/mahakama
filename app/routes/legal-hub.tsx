@@ -4,6 +4,7 @@ import { authContext, userContext } from "~/middleware/context";
 import { useServices } from "~/feature/website/hooks/use-services";
 import { LoadingState } from "~/components/async-state/loading";
 import { ErrorState } from "~/components/async-state/error";
+import { useState } from "react";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -50,11 +51,25 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function LegalHubPage({ loaderData }: Route.ComponentProps) {
   const { user, error } = loaderData;
+  if (error) return (
+    <ErrorState error={error} />
+  );
+
   const { data: services, isLoading, error: servicesError } = useServices(undefined);
+  const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
+  
   if (isLoading) return <LoadingState />;
   const errorMessage = servicesError 
     ? (servicesError instanceof Error ? servicesError.message : "Failed to load services")
-    : error;
-  if (servicesError || error) return <ErrorState error={errorMessage || "Failed to load services"} />;
-  return <LegalHubScreen services={services ?? []} isAuthenticated={!!user} />;
+    : error || "Failed to load services";
+  if (servicesError || error) return <ErrorState error={errorMessage} />;
+  
+  return (
+    <LegalHubScreen 
+      services={services ?? []} 
+      isAuthenticated={!!user}
+      displayMode={displayMode}
+      onDisplayModeChange={setDisplayMode}
+    />
+  );
 }
