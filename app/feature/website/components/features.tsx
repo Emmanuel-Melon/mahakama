@@ -3,6 +3,7 @@ import { IconContainer } from "~/components/icon-container";
 import { FileText } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { NavLink } from "react-router";
+import { CardWithLabel } from "~/components/ui/card-with-label";
 
 const features = [
     {
@@ -49,21 +50,14 @@ export const MahakamaFeatures = () => {
 
                 <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {features.map((feature) => (
-                        <div
+                        <CardWithLabel
+                            label={feature.title}
                             key={feature.id}
                             className={cn(
-                                "relative p-4 bg-white border-2 border-gray-900 group transition-all duration-200 transform hover:-translate-y-1 hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)]",
+                                "border-solid group transition-all duration-200 transform hover:-translate-y-1 hover:shadow-[6px_6px_0_0_rgba(0,0,0,1)]",
                                 "flex gap-4 h-full",
                             )}
-                            style={{
-                                borderRadius: "16px 8px 16px 8px",
-                                border: "2px solid #000",
-                                boxShadow: "4px 4px 0 0 #000",
-                            }}
                         >
-                            {/* Decorative corner elements */}
-                            <div className="absolute -right-2 -top-2 w-3 h-3 border-t-2 border-r-2 border-gray-900 bg-yellow-300"></div>
-                            <div className="absolute -left-2 -bottom-2 w-3 h-3 border-b-2 border-l-2 border-gray-900 bg-yellow-300"></div>
                             <div className="space-y-4">
                                 <div>
                                     <IconContainer
@@ -78,14 +72,13 @@ export const MahakamaFeatures = () => {
                                 <p className="text-gray-600 leading-relaxed">
                                     {feature.description}
                                 </p>
-
                                 <NavLink to={feature.href} className="p-2 inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors 4px 8px 4px 8px 2px 2px 0 0 #000">
                                     <div className="flex items-center gap-2">
                                         Learn More <ArrowRight className="ml-2" />
                                     </div>
                                 </NavLink>
                             </div>
-                        </div>
+                        </CardWithLabel>
                     ))}
                 </div>
             </div>

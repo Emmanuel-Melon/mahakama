@@ -2,7 +2,7 @@ import { Bookmark } from "lucide-react";
 import { Toggle } from "~/components/ui/toggle";
 
 interface BookmarkButtonProps {
-    onClick: () => void;
+    onClick: (e: React.MouseEvent) => void;
     isBookmarked?: boolean;
     bookmarkCount?: number;
     className?: string;
@@ -20,9 +20,9 @@ export function BookmarkButton({
         <Toggle
             onClick={onClick}
             aria-label={isBookmarked ? "Bookmarked" : "Bookmark document"}
-            size="sm"
+            size="lg"
             variant="outline"
-            className="data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-blue-500 data-[state=on]:*:[svg]:stroke-blue-500"
+            className="data-[state=on]:bg-transparent data-[state=on]:*:[svg]:fill-blue-500 data-[state=on]:*:[svg]:stroke-blue-500 rounded-full"
 
         >
             <Bookmark />

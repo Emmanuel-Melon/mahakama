@@ -18,16 +18,22 @@ export async function loader({ context }: Route.LoaderArgs) {
   try {
     const user = context.get(userContext);
     const token = context.get(authContext)?.token || null;
-    if (user && token) {
+    const isAuth = user && token;
+    if (isAuth) {
       return redirect("/app");
     }
-    return { user: null, token: null };
+    return { user: null, isAuth };
   } catch (error) {
     console.error("Error checking authentication:", error);
-    return { user: null, token: null };
+    return { user: null, isAuth: false };
   }
 }
 
 export default function Mahakama({ loaderData }: Route.ComponentProps) {
+  const { user, isAuth } = loaderData;
+  if (isAuth) {
+    return redirect("/app");
+  }
+  console.log("User is not authenticated", user, isAuth);
   return <HomeScreen />;
 }

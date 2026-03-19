@@ -9,7 +9,6 @@ import {
   useLoaderData,
   useLocation,
 } from "react-router";
-import { Header } from "~/layouts/header";
 import { AppShell } from "~/layouts/AppShell";
 import { WebsiteLayout } from "~/layouts/WebsiteLayout";
 import { AuthLayout } from "~/layouts/AuthLayout";
@@ -17,9 +16,8 @@ import { QueryClientProviderWrapper } from '~/context/query-client-provider';
 import "./app.css";
 import { NotFound } from "./routes/$";
 import { userContext, authContext } from "~/middleware/context";
-import { getAuthToken } from "~/lib/api/utils";
-import { usersApi, UsersApiClient } from "~/lib/api/users.api";
-import { FetchApiClient } from "~/lib/api/fetch";
+import { getAuthToken, decodeJWT } from "~/lib/api/utils";
+import { getPageTitle, isAuthRoute, isAuthPageRoute } from "~/config/routes.config";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -49,29 +47,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const user = loaderData?.user || null;
   const location = useLocation();
 
-  const getPageTitle = (pathname: string): string => {
-    if (pathname === '/') return 'Home';
-    if (pathname.startsWith('/documents')) return 'Documents';
-    if (pathname.startsWith('/lawyers')) return 'Lawyers';
-    if (pathname.startsWith('/legal-hub')) return 'Justice Hub';
-    if (pathname.startsWith('/chats')) return 'Chats';
-    if (pathname.startsWith('/users/profile')) return 'Profile';
-    if (pathname.startsWith('/users/settings')) return 'Settings';
-    if (pathname.startsWith('/about')) return 'About';
-    if (pathname.startsWith('/contact')) return 'Contact';
-    return 'Mahakama';
-  };
-
   const pageTitle = getPageTitle(location.pathname);
-  const isAppRoute = location.pathname.startsWith('/app') ||
-    location.pathname.startsWith('/documents') ||
-    location.pathname.startsWith('/lawyers') ||
-    location.pathname.startsWith('/chats') ||
-    location.pathname.startsWith('/chat') ||
-    location.pathname.startsWith('/legal-hub') ||
-    location.pathname.startsWith('/users');
-  
-  const isAuthRoute = location.pathname.startsWith('/login') || location.pathname.startsWith('/signup');
+  const isAppRoute = isAuthRoute(location.pathname);
+  const isAuthRoutePage = isAuthPageRoute(location.pathname);
 
   return (
     <html lang="en" className="h-full">
@@ -83,11 +61,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
         <QueryClientProviderWrapper>
-          {isAuthRoute ? (
+          {isAuthRoutePage ? (
             <AuthLayout>
               {children}
             </AuthLayout>
-          ) : isAppRoute && user ? (
+          ) : isAppRoute ? (
             <AppShell pageTitle={pageTitle} user={user}>
               {children}
             </AppShell>
@@ -141,29 +119,42 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   );
 }
 
-async function authMiddleware({ request, context }: Route.LoaderArgs) {
+async function authMiddleware({ request, context }) {
   const token = getAuthToken(request);
+  console.log("token", token);
   const url = new URL(request.url);
   const pathname = url.pathname;
   if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
     return;
   }
 
-  const cookieHeader = request.headers.get('cookie');
-  const apiClient = cookieHeader ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader })) : usersApi;
+  if (!token) {
+    return;
+  }
 
   try {
-    const user = await apiClient.getCurrentUser();
-    if (!user.isOnboarded) {
+    const decodedToken = await decodeJWT(token);
+    if (!decodedToken) {
+      return;
     }
+
+    // Extract user info from decoded token
+    const user = {
+      id: decodedToken.sub,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      isOnboarded: decodedToken.isOnboarded,
+      // Add any other user fields from your token payload
+    };
+
     context.set(userContext, user);
     context.set(authContext, { token });
   } catch (error) {
-    
+    console.error('Auth middleware error:', error);
   }
 }
 
-// export const middleware: Route.MiddlewareFunction[] = [
-//   authMiddleware,
-// ];
+export const middleware: Route.MiddlewareFunction[] = [
+  authMiddleware,
+];
 

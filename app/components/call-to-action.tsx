@@ -23,7 +23,9 @@ export const CallToAction = () => {
                         variant="outline"
                         className="group flex-1 border-2 border-gray-900 bg-white hover:bg-gray-50 text-gray-900 hover:text-gray-900 font-medium py-6 px-6 rounded-lg transition-all duration-200 hover:shadow-md"
                     >
-                        <NavLink to="/app/citizen" className="flex items-center justify-center gap-2">
+                        <NavLink 
+                        viewTransition
+                        to="/app/citizen" className="flex items-center justify-center gap-2">
                             <Scale className="h-5 w-5" />
                             <span>I'm a Citizen</span>
                             <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
@@ -35,7 +37,9 @@ export const CallToAction = () => {
                         size="lg"
                         className="flex-1 bg-gray-900 hover:bg-gray-800 text-white font-medium py-6 px-6 rounded-lg transition-all duration-200 hover:shadow-md"
                     >
-                        <NavLink to="/app/legal-professional" className="flex items-center justify-center gap-2">
+                        <NavLink 
+                        viewTransition
+                        to="/app/legal-professional" className="flex items-center justify-center gap-2">
                             <Gavel className="h-5 w-5" />
                             <span>I'm a Legal Professional</span>
                             <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />

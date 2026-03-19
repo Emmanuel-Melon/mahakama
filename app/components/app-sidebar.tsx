@@ -9,6 +9,7 @@ import {
     User,
     Scale,
     Briefcase,
+    Home
 } from "lucide-react"
 // import { useUser } from '~/context/user-provider';
 import { useLogout } from '~/feature/auth/hooks/use-auth';
@@ -29,6 +30,12 @@ import { OnboardingProgress } from "~/components/onboarding-progress";
 import { SidebarNav } from "~/components/SidebarNav";
 
 const userItems = [
+    {
+        id: 'nav-home',
+        title: 'Home',
+        url: '/',
+        icon: Home
+    },
     {
         id: 'nav-recents',
         title: "Recent Chats",

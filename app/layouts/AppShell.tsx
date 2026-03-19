@@ -4,6 +4,7 @@ import { SiteHeader } from "~/components/site-header";
 import { Toaster } from 'sonner';
 import { UserProvider } from '~/context/user-provider';
 import { CountryProvider } from '~/context/country-context';
+import { NavigationLoader } from '~/components/navigation-loader';
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ export const AppShell = ({ children, pageTitle, user }: AppShellProps) => {
       <CountryProvider>
         <Toaster />
         <main className="flex-1 pb-16 md:pb-0">
+          <NavigationLoader />
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset >

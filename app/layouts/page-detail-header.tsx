@@ -46,8 +46,8 @@ export function PageDetailHeader({
   return (
     <CardWithLabel
       label={type}
-      labelClassName="bg-yellow-100 text-yellow-800 font-bold"
-      className={`w-full mx-0 max-w-none space-y-4 ${className}`}
+      labelClassName="bg-yellow-100 text-yellow-800 font-bold border-2 border-gray-900"
+      className={`w-full mx-0 max-w-none space-y-4 ${className} border-solid`}
     >
       <div className="flex-1 flex items-center gap-2">
         <div className="flex-shrink-0">

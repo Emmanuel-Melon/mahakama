@@ -2,19 +2,13 @@ import { Link } from "react-router";
 import { Download, Eye, FileText } from "lucide-react";
 import { IconContainer } from "~/components/icon-container";
 import { BookmarkButton } from "~/components/bookmark-button";
+import { ShareButton } from "~/components/share-button";
 import { MahButton, type MahAction } from "~/components/mah-button";
+import { MahCard } from "~/components/mah-card";
+import type { components } from "~/lib/api/generated/api.types";
 
-export interface Document {
-  id: number;
-  title: string;
-  description: string;
-  lastUpdated: string;
-  sections: number;
-  type: string;
-  storageUrl?: string;
-  bookmarkCount?: number;
-  downloadCount?: number;
-}
+export type Document = components["schemas"]["Document"];
+
 
 interface DocumentCardProps {
   document: Document;
@@ -56,6 +50,11 @@ export function DocumentCard({
     if (onBookmark) {
       onBookmark(document);
     }
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    console.log('Sharing document:', document.title);
   };
 
   const defaultActions = (
@@ -146,15 +145,9 @@ export function DocumentCard({
   if (displayMode === "grid") {
     return variant === "minimal" ? (
       // Minimal grid card
-      <div
-        className={`h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-6 flex flex-col`}
-        style={{
-          borderRadius: "8px 16px 8px 16px",
-          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-        }}
-      >
-        <div className="relative z-10 h-full flex flex-col">
-          <div className="flex justify-center mb-4">
+      <MahCard variant="default" className="group">
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-start">
             <IconContainer
               icon={FileText}
               size="lg"
@@ -162,71 +155,86 @@ export function DocumentCard({
               className="flex-shrink-0"
             />
           </div>
-          <div className="text-center mb-4">
-
-            <h3 className="font-black text-gray-900 text-base mt-1 font-serif">
-              {document.title}
-            </h3>
-          </div>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
-            {document.description}
-          </p>
-          <div className="mt-auto pt-4">
-            <Link
-              to={`/documents/${document.id}`}
-              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"
+          <ShareButton
+            onClick={handleShare}
+            className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000]"
+            aria-label="Share document"
+          />
+        </div>
+        <div className="text-left mb-4">
+          <h3 className="font-black text-gray-900 text-base mt-1 font-serif">
+            {document.title}
+          </h3>
+        </div>
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
+          {document.description}
+        </p>
+        <div className="mt-auto pt-4">
+          <div className="flex gap-2">
+            <MahButton
+              href={`/documents/${document.id}`}
+              variant="card"
+              className="flex-[2]"
             >
               <Eye className="w-4 h-4 mr-2" />
               View Document
-            </Link>
+            </MahButton>
+            <BookmarkButton
+              onClick={handleBookmark}
+              isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+              bookmarkCount={document.bookmarkCount}
+              size="sm"
+              className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000] flex-[1] h-full"
+            />
           </div>
         </div>
-      </div>
+      </MahCard>
     ) : (
       // Default grid card
-      <div
-        className={`h-full border-2 border-gray-900 bg-white rounded-lg overflow-hidden p-6 flex flex-col`}
-        style={{
-          borderRadius: "8px 16px 8px 16px",
-          background: "linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)",
-        }}
-      >
-        <div className="relative z-10 h-full flex flex-col">
-          <div className="flex items-center justify-between mb-4 gap-3">
-            <div className="flex items-center gap-4">
-              <IconContainer
-                icon={FileText}
-                size="lg"
-                color="outline"
-                className="flex-shrink-0"
-              />
-              <div className="flex-1">
-                <h3 className="font-black text-gray-900 text-base font-serif">
-                  {document.title}
-                </h3>
-              </div>
-            </div>
-        <BookmarkButton
-          onClick={handleBookmark}
-          isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
-          bookmarkCount={document.bookmarkCount}
-          size="sm"
-        />
+      <MahCard variant="default" className="group">
+        <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-start">
+            <IconContainer
+              icon={FileText}
+              size="lg"
+              color="outline"
+              className="flex-shrink-0"
+            />
           </div>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
-            {document.description}
-          </p>
-          <div className="mt-auto pt-4">
-            <Link
-              to={`/documents/${document.id}`}
-              className="flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium border-2 border-black rounded-lg bg-yellow-300 shadow-[3px_3px_0_0_#000] w-full"
+          <ShareButton
+            onClick={handleShare}
+            className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000]"
+            aria-label="Share document"
+          />
+        </div>
+        <div className="text-left mb-4">
+          <h3 className="font-black text-gray-900 text-base mt-1 font-serif">
+            {document.title}
+          </h3>
+        </div>
+        <p className="text-sm text-gray-600 mb-4 line-clamp-3 flex-1">
+          {document.description}
+        </p>
+        <div className="mt-auto pt-4">
+          <div className="flex gap-2">
+            <MahButton
+              href={`/documents/${document.id}`}
+              variant="card"
+              className="flex-[2]"
             >
               <Eye className="w-4 h-4 mr-2" />
               View Document
-            </Link>
+            </MahButton>
+            <BookmarkButton
+              onClick={handleBookmark}
+              isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+              bookmarkCount={document.bookmarkCount}
+              size="sm"
+              className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000] flex-[1] h-full"
+            />
           </div>
         </div>
-      </div>
+      </MahCard>
     );
   }
 
@@ -234,9 +242,7 @@ export function DocumentCard({
   if (displayMode === "list") {
     return variant === "minimal" ? (
       // Minimal list item
-      <div
-        className={`border border-gray-200 bg-white rounded-lg p-4 hover:shadow-md transition-shadow ${className}`}
-      >
+      <MahCard variant="minimal" className={className}>
         <div className="flex items-start">
           <div className="mr-3 flex-shrink-0">
             <IconContainer
@@ -251,19 +257,17 @@ export function DocumentCard({
               <h3 className="font-medium text-gray-900 text-sm mb-1">
                 {document.title}
               </h3>
-              <span className="text-xs font-medium text-gray-500 border border-gray-200 rounded-full px-2 py-0.5 ml-2 whitespace-nowrap flex-shrink-0">
+              <span className="text-xs font-medium text-gray-500 border border-gray-200 rounded-full px-2 py-0.5 ml-2 whitespace-nowrap flex-shrink-0 bg-white">
                 {document.type}
               </span>
             </div>
             {minimalActions}
           </div>
         </div>
-      </div>
+      </MahCard>
     ) : (
       // Default list item (enhanced)
-      <div
-        className={`group relative bg-white border-2 border-gray-900 rounded-lg p-6 transition-all duration-200 hover:-translate-y-1 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] ${className}`}
-      >
+      <MahCard variant="outlined" className={`group transition-all duration-200 hover:-translate-y-1 ${className}`}>
         <div className="flex items-start">
           <div className="mr-5">
             <IconContainer
@@ -288,15 +292,13 @@ export function DocumentCard({
             {defaultActions}
           </div>
         </div>
-      </div>
+      </MahCard>
     );
   }
 
   // Default to grid view if displayMode is not recognized
   return (
-    <div
-      className={`flex flex-col h-full border border-gray-200 bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow ${className}`}
-    >
+    <MahCard variant="minimal" className={className}>
       <div className="p-4 flex-1">
         <div className="flex items-start mb-3">
           <IconContainer
@@ -324,6 +326,6 @@ export function DocumentCard({
           <span>{document.sections} Sections</span>
         </div>
       </div>
-    </div>
+    </MahCard>
   );
 }

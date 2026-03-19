@@ -7,7 +7,7 @@ import { Scale } from "lucide-react";
 
 export const HomeScreen = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 max-w-7xl mx-auto ">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 max-w-7xl mx-auto space-y-8 ">
       <HeroSection
         title={
           <>
@@ -22,9 +22,8 @@ export const HomeScreen = () => {
         description="Free, easy-to-understand legal information for South Sudan and Uganda."
         icon={Scale}
       />
-      <DiagonalSeparator />
-      <SupportedCountries />
       <MahakamaFeatures />
+      <SupportedCountries />
       <CallToAction />
     </div>
   );
