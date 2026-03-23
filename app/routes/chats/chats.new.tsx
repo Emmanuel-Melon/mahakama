@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chats.new";
 import { chatApi } from "~/lib/api/chat.api";
-import { parseCookies } from "~/lib/api/utils";
+import { parseCookies } from "~/lib/api/api.utils";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
 
 export function meta({ }: Route.MetaArgs) {

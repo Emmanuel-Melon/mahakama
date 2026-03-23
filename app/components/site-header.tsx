@@ -1,15 +1,14 @@
 import { Separator } from "~/components/ui/separator"
 import { SidebarTrigger } from "~/components/ui/sidebar"
-import { HelpCircle, Scale, PhoneCall, Briefcase, User } from "lucide-react"
+import { HelpCircle, PhoneCall } from "lucide-react"
 import { NavLink } from "react-router"
 import { NotificationsDropdown } from "./notifications-dropdown"
 
 interface SiteHeaderProps {
-    role?: string;
     title?: string;
 }
 
-export function SiteHeader({ title = "Documents", role }: SiteHeaderProps) {
+export function SiteHeader({ title = "Documents" }: SiteHeaderProps) {
     return (
         <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height) py-2 hidden md:flex">
             <div className="flex justify-between items-center w-full">
@@ -24,26 +23,10 @@ export function SiteHeader({ title = "Documents", role }: SiteHeaderProps) {
                         viewTransition
                         className="flex items-center gap-2 group"
                     >
-                        <Scale className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
-                        <span className="text-base font-semibold">Mahakama</span>
+                        <span className="text-base font-semibold">{title}</span>
                     </NavLink>
                 </div>
                 <div className="flex items-center gap-2">
-                    {role && (
-                        <div className="flex items-center gap-1.5 px-3 py-1 bg-yellow-400 text-black text-xs font-bold rounded-full border-2 border-black">
-                            {role === "lawyer" ? (
-                                <>
-                                    <Briefcase className="w-3 h-3" />
-                                    <span>Lawyer</span>
-                                </>
-                            ) : (
-                                <>
-                                    <User className="w-3 h-3" />
-                                    <span>Citizen</span>
-                                </>
-                            )}
-                        </div>
-                    )}
                     <NotificationsDropdown
                         notifications={[
                             {

@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chats.recents";
 import { chatApi } from "~/lib/api/chat.api";
-import { parseCookies } from "~/lib/api/utils";
+import { parseCookies } from "~/lib/api/api.utils";
 import { RecentChatsScreen } from "~/feature/chats/screens/RecentChatsScreen";
 
 export function meta() {

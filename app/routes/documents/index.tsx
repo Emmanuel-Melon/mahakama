@@ -1,10 +1,12 @@
 import type { Route } from "./+types/index";
 import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
-import { useDocuments } from "~/feature/documents/hooks/use-documents";
+import { documentsKeys, useDocuments } from "~/feature/documents/hooks/use-documents";
 import { authContext, userContext } from "~/middleware/context";
 import { PageError } from "~/components/page-error";
-import { PageLayout } from "~/layouts/page-layout";
 import { useState } from "react";
+import { createPrefetchLoader, prefetch } from "~/lib/react-query/react-query.utils";
+import { documentsApi } from '~/lib/api/documents.api';
+import { useRouteError } from "react-router";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -39,47 +41,47 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
-export async function loader({ context }: Route.LoaderArgs) {
-  try {
-    const user = context.get(userContext);
-    const token = context.get(authContext)?.token || null;
-    return { user, token, error: null };
-  } catch (error) {
+const prefetchDocuments = createPrefetchLoader([
+  prefetch({
+    queryKey: documentsKeys.documents(),
+    queryFn: () => documentsApi.getDocuments(),
+    staleTime: 1000 * 60 * 5,
+  }),
+]);
 
-    return {
-      user: null,
-      token: null,
-      error: error instanceof Error ? error.message : "Failed to load user data"
-    };
-  }
+export async function loader({ context }: Route.LoaderArgs) {
+  const user = context.get(userContext);
+  const token = context.get(authContext)?.token || null;
+  // Throws → caught by ErrorBoundary, never reaches the component
+  await prefetchDocuments({ context });
+
+  return { user, token };
 }
 
 export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
-  const { user, error } = loaderData;
-  if (error) return (
-    <PageLayout>
-      <PageError
-        title="Authentication Error"
-        description="There was a problem loading your user session. Please try logging in again."
-        error={error}
-        onRetry={() => window.location.reload()}
-      />
-    </PageLayout>
-  );
-
-  const { data: documents, error: documentsError, isLoading } = useDocuments();
+  const { user } = loaderData;
+  const { data: documents = [], isLoading } = useDocuments();
   const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
 
   return (
-    <PageLayout>
-      <DocumentsScreen
-        documents={documents || []}
-        error={documentsError}
-        isLoading={isLoading}
-        isAuthenticated={!!user}
-        displayMode={displayMode}
-        onDisplayModeChange={setDisplayMode}
-      />
-    </PageLayout>
+    <DocumentsScreen
+      documents={documents}
+      isLoading={isLoading}
+      isAuthenticated={!!user}
+      displayMode={displayMode}
+      onDisplayModeChange={setDisplayMode}
+    />
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  return (
+    <PageError
+      title="Failed to load Legal Database"
+      description="There was an error loading the legal documents. Please try again later."
+      onRetry={() => window.location.reload()}
+    />
   );
 }

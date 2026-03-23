@@ -16,8 +16,9 @@ import { QueryClientProviderWrapper } from '~/context/query-client-provider';
 import "./app.css";
 import { NotFound } from "./routes/$";
 import { userContext, authContext } from "~/middleware/context";
-import { getAuthToken, decodeJWT } from "~/lib/api/utils";
+import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
 import { getPageTitle, isAuthRoute, isAuthPageRoute } from "~/config/routes.config";
+import { UserProvider } from '~/context/user-provider';
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -32,25 +33,13 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export async function loader({ context, request }: Route.LoaderArgs) {
-  try {
-    const user = null;
-    const token = null;
-    return { user, token };
-  } catch (error) {
-    return { user: null, token: null };
-  }
+export async function loader({ context }: Route.LoaderArgs) {
+  const user = context.get(userContext) || null;
+  const auth = context.get(authContext) || null;
+  return { user, token: auth?.token };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const loaderData = useLoaderData<typeof loader>();
-  const user = loaderData?.user || null;
-  const location = useLocation();
-
-  const pageTitle = getPageTitle(location.pathname);
-  const isAppRoute = isAuthRoute(location.pathname);
-  const isAuthRoutePage = isAuthPageRoute(location.pathname);
-
   return (
     <html lang="en" className="h-full">
       <head>
@@ -61,19 +50,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
         <QueryClientProviderWrapper>
-          {isAuthRoutePage ? (
-            <AuthLayout>
-              {children}
-            </AuthLayout>
-          ) : isAppRoute ? (
-            <AppShell pageTitle={pageTitle} user={user}>
-              {children}
-            </AppShell>
-          ) : (
-            <WebsiteLayout>
-              {children}
-            </WebsiteLayout>
-          )}
+          {children}
         </QueryClientProviderWrapper>
         <ScrollRestoration />
         <Scripts />
@@ -83,7 +60,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const { user } = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const pageTitle = getPageTitle(location.pathname);
+  const isAppRoute = isAuthRoute(location.pathname);
+  const isAuthRoutePage = isAuthPageRoute(location.pathname);
+
+  return (
+    <UserProvider user={user}>
+      {isAuthRoutePage ? (
+        <AuthLayout><Outlet /></AuthLayout>
+      ) : isAppRoute ? (
+        <AppShell pageTitle={pageTitle}><Outlet /></AppShell>
+      ) : (
+        <WebsiteLayout><Outlet /></WebsiteLayout>
+      )}
+    </UserProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
@@ -121,7 +114,6 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 
 async function authMiddleware({ request, context }) {
   const token = getAuthToken(request);
-  console.log("token", token);
   const url = new URL(request.url);
   const pathname = url.pathname;
   if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
