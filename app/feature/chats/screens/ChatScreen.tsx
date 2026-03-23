@@ -1,5 +1,4 @@
 import type { components } from "~/lib/api/generated/api.types";
-import { PageLayout } from "~/layouts/page-layout";
 import { ChatHeader } from "~/feature/chats/components/ChatHeader";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";

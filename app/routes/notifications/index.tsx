@@ -3,12 +3,22 @@ import type { Route } from "./+types/index";
 import { NotificationsScreen } from "~/feature/notifications/Screens/NotificationsScreen";
 import { useNotifications } from "~/feature/notifications/hooks/use-notifications";
 import { useRouteError } from "react-router";
-import { PageLayout } from "~/layouts/page-layout";
+import { authContext } from "~/middleware/context";
+import { notificationsApi } from "~/lib/api/notifications.api";
 
 export function meta({ }: Route.MetaArgs) {
     return [
         { title: "Notifications" },
     ];
+}
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const token = context.get(authContext)?.token;
+  // Fetch data on server
+  const notifications = await notificationsApi.getNotifications({ 
+    headers: { Authorization: `Bearer ${token}` } 
+  });
+  return { notifications };
 }
 
 export default function NotificationsRoute() {

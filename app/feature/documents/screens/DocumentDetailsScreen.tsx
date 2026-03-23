@@ -1,4 +1,4 @@
-import { PageHeader, PageLayout } from "~/layouts/page-layout";
+import { PageHeader } from "~/layouts/PageHeader";
 import {
   DocumentDetailsHeader,
   DocumentHighlights,
@@ -15,7 +15,7 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
 
   if (!document) {
     return (
-      <PageLayout className="flex items-center justify-center">
+
         <div className="text-center p-6 max-w-md">
           <h1 className="text-2xl font-bold text-foreground mb-2">
             {error ? "Error Loading Document" : "Document Not Found"}
@@ -24,7 +24,7 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
             {error || "We couldn't find the document you're looking for."}
           </p>
         </div>
-      </PageLayout>
+  
     );
   }
 
@@ -38,7 +38,7 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
   ];
 
   return (
-    <PageLayout className="space-y-6">
+    <>
       <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
       <DocumentDetailsHeader document={document} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
@@ -65,6 +65,6 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
           />
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }

@@ -7,7 +7,6 @@ import { EnhancementsStep } from "~/feature/users/components/EnhancementsStep";
 import { ProgressIndicator } from "~/feature/users/components/ProgressIndicator";
 import { StepHeader } from "~/feature/users/components/StepHeader";
 import { OnboardingNavigation } from "~/feature/users/components/OnboardingNavigation";
-import { PageLayout } from "~/layouts/page-layout";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { useState, useRef } from "react";
 import type { User } from "~/feature/users/hooks/use-users";
@@ -145,7 +144,7 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
   };
 
   return (
-    <PageLayout>
+    <>
       <div>
         <div className="mx-auto max-w-2xl space-y-4">
           <ProgressIndicator currentStep={step} selectedRole={selectedRole} />
@@ -239,6 +238,6 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
           onComplete={step === "enhancements" ? handleComplete : undefined}
         />
       </div>
-    </PageLayout>
+    </>
   );
 };

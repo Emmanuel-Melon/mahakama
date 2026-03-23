@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Upload, Image, File, X } from "lucide-react";
+import { Plus, Image, File } from "lucide-react";
+import { Button } from "~/components/ui/button"
 
 interface UploadDropdownProps {
   onFileUpload: (files: File[]) => void;
@@ -45,36 +46,36 @@ export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdow
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
+      <Button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
+        variant="outline" size="icon"
         disabled={disabled}
-        className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Upload content"
       >
-        <Upload className="w-4 h-4" />
-      </button>
+        <Plus className="w-4 h-4" />
+      </Button>
 
       {isOpen && (
         <div className="absolute left-0 bottom-full mb-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-50">
           <div className="py-1">
-            <button
+            <Button
               type="button"
               onClick={() => handleUploadType('file')}
-              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 transition-colors"
+              variant="ghost" size="sm"
             >
               <File className="w-4 h-4" />
               <span>Upload File</span>
-            </button>
+            </Button>
             
-            <button
+            <Button
               type="button"
               onClick={() => handleUploadType('image')}
-              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 transition-colors"
+              variant="ghost" size="sm"
             >
               <Image className="w-4 h-4" />
               <span>Upload Image</span>
-            </button>
+            </Button>
           </div>
         </div>
       )}

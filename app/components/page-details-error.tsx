@@ -1,6 +1,5 @@
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
-import { PageLayout } from "~/layouts/page-layout";
 
 interface PageDetailsErrorProps {
   error?: Error | string;
@@ -20,7 +19,6 @@ export function PageDetailsError({
   const errorMessage = error instanceof Error ? error.message : String(error);
 
   return (
-    <PageLayout>
       <div className={`space-y-6 ${className}`}>
         <CardWithLabel
         label="Error"
@@ -54,7 +52,6 @@ export function PageDetailsError({
         </div>
       </CardWithLabel>
       </div>
-    </PageLayout>
   );
 }
 

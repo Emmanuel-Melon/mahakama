@@ -2,9 +2,7 @@ import {
     Users,
     Library,
     History,
-    Mail,
     Scale,
-    Briefcase,
     Home
 } from "lucide-react"
 
@@ -51,12 +49,6 @@ const userItems = [
         title: "Legal Database",
         url: "/documents",
         icon: Library,
-    },
-    {
-        id: 'nav-messages',
-        title: "Messages",
-        url: "/messages",
-        icon: Mail,
     }
 ];
 

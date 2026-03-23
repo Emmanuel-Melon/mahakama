@@ -7,7 +7,6 @@ import type { LegalService as ApiLegalService } from "~/feature/website/hooks/us
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import { PageLayout } from "~/layouts/page-layout";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
@@ -54,7 +53,7 @@ export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuth
   };
 
   return (
-    <PageLayout>
+    <>
       {!isAuthenticated && (
         <div className="bg-background">
           <HeroSection
@@ -89,6 +88,6 @@ export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuth
             onDisplayModeChange={onDisplayModeChange}
           />
       </div>
-    </PageLayout>
+    </>
   );
 }

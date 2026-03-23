@@ -15,7 +15,6 @@ export interface MessageSender {
   displayName?: string;
 }
 
-
 export interface ChatMetadata {
   questionId?: number;
   isQuestionChat?: boolean;

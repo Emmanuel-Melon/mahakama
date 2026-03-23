@@ -1,11 +1,8 @@
 import { Link } from "react-router";
-import { Scale, Home, Search } from "lucide-react";
-import { IconContainer } from "~/components/icon-container";
-import { PageLayout } from "~/layouts/page-layout";
+import { Home, Search } from "lucide-react";
 
 export function NotFound() {
   return (
-    <PageLayout>
       <div>
         {/* Decorative Blobs */}
         <div className="absolute -left-4 -top-2 w-12 h-12 bg-primary/10 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -113,7 +110,6 @@ export function NotFound() {
           </p>
         </div>
       </div>
-    </PageLayout>
   );
 }
 

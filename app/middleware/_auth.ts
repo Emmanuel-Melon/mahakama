@@ -1,6 +1,6 @@
 // new middleware file
 import { userContext, authContext } from "~/middleware/context";
-import { getAuthToken, decodeJWT } from "~/lib/api/utils";
+import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
 
 export async function authMiddleware({ request, context }: any) {
   const token = getAuthToken(request);

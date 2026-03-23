@@ -1,25 +1,6 @@
-import type { ReactNode } from "react";
-import { SidebarInset, SidebarTrigger } from "~/components/ui/sidebar";
 import { useNavigate, useLocation, Link, NavLink } from "react-router";
 import { ArrowLeft, ChevronRight, Home } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-
-interface PageLayoutProps {
-  children: ReactNode;
-  className?: string;
-}
-
-export function PageLayout({ children, className = "" }: PageLayoutProps) {
-  return (
-    <SidebarInset>
-      <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-        <div className="w-full py-4">
-          <div className={className}>{children}</div>
-        </div>
-      </div>
-    </SidebarInset>
-  );
-}
 
 export interface BreadcrumbItem {
   label: string;

@@ -20,7 +20,6 @@ export async function action({ request }: Route.ActionArgs) {
   const token = cookies.token;
   const formData = await request.formData();
   const question = formData.get("question") as string;
-  const country = (formData.get("country") as string) || "South Sudan";
 
   if (!question) {
     return { error: "Question is required" };
@@ -28,7 +27,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   try {
     // Create a new chat with the question
-    const chat = await chatApi.createChat(question, {
+    const chat = await chatApi.createChat({ message: question }, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

@@ -61,11 +61,7 @@ export function ChatHeader({
               </Link>
             </Button>
           </div>
-          <SearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search chats..."
-          />
+
         </div>
       </div>
     )
@@ -77,11 +73,7 @@ export function ChatHeader({
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-normal text-foreground">{title}</h1>
           <div className="flex items-center gap-2 flex-1 justify-end">
-            <SearchBar
-              value={searchQuery}
-              onChange={setSearchQuery}
-              placeholder="Search..."
-            />
+     
             <Button
               onClick={onShareChat}
               variant="outline"

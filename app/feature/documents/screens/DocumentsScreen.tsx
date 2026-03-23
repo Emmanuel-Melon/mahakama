@@ -1,22 +1,18 @@
-import { useState, useMemo } from "react";
 import { DocumentCollection } from "~/feature/documents/components/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { Library } from "lucide-react";
-import { ErrorState } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
 import { PageLoading } from "~/components/page-loading";
 import { type Document } from "~/lib/api/documents.api";
 import { HeroSection } from "~/layouts/HeroSection";
 
-
-export const DocumentsScreen = ({ documents, error, isLoading, isAuthenticated, displayMode, onDisplayModeChange }: {
+export const DocumentsScreen = ({ documents, isLoading, isAuthenticated, displayMode, onDisplayModeChange }: {
   documents: Document[],
-  error?: any,
   isLoading?: boolean,
   isAuthenticated?: boolean,
   displayMode?: "grid" | "list",
   onDisplayModeChange?: (mode: "grid" | "list") => void
-}) => {
+}) => { 
 
   if (isLoading) {
     return (
@@ -26,18 +22,6 @@ export const DocumentsScreen = ({ documents, error, isLoading, isAuthenticated, 
         displayMode={displayMode}
         skeletonCount={5}
       />
-    );
-  }
-
-  if (error) {
-    return (
-      <>
-        <ErrorState
-          title="Error Loading Documents"
-          error={error instanceof Error ? error.message : String(error)}
-          onRetry={() => window.location.reload()}
-        />
-      </>
     );
   }
 

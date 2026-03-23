@@ -1,7 +1,5 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 import { documentsApi } from '~/lib/api/documents.api';
-
 import type { components } from "~/lib/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
@@ -11,10 +9,10 @@ export type DocumentsCollectionResponse = components["schemas"]["DocumentsCollec
 export type JsonApiErrorResponse = components["schemas"]["JsonApiErrorResponse"];
 
 export const documentsKeys = {
-    all: ['documents'] as const,
-    documents: () => [...documentsKeys.all, 'documents'] as const,
-    document: (id: string | number) => [...documentsKeys.all, 'document', id] as const,
-};
+    all: ['documents'],
+    documents: () => [...documentsKeys.all, 'documents'],
+    document: (id: string | number) => [...documentsKeys.all, 'document', id],
+} as const;
 
 export function useDocuments() {
     return useQuery<Document[], JsonApiErrorResponse>({

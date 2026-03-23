@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft, Phone, Mail, Globe, MapPin, Clock, Users, FileText, Building, Home } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { PageLayout, PageHeader } from "~/layouts/page-layout";
+import { PageHeader } from "~/layouts/PageHeader";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
 import { ContactInformation, type ContactItem } from "~/components/contact-information";
 import type { components } from "~/lib/api/generated/api.types";
@@ -63,7 +63,7 @@ export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProp
   }
 
   return (
-    <PageLayout>
+
       <div className="space-y-6">
         <PageHeader 
           showBackButton={!!onBack}
@@ -157,6 +157,5 @@ export function ServiceDetailScreen({ service, onBack }: ServiceDetailScreenProp
         </div>
       </div>
     </div>
-    </PageLayout>
   );
 }

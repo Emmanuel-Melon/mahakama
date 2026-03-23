@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
-import { PageLayout } from "~/layouts/page-layout";
 
 export const ForgotPasswordScreen = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -15,7 +14,6 @@ export const ForgotPasswordScreen = () => {
   };
 
   return (
-    <PageLayout>
       <div className="flex flex-col items-center justify-center p-6">
         <div className="w-full max-w-md">
           {!isSubmitted ? (
@@ -82,6 +80,5 @@ export const ForgotPasswordScreen = () => {
           )}
         </div>
       </div>
-    </PageLayout>
   );
 };

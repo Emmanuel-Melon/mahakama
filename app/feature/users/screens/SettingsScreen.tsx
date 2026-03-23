@@ -1,7 +1,6 @@
 import { Button } from "~/components/ui/button";
 import { useState } from "react";
 import { UserProfileForm } from "~/feature/users/components/UserProfileForm";
-import { PageLayout } from "~/layouts/page-layout";
 import { ProfileHeader } from "~/feature/users/components/ProfileHeader";
 import { ContactInformation } from "~/feature/users/components/ContactInformation";
 import { AccountManagement } from "~/feature/users/components/AccountManagement";
@@ -39,7 +38,6 @@ export const SettingsScreen = ({ user, token, updateMutation }: SettingsScreenPr
 
   if (isEditing) {
     return (
-      <PageLayout>
         <div className="mx-auto max-w-6xl p-6">
           <div className="mb-8 flex items-center justify-between">
             <h2 className="text-2xl font-bold">Edit Your Profile</h2>
@@ -59,12 +57,10 @@ export const SettingsScreen = ({ user, token, updateMutation }: SettingsScreenPr
             onSubmit={handleFormSubmit}
           />
         </div>
-      </PageLayout>
     );
   }
 
   return (
-    <PageLayout>
       <div>
         <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
@@ -79,6 +75,5 @@ export const SettingsScreen = ({ user, token, updateMutation }: SettingsScreenPr
           <AccountManagement user={user} onLogout={handleLogout} />
         )}
       </div>
-    </PageLayout>
   );
 };

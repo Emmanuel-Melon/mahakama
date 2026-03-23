@@ -4,8 +4,6 @@ import { HeroSection } from "~/layouts/HeroSection";
 import { Gavel } from "lucide-react";
 import { ErrorState } from "~/components/async-state/error";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { PageLayout } from "~/layouts/page-layout";
-
 import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 export type Lawyer = componentsv1["schemas"]["Lawyer"];
 
@@ -61,7 +59,7 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
   onSortChange
 }) => {
   return (
-    <PageLayout>
+    <div>
       {!isAuthenticated && (
         <div className="bg-background">
           <HeroSection
@@ -105,6 +103,6 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
           )}
         </div>
       </div>
-    </PageLayout>
+    </div>
   );
 }

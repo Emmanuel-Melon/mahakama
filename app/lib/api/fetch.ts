@@ -1,3 +1,4 @@
+import { getAuthToken, parseCookies } from "./api.utils";
 import type { components } from "./generated/api.types";
 
 export const DEFAULT_TIMEOUT = 5000;
@@ -21,10 +22,18 @@ export class FetchApiClient {
   private baseURL: string;
   private defaultHeaders: HeadersInit;
 
+  private getClientToken(): string | null {
+    if (typeof document === "undefined") return null;
+    const cookies = parseCookies(document.cookie);
+    return cookies.token ?? null;
+  }
+
   constructor(defaultHeaders: HeadersInit = {}, baseURL?: string) {
     this.baseURL = baseURL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
     this.defaultHeaders = defaultHeaders;
   }
+
+
   static withAuth(token: string): FetchApiClient {
     return new FetchApiClient({
       Authorization: `Bearer ${token}`,
@@ -55,19 +64,23 @@ export class FetchApiClient {
   public async request<T>(
     endpoint: string,
     options: RequestInit = {},
+    loaderToken?: string
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-
+    const token = loaderToken || this.getClientToken();
     const headers = {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...this.defaultHeaders,
       ...options.headers,
     };
+
     const response = await fetch(url, {
       ...options,
       headers,
-      credentials: options.credentials || 'include',
+      credentials: 'include',
     });
+
     return this.handleResponse<T>(response);
   }
 }

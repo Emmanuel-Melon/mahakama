@@ -1,5 +1,4 @@
 import type { components } from "~/lib/api/generated/api.types";
-import { PageLayout } from "~/layouts/page-layout";
 import { ChatHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
 import { useDeleteChat, useUpdateChatTitle } from "../hooks/use-chats";
@@ -24,16 +23,14 @@ export const RecentChatsScreen = ({ chats, error }: { chats: Chat[], error: any 
   };
 
   return (
-    <PageLayout>
-        <div className="space-y-2">
-          <ChatHeader variant="list" />
-          <ChatList
-            chats={chats}
-            error={error}
-            onRename={handleRenameChat}
-            onDelete={handleDeleteChat}
-          />
-        </div>
-    </PageLayout>
+    <div className="space-y-2">
+      <ChatHeader variant="list" />
+      <ChatList
+        chats={chats}
+        error={error}
+        onRename={handleRenameChat}
+        onDelete={handleDeleteChat}
+      />
+    </div>
   );
 }

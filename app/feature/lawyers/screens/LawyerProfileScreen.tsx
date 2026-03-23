@@ -1,4 +1,4 @@
-import { PageLayout, PageHeader } from "~/layouts/page-layout";
+import { PageHeader } from "~/layouts/PageHeader";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
 import { ErrorState } from "~/components/async-state/error";
 import { EmptyState } from "~/components/async-state/empty";
@@ -38,20 +38,17 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   if (error) {
     return (
-      <PageLayout className="space-y-8">
         <PageDetailsError
           error={error}
           title="Error Loading Lawyer Profile"
           description="We couldn't load the lawyer profile. Please check your connection and try again."
           onRetry={() => window.location.reload()}
         />
-      </PageLayout>
     );
   }
 
   if (!lawyer) {
     return (
-      <PageLayout className="py-8">
         <EmptyState
           title="Profile Not Found"
           description="We couldn't find the lawyer profile you're looking for."
@@ -65,7 +62,6 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
             },
           ]}
         />
-      </PageLayout>
     );
   }
 
@@ -133,7 +129,7 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
   }
 
   return (
-    <PageLayout className="space-y-8">
+    <>
       <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
       <PageDetailHeader
         type="Lawyer Profile"
@@ -163,6 +159,6 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
           />
         </div>
       </div>
-    </PageLayout>
+    </>
   );
 }
