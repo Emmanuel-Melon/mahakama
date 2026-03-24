@@ -2,8 +2,8 @@ import type { Route } from "./+types/legal-hub";
 import { LegalHubScreen } from "~/feature/website/screens/LegalHubScreen";
 import { authContext, userContext } from "~/middleware/context";
 import { useServices } from "~/feature/website/hooks/use-services";
-import { LoadingState } from "~/components/async-state/loading";
-import { ErrorState } from "~/components/async-state/error";
+import { LoadingState } from "~/components/async-state/LoadingState";
+import { ErrorState } from "~/components/async-state/ErrorState";
 import { useState } from "react";
 
 export function meta({ }: Route.MetaArgs) {

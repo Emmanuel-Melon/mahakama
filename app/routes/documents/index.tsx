@@ -2,11 +2,11 @@ import type { Route } from "./+types/index";
 import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
 import { documentsKeys, useDocuments } from "~/feature/documents/hooks/use-documents";
 import { authContext, userContext } from "~/middleware/context";
-import { PageError } from "~/components/page-error";
 import { useState } from "react";
 import { createPrefetchLoader, prefetch } from "~/lib/react-query/react-query.utils";
 import { documentsApi } from '~/lib/api/documents.api';
-import { useRouteError } from "react-router";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -75,13 +75,12 @@ export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
 }
 
 export function ErrorBoundary() {
-  const error = useRouteError();
+  const error = useAppError();
 
   return (
-    <PageError
-      title="Failed to load Legal Database"
-      description="There was an error loading the legal documents. Please try again later."
-      onRetry={() => window.location.reload()}
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
     />
   );
 }

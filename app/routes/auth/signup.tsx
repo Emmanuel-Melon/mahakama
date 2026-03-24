@@ -1,5 +1,8 @@
 import type { Route } from "./+types/signup";
 import { SignupScreen } from "~/feature/auth/screens/SignupScreen";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -13,3 +16,15 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 export default SignupScreen;
+
+export function ErrorBoundary() {
+  const error = useAppError();
+
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
+    />
+  );
+}
+

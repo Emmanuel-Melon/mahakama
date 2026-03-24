@@ -9,6 +9,9 @@ import { useDebouncedValue } from "~/hooks/use-debounce";
 import { Users, MapPin, CheckCircle } from "lucide-react";
 import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 export type Lawyer = componentsv1["schemas"]["Lawyer"];
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -49,11 +52,7 @@ export async function loader({ context }: Route.LoaderArgs) {
     const token = context.get(authContext)?.token || null;
     return { user, token, error: null };
   } catch (error) {
-    return {
-      user: null,
-      token: null,
-      error: error instanceof Error ? error.message : "Failed to load user data"
-    };
+    handleRouteError(error, "Failed to load user data");
   }
 }
 
@@ -232,6 +231,17 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
       currentSortOrder={currentSortOrder}
       sortOptions={sortOptions}
       onSortChange={handleSortChange}
+    />
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useAppError();
+
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
     />
   );
 }

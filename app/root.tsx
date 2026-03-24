@@ -1,6 +1,5 @@
 import type { Route } from "./+types/root";
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
@@ -14,11 +13,11 @@ import { WebsiteLayout } from "~/layouts/WebsiteLayout";
 import { AuthLayout } from "~/layouts/AuthLayout";
 import { QueryClientProviderWrapper } from '~/context/query-client-provider';
 import "./app.css";
-import { NotFound } from "./routes/$";
 import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
 import { getPageTitle, isAuthRoute, isAuthPageRoute } from "~/config/routes.config";
 import { UserProvider } from '~/context/user-provider';
+import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -80,36 +79,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-
-    if (error.status === 404) {
-      return <NotFound />;
-    }
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
-
-  return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
-  );
+  return <RootErrorBoundary error={error} />;
 }
 
 async function authMiddleware({ request, context }) {

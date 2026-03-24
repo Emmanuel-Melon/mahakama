@@ -1,8 +1,10 @@
 import type { Route } from "./+types/settings";
 import { SettingsScreen } from "~/feature/users/screens/SettingsScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { ErrorState } from "~/components/async-state/error";
 import { useUpdateUser } from "~/feature/users/hooks/use-users";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -24,25 +26,28 @@ export async function loader({ context }: Route.LoaderArgs) {
     }
     return { user, token, error: null };
   } catch (error) {
-    console.error("Error loading settings:", error);
-    return { 
-      user: null, 
-      token: null, 
-      error: error instanceof Error ? error.message : "Failed to load settings" 
-    };
+    handleRouteError(error, "Failed to load mahakama");
   }
 }
 
 export default function SettingsPage({ loaderData }: Route.ComponentProps) {
-  const { user, token, error } = loaderData;
-  if (error) return <ErrorState error={error} />;
-  if (!user || !token) return <ErrorState error="User not authenticated" />;
+  const { user, token } = loaderData;
   const updateMutation = useUpdateUser();
   return (
-    <SettingsScreen 
+    <SettingsScreen
       user={user}
       token={token}
       updateMutation={updateMutation}
+    />
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useAppError();
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
     />
   );
 }

@@ -1,8 +1,8 @@
 import { cn } from "~/lib/utils";
 import type { ComponentType, SVGProps } from "react";
 
-type SizeVariant = "sm" | "md" | "lg";
-type ColorVariant =
+export type SizeVariant = "sm" | "md" | "lg";
+export type ColorVariant =
   | "yellow"
   | "blue"
   | "green"

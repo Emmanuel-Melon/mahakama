@@ -5,6 +5,9 @@ import { useNotifications } from "~/feature/notifications/hooks/use-notification
 import { useRouteError } from "react-router";
 import { authContext } from "~/middleware/context";
 import { notificationsApi } from "~/lib/api/notifications.api";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({ }: Route.MetaArgs) {
     return [
@@ -23,28 +26,18 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function NotificationsRoute() {
     const { data: notifications, isLoading, error } = useNotifications();
-
-    if (isLoading) {
-        return <div>Loading notifications...</div>;
-    }
-
-    if (error) {
-        return <div>Error loading notifications</div>;
-    }
-
     return (
         <NotificationsScreen notifications={notifications} />
     );
 }
 
 export function ErrorBoundary() {
-    const error = useRouteError();
+    const error = useAppError();
 
     return (
-        <PageError
-            title="Failed to load Notifications"
-            description="There was an error loading the notifications. Please try again later."
-            onRetry={() => window.location.reload()}
+        <MahErrorBoundary
+            status={error.status}
+            data={error.data}
         />
     );
 }

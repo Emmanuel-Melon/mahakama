@@ -2,6 +2,9 @@ import type { Route } from "./+types/index";
 import { authContext, userContext } from "~/middleware/context";
 import { redirect } from "react-router";
 import { HomeScreen } from "~/feature/website/screens/HomeScreen";
+import { handleRouteError } from "~/lib/errors/errors.utils";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -24,8 +27,7 @@ export async function loader({ context }: Route.LoaderArgs) {
     }
     return { user: null, isAuth };
   } catch (error) {
-    console.error("Error checking authentication:", error);
-    return { user: null, isAuth: false };
+    handleRouteError(error, "Failed to load mahakama");
   }
 }
 
@@ -36,4 +38,14 @@ export default function Mahakama({ loaderData }: Route.ComponentProps) {
   }
   console.log("User is not authenticated", user, isAuth);
   return <HomeScreen />;
+}
+
+export function ErrorBoundary() {
+  const error = useAppError();
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
+    />
+  );
 }

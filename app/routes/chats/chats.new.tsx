@@ -2,6 +2,9 @@ import type { Route } from "./+types/chats.new";
 import { chatApi } from "~/lib/api/chat.api";
 import { parseCookies } from "~/lib/api/api.utils";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -49,5 +52,16 @@ export async function action({ request }: Route.ActionArgs) {
 export default function NewChat() {
   return (
     <NewChatScreen />
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useAppError();
+
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
+    />
   );
 }

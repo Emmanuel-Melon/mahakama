@@ -2,6 +2,9 @@ import type { Route } from "./+types/chats.recents";
 import { chatApi } from "~/lib/api/chat.api";
 import { parseCookies } from "~/lib/api/api.utils";
 import { RecentChatsScreen } from "~/feature/chats/screens/RecentChatsScreen";
+import { useAppError } from "~/components/errors/useAppError";
+import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta() {
   return [
@@ -24,13 +27,9 @@ export async function loader({ request }: Route.LoaderArgs) {
         Authorization: `Bearer ${token}`,
       },
     });
-    return { chats };
+    return { chats, error: null };
   } catch (error) {
-    console.error("Error loading chats:", error);
-    return {
-      chats: [],
-      error: error instanceof Error ? error.message : "Failed to load chats",
-    };
+    handleRouteError(error);
   }
 }
 
@@ -38,5 +37,16 @@ export default function RecentChats({ loaderData }: Route.ComponentProps) {
   const { chats, error } = loaderData;
   return (
     <RecentChatsScreen chats={chats} error={error} />
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useAppError();
+
+  return (
+    <MahErrorBoundary
+      status={error.status}
+      data={error.data}
+    />
   );
 }
