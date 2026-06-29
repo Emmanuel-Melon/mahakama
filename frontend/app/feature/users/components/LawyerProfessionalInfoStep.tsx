@@ -40,19 +40,24 @@ interface LawyerProfessionalInfoStepProps {
   formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export function LawyerProfessionalInfoStep({ user, onNext, initialData, formRef }: LawyerProfessionalInfoStepProps) {
+export function LawyerProfessionalInfoStep({
+  user,
+  onNext,
+  initialData,
+  formRef,
+}: LawyerProfessionalInfoStepProps) {
   const form = useForm({
     resolver: zodResolver(lawyerProfessionalSchema),
     defaultValues: {
-      specialization: initialData?.specialization || '',
-      experienceYears: initialData?.experienceYears || '',
-      casesHandled: initialData?.casesHandled || ''
+      specialization: initialData?.specialization || "",
+      experienceYears: initialData?.experienceYears || "",
+      casesHandled: initialData?.casesHandled || "",
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate with Zod
     const result = lawyerProfessionalSchema.safeParse(form.getValues());
     if (!result.success) {
@@ -74,7 +79,9 @@ export function LawyerProfessionalInfoStep({ user, onNext, initialData, formRef 
         name="specialization"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">Specialization *</FormLabel>
+            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">
+              Specialization *
+            </FormLabel>
             <FormControl>
               <Input
                 {...field}
@@ -96,7 +103,9 @@ export function LawyerProfessionalInfoStep({ user, onNext, initialData, formRef 
         name="experienceYears"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">Years of Experience *</FormLabel>
+            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">
+              Years of Experience *
+            </FormLabel>
             <FormControl>
               <Input
                 {...field}
@@ -119,7 +128,9 @@ export function LawyerProfessionalInfoStep({ user, onNext, initialData, formRef 
         name="casesHandled"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">Cases Handled *</FormLabel>
+            <FormLabel className="block text-sm font-bold text-gray-700 mb-1">
+              Cases Handled *
+            </FormLabel>
             <FormControl>
               <Input
                 {...field}

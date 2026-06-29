@@ -23,7 +23,11 @@ interface ChatFormProps {
   disabled?: boolean;
 }
 
-export const ChatForm = ({ onSubmit, isSubmitting, disabled = false }: ChatFormProps) => {
+export const ChatForm = ({
+  onSubmit,
+  isSubmitting,
+  disabled = false,
+}: ChatFormProps) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
 
   const {
@@ -40,11 +44,11 @@ export const ChatForm = ({ onSubmit, isSubmitting, disabled = false }: ChatFormP
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
-    setAttachedFiles(prev => [...prev, ...files]);
+    setAttachedFiles((prev) => [...prev, ...files]);
   };
 
   const removeFile = (index: number) => {
-    setAttachedFiles(prev => prev.filter((_, i) => i !== index));
+    setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onFormSubmit = (data: CreateChatRequest) => {
@@ -68,7 +72,9 @@ export const ChatForm = ({ onSubmit, isSubmitting, disabled = false }: ChatFormP
               onFileUpload={handleFileUpload}
               disabled={isSubmitting || disabled}
             />
-            <InputGroupText className="ml-auto font-medium">Auto</InputGroupText>
+            <InputGroupText className="ml-auto font-medium">
+              Auto
+            </InputGroupText>
             <Separator orientation="vertical" className="!h-4" />
             <InputGroupButton
               type="submit"
@@ -89,25 +95,30 @@ export const ChatForm = ({ onSubmit, isSubmitting, disabled = false }: ChatFormP
         </InputGroup>
       </div>
 
-        {attachedFiles.length > 0 && (
-          <div className="mt-3 space-y-2">
-            <p className="text-sm font-medium text-gray-700">Attached files:</p>
-            {attachedFiles.map((file, index) => (
-              <div key={index} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-3 py-2">
-                <span className="text-sm text-gray-700 truncate">{file.name}</span>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => removeFile(index)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-          </div>
-        )}
+      {attachedFiles.length > 0 && (
+        <div className="mt-3 space-y-2">
+          <p className="text-sm font-medium text-gray-700">Attached files:</p>
+          {attachedFiles.map((file, index) => (
+            <div
+              key={index}
+              className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
+            >
+              <span className="text-sm text-gray-700 truncate">
+                {file.name}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => removeFile(index)}
+                className="text-red-500 hover:text-red-700"
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

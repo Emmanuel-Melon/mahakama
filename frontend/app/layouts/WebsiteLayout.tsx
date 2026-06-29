@@ -10,10 +10,8 @@ export const WebsiteLayout = ({ children }: WebsiteLayoutProps) => {
   return (
     <div className="max-w-6xl mx-auto">
       <Header />
-      <main className="flex-1">
-        {children || <Outlet />}
-      </main>
+      <main className="flex-1">{children || <Outlet />}</main>
       <Footer />
     </div>
-  )
-}
+  );
+};

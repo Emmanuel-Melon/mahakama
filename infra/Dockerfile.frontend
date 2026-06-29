@@ -1,0 +1,14 @@
+FROM node:22-alpine AS builder
+WORKDIR /app
+COPY package-lock.json ./
+COPY frontend/package.json ./frontend/
+
+RUN npm ci --workspace=frontend --include-workspace-root
+COPY frontend/ ./frontend/
+RUN npm run build --workspace=frontend
+
+# Production stage: Nginx to serve static files
+FROM nginx:alpine
+COPY --from=builder /app/frontend/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

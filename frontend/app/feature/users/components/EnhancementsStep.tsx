@@ -11,11 +11,7 @@ interface EnhancementsStepProps {
   user: User;
   role?: UserRole;
   basicInfo: { name: string; age: string; gender: string };
-  onComplete: (data: {
-    occupation: string;
-    bio: string;
-    photo?: File;
-  }) => void;
+  onComplete: (data: { occupation: string; bio: string; photo?: File }) => void;
   initialData?: {
     occupation: string;
     bio: string;
@@ -24,34 +20,34 @@ interface EnhancementsStepProps {
   formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export function EnhancementsStep({ 
-  user, 
+export function EnhancementsStep({
+  user,
   role,
-  basicInfo, 
-  onComplete, 
+  basicInfo,
+  onComplete,
   initialData,
-  formRef 
+  formRef,
 }: EnhancementsStepProps) {
   const [formData, setFormData] = useState({
-    occupation: initialData?.occupation || user.occupation || '',
-    bio: initialData?.bio || user.bio || '',
-    photo: initialData?.photo || null as File | null
+    occupation: initialData?.occupation || user.occupation || "",
+    bio: initialData?.bio || user.bio || "",
+    photo: initialData?.photo || (null as File | null),
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData(prev => ({ ...prev, photo: file }));
+      setFormData((prev) => ({ ...prev, photo: file }));
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     onComplete(formData);
   };
 
@@ -70,21 +66,18 @@ export function EnhancementsStep({
           <Camera className="h-5 w-5" />
           Profile Photo
         </h2>
-        
+
         <div className="flex items-center gap-6">
           <Avatar className="h-20 w-20 border-4 border-gray-900">
             {getPhotoDisplay() ? (
-              <AvatarImage 
-                src={getPhotoDisplay()} 
-                alt="Profile" 
-              />
+              <AvatarImage src={getPhotoDisplay()} alt="Profile" />
             ) : (
               <AvatarFallback className="text-2xl font-bold bg-gray-100">
-                {basicInfo.name?.charAt(0).toUpperCase() || 'U'}
+                {basicInfo.name?.charAt(0).toUpperCase() || "U"}
               </AvatarFallback>
             )}
           </Avatar>
-          
+
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <input
@@ -99,17 +92,19 @@ export function EnhancementsStep({
                 variant="outline"
                 size="sm"
                 className="gap-2 border-2 border-gray-900"
-                onClick={() => document.getElementById('photo')?.click()}
+                onClick={() => document.getElementById("photo")?.click()}
               >
                 <Upload className="h-4 w-4" />
-                {formData.photo ? 'Change Photo' : 'Upload Photo'}
+                {formData.photo ? "Change Photo" : "Upload Photo"}
               </Button>
               {formData.photo && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  onClick={() => setFormData(prev => ({ ...prev, photo: null }))}
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, photo: null }))
+                  }
                 >
                   Remove
                 </Button>
@@ -123,17 +118,17 @@ export function EnhancementsStep({
       </div>
 
       {role === "lawyer" && (
-        <ProfessionalSection 
+        <ProfessionalSection
           formData={{
-            occupation: formData.occupation
+            occupation: formData.occupation,
           }}
           onInputChange={handleInputChange}
         />
       )}
 
-      <BioSection 
+      <BioSection
         formData={{
-          bio: formData.bio
+          bio: formData.bio,
         }}
         onInputChange={handleInputChange}
       />

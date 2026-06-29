@@ -10,7 +10,11 @@ interface MessageListProps {
   isSending?: boolean;
 }
 
-export function MessageList({ messages, isLoading, isSending = false }: MessageListProps) {
+export function MessageList({
+  messages,
+  isLoading,
+  isSending = false,
+}: MessageListProps) {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
@@ -34,10 +38,7 @@ export function MessageList({ messages, isLoading, isSending = false }: MessageL
         <MessageBubble key={message.id} message={message} />
       ))}
       {isSending && (
-        <MessageBubble 
-          message={{} as ChatMessage} 
-          isSending={true} 
-        />
+        <MessageBubble message={{} as ChatMessage} isSending={true} />
       )}
     </div>
   );

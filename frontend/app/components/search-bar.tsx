@@ -6,7 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 const searchSchema = z.object({
-  query: z.string().min(0).max(100, "Search query must be less than 100 characters"),
+  query: z
+    .string()
+    .min(0)
+    .max(100, "Search query must be less than 100 characters"),
 });
 
 export type SearchFormData = z.infer<typeof searchSchema>;
@@ -26,7 +29,13 @@ export function SearchBar({
   disabled = false,
   className = "",
 }: SearchBarProps) {
-  const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm<SearchFormData>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<SearchFormData>({
     resolver: zodResolver(searchSchema),
     defaultValues: {
       query: value,
@@ -35,7 +44,7 @@ export function SearchBar({
 
   // Watch for changes and call onChange
   const query = watch("query");
-  
+
   React.useEffect(() => {
     if (query !== value) {
       onChange(query);

@@ -2,7 +2,6 @@ import { cn } from "~/lib/utils";
 import { MessageBubble } from "~/components/ui/message-bubble";
 // import { type ChatMessage } from "~/lib/api/chat.api";
 
-
 interface ChatAreaProps {
   messages: Array<any>;
   relevantLaws?: Array<{ title: string; description: string }>;
@@ -15,7 +14,6 @@ interface ChatAreaProps {
   isLoading?: boolean;
   className?: string;
 }
-
 
 export function ChatArea({
   messages = [],
@@ -45,27 +43,24 @@ export function ChatArea({
                   {message.content}
                 </p>
 
-                {message.role === "assistant" &&
-                  relevantLaws?.length > 0 && (
-                    <div className="mt-2">
-                      <div className="text-xs font-semibold text-gray-500 mb-1">
-                        Relevant Laws:
-                      </div>
-                      <div className="space-y-2">
-                        {relevantLaws.map((law, index) => (
-                          <div
-                            key={index}
-                            className="text-sm p-2 bg-gray-50 rounded"
-                          >
-                            <div className="font-medium">{law.title}</div>
-                            <div className="text-gray-600">
-                              {law.description}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                {message.role === "assistant" && relevantLaws?.length > 0 && (
+                  <div className="mt-2">
+                    <div className="text-xs font-semibold text-gray-500 mb-1">
+                      Relevant Laws:
                     </div>
-                  )}
+                    <div className="space-y-2">
+                      {relevantLaws.map((law, index) => (
+                        <div
+                          key={index}
+                          className="text-sm p-2 bg-gray-50 rounded"
+                        >
+                          <div className="font-medium">{law.title}</div>
+                          <div className="text-gray-600">{law.description}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {message.role === "assistant" &&
                   relatedDocuments?.length > 0 && (

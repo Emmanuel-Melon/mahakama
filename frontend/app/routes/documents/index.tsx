@@ -1,14 +1,20 @@
 import type { Route } from "./+types/index";
 import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
-import { documentsKeys, useDocuments } from "~/feature/documents/hooks/use-documents";
+import {
+  documentsKeys,
+  useDocuments,
+} from "~/feature/documents/hooks/use-documents";
 import { authContext, userContext } from "~/middleware/context";
 import { useState } from "react";
-import { createPrefetchLoader, prefetch } from "~/lib/react-query/react-query.utils";
-import { documentsApi } from '~/lib/api/documents.api';
+import {
+  createPrefetchLoader,
+  prefetch,
+} from "~/lib/react-query/react-query.utils";
+import { documentsApi } from "~/lib/api/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Legal Database - Access South Sudan & Uganda Laws" },
     {
@@ -77,10 +83,5 @@ export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
 export function ErrorBoundary() {
   const error = useAppError();
 
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import type { Route } from "~/+types/root"; 
+import type { Route } from "~/+types/root";
 
 export type PrefetchConfig<T = unknown> = {
   queryKey: unknown[];

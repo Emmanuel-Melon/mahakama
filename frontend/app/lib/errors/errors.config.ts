@@ -1,4 +1,11 @@
-import { AlertCircle, WifiOff, Lock, ShieldOff, Search, ServerCrash } from "lucide-react";
+import {
+  AlertCircle,
+  WifiOff,
+  Lock,
+  ShieldOff,
+  Search,
+  ServerCrash,
+} from "lucide-react";
 import type { ErrorConfig } from "./errors.types";
 
 export const ERROR_MAP: Record<number, ErrorConfig> = {
@@ -39,5 +46,5 @@ export const DEFAULT_ERROR = {
   title: "Unexpected Error",
   description: "An unexpected error occurred.",
   iconColor: "text-red-600",
-  actionType: "reload"
+  actionType: "reload",
 };

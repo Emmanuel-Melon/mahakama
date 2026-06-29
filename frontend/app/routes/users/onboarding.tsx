@@ -6,7 +6,7 @@ import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Onboarding - Mahakama" },
     {
@@ -34,7 +34,7 @@ export default function OnboardingPage({ loaderData }: Route.ComponentProps) {
   const { user, token, error } = loaderData;
   const updateMutation = useUpdateUser();
   return (
-    <OnboardingScreen 
+    <OnboardingScreen
       user={user}
       token={token}
       updateMutation={updateMutation}
@@ -44,10 +44,5 @@ export default function OnboardingPage({ loaderData }: Route.ComponentProps) {
 
 export function ErrorBoundary() {
   const error = useAppError();
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

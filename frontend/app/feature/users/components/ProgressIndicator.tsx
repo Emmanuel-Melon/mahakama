@@ -5,9 +5,19 @@ interface ProgressIndicatorProps {
   selectedRole: UserRole | null;
 }
 
-export function ProgressIndicator({ currentStep, selectedRole }: ProgressIndicatorProps) {
+export function ProgressIndicator({
+  currentStep,
+  selectedRole,
+}: ProgressIndicatorProps) {
   const totalSteps = selectedRole === "legal_professional" ? 4 : 3;
-  const currentStepNumber = currentStep === "role" ? 1 : currentStep === "basic" ? 2 : currentStep === "professional" ? 3 : 4;
+  const currentStepNumber =
+    currentStep === "role"
+      ? 1
+      : currentStep === "basic"
+        ? 2
+        : currentStep === "professional"
+          ? 3
+          : 4;
 
   return (
     <div className="flex items-center justify-center gap-2 mb-8">
@@ -15,7 +25,9 @@ export function ProgressIndicator({ currentStep, selectedRole }: ProgressIndicat
         <div
           key={stepNum}
           className={`h-2 rounded-full transition-all ${
-            stepNum === currentStepNumber ? 'w-8 bg-yellow-400' : 'w-2 bg-gray-300'
+            stepNum === currentStepNumber
+              ? "w-8 bg-yellow-400"
+              : "w-2 bg-gray-300"
           }`}
         />
       ))}

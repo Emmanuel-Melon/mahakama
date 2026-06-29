@@ -8,14 +8,18 @@ import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
-import { ContactInformation, type ContactItem } from "~/components/contact-information";
+import {
+  ContactInformation,
+  type ContactItem,
+} from "~/components/contact-information";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
 
 import type { components } from "~/lib/api/generated/api.types";
 import type { components as componentsv1 } from "~/lib/api/generated/api.types";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
-export type JsonApiErrorResponse = componentsv1["schemas"]["JsonApiErrorResponse"];
+export type JsonApiErrorResponse =
+  componentsv1["schemas"]["JsonApiErrorResponse"];
 export type Lawyer = components["schemas"]["Lawyer"];
 
 type LawyerProfileScreenProps = {
@@ -24,8 +28,11 @@ type LawyerProfileScreenProps = {
   isLoading?: boolean;
 };
 
-export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileScreenProps) => {
-
+export const LawyerProfileScreen = ({
+  error,
+  lawyer,
+  isLoading,
+}: LawyerProfileScreenProps) => {
   if (isLoading) {
     return (
       <PageDetailsLoading
@@ -38,30 +45,30 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   if (error) {
     return (
-        <PageDetailsError
-          error={error}
-          title="Error Loading Lawyer Profile"
-          description="We couldn't load the lawyer profile. Please check your connection and try again."
-          onRetry={() => window.location.reload()}
-        />
+      <PageDetailsError
+        error={error}
+        title="Error Loading Lawyer Profile"
+        description="We couldn't load the lawyer profile. Please check your connection and try again."
+        onRetry={() => window.location.reload()}
+      />
     );
   }
 
   if (!lawyer) {
     return (
-        <EmptyState
-          title="Profile Not Found"
-          description="We couldn't find the lawyer profile you're looking for."
-          className="mx-auto"
-          actions={[
-            {
-              label: "Back to Lawyers",
-              href: "/lawyers",
-              icon: <MapPin className="w-4 h-4 mr-2" />,
-              variant: "default",
-            },
-          ]}
-        />
+      <EmptyState
+        title="Profile Not Found"
+        description="We couldn't find the lawyer profile you're looking for."
+        className="mx-auto"
+        actions={[
+          {
+            label: "Back to Lawyers",
+            href: "/lawyers",
+            icon: <MapPin className="w-4 h-4 mr-2" />,
+            variant: "default",
+          },
+        ]}
+      />
     );
   }
 
@@ -80,7 +87,7 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
   if (lawyer.specialization) {
     metadata.push({
       icon: Scale,
-      label: 'Specialization',
+      label: "Specialization",
       value: lawyer.specialization,
     });
   }
@@ -88,7 +95,7 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
   if (lawyer.experienceYears) {
     metadata.push({
       icon: Briefcase,
-      label: 'Experience',
+      label: "Experience",
       value: getExperienceText(lawyer.experienceYears),
     });
   }
@@ -96,7 +103,7 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
   if (lawyer.location) {
     metadata.push({
       icon: MapPin,
-      label: 'Location',
+      label: "Location",
       value: lawyer.location,
     });
   }
@@ -105,10 +112,10 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   if (handleContact) {
     actions.push({
-      label: 'Contact Lawyer',
+      label: "Contact Lawyer",
       icon: MapPin,
       onClick: handleContact,
-      variant: 'primary' as const,
+      variant: "primary" as const,
     });
   }
 
@@ -122,8 +129,8 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
 
   if (lawyer.email) {
     contactItems.push({
-      type: 'email',
-      label: 'Email Address',
+      type: "email",
+      label: "Email Address",
       value: lawyer.email,
     });
   }
@@ -161,4 +168,4 @@ export const LawyerProfileScreen = ({ error, lawyer, isLoading }: LawyerProfileS
       </div>
     </>
   );
-}
+};

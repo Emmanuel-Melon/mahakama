@@ -11,8 +11,6 @@ import { Button } from "~/components/ui/button";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
 
-
-
 interface LawyerProfileHeaderProps {
   lawyer: any & {
     // Add any additional UI-specific props here

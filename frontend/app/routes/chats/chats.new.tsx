@@ -6,7 +6,7 @@ import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Start New Chat - Mahakama" },
     {
@@ -30,11 +30,14 @@ export async function action({ request }: Route.ActionArgs) {
 
   try {
     // Create a new chat with the question
-    const chat = await chatApi.createChat({ message: question }, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const chat = await chatApi.createChat(
+      { message: question },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
-    });
+    );
 
     // Redirect to the new chat
     return new Response(null, {
@@ -50,18 +53,11 @@ export async function action({ request }: Route.ActionArgs) {
 }
 
 export default function NewChat() {
-  return (
-    <NewChatScreen />
-  );
+  return <NewChatScreen />;
 }
 
 export function ErrorBoundary() {
   const error = useAppError();
 
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

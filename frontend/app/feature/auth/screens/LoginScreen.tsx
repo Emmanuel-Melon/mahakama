@@ -12,42 +12,46 @@ const loginRequestSchema = schemas.postAuthv1login_Body;
 export type LoginRequest = components["schemas"]["LoginRequest"];
 
 export const LoginScreen = () => {
-    const navigate = useNavigate();
-    const loginMutation = useLogin();
+  const navigate = useNavigate();
+  const loginMutation = useLogin();
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-    } = useForm<LoginRequest>({
-        resolver: zodResolver(loginRequestSchema),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginRequest>({
+    resolver: zodResolver(loginRequestSchema),
+  });
+
+  const onSubmit = (data: LoginRequest) => {
+    loginMutation.mutate(data, {
+      onSuccess: (authResponse) => {
+        navigate("/");
+      },
+      onError: (error) => {
+        toast.error("Login failed. Please try again.");
+      },
     });
+  };
 
-    const onSubmit = (data: LoginRequest) => {
-        loginMutation.mutate(data, {
-            onSuccess: (authResponse) => {
-                navigate("/");
-            },
-            onError: (error) => {
-                toast.error("Login failed. Please try again.");
-            }
-        });
-    };
-
-    return (
-        <>
-            <AuthForm
-                handleSubmit={handleSubmit(onSubmit)}
-                isLoading={isSubmitting || loginMutation.isPending}
-                error={loginMutation.error ? "Invalid email or password. Please try again." : null}
-                register={register}
-                errors={errors}
-            />
-            <AuthAlternative
-                to="/signup"
-                text="Sign up"
-                message="Don't have an account?"
-            />
-        </>
-    );
-}
+  return (
+    <>
+      <AuthForm
+        handleSubmit={handleSubmit(onSubmit)}
+        isLoading={isSubmitting || loginMutation.isPending}
+        error={
+          loginMutation.error
+            ? "Invalid email or password. Please try again."
+            : null
+        }
+        register={register}
+        errors={errors}
+      />
+      <AuthAlternative
+        to="/signup"
+        text="Sign up"
+        message="Don't have an account?"
+      />
+    </>
+  );
+};

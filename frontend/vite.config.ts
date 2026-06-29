@@ -10,7 +10,7 @@ export default defineConfig({
     tailwindcss(),
     tsconfigPaths(),
     // netlifyReactRouter() // ← add this
-  ]
+  ],
 });
 // import { reactRouter } from "@react-router/dev/vite";
 
@@ -21,7 +21,6 @@ export default defineConfig({
 // export default defineConfig({
 //   plugins: [reactRouter(), tailwindcss(), tsconfigPaths(), netlifyPlugin()],
 // });
-
 
 // import { reactRouter } from "@react-router/dev/vite";
 // import { defineConfig } from "vite";

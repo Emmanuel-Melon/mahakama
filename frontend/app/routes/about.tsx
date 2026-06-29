@@ -1,7 +1,7 @@
 import type { Route } from "./+types/about";
 import { AboutScreen } from "~/feature/website/screens/AboutScreen";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "About Mahakama - Empowering East Africa with Legal Knowledge" },
     {

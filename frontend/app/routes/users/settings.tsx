@@ -6,7 +6,7 @@ import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Settings - Mahakama" },
     {
@@ -34,20 +34,11 @@ export default function SettingsPage({ loaderData }: Route.ComponentProps) {
   const { user, token } = loaderData;
   const updateMutation = useUpdateUser();
   return (
-    <SettingsScreen
-      user={user}
-      token={token}
-      updateMutation={updateMutation}
-    />
+    <SettingsScreen user={user} token={token} updateMutation={updateMutation} />
   );
 }
 
 export function ErrorBoundary() {
   const error = useAppError();
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

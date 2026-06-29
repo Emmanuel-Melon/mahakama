@@ -4,7 +4,8 @@ import type { components } from "~/lib/api/generated/api.types";
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
+export type ChatsCollectionResponse =
+  components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
@@ -60,13 +61,15 @@ export class ChatApiClient {
           headers: options.headers,
         },
       );
-      
+
       if (!response.data) {
         console.error("Invalid chats data:", response);
         throw new Error("Invalid chats data received from the server");
       }
-      
-      const chats = response.data.map((resource: ChatResource) => resource.attributes);
+
+      const chats = response.data.map(
+        (resource: ChatResource) => resource.attributes,
+      );
       return chats;
     } catch (error) {
       console.error("Failed to fetch chats:", error);
@@ -79,10 +82,13 @@ export class ChatApiClient {
     options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Chat> {
     try {
-      const response = await this.api.request<ChatSingleResponse>(`/v1/chats/${chatId}`, {
-        headers: options.headers,
-      });
-      
+      const response = await this.api.request<ChatSingleResponse>(
+        `/v1/chats/${chatId}`,
+        {
+          headers: options.headers,
+        },
+      );
+
       if (!response.data.attributes) {
         console.error("Invalid chat data:", response);
         throw new Error("Invalid chat data received from the server");
@@ -97,25 +103,30 @@ export class ChatApiClient {
 
   public async getChatMessages(
     chatId: string,
-    options: { headers: HeadersInit; limit?: number; offset?: number } = { headers: {} },
+    options: { headers: HeadersInit; limit?: number; offset?: number } = {
+      headers: {},
+    },
   ): Promise<ChatMessage[]> {
     try {
       const queryParams = new URLSearchParams();
-      if (options.limit) queryParams.append('limit', options.limit.toString());
-      if (options.offset) queryParams.append('offset', options.offset.toString());
-      
-      const url = `/v1/messages/${chatId}/all${queryParams.toString() ? `?${queryParams.toString()}` : ''}`;
-      
+      if (options.limit) queryParams.append("limit", options.limit.toString());
+      if (options.offset)
+        queryParams.append("offset", options.offset.toString());
+
+      const url = `/v1/messages/${chatId}/all${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+
       const response = await this.api.request<{ data: ChatResource[] }>(url, {
         headers: options.headers,
       });
-      
+
       if (!response.data) {
         console.error("Invalid messages data:", response);
         throw new Error("Invalid messages data received from the server");
       }
-      
-      const messages = response.data.map((resource: ChatResource) => resource.attributes);
+
+      const messages = response.data.map(
+        (resource: ChatResource) => resource.attributes,
+      );
       return messages;
     } catch (error) {
       console.error("Failed to fetch chat messages:", error);
@@ -150,12 +161,15 @@ export class ChatApiClient {
     options: { headers: HeadersInit } = { headers: {} },
   ): Promise<Chat> {
     try {
-      const response = await this.api.request<ChatSingleResponse>(`/v1/chats/${chatId}`, {
-        method: "PATCH",
-        headers: options.headers,
-        body: JSON.stringify({ title: newTitle }),
-      });
-      
+      const response = await this.api.request<ChatSingleResponse>(
+        `/v1/chats/${chatId}`,
+        {
+          method: "PATCH",
+          headers: options.headers,
+          body: JSON.stringify({ title: newTitle }),
+        },
+      );
+
       if (!response.data.attributes) {
         console.error("Invalid chat data:", response);
         throw new Error("Invalid chat data received from the server");

@@ -10,6 +10,7 @@ permalink: /architecture/
 This document provides a comprehensive technical overview of the Mahakama server architecture, including high-level design, component interactions, and key technical decisions. For a higher-level introduction, see the [README](../README.md).
 
 ## Table of Contents
+
 - [High-Level Architecture](#high-level-architecture)
 - [Core Components](#core-components)
   - [API Layer](#api-layer)
@@ -30,6 +31,7 @@ Coming Soon!
 ## Core Components
 
 ### API Layer
+
 - **Express.js** for HTTP server and routing
 - **OpenAPI/Swagger** for API documentation
 - **Authentication** JWT-based auth with role-based access control
@@ -38,6 +40,7 @@ Coming Soon!
 - **CORS** and security headers
 
 ### Domain Layer
+
 - **Domain-Driven Design** with clear bounded contexts
 - **Use Case** classes for business operations
 - **Domain Events** for cross-domain communication
@@ -45,6 +48,7 @@ Coming Soon!
 - **Domain Services** for cross-entity operations
 
 ### Service Layer
+
 - **LLM Integration** (Ollama, Google Gemini)
 - **Vector Database** (ChromaDB) for semantic search
 - **Caching** with Redis/Upstash
@@ -52,6 +56,7 @@ Coming Soon!
 - **File Storage** for document management
 
 ### Data Access Layer
+
 - **Drizzle ORM** for type-safe database operations
 - **PostgreSQL** as primary data store
 - **Migrations** for schema versioning
@@ -105,6 +110,7 @@ Coming Soon!
 The configuration object is strongly typed, inferred from the Zod schema, ensuring type safety throughout the application. This approach prevents runtime errors from misconfigured environments and provides clear documentation of required settings.
 
 Configuration is accessed consistently across all domains:
+
 ```typescript
 import { config } from "../../config";
 
@@ -140,7 +146,11 @@ import { logger } from "../../lib/logger";
 logger.info("Server started on port 3000");
 
 // With context
-logger.warn({ userId: user.id, path: req.path }, "User accessed restricted area");
+logger.warn(
+  { userId: user.id, path: req.path },
+  "User accessed restricted area",
+);
 
 // Error logging with stack traces
 logger.error({ error }, "Failed to process request");
+```

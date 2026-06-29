@@ -4,8 +4,10 @@ import { DOCUMENTS_API_ROUTES } from "~/feature/documents/DocumentsConfig";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];
-export type DocumentSingleResponse = components["schemas"]["DocumentSingleResponse"];
-export type DocumentsCollectionResponse = components["schemas"]["DocumentsCollectionResponse"];
+export type DocumentSingleResponse =
+  components["schemas"]["DocumentSingleResponse"];
+export type DocumentsCollectionResponse =
+  components["schemas"]["DocumentsCollectionResponse"];
 
 export class DocumentsApiClient {
   private api: FetchApiClient;
@@ -14,7 +16,9 @@ export class DocumentsApiClient {
   }
   public async getDocuments(): Promise<Document[]> {
     try {
-      const response = await this.api.request<DocumentsCollectionResponse>(DOCUMENTS_API_ROUTES.ROOT);
+      const response = await this.api.request<DocumentsCollectionResponse>(
+        DOCUMENTS_API_ROUTES.ROOT,
+      );
       if (!response.data) {
         console.error("Invalid documents data:", response);
         throw new Error("Invalid documents data received from the server");
@@ -27,12 +31,13 @@ export class DocumentsApiClient {
     }
   }
 
-  public async getDocumentById(
-    documentId: string | number,
-  ): Promise<Document> {
+  public async getDocumentById(documentId: string | number): Promise<Document> {
     try {
       const response = await this.api.request<DocumentSingleResponse>(
-        DOCUMENTS_API_ROUTES.DOCUMENT.replace(':documentId', String(documentId))
+        DOCUMENTS_API_ROUTES.DOCUMENT.replace(
+          ":documentId",
+          String(documentId),
+        ),
       );
       if (!response.data.attributes) {
         console.error("Invalid document data:", response);

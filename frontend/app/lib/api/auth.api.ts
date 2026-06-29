@@ -20,10 +20,13 @@ export class AuthApiClient {
     }
   }
 
-  private async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  private async makeRequest<T>(
+    endpoint: string,
+    options: RequestInit = {},
+  ): Promise<T> {
     return await this.api.request<T>(endpoint, {
       ...options,
-      credentials: 'include',
+      credentials: "include",
     });
   }
 
@@ -31,7 +34,7 @@ export class AuthApiClient {
     return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.LOGIN, {
       method: "POST",
       body: JSON.stringify(credentials),
-      credentials: 'include',
+      credentials: "include",
     });
   }
 
@@ -39,14 +42,14 @@ export class AuthApiClient {
     return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.REGISTER, {
       method: "POST",
       body: JSON.stringify(userAttrs),
-      credentials: 'include',
+      credentials: "include",
     });
   }
 
   public async logout(): Promise<void> {
     await this.makeRequest<void>(AUTH_API_ROUTES.LOGOUT, {
       method: "POST",
-      credentials: 'include',
+      credentials: "include",
     });
   }
 }

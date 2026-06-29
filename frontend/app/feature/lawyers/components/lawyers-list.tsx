@@ -75,7 +75,9 @@ export function LawyersList({
         />
       )}
 
-      {(currentFilter === 'specialization' || currentFilter === 'location' || currentFilter === 'isAvailable') && (
+      {(currentFilter === "specialization" ||
+        currentFilter === "location" ||
+        currentFilter === "isAvailable") && (
         <FilterSection
           currentFilter={currentFilter}
           currentSpecialization={currentSpecialization}
@@ -85,7 +87,7 @@ export function LawyersList({
           onSpecializationChange={onSpecializationChange}
           onLocationChange={onLocationChange}
           onAvailableChange={onAvailableChange}
-          onClose={() => onFilterChange('all')}
+          onClose={() => onFilterChange("all")}
           showFilterBadge={true}
         />
       )}
@@ -95,7 +97,7 @@ export function LawyersList({
           label="No Lawyers Found"
           title="No Lawyers Match Your Search"
           description={
-            currentSearch || currentFilter !== "all" 
+            currentSearch || currentFilter !== "all"
               ? `No lawyers found matching your search criteria. Try adjusting your filters or search term.`
               : "No lawyers are available at the moment. Please check back later."
           }
@@ -103,11 +105,11 @@ export function LawyersList({
             {
               label: "Clear Filters",
               onClick: () => {
-                onFilterChange('all');
-                onSearch('');
+                onFilterChange("all");
+                onSearch("");
               },
               variant: "outline",
-            }
+            },
           ]}
           showDefaultActions={true}
         />

@@ -61,17 +61,11 @@ export function PageDetailHeader({
               }}
             />
           ) : icon ? (
-            <IconContainer
-              icon={icon}
-              size="lg"
-              color="handdrawn"
-            />
+            <IconContainer icon={icon} size="lg" color="handdrawn" />
           ) : null}
         </div>
         <div className="flex-1">
-          <h1 className="text-3xl font-black text-gray-900">
-            {title}
-          </h1>
+          <h1 className="text-3xl font-black text-gray-900">{title}</h1>
         </div>
       </div>
       <p className="text-gray-600 text-lg">{description}</p>
@@ -100,10 +94,11 @@ export function PageDetailHeader({
                 key={index}
                 href={action.href}
                 download={action.download}
-                className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all border-2 border-black rounded-lg text-gray-900 ${action.variant === "primary"
+                className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium transition-all border-2 border-black rounded-lg text-gray-900 ${
+                  action.variant === "primary"
                     ? "bg-yellow-300 shadow-[2px_2px_0_0_#000] translate-x-0 translate-y-0"
                     : "bg-white shadow-[3px_3px_0_0_#000] hover:bg-white hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:text-gray-900"
-                  }`}
+                }`}
               >
                 <action.icon className="h-4 w-4 mr-2" />
                 {action.label}

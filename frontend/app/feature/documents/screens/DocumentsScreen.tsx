@@ -6,14 +6,19 @@ import { PageLoading } from "~/components/page-loading";
 import { type Document } from "~/lib/api/documents.api";
 import { HeroSection } from "~/layouts/HeroSection";
 
-export const DocumentsScreen = ({ documents, isLoading, isAuthenticated, displayMode, onDisplayModeChange }: {
-  documents: Document[],
-  isLoading?: boolean,
-  isAuthenticated?: boolean,
-  displayMode?: "grid" | "list",
-  onDisplayModeChange?: (mode: "grid" | "list") => void
-}) => { 
-
+export const DocumentsScreen = ({
+  documents,
+  isLoading,
+  isAuthenticated,
+  displayMode,
+  onDisplayModeChange,
+}: {
+  documents: Document[];
+  isLoading?: boolean;
+  isAuthenticated?: boolean;
+  displayMode?: "grid" | "list";
+  onDisplayModeChange?: (mode: "grid" | "list") => void;
+}) => {
   if (isLoading) {
     return (
       <PageLoading
@@ -57,4 +62,4 @@ export const DocumentsScreen = ({ documents, isLoading, isAuthenticated, display
       </div>
     </>
   );
-}
+};

@@ -1,6 +1,5 @@
 export type DbSingleResult<T> =
-  | { data: T; ok: true }
-  | { data: null; ok: false };
+  { data: T; ok: true } | { data: null; ok: false };
 
 export interface PaginationMetadata {
   total: number;

@@ -3,7 +3,8 @@ import type { components } from "./generated/api.types";
 
 export const DEFAULT_TIMEOUT = 5000;
 
-export type JsonApiErrorResponse = components["schemas"]["JsonApiErrorResponse"];
+export type JsonApiErrorResponse =
+  components["schemas"]["JsonApiErrorResponse"];
 export type JsonApiError = components["schemas"]["JsonApiError"];
 
 export interface ApiError {
@@ -29,10 +30,12 @@ export class FetchApiClient {
   }
 
   constructor(defaultHeaders: HeadersInit = {}, baseURL?: string) {
-    this.baseURL = baseURL || import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+    this.baseURL =
+      baseURL ||
+      import.meta.env.VITE_API_BASE_URL ||
+      "http://localhost:3000/api";
     this.defaultHeaders = defaultHeaders;
   }
-
 
   static withAuth(token: string): FetchApiClient {
     return new FetchApiClient({
@@ -46,16 +49,18 @@ export class FetchApiClient {
         errorData = await response.json();
       } catch {
         errorData = {
-          errors: [{
-            title: `Request failed with status ${response.status}`,
-            detail: null,
-            status: response.status.toString(),
-          }],
+          errors: [
+            {
+              title: `Request failed with status ${response.status}`,
+              detail: null,
+              status: response.status.toString(),
+            },
+          ],
         };
       }
       throw new Error(
         errorData.errors?.[0]?.detail ||
-        `Request failed with status ${response.status}`,
+          `Request failed with status ${response.status}`,
       );
     }
     return response.json();
@@ -64,7 +69,7 @@ export class FetchApiClient {
   public async request<T>(
     endpoint: string,
     options: RequestInit = {},
-    loaderToken?: string
+    loaderToken?: string,
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
     const token = loaderToken || this.getClientToken();
@@ -78,7 +83,7 @@ export class FetchApiClient {
     const response = await fetch(url, {
       ...options,
       headers,
-      credentials: 'include',
+      credentials: "include",
     });
 
     return this.handleResponse<T>(response);

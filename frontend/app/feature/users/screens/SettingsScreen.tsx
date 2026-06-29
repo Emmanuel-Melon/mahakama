@@ -12,11 +12,17 @@ export type User = components["schemas"]["User"];
 interface SettingsScreenProps {
   user: User;
   token: string;
-  updateMutation: any; 
+  updateMutation: any;
 }
 
-export const SettingsScreen = ({ user, token, updateMutation }: SettingsScreenProps) => {
-  const [activeTab, setActiveTab] = useState<"personal" | "account">("personal");
+export const SettingsScreen = ({
+  user,
+  token,
+  updateMutation,
+}: SettingsScreenProps) => {
+  const [activeTab, setActiveTab] = useState<"personal" | "account">(
+    "personal",
+  );
   const [isEditing, setIsEditing] = useState(false);
 
   const handleEditProfile = () => {
@@ -38,42 +44,42 @@ export const SettingsScreen = ({ user, token, updateMutation }: SettingsScreenPr
 
   if (isEditing) {
     return (
-        <div className="mx-auto max-w-6xl p-6">
-          <div className="mb-8 flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Edit Your Profile</h2>
-            <Button
-              onClick={handleCancel}
-              variant="outline"
-              size="sm"
-              className="gap-2"
-            >
-              Cancel
-            </Button>
-          </div>
-          <UserProfileForm
-            user={user}
-            updateMutation={updateMutation}
-            mode="edit"
-            onSubmit={handleFormSubmit}
-          />
+      <div className="mx-auto max-w-6xl p-6">
+        <div className="mb-8 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Edit Your Profile</h2>
+          <Button
+            onClick={handleCancel}
+            variant="outline"
+            size="sm"
+            className="gap-2"
+          >
+            Cancel
+          </Button>
         </div>
+        <UserProfileForm
+          user={user}
+          updateMutation={updateMutation}
+          mode="edit"
+          onSubmit={handleFormSubmit}
+        />
+      </div>
     );
   }
 
   return (
-      <div>
-        <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
+    <div>
+      <ProfileTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {activeTab === "personal" && (
-          <div>
-            <ProfileHeader user={user} onEditProfile={handleEditProfile} />
-            <ContactInformation user={user} />
-          </div>
-        )}
+      {activeTab === "personal" && (
+        <div>
+          <ProfileHeader user={user} onEditProfile={handleEditProfile} />
+          <ContactInformation user={user} />
+        </div>
+      )}
 
-        {activeTab === "account" && (
-          <AccountManagement user={user} onLogout={handleLogout} />
-        )}
-      </div>
+      {activeTab === "account" && (
+        <AccountManagement user={user} onLogout={handleLogout} />
+      )}
+    </div>
   );
 };

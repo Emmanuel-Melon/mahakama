@@ -6,7 +6,7 @@ import { handleRouteError } from "~/lib/errors/errors.utils";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Mahakama - Legal Knowledge and Access for Everyone" },
     {
@@ -42,10 +42,5 @@ export default function Mahakama({ loaderData }: Route.ComponentProps) {
 
 export function ErrorBoundary() {
   const error = useAppError();
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

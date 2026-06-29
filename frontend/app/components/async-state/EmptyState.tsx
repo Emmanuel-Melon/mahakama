@@ -1,7 +1,7 @@
 import { FileSearch, Plus, Home } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 
-import { 
+import {
   Empty,
   EmptyContent,
   EmptyDescription,

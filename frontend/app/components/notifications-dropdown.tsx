@@ -29,7 +29,7 @@ export function NotificationsDropdown({
   onShowAll,
   className = "",
 }: NotificationsDropdownProps) {
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
     <DropdownMenu>
@@ -43,7 +43,7 @@ export function NotificationsDropdown({
           )}
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
+      <DropdownMenuContent
         className="w-80 border-2 border-gray-900 bg-white"
         style={{ boxShadow: "3px 3px 0 0 #000" }}
       >
@@ -51,7 +51,7 @@ export function NotificationsDropdown({
           Notifications
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         {notifications.length === 0 ? (
           <div className="px-3 py-5 text-center text-sm text-gray-500">
             No new notifications
@@ -65,10 +65,14 @@ export function NotificationsDropdown({
                 onClick={() => onMarkAsRead?.(notification.id)}
               >
                 <div className="flex items-start gap-2 w-full">
-                  <div className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
-                    notification.read ? "bg-gray-300" : "bg-blue-500"
-                  }`}>
-                    {notification.read && <CheckCircle className="w-2 h-2 text-white" />}
+                  <div
+                    className={`w-2 h-2 rounded-full mt-1 flex-shrink-0 ${
+                      notification.read ? "bg-gray-300" : "bg-blue-500"
+                    }`}
+                  >
+                    {notification.read && (
+                      <CheckCircle className="w-2 h-2 text-white" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-gray-900 line-clamp-1">
@@ -84,7 +88,7 @@ export function NotificationsDropdown({
                 </div>
               </DropdownMenuItem>
             ))}
-            
+
             {notifications.length > 3 && (
               <>
                 <DropdownMenuSeparator />

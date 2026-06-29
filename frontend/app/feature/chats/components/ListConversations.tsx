@@ -1,5 +1,5 @@
-import React from 'react';
-import { ChatItem, type Chat } from './ChatItem';
+import React from "react";
+import { ChatItem, type Chat } from "./ChatItem";
 
 export const ListConversations = () => {
   // Generate dummy chats that match the Chat type
@@ -29,7 +29,7 @@ export const ListConversations = () => {
           <h1 className="text-2xl font-bold text-gray-800 mb-6">
             Conversations
           </h1>
-          
+
           <div className="space-y-4">
             {chats.map((chat) => (
               <ChatItem

@@ -6,6 +6,7 @@ permalink: /
 ---
 
 ## 🚀 Try It Now
+
 **Get clear answers to your legal questions in plain language. No legal background needed, and it's completely free.**
 
 Live demo is available at:
@@ -31,11 +32,13 @@ Explore our extensive collection of legal information across multiple domains:
 We're on a mission to continuously improve Mahakama. Here's a glimpse of what's coming next:
 
 ### 🚀 Upcoming Features
+
 - **Local Development & Self-hosting** - Easy setup with Docker and comprehensive guides
 - **Speech-based Queries** - Voice input and audio responses for better accessibility
 - **Multi-modal Interactions** - Document upload and visual legal assistance
 
 ### 🌍 Future Vision
+
 - Expansion to more East African countries
 - Mobile applications for iOS and Android
 - Enhanced offline capabilities

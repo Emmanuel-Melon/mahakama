@@ -2,9 +2,12 @@ import { FetchApiClient } from "./fetch";
 import type { components } from "./generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource = components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse = components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse = components["schemas"]["LegalServicesCollectionResponse"];
+export type LegalServiceResource =
+  components["schemas"]["LegalServiceResource"];
+export type LegalServiceSingleResponse =
+  components["schemas"]["LegalServiceSingleResponse"];
+export type LegalServicesCollectionResponse =
+  components["schemas"]["LegalServicesCollectionResponse"];
 export type CategoryLabels = components["schemas"]["CategoryLabels"];
 export type ServiceCategory = components["schemas"]["ServiceCategory"];
 
@@ -13,9 +16,10 @@ export class ServicesApiClient {
   constructor(apiClient?: FetchApiClient) {
     this.api = apiClient || new FetchApiClient();
   }
-  
+
   public async getServices(
-    category?: "government" | "legal-aid" | "dispute-resolution" | "specialized"
+    category?:
+      "government" | "legal-aid" | "dispute-resolution" | "specialized",
   ): Promise<LegalService[]> {
     try {
       let url = "/v1/services";
@@ -24,7 +28,8 @@ export class ServicesApiClient {
         url += `?category=${encodeURIComponent(category)}`;
       }
 
-      const response = await this.api.request<LegalServicesCollectionResponse>(url);
+      const response =
+        await this.api.request<LegalServicesCollectionResponse>(url);
 
       if (!response.data) {
         console.error("Invalid services data:", response);
@@ -41,7 +46,9 @@ export class ServicesApiClient {
 
   public async getServiceById(serviceId: string): Promise<LegalService> {
     try {
-      const response = await this.api.request<LegalServiceSingleResponse>(`/v1/services/${serviceId}`);
+      const response = await this.api.request<LegalServiceSingleResponse>(
+        `/v1/services/${serviceId}`,
+      );
 
       if (!response.data.attributes) {
         console.error("Invalid service data:", response);
@@ -56,4 +63,4 @@ export class ServicesApiClient {
   }
 }
 
-export const servicesApi = new ServicesApiClient(); 
+export const servicesApi = new ServicesApiClient();

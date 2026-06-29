@@ -8,23 +8,28 @@ import type { components } from "~/lib/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];
-export type DocumentSingleResponse = components["schemas"]["DocumentSingleResponse"];
-export type DocumentsCollectionResponse = components["schemas"]["DocumentsCollectionResponse"];
+export type DocumentSingleResponse =
+  components["schemas"]["DocumentSingleResponse"];
+export type DocumentsCollectionResponse =
+  components["schemas"]["DocumentsCollectionResponse"];
 
-export const DocumentDetailsScreen = ({ document, error }: { document: Document, error: string }) => {
-
+export const DocumentDetailsScreen = ({
+  document,
+  error,
+}: {
+  document: Document;
+  error: string;
+}) => {
   if (!document) {
     return (
-
-        <div className="text-center p-6 max-w-md">
-          <h1 className="text-2xl font-bold text-foreground mb-2">
-            {error ? "Error Loading Document" : "Document Not Found"}
-          </h1>
-          <p className="text-muted-foreground">
-            {error || "We couldn't find the document you're looking for."}
-          </p>
-        </div>
-  
+      <div className="text-center p-6 max-w-md">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
+          {error ? "Error Loading Document" : "Document Not Found"}
+        </h1>
+        <p className="text-muted-foreground">
+          {error || "We couldn't find the document you're looking for."}
+        </p>
+      </div>
     );
   }
 
@@ -67,4 +72,4 @@ export const DocumentDetailsScreen = ({ document, error }: { document: Document,
       </div>
     </>
   );
-}
+};

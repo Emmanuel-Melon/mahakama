@@ -26,17 +26,13 @@ export function SortSelect({
   disabled = false,
 }: SortSelectProps) {
   return (
-    <div 
+    <div
       className="w-[180px] border-2 border-gray-900 bg-white hover:bg-yellow-50"
       style={{
         borderRadius: "4px 8px 4px 8px",
       }}
     >
-      <Select
-        value={value}
-        onValueChange={onValueChange}
-        disabled={disabled}
-      >
+      <Select value={value} onValueChange={onValueChange} disabled={disabled}>
         <SelectTrigger className="w-full border-none bg-transparent shadow-none">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>

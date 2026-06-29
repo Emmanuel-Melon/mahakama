@@ -12,19 +12,19 @@ interface OnboardingNavigationProps {
   nextText?: string;
 }
 
-export function OnboardingNavigation({ 
-  currentStep, 
-  selectedRole, 
-  onBack, 
-  onNext, 
+export function OnboardingNavigation({
+  currentStep,
+  selectedRole,
+  onBack,
+  onNext,
   onComplete,
   nextDisabled = false,
-  nextText = "Continue"
+  nextText = "Continue",
 }: OnboardingNavigationProps) {
   const showBackButton = currentStep !== "role";
   const isLastStep = currentStep === "enhancements";
   const isLawyerFlow = selectedRole === "legal_professional";
-  
+
   // Determine if we should show next button (role selection has its own continue button)
   const showNextButton = currentStep !== "role" && (onNext || onComplete);
 
@@ -32,7 +32,7 @@ export function OnboardingNavigation({
     <div className="w-full p-4">
       <div className="max-w-2xl mx-auto w-full flex justify-between gap-4">
         {showBackButton && (
-          <Button 
+          <Button
             onClick={onBack}
             variant="outline"
             className="px-6 py-2 border-2 border-gray-900 text-gray-700 hover:bg-gray-50"
@@ -40,16 +40,16 @@ export function OnboardingNavigation({
             ← Back
           </Button>
         )}
-        
+
         {showNextButton && (
-          <Button 
+          <Button
             onClick={() => {
-              console.log('Next button clicked, isLastStep:', isLastStep);
+              console.log("Next button clicked, isLastStep:", isLastStep);
               if (isLastStep && onComplete) {
-                console.log('Calling onComplete');
+                console.log("Calling onComplete");
                 onComplete();
               } else if (onNext) {
-                console.log('Calling onNext');
+                console.log("Calling onNext");
                 onNext();
               }
             }}

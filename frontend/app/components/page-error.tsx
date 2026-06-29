@@ -19,7 +19,7 @@ export function PageError({
   className = "",
 }: PageErrorProps) {
   const errorMessage = error instanceof Error ? error.message : error;
-  
+
   return (
     <div className={`space-y-6 ${className}`}>
       <CardWithLabel
@@ -37,7 +37,9 @@ export function PageError({
               <p>{description}</p>
               {errorMessage && (
                 <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-md">
-                  <p className="text-red-700 text-xs font-mono">{errorMessage}</p>
+                  <p className="text-red-700 text-xs font-mono">
+                    {errorMessage}
+                  </p>
                 </div>
               )}
             </div>

@@ -4,7 +4,7 @@ import { useChat, useMessages } from "~/feature/chats/hooks/use-chats";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
-export function meta({ }: Route.MetaArgs) {
+export function meta({}: Route.MetaArgs) {
   return [
     { title: "Chat - Mahakama" },
     { name: "description", content: "View your legal answer" },
@@ -14,17 +14,22 @@ export function meta({ }: Route.MetaArgs) {
 export default function ChatDetailsPage({ params }: Route.ComponentProps) {
   const { chatId } = params;
   const { data: chat, isLoading, error } = useChat(chatId);
-  const { data: messages, isLoading: messagesLoading } = useMessages(chat?.id || '');
-  return <ChatScreen chat={chat || null} isLoading={isLoading} error={error} messages={messages || []} messagesLoading={messagesLoading} />;
+  const { data: messages, isLoading: messagesLoading } = useMessages(
+    chat?.id || "",
+  );
+  return (
+    <ChatScreen
+      chat={chat || null}
+      isLoading={isLoading}
+      error={error}
+      messages={messages || []}
+      messagesLoading={messagesLoading}
+    />
+  );
 }
 
 export function ErrorBoundary() {
   const error = useAppError();
 
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

@@ -21,7 +21,10 @@ export const ErrorState = ({
   showReportButton = true,
 }: ErrorStateProps) => {
   const handleReport = () => {
-    window.open(`mailto:support@mahakama.com?subject=${encodeURIComponent(title)} Issue`, '_blank');
+    window.open(
+      `mailto:support@mahakama.com?subject=${encodeURIComponent(title)} Issue`,
+      "_blank",
+    );
   };
 
   return (
@@ -34,11 +37,11 @@ export const ErrorState = ({
           className="mb-8"
         />
       </div>
-      
+
       <h1 className="text-2xl md:text-3xl font-black text-gray-900 tracking-tight mb-4 px-2">
         {title}
       </h1>
-      
+
       {details && (
         <div className="w-full max-w-md bg-white border-2 border-dashed border-gray-300 rounded-lg px-6 py-4 mb-8 shadow-[2px_2px_0_0_#000]">
           <div className="text-gray-700 text-sm md:text-base leading-relaxed">
@@ -46,7 +49,7 @@ export const ErrorState = ({
           </div>
         </div>
       )}
-      
+
       <div className="flex flex-col items-center gap-4 w-full max-w-xs md:max-w-none">
         {showReportButton && (
           <MahButton
@@ -58,12 +61,10 @@ export const ErrorState = ({
             Report Issue
           </MahButton>
         )}
-        
-        <div className="w-full md:w-auto">
-          {actions}
-        </div>
+
+        <div className="w-full md:w-auto">{actions}</div>
       </div>
-      
+
       <p className="mt-8 text-xs font-medium text-gray-400 uppercase tracking-widest">
         Mahakama Legal Platform
       </p>

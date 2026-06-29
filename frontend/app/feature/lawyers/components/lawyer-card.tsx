@@ -1,9 +1,4 @@
-import {
-  MapPin,
-  Briefcase,
-  ChevronRight,
-  Languages,
-} from "lucide-react";
+import { MapPin, Briefcase, ChevronRight, Languages } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { BookmarkButton } from "~/components/bookmark-button";
 import { ShareButton } from "~/components/share-button";
@@ -29,12 +24,12 @@ interface LawyerCardProps {
 
 const handleBookmark = (e: React.MouseEvent) => {
   e.preventDefault();
-  console.log('Bookmarking lawyer:');
+  console.log("Bookmarking lawyer:");
 };
 
 const handleShare = (e: React.MouseEvent) => {
   e.preventDefault();
-  console.log('Sharing lawyer:');
+  console.log("Sharing lawyer:");
 };
 
 export function LawyerCard({
@@ -67,7 +62,14 @@ export function LawyerCard({
               alt={`${lawyer.name} profile picture`}
             />
             <AvatarFallback className="bg-gray-100 text-gray-600 font-semibold">
-              {lawyer.name ? lawyer.name.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() : "LW"}
+              {lawyer.name
+                ? lawyer.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .slice(0, 2)
+                    .toUpperCase()
+                : "LW"}
             </AvatarFallback>
           </Avatar>
         </div>
@@ -79,9 +81,7 @@ export function LawyerCard({
       </div>
 
       <div className="text-left mb-4">
-        <h3 className="text-xl">
-          {lawyer.name || "Unnamed Lawyer"}
-        </h3>
+        <h3 className="text-xl">{lawyer.name || "Unnamed Lawyer"}</h3>
         {lawyer.location && (
           <div className="flex items-center text-sm text-gray-600 mt-1">
             <MapPin className="h-4 w-4 mr-1 flex-shrink-0" />
@@ -100,7 +100,9 @@ export function LawyerCard({
         {lawyer.experienceYears && (
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Briefcase className="h-4 w-4 mr-1 flex-shrink-0" />
-            <span className="font-medium">{getExperienceText(lawyer.experienceYears)}</span>
+            <span className="font-medium">
+              {getExperienceText(lawyer.experienceYears)}
+            </span>
           </div>
         )}
       </div>

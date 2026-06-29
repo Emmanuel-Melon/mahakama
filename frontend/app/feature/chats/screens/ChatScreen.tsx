@@ -14,23 +14,24 @@ import { z } from "zod";
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
+export type ChatsCollectionResponse =
+  components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
- 
-const sendMessageRequestSchema = schemas.postV1messages_Body;
-export type SendMessageRequest = z.infer<typeof sendMessageRequestSchema>
 
-export const ChatScreen = ({ 
-  chat, 
-  isLoading, 
+const sendMessageRequestSchema = schemas.postV1messages_Body;
+export type SendMessageRequest = z.infer<typeof sendMessageRequestSchema>;
+
+export const ChatScreen = ({
+  chat,
+  isLoading,
   error,
   messages,
-  messagesLoading
-}: { 
-  chat: Chat | null; 
-  isLoading: boolean; 
-  error: any; 
+  messagesLoading,
+}: {
+  chat: Chat | null;
+  isLoading: boolean;
+  error: any;
   messages: ChatMessage[];
   messagesLoading: boolean;
 }) => {
@@ -39,9 +40,29 @@ export const ChatScreen = ({
   const deleteChatMutation = useDeleteChat();
 
   // Handle loading and error states
-  if (isLoading) return <PageDetailsLoading title="Loading Chat" description="Please wait while we load your conversation..." />;
-  if (error) return <PageDetailsError error="Failed to load chat" title="Error Loading Chat" description="We couldn't load your conversation. Please try again." />;
-  if (!chat) return <PageDetailsError error="Chat not found" title="Chat Not Found" description="The conversation you're looking for doesn't exist or has been removed." />;
+  if (isLoading)
+    return (
+      <PageDetailsLoading
+        title="Loading Chat"
+        description="Please wait while we load your conversation..."
+      />
+    );
+  if (error)
+    return (
+      <PageDetailsError
+        error="Failed to load chat"
+        title="Error Loading Chat"
+        description="We couldn't load your conversation. Please try again."
+      />
+    );
+  if (!chat)
+    return (
+      <PageDetailsError
+        error="Chat not found"
+        title="Chat Not Found"
+        description="The conversation you're looking for doesn't exist or has been removed."
+      />
+    );
 
   const {
     register,
@@ -63,34 +84,32 @@ export const ChatScreen = ({
   const messageContent = watch("content");
 
   const handleRenameChat = () => {
-    const newTitle = window.prompt('Enter new chat title:', chat.title || '');
+    const newTitle = window.prompt("Enter new chat title:", chat.title || "");
     if (newTitle && newTitle.trim() && newTitle !== chat.title) {
-
     }
   };
 
   const handleDeleteChat = () => {
     deleteChatMutation.mutate(chat.id, {
       onSuccess: () => {
-        navigate('/chats/recents');
+        navigate("/chats/recents");
       },
     });
   };
 
-  const handleFavoriteChat = () => {
-  };
+  const handleFavoriteChat = () => {};
 
   const handleShareChat = () => {
     const shareUrl = `${window.location.origin}/chats/${chat.id}`;
     if (navigator.share) {
       navigator.share({
-        title: chat.title || 'Legal Consultation',
-        text: 'Check out this legal consultation',
+        title: chat.title || "Legal Consultation",
+        text: "Check out this legal consultation",
         url: shareUrl,
       });
     } else {
       navigator.clipboard.writeText(shareUrl);
-      alert('Chat link copied to clipboard!');
+      alert("Chat link copied to clipboard!");
     }
   };
 
@@ -125,9 +144,9 @@ export const ChatScreen = ({
 
       <div className="flex-1 min-h-0">
         <div className="w-full p-4 pb-8 h-full overflow-y-auto">
-          <MessageList 
-            messages={messages || []} 
-            isLoading={messagesLoading} 
+          <MessageList
+            messages={messages || []}
+            isLoading={messagesLoading}
             isSending={sendMessageMutation.isPending}
           />
         </div>
@@ -144,11 +163,13 @@ export const ChatScreen = ({
               disabled={isSubmitting || sendMessageMutation.isPending}
             />
             {errors.content && (
-              <p className="text-red-500 text-sm mt-2">{errors.content.message}</p>
+              <p className="text-red-500 text-sm mt-2">
+                {errors.content.message}
+              </p>
             )}
           </form>
         </div>
       </div>
     </div>
   );
-}
+};

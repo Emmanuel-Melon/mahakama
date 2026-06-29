@@ -25,7 +25,10 @@ const strategyResourceSchema = createJsonApiResourceSchema(
   "strategy",
   strategySchema,
 );
-const modelResourceSchema = createJsonApiResourceSchema('model', inferenceModelSelectSchema)
+const modelResourceSchema = createJsonApiResourceSchema(
+  "model",
+  inferenceModelSelectSchema,
+);
 
 const preferenceSingleResponseSchema = createJsonApiSingleResponseSchema(
   preferenceResourceSchema,
@@ -38,16 +41,18 @@ const providerCollectionResponseSchema = createJsonApiCollectionResponseSchema(
 const strategyCollectionResponseSchema = createJsonApiCollectionResponseSchema(
   strategyResourceSchema,
 );
-const modelCollectionResponseSchema = createJsonApiCollectionResponseSchema(
-  modelResourceSchema,
-);
+const modelCollectionResponseSchema =
+  createJsonApiCollectionResponseSchema(modelResourceSchema);
 
 // Error response reference
 const ErrorResponseRef = { $ref: "#/components/schemas/JsonApiErrorResponse" };
 
 // Create registry and register schemas
 export const inferenceRegistry = new OpenAPIRegistry();
-inferenceRegistry.register("InferencePreference", inferencePreferenceSelectSchema);
+inferenceRegistry.register(
+  "InferencePreference",
+  inferencePreferenceSelectSchema,
+);
 inferenceRegistry.register(
   "InferencePreferenceResource",
   preferenceResourceSchema,

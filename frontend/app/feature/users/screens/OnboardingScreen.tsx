@@ -1,5 +1,8 @@
 import { User as UserIcon, Briefcase, Sparkles } from "lucide-react";
-import { RoleSelector, type UserRole } from "~/feature/users/components/RoleSelector";
+import {
+  RoleSelector,
+  type UserRole,
+} from "~/feature/users/components/RoleSelector";
 import { BasicInfoStep } from "~/feature/users/components/BasicInfoStep";
 import { LawyerBasicInfoStep } from "~/feature/users/components/LawyerBasicInfoStep";
 import { LawyerProfessionalInfoStep } from "~/feature/users/components/LawyerProfessionalInfoStep";
@@ -17,11 +20,24 @@ interface OnboardingScreenProps {
   updateMutation: any;
 }
 
-export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScreenProps) => {
+export const OnboardingScreen = ({
+  user,
+  token,
+  updateMutation,
+}: OnboardingScreenProps) => {
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
-  const [step, setStep] = useState<"role" | "basic" | "professional" | "enhancements">("role");
-  const [basicInfo, setBasicInfo] = useState<{ name: string; age: string; gender: string } | null>(null);
-  const [locationInfo, setLocationInfo] = useState<{ country: string; city: string } | null>(null);
+  const [step, setStep] = useState<
+    "role" | "basic" | "professional" | "enhancements"
+  >("role");
+  const [basicInfo, setBasicInfo] = useState<{
+    name: string;
+    age: string;
+    gender: string;
+  } | null>(null);
+  const [locationInfo, setLocationInfo] = useState<{
+    country: string;
+    city: string;
+  } | null>(null);
   const [lawyerInfo, setLawyerInfo] = useState<{
     specialization: string;
     experienceYears: string;
@@ -45,15 +61,21 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
     setStep("basic");
   };
 
-  const handleBasicInfoNext = (data: { name: string; age: string; gender: string; country?: string; city?: string }) => {
-    console.log('handleBasicInfoNext called with:', data);
+  const handleBasicInfoNext = (data: {
+    name: string;
+    age: string;
+    gender: string;
+    country?: string;
+    city?: string;
+  }) => {
+    console.log("handleBasicInfoNext called with:", data);
     setBasicInfo({ name: data.name, age: data.age, gender: data.gender });
-    setLocationInfo({ country: data.country || '', city: data.city || '' });
+    setLocationInfo({ country: data.country || "", city: data.city || "" });
     if (selectedRole === "lawyer") {
-      console.log('Moving to professional step');
+      console.log("Moving to professional step");
       setStep("professional");
     } else {
-      console.log('Moving to enhancements step');
+      console.log("Moving to enhancements step");
       setStep("enhancements");
     }
   };
@@ -82,26 +104,32 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
       ...data,
       role: selectedRole,
       age: basicInfo?.age ? parseInt(basicInfo.age, 10) : null,
-      gender: basicInfo?.gender as "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null,
+      gender: basicInfo?.gender as
+        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null,
       country: locationInfo?.country?.trim() || null,
       city: locationInfo?.city?.trim() || null,
       occupation: data.occupation.trim() || null,
       bio: data.bio.trim() || null,
       isOnboarded: true,
       // Add lawyer-specific fields if applicable
-      ...(selectedRole === "lawyer" && lawyerInfo ? {
-        specialization: lawyerInfo.specialization,
-        experienceYears: parseInt(lawyerInfo.experienceYears, 10),
-        rating: lawyerInfo.rating,
-        casesHandled: parseInt(lawyerInfo.casesHandled, 10),
-        location: lawyerInfo.location,
-        languages: lawyerInfo.languages.split(',').map(lang => lang.trim()).filter(lang => lang)
-      } : {})
+      ...(selectedRole === "lawyer" && lawyerInfo
+        ? {
+            specialization: lawyerInfo.specialization,
+            experienceYears: parseInt(lawyerInfo.experienceYears, 10),
+            rating: lawyerInfo.rating,
+            casesHandled: parseInt(lawyerInfo.casesHandled, 10),
+            location: lawyerInfo.location,
+            languages: lawyerInfo.languages
+              .split(",")
+              .map((lang) => lang.trim())
+              .filter((lang) => lang),
+          }
+        : {}),
     };
 
     updateMutation.mutate({
       userId: user.id,
-      data: updateData
+      data: updateData,
     });
   };
 
@@ -121,25 +149,25 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
 
   // Navigation handlers for the bottom navigation
   const handleNextStep = () => {
-    console.log('handleNextStep called for step:', step);
+    console.log("handleNextStep called for step:", step);
     if (step === "basic" && basicFormRef.current) {
-      console.log('Triggering basic form submission');
+      console.log("Triggering basic form submission");
       basicFormRef.current.requestSubmit();
     } else if (step === "professional" && professionalFormRef.current) {
-      console.log('Triggering professional form submission');
+      console.log("Triggering professional form submission");
       professionalFormRef.current.requestSubmit();
     } else {
-      console.log('No form found for current step');
+      console.log("No form found for current step");
     }
   };
 
   const handleComplete = () => {
-    console.log('handleComplete called');
+    console.log("handleComplete called");
     if (enhancementsFormRef.current) {
-      console.log('Triggering enhancements form submission');
+      console.log("Triggering enhancements form submission");
       enhancementsFormRef.current.requestSubmit();
     } else {
-      console.log('No enhancements form found');
+      console.log("No enhancements form found");
     }
   };
 
@@ -167,7 +195,11 @@ export const OnboardingScreen = ({ user, token, updateMutation }: OnboardingScre
                 icon={UserIcon}
               />
               <CardWithLabel
-                label={selectedRole === "lawyer" ? "lawyer-basic-info" : "user-basic-info"}
+                label={
+                  selectedRole === "lawyer"
+                    ? "lawyer-basic-info"
+                    : "user-basic-info"
+                }
                 className="rounded-xl border-2 border-gray-900 border-solid"
               >
                 {selectedRole === "lawyer" ? (

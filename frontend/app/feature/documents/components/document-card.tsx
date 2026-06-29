@@ -9,7 +9,6 @@ import type { components } from "~/lib/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 
-
 interface DocumentCardProps {
   document: Document;
   /** Controls the visual style of the card */
@@ -54,7 +53,7 @@ export function DocumentCard({
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Sharing document:', document.title);
+    console.log("Sharing document:", document.title);
   };
 
   const defaultActions = (
@@ -96,14 +95,8 @@ export function DocumentCard({
           </span>
         </div>
 
-        <Link
-          to={`/documents/${document.id}`}
-        >
-          <MahButton
-            variant="primary"
-          >
-            View full document
-          </MahButton>
+        <Link to={`/documents/${document.id}`}>
+          <MahButton variant="primary">View full document</MahButton>
         </Link>
       </div>
     </div>
@@ -111,25 +104,21 @@ export function DocumentCard({
 
   const minimalActions = (
     <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
-      <MahButton
-        onClick={handleView}
-        variant="secondary"
-      >
+      <MahButton onClick={handleView} variant="secondary">
         <Eye className="h-3.5 w-3.5 mr-1.5" />
         View
       </MahButton>
       <div className="flex items-center space-x-2">
         <BookmarkButton
           onClick={handleBookmark}
-          isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+          isBookmarked={
+            document.bookmarkCount !== undefined && document.bookmarkCount > 0
+          }
           bookmarkCount={document.bookmarkCount}
           size="sm"
         />
         <div className="h-4 w-px bg-gray-300 mx-1"></div>
-        <MahButton
-          onClick={handleDownload}
-          variant="secondary"
-        >
+        <MahButton onClick={handleDownload} variant="secondary">
           <Download className="h-4 w-4" />
           {document.downloadCount !== undefined && (
             <span className="text-xs ml-1 text-gray-500">
@@ -181,7 +170,10 @@ export function DocumentCard({
             </MahButton>
             <BookmarkButton
               onClick={handleBookmark}
-              isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+              isBookmarked={
+                document.bookmarkCount !== undefined &&
+                document.bookmarkCount > 0
+              }
               bookmarkCount={document.bookmarkCount}
               size="sm"
               className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000] flex-[1] h-full"
@@ -227,7 +219,10 @@ export function DocumentCard({
             </MahButton>
             <BookmarkButton
               onClick={handleBookmark}
-              isBookmarked={document.bookmarkCount !== undefined && document.bookmarkCount > 0}
+              isBookmarked={
+                document.bookmarkCount !== undefined &&
+                document.bookmarkCount > 0
+              }
               bookmarkCount={document.bookmarkCount}
               size="sm"
               className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000] flex-[1] h-full"
@@ -267,7 +262,10 @@ export function DocumentCard({
       </MahCard>
     ) : (
       // Default list item (enhanced)
-      <MahCard variant="outlined" className={`group transition-all duration-200 hover:-translate-y-1 ${className}`}>
+      <MahCard
+        variant="outlined"
+        className={`group transition-all duration-200 hover:-translate-y-1 ${className}`}
+      >
         <div className="flex items-start">
           <div className="mr-5">
             <IconContainer

@@ -1,15 +1,6 @@
-import {
-  User,
-  Settings,
-  LogOut,
-  MoreVertical,
-} from "lucide-react"
+import { User, Settings, LogOut, MoreVertical } from "lucide-react";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "~/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,37 +9,37 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu"
+} from "~/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "~/components/ui/sidebar"
-import { useUser } from '~/context/user-provider';
-import { useLogout } from '~/feature/auth/hooks/use-auth';
+} from "~/components/ui/sidebar";
+import { useUser } from "~/context/user-provider";
+import { useLogout } from "~/feature/auth/hooks/use-auth";
 import { NavLink } from "react-router";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { user } = useUser();
   const logoutMutation = useLogout();
-  
+
   const userItems = [
     {
-      id: 'user-account',
+      id: "user-account",
       title: "Account",
       icon: User,
       url: "/users/profile",
     },
     {
-      id: 'user-settings',
+      id: "user-settings",
       title: "Settings",
       icon: Settings,
       url: "/users/settings",
     },
     {
-      id: 'user-logout',
+      id: "user-logout",
       title: "Sign out",
       icon: LogOut,
       action: "logout",
@@ -57,9 +48,14 @@ export function NavUser() {
 
   const getInitials = (name?: string, email?: string) => {
     if (name) {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      return name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
     }
-    return (email?.charAt(0).toUpperCase() || "U");
+    return email?.charAt(0).toUpperCase() || "U";
   };
 
   return (
@@ -82,7 +78,9 @@ export function NavUser() {
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user?.name || user?.email || 'User'}</span>
+                <span className="truncate font-medium">
+                  {user?.name || user?.email || "User"}
+                </span>
                 <span className="text-muted-foreground truncate text-xs">
                   {user?.email}
                 </span>
@@ -105,7 +103,9 @@ export function NavUser() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user?.name || user?.email || 'User'}</span>
+                  <span className="truncate font-medium">
+                    {user?.name || user?.email || "User"}
+                  </span>
                   <span className="text-muted-foreground truncate text-xs">
                     {user?.email}
                   </span>
@@ -146,5 +146,5 @@ export function NavUser() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

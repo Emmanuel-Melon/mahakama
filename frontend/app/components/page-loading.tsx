@@ -42,7 +42,11 @@ export function PageLoading({
           {displayMode === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: skeletonCount }).map((_, index) => (
-                <div key={index} className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse" style={{ borderRadius: "8px 16px 8px 16px" }}>
+                <div
+                  key={index}
+                  className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse"
+                  style={{ borderRadius: "8px 16px 8px 16px" }}
+                >
                   <div className="space-y-3">
                     <div className="flex items-start gap-4">
                       <div className="w-12 h-12 bg-gray-200 rounded-full border-2 border-gray-300"></div>
@@ -66,7 +70,11 @@ export function PageLoading({
           ) : (
             <div className="space-y-4">
               {Array.from({ length: skeletonCount }).map((_, index) => (
-                <div key={index} className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse" style={{ borderRadius: "8px 16px 8px 16px" }}>
+                <div
+                  key={index}
+                  className="bg-white border-2 border-gray-900 rounded-lg p-6 animate-pulse"
+                  style={{ borderRadius: "8px 16px 8px 16px" }}
+                >
                   <div className="flex items-start gap-6">
                     <div className="w-16 h-16 bg-gray-200 rounded-full border-2 border-gray-300 flex-shrink-0"></div>
                     <div className="flex-1 space-y-3">

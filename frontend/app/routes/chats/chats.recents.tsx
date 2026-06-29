@@ -35,18 +35,11 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function RecentChats({ loaderData }: Route.ComponentProps) {
   const { chats, error } = loaderData;
-  return (
-    <RecentChatsScreen chats={chats} error={error} />
-  );
+  return <RecentChatsScreen chats={chats} error={error} />;
 }
 
 export function ErrorBoundary() {
   const error = useAppError();
 
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

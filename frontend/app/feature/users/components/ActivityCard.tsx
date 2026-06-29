@@ -8,7 +8,10 @@ interface ActivityCardProps {
   profileCompletion: number;
 }
 
-export const ActivityCard = ({ user, profileCompletion }: ActivityCardProps) => {
+export const ActivityCard = ({
+  user,
+  profileCompletion,
+}: ActivityCardProps) => {
   return (
     <BorderedBox
       className="p-6"
@@ -23,18 +26,24 @@ export const ActivityCard = ({ user, profileCompletion }: ActivityCardProps) => 
       <div className="relative z-10 space-y-4">
         <div>
           <p className="text-sm font-medium text-gray-500">Last Updated</p>
-          <p className="text-lg font-semibold text-gray-900">{formatDate(user?.updatedAt || "")}</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {formatDate(user?.updatedAt || "")}
+          </p>
         </div>
 
         <div>
-          <p className="mb-2 text-sm font-medium text-gray-500">Profile Completion</p>
+          <p className="mb-2 text-sm font-medium text-gray-500">
+            Profile Completion
+          </p>
           <div className="h-3 w-full rounded-full bg-gray-200 border-2 border-gray-900">
             <div
               className="h-full rounded-full bg-yellow-400"
               style={{ width: `${profileCompletion}%` }}
             />
           </div>
-          <p className="mt-2 text-sm font-semibold text-gray-700">{profileCompletion}% Complete</p>
+          <p className="mt-2 text-sm font-semibold text-gray-700">
+            {profileCompletion}% Complete
+          </p>
         </div>
       </div>
     </BorderedBox>

@@ -1,9 +1,13 @@
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "~/components/ui/sidebar"
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "~/components/ui/sidebar";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SiteHeader } from "~/components/site-header";
-import { Toaster } from 'sonner';
-import { CountryProvider } from '~/context/country-context';
-import { NavigationLoader } from '~/components/navigation-loader';
+import { Toaster } from "sonner";
+import { CountryProvider } from "~/context/country-context";
+import { NavigationLoader } from "~/components/navigation-loader";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -18,13 +22,12 @@ export const AppShell = ({ children, pageTitle }: AppShellProps) => {
         <NavigationLoader />
         <SidebarProvider>
           <AppSidebar />
-          <SidebarInset >
+          <SidebarInset>
             <SiteHeader title={pageTitle} />
             {children}
           </SidebarInset>
         </SidebarProvider>
       </main>
     </CountryProvider>
-
-  )
-}
+  );
+};

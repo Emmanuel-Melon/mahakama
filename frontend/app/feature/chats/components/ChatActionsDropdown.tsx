@@ -8,20 +8,28 @@ interface ChatActionsDropdownProps {
   onRename: () => void;
 }
 
-export function ChatActionsDropdown({ chatId, onDelete, onFavorite, onRename }: ChatActionsDropdownProps) {
+export function ChatActionsDropdown({
+  chatId,
+  onDelete,
+  onFavorite,
+  onRename,
+}: ChatActionsDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -50,7 +58,7 @@ export function ChatActionsDropdown({ chatId, onDelete, onFavorite, onRename }: 
               <Edit3 className="w-4 h-4" />
               <span>Rename Chat</span>
             </button>
-            
+
             <button
               onClick={() => handleAction(onFavorite)}
               className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 transition-colors"
@@ -58,9 +66,9 @@ export function ChatActionsDropdown({ chatId, onDelete, onFavorite, onRename }: 
               <Star className="w-4 h-4" />
               <span>Add to Favorites</span>
             </button>
-            
+
             <div className="border-t border-gray-200 my-1"></div>
-            
+
             <button
               onClick={() => handleAction(onDelete)}
               className="w-full px-3 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-2 transition-colors"

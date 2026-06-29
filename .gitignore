@@ -1,17 +1,15 @@
-node_modules/
-dist
-_site/
+.DS_Store
 .env
 .env*
-.env.example
-.DS_Store
-.DS_Store
-.env
-/node_modules/
+node_modules/
+dist/
+_site/
 
-# React Router
+# Frontend
 /.react-router/
 /build/
+.netlify/
 
-# Local Netlify folder
-.netlify
+# IDE / OS
+.vscode/
+.idea/

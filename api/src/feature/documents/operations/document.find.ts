@@ -71,21 +71,27 @@ export async function findBookmarkById(
   return toResult(bookmark);
 }
 
-export async function findDocuments(query: DocumentsFilters): Promise<DbManyResult<Document>> {
+export async function findDocuments(
+  query: DocumentsFilters,
+): Promise<DbManyResult<Document>> {
   const filters = [];
 
   if (query.type) {
     filters.push(sql`LOWER(${documentsTable.type}) = LOWER(${query.type})`);
   }
 
-  const result = await paginate<"documentsTable", Document>("documentsTable", documentsTable, {
-    ...query,
-    filters,
-    search: {
-      q: query.q,
-      columns: [documentsTable.title, documentsTable.description],
+  const result = await paginate<"documentsTable", Document>(
+    "documentsTable",
+    documentsTable,
+    {
+      ...query,
+      filters,
+      search: {
+        q: query.q,
+        columns: [documentsTable.title, documentsTable.description],
+      },
     },
-  });
+  );
 
   return toManyResult(result);
 }

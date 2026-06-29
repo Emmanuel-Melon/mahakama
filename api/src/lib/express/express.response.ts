@@ -67,8 +67,7 @@ export const initSSE = (res: Response, options?: SSEOptions) => {
 
   const sendEvent = <T, Type extends string = string>(
     event:
-      | SSEEvent<T, Type>
-      | { type: Type; data: T; id?: string; retry?: number },
+      SSEEvent<T, Type> | { type: Type; data: T; id?: string; retry?: number },
   ) => {
     const { type, data = {} as T, id, retry } = event;
 

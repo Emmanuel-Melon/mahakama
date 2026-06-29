@@ -79,7 +79,9 @@ export function HeroSection({
   icon: Icon = Scale,
 }: HeroSectionProps) {
   return (
-    <div className={cn("bg-background relative w-full overflow-hidden", className)}>
+    <div
+      className={cn("bg-background relative w-full overflow-hidden", className)}
+    >
       <div className="py-8 sm:py-24">
         <div className="text-center space-y-8">
           <div className="space-y-4">

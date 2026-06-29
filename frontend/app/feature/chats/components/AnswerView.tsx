@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { ChatArea } from "~/feature/chats/components/chat-area";
-import { type ChatType  } from "~/lib/api/chat.api";
+import { type ChatType } from "~/lib/api/chat.api";
 
 interface ChatViewProps {
   chatData: ChatType;
@@ -52,13 +52,13 @@ export function ChatView({
 
       <div className="flex-1 overflow-hidden">
         <div className="max-w-6xl mx-auto h-full">
-            <ChatArea
-              messages={[]}
-              relevantLaws={relevantLaws}
-              relatedDocuments={relatedDocuments}
-              isLoading={isLoading}
-              className="flex-1 overflow-y-auto"
-            />
+          <ChatArea
+            messages={[]}
+            relevantLaws={relevantLaws}
+            relatedDocuments={relatedDocuments}
+            isLoading={isLoading}
+            className="flex-1 overflow-y-auto"
+          />
         </div>
       </div>
 

@@ -6,7 +6,7 @@ export async function authMiddleware({ request, context }: any) {
   const token = getAuthToken(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
-  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+  if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
     return;
   }
 
@@ -32,6 +32,6 @@ export async function authMiddleware({ request, context }: any) {
     context.set(userContext, user);
     context.set(authContext, { token });
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error("Auth middleware error:", error);
   }
 }

@@ -65,7 +65,7 @@ export function ChatInput({
             <Plus className="h-4 w-4" />
           </Button>
         </ButtonGroup>
-        
+
         <ButtonGroup className="flex-1">
           <InputGroup className="w-full">
             <InputGroupInput
@@ -73,10 +73,11 @@ export function ChatInput({
               value={voiceEnabled ? "" : value}
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={voiceEnabled ? "Record and send audio..." : placeholder}
+              placeholder={
+                voiceEnabled ? "Record and send audio..." : placeholder
+              }
               disabled={disabled || isLoading || voiceEnabled}
               className="min-h-[44px] resize-none"
-            
             />
             <InputGroupAddon align="inline-end">
               <Tooltip>
@@ -87,7 +88,7 @@ export function ChatInput({
                     data-active={voiceEnabled}
                     className={cn(
                       "data-[active=true]:bg-orange-100 data-[active=true]:text-orange-700",
-                      "dark:data-[active=true]:bg-orange-800 dark:data-[active=true]:text-orange-100"
+                      "dark:data-[active=true]:bg-orange-800 dark:data-[active=true]:text-orange-100",
                     )}
                     aria-pressed={voiceEnabled}
                     disabled={disabled || isLoading}
@@ -100,7 +101,7 @@ export function ChatInput({
             </InputGroupAddon>
           </InputGroup>
         </ButtonGroup>
-        
+
         {!voiceEnabled && (
           <ButtonGroup className="shrink-0">
             <Button

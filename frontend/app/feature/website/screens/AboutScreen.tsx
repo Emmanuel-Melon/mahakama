@@ -108,4 +108,4 @@ export const AboutScreen = () => {
       </div>
     </div>
   );
-}
+};

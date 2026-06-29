@@ -1,4 +1,10 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import type { Lawyer } from "~/lib/api/lawyers.api";
 
 interface FilterSelectorProps {
@@ -6,7 +12,10 @@ interface FilterSelectorProps {
   onFilterChange: (filter: string) => void;
 }
 
-export function FilterSelector({ currentFilter, onFilterChange }: FilterSelectorProps) {
+export function FilterSelector({
+  currentFilter,
+  onFilterChange,
+}: FilterSelectorProps) {
   return (
     <div className="flex-shrink-0">
       <div className="text-sm text-gray-600 mb-2">Filter by:</div>

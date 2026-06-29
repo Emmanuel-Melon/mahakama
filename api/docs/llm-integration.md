@@ -3,6 +3,7 @@
 This document provides detailed information about integrating and working with Large Language Models (LLMs) in the Mahakama server.
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Supported LLM Providers](#supported-llm-providers)
   - [Google Gemini](#google-gemini)
@@ -22,6 +23,7 @@ Mahakama uses LLMs to provide natural language understanding and generation capa
 ### Google Gemini
 
 #### Setup
+
 1. Get an API key from [Google AI Studio](https://makersuite.google.com/)
 2. Add the API key to your environment:
    ```bash
@@ -29,10 +31,11 @@ Mahakama uses LLMs to provide natural language understanding and generation capa
    ```
 
 #### Configuration
+
 ```typescript
 // Example configuration in config.ts
 const geminIBaseConfig = {
-  model: 'gemini-pro',
+  model: "gemini-pro",
   temperature: 0.7,
   maxOutputTokens: 2048,
 };
@@ -41,6 +44,7 @@ const geminIBaseConfig = {
 ### Ollama
 
 #### Setup
+
 1. Install Ollama locally: https://ollama.ai/
 2. Pull the desired model:
    ```bash
@@ -52,10 +56,11 @@ const geminIBaseConfig = {
    ```
 
 #### Configuration
+
 ```typescript
 const ollamaConfig = {
-  baseUrl: 'http://localhost:11434',
-  model: 'mistral',
+  baseUrl: "http://localhost:11434",
+  model: "mistral",
   temperature: 0.8,
 };
 ```
@@ -65,19 +70,19 @@ const ollamaConfig = {
 ### Basic Usage
 
 ```typescript
-import { llmService } from '../lib/llm';
+import { llmService } from "../lib/llm";
 
 async function getLegalAdvice(question: string) {
   const prompt = `You are a legal assistant. Answer the following question in plain language:
   
   ${question}`;
-  
+
   const response = await llmService.generateText({
     prompt,
     maxTokens: 1000,
     temperature: 0.7,
   });
-  
+
   return response.text;
 }
 ```
@@ -86,7 +91,7 @@ async function getLegalAdvice(question: string) {
 
 ```typescript
 const stream = await llmService.streamText({
-  prompt: 'Explain the legal concept of...',
+  prompt: "Explain the legal concept of...",
   onChunk: (chunk) => {
     // Handle streaming chunks
     console.log(chunk);
@@ -97,6 +102,7 @@ const stream = await llmService.streamText({
 ## Prompt Engineering
 
 ### Best Practices
+
 1. **Be Specific**: Clearly define the task and expected output format
 2. **Provide Context**: Include relevant legal context and constraints
 3. **Use Examples**: Include examples of desired outputs
@@ -131,11 +137,12 @@ QUESTION: [USER_QUESTION]
 ## Testing & Evaluation
 
 ### Unit Tests
+
 ```typescript
-describe('LLM Service', () => {
-  it('should generate legal advice', async () => {
+describe("LLM Service", () => {
+  it("should generate legal advice", async () => {
     const response = await llmService.generateText({
-      prompt: 'What are my rights as a tenant?',
+      prompt: "What are my rights as a tenant?",
     });
     expect(response.text).toBeDefined();
   });
@@ -143,6 +150,7 @@ describe('LLM Service', () => {
 ```
 
 ### Evaluation Metrics
+
 - Response relevance
 - Legal accuracy
 - Response time
@@ -151,6 +159,7 @@ describe('LLM Service', () => {
 ## Best Practices
 
 1. **Error Handling**
+
    ```typescript
    try {
      const response = await llmService.generateText(/* ... */);

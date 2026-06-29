@@ -1,11 +1,13 @@
 import { FetchApiClient } from "./fetch";
 import type { components } from "./generated/api.types";
-import { LAWYERS_API_ROUTES } from '~/feature/lawyers/LawyersConfig';
+import { LAWYERS_API_ROUTES } from "~/feature/lawyers/LawyersConfig";
 
 export type Lawyer = components["schemas"]["Lawyer"];
 export type LawyerResource = components["schemas"]["LawyerResource"];
-export type LawyerSingleResponse = components["schemas"]["LawyerSingleResponse"];
-export type LawyersCollectionResponse = components["schemas"]["LawyersCollectionResponse"];
+export type LawyerSingleResponse =
+  components["schemas"]["LawyerSingleResponse"];
+export type LawyersCollectionResponse =
+  components["schemas"]["LawyersCollectionResponse"];
 export type CreateLawyerRequest = components["schemas"]["CreateLawyer"];
 
 export class LawyersApiClient {
@@ -15,31 +17,29 @@ export class LawyersApiClient {
   }
 
   // Get all lawyers with optional filtering
-  public async getLawyers(
-    filters?: {
-      specialization?: string;
-      location?: string;
-      available?: boolean;
-      q?: string;
-    }
-  ): Promise<Lawyer[]> {
+  public async getLawyers(filters?: {
+    specialization?: string;
+    location?: string;
+    available?: boolean;
+    q?: string;
+  }): Promise<Lawyer[]> {
     try {
       let url = LAWYERS_API_ROUTES.ROOT;
       const searchParams = new URLSearchParams();
 
       if (filters) {
         if (filters.specialization) {
-          searchParams.append('specialization', filters.specialization);
+          searchParams.append("specialization", filters.specialization);
         }
         if (filters.location) {
-          searchParams.append('location', filters.location);
+          searchParams.append("location", filters.location);
         }
         if (filters.available !== undefined) {
-          searchParams.append('available', filters.available.toString());
+          searchParams.append("available", filters.available.toString());
         }
 
         if (filters.q) {
-          searchParams.append('q', filters.q);
+          searchParams.append("q", filters.q);
         }
       }
 
@@ -61,11 +61,11 @@ export class LawyersApiClient {
     }
   }
 
-  public async getLawyerById(
-    lawyerId: string,
-  ): Promise<Lawyer> {
+  public async getLawyerById(lawyerId: string): Promise<Lawyer> {
     try {
-      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/${lawyerId}`);
+      const response = await this.api.request<LawyerSingleResponse>(
+        LAWYERS_API_ROUTES.ROOT + `/${lawyerId}`,
+      );
 
       if (!response.data.attributes) {
         console.error("Invalid lawyer data:", response);
@@ -79,14 +79,15 @@ export class LawyersApiClient {
     }
   }
 
-  public async createLawyer(
-    lawyerData: CreateLawyerRequest,
-  ): Promise<Lawyer> {
+  public async createLawyer(lawyerData: CreateLawyerRequest): Promise<Lawyer> {
     try {
-      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT, {
-        method: 'POST',
-        body: JSON.stringify(lawyerData),
-      });
+      const response = await this.api.request<LawyerSingleResponse>(
+        LAWYERS_API_ROUTES.ROOT,
+        {
+          method: "POST",
+          body: JSON.stringify(lawyerData),
+        },
+      );
 
       if (!response.data.attributes) {
         console.error("Invalid lawyer data:", response);
@@ -122,11 +123,11 @@ export class LawyersApiClient {
   //   }
   // }
 
-  public async getLawyerByEmail(
-    email: string,
-  ): Promise<Lawyer> {
+  public async getLawyerByEmail(email: string): Promise<Lawyer> {
     try {
-      const response = await this.api.request<LawyerSingleResponse>(LAWYERS_API_ROUTES.ROOT + `/email?email=${encodeURIComponent(email)}`);
+      const response = await this.api.request<LawyerSingleResponse>(
+        LAWYERS_API_ROUTES.ROOT + `/email?email=${encodeURIComponent(email)}`,
+      );
 
       if (!response.data.attributes) {
         console.error("Invalid lawyer data:", response);

@@ -10,10 +10,9 @@ interface ErrorBoundaryProps {
   data?: string;
 }
 
-
 export const MahErrorBoundary = ({ status, data }: ErrorBoundaryProps) => {
   const ErrorComponent = getErrorComponent(status);
-  
+
   const config = (status && ERROR_MAP[status]) || DEFAULT_ERROR;
 
   return <ErrorComponent {...config} data={data} />;

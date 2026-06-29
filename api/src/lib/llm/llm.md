@@ -18,6 +18,7 @@ The LLM module follows a provider-based architecture with the following key comp
 ### 1. Gemini (Google)
 
 **Configuration Options:**
+
 - `apiKey`: Google API key for authentication
 - `model`: Model to use (default: "gemini-2.5-flash")
 - `authType`: Authentication type ("api_key" or "vertexai")
@@ -25,6 +26,7 @@ The LLM module follows a provider-based architecture with the following key comp
 - `location`: Required for Vertex AI authentication
 
 **Available Models:**
+
 - gemini-2.5-pro
 - gemini-2.5-flash
 - gemini-1.5-pro
@@ -33,10 +35,12 @@ The LLM module follows a provider-based architecture with the following key comp
 ### 2. Ollama
 
 **Configuration Options:**
+
 - `host`: URL of the Ollama server
 - `model`: Model to use (default: "gemma3:1b")
 
 **Available Models:**
+
 - gemma3:1b (default)
 
 ## Core Interfaces
@@ -100,8 +104,12 @@ const response = await llmProviderManager.generateTextContent(
 
 // With system prompt
 const provider = llmProviderManager.getProvider("ollama");
-provider.setSystemPrompt("You are a helpful assistant that speaks like Shakespeare.");
-const shakespeareResponse = await provider.generateTextContent("Tell me about the weather");
+provider.setSystemPrompt(
+  "You are a helpful assistant that speaks like Shakespeare.",
+);
+const shakespeareResponse = await provider.generateTextContent(
+  "Tell me about the weather",
+);
 ```
 
 ### Structured Output
@@ -124,7 +132,7 @@ const recipe = await llmProviderManager.generateTextContent(
   {
     outputType: "structured",
     responseJsonSchema: recipeSchema,
-  }
+  },
 );
 
 console.log(recipe.content.title); // Type-safe access to structured data

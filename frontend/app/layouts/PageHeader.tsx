@@ -41,8 +41,8 @@ export function PageHeader({
   return (
     <div className={`flex items-center justify-between ${className}`}>
       <div className="flex items-center space-x-2">
-        {showBackButton && (
-          backTo ? (
+        {showBackButton &&
+          (backTo ? (
             <NavLink
               to={backTo}
               viewTransition
@@ -59,8 +59,7 @@ export function PageHeader({
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-          )
-        )}
+          ))}
         <nav className="flex items-center text-sm">
           {pathSegments.map((segment, index) => (
             <div key={index} className="flex items-center">

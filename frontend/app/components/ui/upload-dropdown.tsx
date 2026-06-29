@@ -1,13 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, Image, File } from "lucide-react";
-import { Button } from "~/components/ui/button"
+import { Button } from "~/components/ui/button";
 
 interface UploadDropdownProps {
   onFileUpload: (files: File[]) => void;
   disabled?: boolean;
 }
 
-export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdownProps) {
+export function UploadDropdown({
+  onFileUpload,
+  disabled = false,
+}: UploadDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -15,14 +18,17 @@ export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdow
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -33,11 +39,11 @@ export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdow
       setIsOpen(false);
     }
     // Reset the input value to allow selecting the same file again
-    event.target.value = '';
+    event.target.value = "";
   };
 
-  const handleUploadType = (type: 'file' | 'image') => {
-    if (type === 'file') {
+  const handleUploadType = (type: "file" | "image") => {
+    if (type === "file") {
       fileInputRef.current?.click();
     } else {
       imageInputRef.current?.click();
@@ -49,7 +55,8 @@ export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdow
       <Button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        variant="outline" size="icon"
+        variant="outline"
+        size="icon"
         disabled={disabled}
         aria-label="Upload content"
       >
@@ -61,17 +68,19 @@ export function UploadDropdown({ onFileUpload, disabled = false }: UploadDropdow
           <div className="py-1">
             <Button
               type="button"
-              onClick={() => handleUploadType('file')}
-              variant="ghost" size="sm"
+              onClick={() => handleUploadType("file")}
+              variant="ghost"
+              size="sm"
             >
               <File className="w-4 h-4" />
               <span>Upload File</span>
             </Button>
-            
+
             <Button
               type="button"
-              onClick={() => handleUploadType('image')}
-              variant="ghost" size="sm"
+              onClick={() => handleUploadType("image")}
+              variant="ghost"
+              size="sm"
             >
               <Image className="w-4 h-4" />
               <span>Upload Image</span>

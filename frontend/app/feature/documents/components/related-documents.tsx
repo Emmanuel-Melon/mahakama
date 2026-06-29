@@ -27,7 +27,7 @@ export function RelatedDocuments({ documents }: RelatedDocumentsProps) {
           Similar documents you might find helpful.
         </p>
       </div>
-      
+
       <div className="space-y-4">
         {documents.map((doc) => (
           <div
@@ -39,9 +39,15 @@ export function RelatedDocuments({ documents }: RelatedDocumentsProps) {
           >
             <FileText className="w-5 h-5 text-blue-600" />
             <div>
-              <p className="text-sm font-medium text-gray-500">Related Document</p>
-              <p className="text-base font-semibold text-gray-900">{doc.title}</p>
-              <p className="text-sm text-gray-500">{doc.type} • Updated {doc.lastUpdated}</p>
+              <p className="text-sm font-medium text-gray-500">
+                Related Document
+              </p>
+              <p className="text-base font-semibold text-gray-900">
+                {doc.title}
+              </p>
+              <p className="text-sm text-gray-500">
+                {doc.type} • Updated {doc.lastUpdated}
+              </p>
             </div>
           </div>
         ))}

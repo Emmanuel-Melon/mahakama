@@ -1,16 +1,16 @@
 export const LAWYERS_ROUTES = {
-    INDEX: {
-        URL_SEGMENT: "lawyers",
-        PATH: "routes/lawyers/index.tsx",
-        NAME: "lawyersIndex",
-        LABEL: "Lawyers",
-    },
-    DETAIL: {
-        URL_SEGMENT: ":lawyerId",
-        PATH: "routes/lawyers/$lawyerId.tsx",
-        NAME: "lawyerDetail",
-        LABEL: "Lawyer Details",
-    },
+  INDEX: {
+    URL_SEGMENT: "lawyers",
+    PATH: "routes/lawyers/index.tsx",
+    NAME: "lawyersIndex",
+    LABEL: "Lawyers",
+  },
+  DETAIL: {
+    URL_SEGMENT: ":lawyerId",
+    PATH: "routes/lawyers/$lawyerId.tsx",
+    NAME: "lawyerDetail",
+    LABEL: "Lawyer Details",
+  },
 } as const;
 
 const API_V1 = "/v1";
