@@ -1,0 +1,84 @@
+version: '3'
+
+services:
+  # Local PostgreSQL
+  postgres:
+    image: postgres:15
+    container_name: mahakama-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Ollama Service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: mahakama-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+
+  mahakama-api:
+    container_name: mahakama-api
+    build:
+      context: .
+      dockerfile: ./dockerfile
+    image: mahakama-api
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      # Database
+      - DATABASE_URL=${DATABASE_URL}
+      - NETLIFY_DATABASE_URL=${NETLIFY_DATABASE_URL}
+      - NETLIFY_DATABASE_URL_UNPOOLED=${NETLIFY_DATABASE_URL_UNPOOLED}
+      - OLLAMA_BASE_URL=http://ollama:11434
+      
+      # Authentication
+      - JWT_SECRET=${JWT_SECRET}
+      
+      # AI Services
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      
+      # Vector Database (Chroma)
+      - CHROMA_API_KEY=${CHROMA_API_KEY}
+      - CHROMA_TENANT=${CHROMA_TENANT}
+      - CHROMA_DATABASE=${CHROMA_DATABASE}
+      
+      # Redis (Caching)
+      - REDIS_URL=${REDIS_URL}
+      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+      - UPSTASH_REDIS_PASSWORD=${UPSTASH_REDIS_PASSWORD}
+      - REDIS_PORT=${REDIS_PORT}
+      
+      # Database Configuration
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+    
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  ollama_data:

@@ -1,0 +1,56 @@
+export const servicesData = [
+  {
+    name: "Ministry of Justice - South Sudan",
+    category: "government" as const,
+    description:
+      "Government body responsible for legal affairs and justice administration.",
+    location: "Juba, South Sudan",
+    contact: "+211 912 345 678",
+    website: "https://moj.gov.ss",
+    services: ["Legal documentation", "Court filings", "Legal advice"],
+  },
+  {
+    name: "Legal Aid South Sudan",
+    category: "legal-aid" as const,
+    description: "Provides free legal assistance to vulnerable populations.",
+    location: "Juba, South Sudan",
+    contact: "+211 987 654 321",
+    website: null,
+    services: [
+      "Free legal representation",
+      "Legal counseling",
+      "Awareness programs",
+    ],
+  },
+  {
+    name: "South Sudan Mediation Centre",
+    category: "dispute-resolution" as const,
+    description: "Alternative dispute resolution services for civil matters.",
+    location: "Juba, South Sudan",
+    contact: "+211 912 345 679",
+    website: null,
+    services: ["Mediation", "Arbitration", "Conflict resolution training"],
+  },
+  {
+    name: "South Sudan Human Rights Commission",
+    category: "government" as const,
+    description: "Handles human rights violations and complaints.",
+    location: "Juba, South Sudan",
+    contact: "+211 915 555 555",
+    website: null,
+    services: ["Human rights complaints", "Legal advice", "Advocacy"],
+  },
+  {
+    name: "Women & Child Legal Aid",
+    category: "specialized" as const,
+    description: "Specialized legal services for women and children.",
+    location: "Juba, South Sudan",
+    contact: "+211 912 888 999",
+    website: null,
+    services: [
+      "Domestic violence cases",
+      "Child custody",
+      "Gender-based violence",
+    ],
+  },
+];
