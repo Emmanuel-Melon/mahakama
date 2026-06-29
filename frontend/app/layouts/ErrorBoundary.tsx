@@ -30,10 +30,10 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
             <div className="text-red-600 text-4xl">⚠️</div>
           </div>
         </div>
-        
+
         <h1 className="text-4xl font-bold text-gray-900 mb-4">{message}</h1>
         <p className="text-lg text-gray-600 mb-8">{details}</p>
-        
+
         {stack && (
           <details className="mb-8 text-left">
             <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 mb-2">
@@ -44,19 +44,19 @@ export function ErrorBoundary({ error }: ErrorBoundaryProps) {
             </pre>
           </details>
         )}
-        
+
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            onClick={() => window.location.reload()} 
+          <Button
+            onClick={() => window.location.reload()}
             className="w-full sm:w-auto"
           >
             <RefreshCw className="mr-2 h-4 w-4" />
             Try Again
           </Button>
-          
-          <Button 
-            variant="outline" 
-            onClick={() => window.location.href = '/'}
+
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/")}
             className="w-full sm:w-auto"
           >
             <Home className="mr-2 h-4 w-4" />

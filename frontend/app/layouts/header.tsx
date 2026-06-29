@@ -23,14 +23,14 @@ const links = [
     id: 2,
     title: "Justice Hub",
     icon: Scale,
-    url: "/legal-hub"
+    url: "/legal-hub",
   },
   {
     id: 3,
     title: "Legal Database",
     icon: Library,
     url: "/documents",
-  }
+  },
 ];
 
 export function Header() {
@@ -83,14 +83,15 @@ export function Header() {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md ${isScrolled ? 'shadow-[0_4px_0_0_rgba(0,0,0,0.1)]' : ''
-        } transition-shadow duration-300`}
+      className={`sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md ${
+        isScrolled ? "shadow-[0_4px_0_0_rgba(0,0,0,0.1)]" : ""
+      } transition-shadow duration-300`}
       style={{
         borderImageSource:
-          'url(' +
-          'data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h20L0 20z\' fill=\'%233b82f6\' fill-opacity=\'0.1\' fill-rule=\'evenodd\'/%3E%3C/svg%3E' +
-          ')',
-        borderImageSlice: '1',
+          "url(" +
+          "data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h20L0 20z' fill='%233b82f6' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E" +
+          ")",
+        borderImageSlice: "1",
       }}
     >
       <div className="w-full">
@@ -98,8 +99,12 @@ export function Header() {
           <div className="flex sm:h-20 items-center justify-between">
             {/* Logo */}
             <div className="flex items-center flex-shrink-0 gap-2">
-              <NavLink to="/" viewTransition className="flex items-center group">
-<Scale className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
+              <NavLink
+                to="/"
+                viewTransition
+                className="flex items-center group"
+              >
+                <Scale className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                 <span className="ml-2 sm:ml-3 text-lg sm:text-2xl font-black text-gray-900 font-serif">
                   Mahakama
                 </span>
@@ -114,9 +119,10 @@ export function Header() {
                       key={link.id}
                       to={link.url}
                       className={({ isActive }: { isActive: boolean }) =>
-                        `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors 4px 8px 4px 8px 2px 2px 0 0 #000 ${isActive
-                          ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                          : "text-gray-700 hover:bg-yellow-100 hover:border-2 hover:border-gray-900"
+                        `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors 4px 8px 4px 8px 2px 2px 0 0 #000 ${
+                          isActive
+                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                            : "text-gray-700 hover:bg-yellow-100 hover:border-2 hover:border-gray-900"
                         }`
                       }
                       style={({ isActive }) => ({
@@ -137,9 +143,10 @@ export function Header() {
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
-                  `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${isActive
-                    ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                    : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                  `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${
+                    isActive
+                      ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                      : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
                   }`
                 }
                 style={({ isActive }) => ({
@@ -158,7 +165,11 @@ export function Header() {
               aria-label="Toggle menu"
               aria-expanded={isOpen}
             >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -187,9 +198,10 @@ export function Header() {
                         key={link.id}
                         to={link.url}
                         className={({ isActive }: { isActive: boolean }) =>
-                          `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${isActive
-                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                            : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                          `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
+                            isActive
+                              ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                              : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
                           }`
                         }
                         style={({ isActive }) => ({
@@ -218,9 +230,10 @@ export function Header() {
                   <NavLink
                     to="/login"
                     className={({ isActive }) =>
-                      `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${isActive
-                        ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                        : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                      `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
+                        isActive
+                          ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                          : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
                       }`
                     }
                     style={({ isActive }) => ({

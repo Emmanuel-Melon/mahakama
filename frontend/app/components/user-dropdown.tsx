@@ -39,11 +39,8 @@ const navLinks = [
 
 export function UserDropdown({ user, onLogout }: UserDropdownProps) {
   return (
-    <DropdownMenu >
-      <DropdownMenuTrigger
-        className="rounded-full mr-2"
-        aria-label="User menu"
-      >
+    <DropdownMenu>
+      <DropdownMenuTrigger className="rounded-full mr-2" aria-label="User menu">
         <IconContainer
           size="sm"
           color="handdrawn"
@@ -52,8 +49,8 @@ export function UserDropdown({ user, onLogout }: UserDropdownProps) {
           className="cursor-pointer"
         />
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
+
+      <DropdownMenuContent
         className="w-56 border-2 border-gray-900 shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg"
         align="end"
       >
@@ -61,7 +58,9 @@ export function UserDropdown({ user, onLogout }: UserDropdownProps) {
           <p className="text-sm font-bold text-gray-900 truncate">
             {user.name || user.email}
           </p>
-          <p className="text-xs text-gray-600 font-normal truncate">{user.email}</p>
+          <p className="text-xs text-gray-600 font-normal truncate">
+            {user.email}
+          </p>
         </DropdownMenuLabel>
         {navLinks.map((link) => {
           const Icon = link.icon;
@@ -78,7 +77,7 @@ export function UserDropdown({ user, onLogout }: UserDropdownProps) {
           );
         })}
         <DropdownMenuSeparator className="bg-gray-200" />
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={onLogout}
           className="text-red-600 hover:bg-yellow-50 cursor-pointer"
         >

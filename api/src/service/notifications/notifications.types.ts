@@ -60,12 +60,7 @@ export type NewNotificationPreferences = z.infer<
 >;
 
 export type NotificationDomain =
-  | "auth"
-  | "relationship"
-  | "occasion"
-  | "decision"
-  | "gifting"
-  | "system";
+  "auth" | "relationship" | "occasion" | "decision" | "gifting" | "system";
 
 /*
  * NOTIFICATION CONTENT TYPES

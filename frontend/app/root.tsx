@@ -11,12 +11,16 @@ import {
 import { AppShell } from "~/layouts/AppShell";
 import { WebsiteLayout } from "~/layouts/WebsiteLayout";
 import { AuthLayout } from "~/layouts/AuthLayout";
-import { QueryClientProviderWrapper } from '~/context/query-client-provider';
+import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
-import { getPageTitle, isAuthRoute, isAuthPageRoute } from "~/config/routes.config";
-import { UserProvider } from '~/context/user-provider';
+import {
+  getPageTitle,
+  isAuthRoute,
+  isAuthPageRoute,
+} from "~/config/routes.config";
+import { UserProvider } from "~/context/user-provider";
 import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
 
 export const links: Route.LinksFunction = () => [
@@ -48,9 +52,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
-        <QueryClientProviderWrapper>
-          {children}
-        </QueryClientProviderWrapper>
+        <QueryClientProviderWrapper>{children}</QueryClientProviderWrapper>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -68,11 +70,17 @@ export default function App() {
   return (
     <UserProvider user={user}>
       {isAuthRoutePage ? (
-        <AuthLayout><Outlet /></AuthLayout>
+        <AuthLayout>
+          <Outlet />
+        </AuthLayout>
       ) : isAppRoute ? (
-        <AppShell pageTitle={pageTitle}><Outlet /></AppShell>
+        <AppShell pageTitle={pageTitle}>
+          <Outlet />
+        </AppShell>
       ) : (
-        <WebsiteLayout><Outlet /></WebsiteLayout>
+        <WebsiteLayout>
+          <Outlet />
+        </WebsiteLayout>
       )}
     </UserProvider>
   );
@@ -86,7 +94,7 @@ async function authMiddleware({ request, context }) {
   const token = getAuthToken(request);
   const url = new URL(request.url);
   const pathname = url.pathname;
-  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+  if (pathname.startsWith("/login") || pathname.startsWith("/signup")) {
     return;
   }
 
@@ -112,11 +120,8 @@ async function authMiddleware({ request, context }) {
     context.set(userContext, user);
     context.set(authContext, { token });
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error("Auth middleware error:", error);
   }
 }
 
-export const middleware: Route.MiddlewareFunction[] = [
-  authMiddleware,
-];
-
+export const middleware: Route.MiddlewareFunction[] = [authMiddleware];

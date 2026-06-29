@@ -6,7 +6,9 @@ type NotificationsListProps = {
   notifications: Notification[];
 };
 
-export const NotificationsList: FC<NotificationsListProps> = ({ notifications }) => {
+export const NotificationsList: FC<NotificationsListProps> = ({
+  notifications,
+}) => {
   return (
     <div>
       {notifications.map((notification) => (
@@ -14,4 +16,4 @@ export const NotificationsList: FC<NotificationsListProps> = ({ notifications })
       ))}
     </div>
   );
-}
+};

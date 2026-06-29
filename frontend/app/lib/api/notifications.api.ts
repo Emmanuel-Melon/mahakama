@@ -2,10 +2,11 @@ import { FetchApiClient } from "~/lib/api/fetch";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type Notification = components["schemas"]["Notification"];
-export type NotificationResource = components["schemas"]["NotificationResource"];
+export type NotificationResource =
+  components["schemas"]["NotificationResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type NotificationssCollectionResponse = components["schemas"]["NotificationsCollectionResponse"];
-
+export type NotificationssCollectionResponse =
+  components["schemas"]["NotificationsCollectionResponse"];
 
 export class NotificationsApiClient {
   private api: FetchApiClient;
@@ -30,14 +31,15 @@ export class NotificationsApiClient {
         throw new Error("Invalid notifications data received from the server");
       }
 
-      const notifications = response.data.map((notification: NotificationResource) => notification.attributes);
+      const notifications = response.data.map(
+        (notification: NotificationResource) => notification.attributes,
+      );
       return notifications;
     } catch (error) {
       console.error("Failed to fetch notifications:", error);
       throw error;
     }
   }
-
 }
 
 export const notificationsApi = new NotificationsApiClient();

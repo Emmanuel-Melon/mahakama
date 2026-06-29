@@ -3,7 +3,12 @@ import { Button } from "~/components/ui/button";
 import { ErrorState } from "../async-state/ErrorState";
 import type { ErrorComponentProps } from "~/lib/errors/errors.types";
 
-export const OfflineError = ({ icon, title, color, data }: ErrorComponentProps) => {
+export const OfflineError = ({
+  icon,
+  title,
+  color,
+  data,
+}: ErrorComponentProps) => {
   return (
     <ErrorState
       icon={icon!}
@@ -11,8 +16,8 @@ export const OfflineError = ({ icon, title, color, data }: ErrorComponentProps) 
       iconColor={`text-${color}-500`}
       details={data}
       actions={
-        <Button 
-          onClick={() => window.location.reload()} 
+        <Button
+          onClick={() => window.location.reload()}
           className="bg-gray-700 hover:bg-gray-800"
         >
           <RefreshCw className="w-4 h-4 mr-2" /> Try Again

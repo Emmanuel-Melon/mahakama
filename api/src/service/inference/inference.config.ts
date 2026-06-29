@@ -16,7 +16,9 @@ export const SerializedPreference: JsonApiResourceConfig<InferencePreference> =
     attributes: (preference: InferencePreference) => preference,
   };
 
-export const SerializedStrategy: JsonApiResourceConfig<IInferenceStrategy & { id: string }> = {
+export const SerializedStrategy: JsonApiResourceConfig<
+  IInferenceStrategy & { id: string }
+> = {
   type: "strategy",
   attributes: (strategy) => ({
     key: strategy.key,

@@ -22,9 +22,7 @@ export interface ResourceIdentifierObject {
   id: string;
 }
 export type ResourceLinkage =
-  | ResourceIdentifierObject
-  | ResourceIdentifierObject[]
-  | null;
+  ResourceIdentifierObject | ResourceIdentifierObject[] | null;
 export interface ResourceObject<T> {
   type: string;
   id: string;

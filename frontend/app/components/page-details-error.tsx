@@ -19,8 +19,8 @@ export function PageDetailsError({
   const errorMessage = error instanceof Error ? error.message : String(error);
 
   return (
-      <div className={`space-y-6 ${className}`}>
-        <CardWithLabel
+    <div className={`space-y-6 ${className}`}>
+      <CardWithLabel
         label="Error"
         className="bg-white"
         labelClassName="text-red-600"
@@ -35,7 +35,9 @@ export function PageDetailsError({
               <p>{description}</p>
               {errorMessage && (
                 <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-red-800 text-sm font-medium">{errorMessage}</p>
+                  <p className="text-red-800 text-sm font-medium">
+                    {errorMessage}
+                  </p>
                 </div>
               )}
             </div>
@@ -51,7 +53,7 @@ export function PageDetailsError({
           </div>
         </div>
       </CardWithLabel>
-      </div>
+    </div>
   );
 }
 

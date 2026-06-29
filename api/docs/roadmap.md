@@ -12,6 +12,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
 **Mission:** Bridge the gap between legal knowledge and taking action
 
 ## Table of Contents
+
 - [🎯 Current Focus (Q4 2025 - Q1 2026)](#-current-focus-q4-2025---q1-2026)
   - [Local Development & Self-hosting](#local-development--self-hosting)
 - [🚀 Upcoming Features](#-upcoming-features)
@@ -23,10 +24,10 @@ This document outlines our development roadmap, highlighting upcoming features, 
   - [Platform Development](#platform-development)
 - [🤝 Get Involved](#-get-involved)
 
-
 ## 🎯 Current Focus (Q4 2025 - Q1 2026)
 
 ### Local Development & Self-hosting
+
 - **Docker Compose Setup**
   - Containerized development environment
   - Pre-configured database and services
@@ -45,6 +46,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
 ## 🚀 Upcoming Features
 
 ### 📋 Legal Services Directory (Q1 2026)
+
 - **Directory Features**
   - Government institutions (courts, ministries, police)
   - Legal aid organizations and NGOs
@@ -71,6 +73,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
   - Advanced search capabilities
 
 ### 🎙️ Speech-based Queries (Q2 2026)
+
 - **Voice Input**
   - Browser-based speech-to-text
   - Mobile-optimized voice interface
@@ -87,6 +90,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
   - Adjustable playback speed
 
 ### 🖼️ Multi-modal LLM Interactions (Q3 2026)
+
 - **Document Analysis**
   - Upload and analyze legal documents
   - Highlight relevant legal provisions
@@ -105,6 +109,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
 ## 🌍 Long-term Vision
 
 ### Regional Expansion
+
 - **Country Coverage**
   - Kenya
   - Tanzania
@@ -118,6 +123,7 @@ This document outlines our development roadmap, highlighting upcoming features, 
   - Regional legal framework comparisons
 
 ### Platform Development
+
 - **Mobile Applications**
   - Native iOS and Android apps
   - Offline functionality

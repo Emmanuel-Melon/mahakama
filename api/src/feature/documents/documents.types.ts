@@ -72,11 +72,7 @@ export type Download = typeof downloadsTable.$inferSelect;
 export type NewDownload = typeof downloadsTable.$inferInsert;
 
 export type DocumentEventType =
-  | "started"
-  | "progress"
-  | "content"
-  | "completed"
-  | "error";
+  "started" | "progress" | "content" | "completed" | "error";
 
 export type DocumentIngestionEventType = DocumentIngestionEvent["type"];
 

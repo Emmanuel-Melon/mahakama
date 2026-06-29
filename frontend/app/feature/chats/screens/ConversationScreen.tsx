@@ -1,5 +1,3 @@
 export const ConversationScreen = () => {
-    return (
-        <p>Conversation</p>
-    )
-}
+  return <p>Conversation</p>;
+};

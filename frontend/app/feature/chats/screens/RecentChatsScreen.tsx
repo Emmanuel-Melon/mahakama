@@ -5,12 +5,18 @@ import { useDeleteChat, useUpdateChatTitle } from "../hooks/use-chats";
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type ChatsCollectionResponse = components["schemas"]["ChatsCollectionResponse"];
+export type ChatsCollectionResponse =
+  components["schemas"]["ChatsCollectionResponse"];
 export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 
-
-export const RecentChatsScreen = ({ chats, error }: { chats: Chat[], error: any }) => {
+export const RecentChatsScreen = ({
+  chats,
+  error,
+}: {
+  chats: Chat[];
+  error: any;
+}) => {
   const deleteChat = useDeleteChat();
   const updateChatTitle = useUpdateChatTitle();
 
@@ -33,4 +39,4 @@ export const RecentChatsScreen = ({ chats, error }: { chats: Chat[], error: any 
       />
     </div>
   );
-}
+};

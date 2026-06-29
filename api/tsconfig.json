@@ -12,26 +12,14 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"]
     },
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "sourceMap": true,
     "allowJs": true,
     "noEmit": false
   },
-  "typeRoots": [
-    "./node_modules/@types",
-    "./src/types"
-  ],
-  "include": [
-    "src/**/*",
-    "vitest.config.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "typeRoots": ["./node_modules/@types", "./src/types"],
+  "include": ["src/**/*", "vitest.config.ts"],
+  "exclude": ["node_modules"]
 }

@@ -1,0 +1,28 @@
+{
+  "name": "mahakama",
+  "version": "1.0.0",
+  "description": "**Mahakama** (Swahili/Arabic for \"Court\") is an AI-powered legal empowerment platform built to demystify the law in South Sudan and Uganda. We deliver instant, plain-language answers to real-life legal questions, empowering citizens to understand their rights before they ever need a lawyer.",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Emmanuel-Melon/mahakama.git"
+  },
+  "workspaces": [
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
+    "lint": "eslint \"{api,frontend}/**/*.{ts,tsx}\"",
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "eslint": "^9.0.0",
+    "prettier": "^3.5.0"
+  },
+  "keywords": [],
+  "author": "Emmanuel Gatwech"
+}

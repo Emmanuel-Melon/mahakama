@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  # Relational Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: mahakama-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for Caching/Queues
+  redis:
+    image: redis:7-alpine
+    container_name: mahakama-redis
+    ports:
+      - '6379:6379'
+    restart: unless-stopped
+
+  # Local LLM Support
+  ollama:
+    image: ollama/ollama:latest
+    container_name: mahakama-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  # API Service
+  mahakama-api:
+    container_name: mahakama-api
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.api
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - REDIS_URL=redis://redis:6379
+      # Map other secrets from your local .env
+      - JWT_SECRET=${JWT_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      ollama:
+        condition: service_started
+
+  # Frontend Service
+  mahakama-frontend:
+    container_name: mahakama-frontend
+    build:
+      context: .
+      dockerfile: infra/Dockerfile.frontend
+    ports:
+      - '80:80'
+    depends_on:
+      - mahakama-api
+
+volumes:
+  postgres_data:
+  ollama_data:

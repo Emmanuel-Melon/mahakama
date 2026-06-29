@@ -1,6 +1,12 @@
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 import { Users, MapPin, CheckCircle } from "lucide-react";
 
 interface FilterOptionsProps {
@@ -24,13 +30,18 @@ export function FilterOptions({
 }: FilterOptionsProps) {
   return (
     <div className="flex-1">
-      {currentFilter === 'specialization' && (
+      {currentFilter === "specialization" && (
         <div>
           <div className="flex items-center gap-2 mb-2">
             <Users className="h-4 w-4 text-gray-600" />
-            <span className="text-sm text-gray-600">Select specialization:</span>
+            <span className="text-sm text-gray-600">
+              Select specialization:
+            </span>
           </div>
-          <Select value={currentSpecialization} onValueChange={onSpecializationChange}>
+          <Select
+            value={currentSpecialization}
+            onValueChange={onSpecializationChange}
+          >
             <SelectTrigger className="w-full max-w-xs">
               <SelectValue placeholder="Select specialization..." />
             </SelectTrigger>
@@ -48,7 +59,7 @@ export function FilterOptions({
         </div>
       )}
 
-      {currentFilter === 'location' && (
+      {currentFilter === "location" && (
         <div>
           <div className="flex items-center gap-2 mb-2">
             <MapPin className="h-4 w-4 text-gray-600" />
@@ -63,7 +74,7 @@ export function FilterOptions({
         </div>
       )}
 
-      {currentFilter === 'isAvailable' && (
+      {currentFilter === "isAvailable" && (
         <div>
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="h-4 w-4 text-gray-600" />
@@ -71,16 +82,16 @@ export function FilterOptions({
           </div>
           <div className="flex gap-2">
             <Button
-              variant={currentAvailable === 'true' ? 'default' : 'outline'}
+              variant={currentAvailable === "true" ? "default" : "outline"}
               size="sm"
-              onClick={() => onAvailableChange('true')}
+              onClick={() => onAvailableChange("true")}
             >
               Available Now
             </Button>
             <Button
-              variant={currentAvailable === 'false' ? 'default' : 'outline'}
+              variant={currentAvailable === "false" ? "default" : "outline"}
               size="sm"
-              onClick={() => onAvailableChange('false')}
+              onClick={() => onAvailableChange("false")}
             >
               Not Available
             </Button>

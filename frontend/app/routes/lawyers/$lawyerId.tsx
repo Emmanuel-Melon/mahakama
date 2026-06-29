@@ -24,18 +24,13 @@ export function meta({ params }: Route.MetaArgs) {
 
 export default function LawyerProfile({ params }: Route.ComponentProps) {
   const { lawyerId } = params;
-  const { data: lawyer, error, isLoading } = useLawyer(lawyerId || '');
-  
+  const { data: lawyer, error, isLoading } = useLawyer(lawyerId || "");
+
   return <LawyerProfileScreen lawyer={lawyer} error={null} isLoading={false} />;
 }
 
 export function ErrorBoundary() {
   const error = useAppError();
 
-  return (
-    <MahErrorBoundary
-      status={error.status}
-      data={error.data}
-    />
-  );
+  return <MahErrorBoundary status={error.status} data={error.data} />;
 }

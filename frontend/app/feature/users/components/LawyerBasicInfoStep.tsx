@@ -5,30 +5,47 @@ import type { User } from "~/feature/users/hooks/use-users";
 
 interface LawyerBasicInfoStepProps {
   user: User;
-  onNext: (data: { name: string; age: string; gender: string; country?: string; city?: string }) => void;
-  initialData?: { name: string; age: string; gender: string; country?: string; city?: string };
+  onNext: (data: {
+    name: string;
+    age: string;
+    gender: string;
+    country?: string;
+    city?: string;
+  }) => void;
+  initialData?: {
+    name: string;
+    age: string;
+    gender: string;
+    country?: string;
+    city?: string;
+  };
   formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export function LawyerBasicInfoStep({ user, onNext, initialData, formRef }: LawyerBasicInfoStepProps) {
+export function LawyerBasicInfoStep({
+  user,
+  onNext,
+  initialData,
+  formRef,
+}: LawyerBasicInfoStepProps) {
   const [formData, setFormData] = useState({
-    name: initialData?.name || user.name || '',
-    age: initialData?.age || user.age?.toString() || '',
-    gender: initialData?.gender || user.gender || '',
-    country: initialData?.country || user.country || '',
-    city: initialData?.city || user.city || ''
+    name: initialData?.name || user.name || "",
+    age: initialData?.age || user.age?.toString() || "",
+    gender: initialData?.gender || user.gender || "",
+    country: initialData?.country || user.country || "",
+    city: initialData?.city || user.city || "",
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.name.trim()) {
-      alert('Name is required');
+      alert("Name is required");
       return;
     }
 
@@ -37,13 +54,13 @@ export function LawyerBasicInfoStep({ user, onNext, initialData, formRef }: Lawy
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-      <BasicInfoSection 
+      <BasicInfoSection
         formData={{
           name: formData.name,
           age: formData.age,
           gender: formData.gender,
           country: formData.country,
-          city: formData.city
+          city: formData.city,
         }}
         onInputChange={handleInputChange}
       />

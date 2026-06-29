@@ -34,11 +34,7 @@ export function FeatureCard({
 
       {/* Icon Container */}
       <div className="flex-shrink-0 mt-1">
-        <IconContainer
-          icon={Icon}
-          size="lg"
-          color="outline"
-        />
+        <IconContainer icon={Icon} size="lg" color="outline" />
       </div>
 
       {/* Content */}

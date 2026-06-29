@@ -106,11 +106,9 @@ export const categoryLabels = {
   specialized: "Specialized",
 } as const;
 
-
 export const serviceQuerySchema = baseQuerySchema.extend({
   category: z.string().optional(),
   institution: z.string().optional(),
 });
 
 export type ServiceFilters = z.infer<typeof serviceQuerySchema>;
-

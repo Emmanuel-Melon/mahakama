@@ -12,13 +12,12 @@ export interface ChatListProps {
   onRetry?: () => void;
 }
 
-
 export function ChatList({
   chats,
   error,
   onRename,
   onDelete,
-  onRetry
+  onRetry,
 }: ChatListProps) {
   if (error) {
     return <ErrorState error={error} onRetry={onRetry} />;
@@ -34,7 +33,7 @@ export function ChatList({
             label: "Start a New Chat",
             href: "/chats/new",
             variant: "default",
-          }
+          },
         ]}
       />
     );

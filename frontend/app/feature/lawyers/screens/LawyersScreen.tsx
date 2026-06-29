@@ -33,10 +33,10 @@ type LawyersScreenProps = {
   onSortChange: (sortBy: string, sortOrder: "asc" | "desc") => void;
 };
 
-export const LawyersScreen: FC<LawyersScreenProps> = ({ 
-  lawyers, 
-  error, 
-  isLoading, 
+export const LawyersScreen: FC<LawyersScreenProps> = ({
+  lawyers,
+  error,
+  isLoading,
   isAuthenticated,
   displayMode,
   onDisplayModeChange,
@@ -56,7 +56,7 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
   currentSortField,
   currentSortOrder,
   sortOptions,
-  onSortChange
+  onSortChange,
 }) => {
   return (
     <div>
@@ -76,8 +76,8 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
           {error ? (
             <ErrorState error={error} />
           ) : (
-            <LawyersList 
-              lawyers={lawyers} 
+            <LawyersList
+              lawyers={lawyers}
               displayMode={displayMode}
               onDisplayModeChange={onDisplayModeChange}
               variant="default"
@@ -105,4 +105,4 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
       </div>
     </div>
   );
-}
+};

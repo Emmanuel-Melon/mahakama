@@ -3,11 +3,11 @@ import { Footer } from "~/layouts/footer";
 import { FAQSection } from "~/components/faq";
 
 export default function WebsiteLayout(props: any) {
-    return (
-        <div>
-            <Outlet />
-            <FAQSection />
-            <Footer />
-        </div>
-    );
+  return (
+    <div>
+      <Outlet />
+      <FAQSection />
+      <Footer />
+    </div>
+  );
 }

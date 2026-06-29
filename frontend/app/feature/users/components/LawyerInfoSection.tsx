@@ -1,7 +1,13 @@
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
 interface LawyerInfoSectionProps {
   formData: {
@@ -15,10 +21,13 @@ interface LawyerInfoSectionProps {
   onInputChange: (field: string, value: string) => void;
 }
 
-export function LawyerInfoSection({ formData, onInputChange }: LawyerInfoSectionProps) {
+export function LawyerInfoSection({
+  formData,
+  onInputChange,
+}: LawyerInfoSectionProps) {
   const specializations = [
     "Corporate Law",
-    "Criminal Law", 
+    "Criminal Law",
     "Family Law",
     "Real Estate Law",
     "Immigration Law",
@@ -26,19 +35,24 @@ export function LawyerInfoSection({ formData, onInputChange }: LawyerInfoSection
     "Tax Law",
     "Environmental Law",
     "Civil Rights",
-    "Bankruptcy Law"
+    "Bankruptcy Law",
   ];
 
   const ratings = ["1", "2", "3", "4", "5"];
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4">Professional Information</h3>
-      
+      <h3 className="text-xl font-semibold text-gray-900 mb-4">
+        Professional Information
+      </h3>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="specialization">Specialization *</Label>
-          <Select value={formData.specialization} onValueChange={(value) => onInputChange("specialization", value)}>
+          <Select
+            value={formData.specialization}
+            onValueChange={(value) => onInputChange("specialization", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select your specialization" />
             </SelectTrigger>
@@ -68,7 +82,10 @@ export function LawyerInfoSection({ formData, onInputChange }: LawyerInfoSection
 
         <div className="space-y-2">
           <Label htmlFor="rating">Professional Rating *</Label>
-          <Select value={formData.rating} onValueChange={(value) => onInputChange("rating", value)}>
+          <Select
+            value={formData.rating}
+            onValueChange={(value) => onInputChange("rating", value)}
+          >
             <SelectTrigger>
               <SelectValue placeholder="Select your rating" />
             </SelectTrigger>

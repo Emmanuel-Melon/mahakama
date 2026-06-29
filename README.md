@@ -8,32 +8,43 @@ Legal knowledge is a right, not a privilege. In South Sudan and Uganda, accessin
 
 ## Key Features
 
-* **🧠 Plain Language Answers:** AI-powered explanations that translate complex legal jargon into everyday language.
-* **🔍 Everyday Language Search:** Ask real-life questions and receive answers mapped directly to specific legal statutes.
-* **📚 Verified Legal Database:** Direct access to up-to-date, versioned legal texts, including the National Constitution, Criminal Code, and Landlord/Tenant Acts.
-* **⚖️ Professional Connection:** A gateway to connect with vetted legal professionals for complex representation.
-* **🌍 Multi-lingual Support:** Designed for accessibility, with planned expansion for local languages.
+- **🔍 Everyday Language Search:** Ask real-life questions and receive answers mapped directly to specific legal statutes.
+- **📚 Verified Legal Database:** Direct access to up-to-date, versioned legal texts, including the National Constitution, Criminal Code, and Landlord/Tenant Acts.
+- **⚖️ Professional Connection:** Connect with vetted legal professionals for complex representation.
+
+## How It Works
+
+1. **Ask Your Question** - Describe your legal situation in everyday language:
+   - "My landlord changed the locks without notice"
+   - "My employee quit without giving notice"
+   - "My neighbor is building on my property"
+   - "I was unfairly dismissed from work"
+
+2. **Get Clear, Verifiable Answers** - Our AI:
+   - References the exact laws, sections, and subsections
+   - Provides both simplified explanations and direct quotes from the legal text
+   - Shows the official version and effective date of each law referenced
+   - Links to the full legal document for verification
+
+3. **Take Action** - Get guidance on:
+   - How to resolve the issue yourself
+   - What documents you might need
+   - When to consider professional legal help
+
+4. **Connect with a Lawyer** - Only if your situation requires:
+   - Court representation
+   - Complex legal documents
+   - Specialized legal advice
 
 ## Project Structure
 
 This repository is a monorepo containing the following components:
 
-| Directory | Description |
-| --- | --- |
-| `/frontend` | The React-based web interface for users. |
-| `/api` | The Express.js backend and AI-driven legal analysis engine. |
-
-## Documentation
-
-For detailed technical information, setup guides, and architectural overviews, please refer to the documentation within each respective directory:
-
-* **[Frontend Documentation](https://www.google.com/search?q=./frontend/README.md)**: Setup, UI components, and client-side architecture.
-* **[API Documentation](https://www.google.com/search?q=./api/README.md)**: Backend services, database schema, AI/Vector search integration, and API endpoints.
+| Directory   | Description                                                 |
+| ----------- | ----------------------------------------------------------- |
+| `/frontend` | The React-based web interface for users.                    |
+| `/api`      | The Express.js backend and AI-driven legal analysis engine. |
 
 ## Contributing
 
-We welcome contributions to make legal knowledge more accessible across East Africa. Whether you are a developer, legal expert, or community advocate, please check the [Contributing Guide](https://www.google.com/search?q=./CONTRIBUTING.md) to get started.
-
-## License
-
-Mahakama is an open-source project. [Include License Info Here, e.g., MIT]
+We welcome contributions to make legal knowledge more accessible across East Africa. Whether you are a developer, legal expert, or community advocate, please check the [Contributing Guide](./CONTRIBUTING.md) to get started.

@@ -116,11 +116,15 @@ export function ListControls({
   const currentSortValue = `${localSortOrder === "desc" && localSortBy !== "createdAt" ? "-" : ""}${localSortBy}`;
 
   // Create dynamic label with count if both are provided
-  const dynamicLabel = label && totalItems !== undefined ? `${totalItems} ${label}` : label;
+  const dynamicLabel =
+    label && totalItems !== undefined ? `${totalItems} ${label}` : label;
 
   return (
     <div className={`space-y-4 w-full ${className}`}>
-      <CardWithLabel label={dynamicLabel} className="px-4 py-3 border-solid border-gray-150 rounded-[8px_16px_8px_16px] max-w-none mx-0">
+      <CardWithLabel
+        label={dynamicLabel}
+        className="px-4 py-3 border-solid border-gray-150 rounded-[8px_16px_8px_16px] max-w-none mx-0"
+      >
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div className="flex items-center gap-2 w-full sm:w-96">
             <SearchBar

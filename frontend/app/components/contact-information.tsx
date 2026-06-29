@@ -1,8 +1,15 @@
-import { Mail, Calendar, MapPin, Phone, Globe, type LucideIcon } from "lucide-react";
+import {
+  Mail,
+  Calendar,
+  MapPin,
+  Phone,
+  Globe,
+  type LucideIcon,
+} from "lucide-react";
 import { formatDate } from "~/utils/time";
 
 export interface ContactItem {
-  type: 'email' | 'phone' | 'location' | 'date' | 'website';
+  type: "email" | "phone" | "location" | "date" | "website";
   label: string;
   value: string;
   href?: string;
@@ -25,35 +32,35 @@ const iconMap = {
 };
 
 const iconColorMap = {
-  email: 'text-blue-600',
-  phone: 'text-green-600',
-  location: 'text-red-600',
-  date: 'text-purple-600',
-  website: 'text-blue-600',
+  email: "text-blue-600",
+  phone: "text-green-600",
+  location: "text-red-600",
+  date: "text-purple-600",
+  website: "text-blue-600",
 };
 
-export function ContactInformation({ 
-  title = "Contact Information", 
-  description, 
-  contactItems, 
-  className = "" 
+export function ContactInformation({
+  title = "Contact Information",
+  description,
+  contactItems,
+  className = "",
 }: ContactInformationProps) {
-  const getIcon = (type: ContactItem['type'], customIcon?: LucideIcon) => {
+  const getIcon = (type: ContactItem["type"], customIcon?: LucideIcon) => {
     if (customIcon) return customIcon;
     return iconMap[type];
   };
 
-  const getIconColor = (type: ContactItem['type']) => {
+  const getIconColor = (type: ContactItem["type"]) => {
     return iconColorMap[type];
   };
 
   const renderContent = (item: ContactItem) => {
     if (item.href) {
       return (
-        <a 
-          href={item.href} 
-          target={item.type === 'website' ? "_blank" : undefined}
-          rel={item.type === 'website' ? "noopener noreferrer" : undefined}
+        <a
+          href={item.href}
+          target={item.type === "website" ? "_blank" : undefined}
+          rel={item.type === "website" ? "noopener noreferrer" : undefined}
           className="text-blue-600 hover:text-blue-800 underline font-semibold"
         >
           {item.value}
@@ -66,21 +73,15 @@ export function ContactInformation({
   return (
     <div className={`space-y-6 ${className}`}>
       <div className="space-y-2">
-        <h3 className="text-lg font-semibold text-gray-900">
-          {title}
-        </h3>
-        {description && (
-          <p className="text-sm text-gray-500">
-            {description}
-          </p>
-        )}
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        {description && <p className="text-sm text-gray-500">{description}</p>}
       </div>
-      
+
       <div className="space-y-4">
         {contactItems.map((item, index) => {
           const Icon = getIcon(item.type, item.icon);
           const iconColor = getIconColor(item.type);
-          
+
           return (
             <div
               key={index}
@@ -91,7 +92,9 @@ export function ContactInformation({
             >
               <Icon className={`w-5 h-5 ${iconColor}`} />
               <div>
-                <p className="text-sm font-medium text-gray-500">{item.label}</p>
+                <p className="text-sm font-medium text-gray-500">
+                  {item.label}
+                </p>
                 {renderContent(item)}
               </div>
             </div>

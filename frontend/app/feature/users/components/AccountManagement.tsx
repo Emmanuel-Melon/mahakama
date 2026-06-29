@@ -9,7 +9,10 @@ interface AccountManagementProps {
   onLogout?: () => void;
 }
 
-export const AccountManagement = ({ user, onLogout }: AccountManagementProps) => {
+export const AccountManagement = ({
+  user,
+  onLogout,
+}: AccountManagementProps) => {
   return (
     <div className="space-y-6">
       {/* Account Information */}
@@ -23,7 +26,9 @@ export const AccountManagement = ({ user, onLogout }: AccountManagementProps) =>
             <div>
               <p className="text-sm font-medium text-gray-500">Account Type</p>
               <p className="text-lg font-semibold text-gray-900">
-                {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "User"}
+                {user?.role
+                  ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+                  : "User"}
               </p>
             </div>
           </div>
@@ -33,16 +38,20 @@ export const AccountManagement = ({ user, onLogout }: AccountManagementProps) =>
             <div>
               <p className="text-sm font-medium text-gray-500">Subscription</p>
               <p className="text-lg font-semibold text-gray-900">Free Tier</p>
-              <p className="text-sm text-gray-600">Upgrade to Premium for additional features</p>
+              <p className="text-sm text-gray-600">
+                Upgrade to Premium for additional features
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <Settings className="w-5 h-5 text-purple-600" />
             <div>
-              <p className="text-sm font-medium text-gray-500">Account Status</p>
+              <p className="text-sm font-medium text-gray-500">
+                Account Status
+              </p>
               <p className="text-lg font-semibold text-gray-900">
-                {user?.isOnboarded ? 'Active' : 'Setup Required'}
+                {user?.isOnboarded ? "Active" : "Setup Required"}
               </p>
             </div>
           </div>

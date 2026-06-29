@@ -12,7 +12,10 @@ interface SuggestedQuestionsProps {
   disabled?: boolean;
 }
 
-export const SuggestedQuestions = ({ onQuestionClick, disabled = false }: SuggestedQuestionsProps) => {
+export const SuggestedQuestions = ({
+  onQuestionClick,
+  disabled = false,
+}: SuggestedQuestionsProps) => {
   return (
     <div className="max-w-5xl mx-auto">
       <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider mb-4">

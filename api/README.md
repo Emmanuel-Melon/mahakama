@@ -8,11 +8,10 @@ Legal knowledge is a right, not a privilege. Mahakama (Swahili/Arabic for "Court
 
 The Mahakama frontend is a modern web application built with React, TypeScript, and Tailwind CSS. It provides an intuitive interface for users to access legal information and connect with legal professionals when needed.
 
-| Component | Link | Description |
-|-----------|------|-------------|
+| Component  | Link                                                                             | Description                                                 |
+| ---------- | -------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | Repository | [github.com/Emmanuel-Melon/mahakama](https://github.com/Emmanuel-Melon/mahakama) | Source code and issue tracking for the frontend application |
-| Live Demo | [mahakama.netlify.app](https://mahakama.netlify.app/) | Production deployment of the latest stable version |
-
+| Live Demo  | [mahakama.netlify.app](https://mahakama.netlify.app/)                            | Production deployment of the latest stable version          |
 
 ## Table of Contents
 
@@ -47,21 +46,25 @@ In South Sudan and Uganda, accessing legal information is often expensive and co
 Mahakama makes legal information accessible through an intuitive, four-step process designed for everyone:
 
 ### 1. 🔍 Ask in Your Own Words
+
 - Type your question naturally, just like you'd ask a friend or neighbor
 - No legal knowledge needed - use everyday language
 - Example: "What should I do if my landlord changes the locks without notice?"
 
 ### 2. 🤖 Smart Legal Analysis
+
 - Our AI understands East African legal contexts and terminology
 - Searches through verified, up-to-date legal documents from South Sudan and Uganda
 - Identifies the most relevant laws and precedents
 
 ### 3. 📝 Clear, Actionable Answers
+
 - Get explanations in simple, straightforward language
 - See direct references to specific laws and articles
 - Understand how the law applies to your specific situation
 
 ### 4. ⚖️ Your Next Steps
+
 - Learn your legal rights and options
 - Access relevant legal forms and templates
 - Connect with local legal professionals if needed
@@ -69,12 +72,14 @@ Mahakama makes legal information accessible through an intuitive, four-step proc
 ## ✨ Features
 
 ### 🤖 AI-Powered Legal Assistant
+
 - **Natural Language Search** - Ask questions in plain English or local languages, just like talking to a legal expert
 - **East Africa Focus** - Tailored specifically for South Sudan and Uganda's legal systems, with expansion plans across East Africa
 - **Context-Aware Responses** - Our AI understands local legal contexts, cultural nuances, and regional legal frameworks
 - **Real-World Examples** - Get answers that reflect common local legal scenarios and situations
 
 ### 🎙️ Speech-based Queries
+
 - **Voice Input**
   - Browser-based speech-to-text
   - Mobile-optimized voice interface
@@ -89,28 +94,33 @@ Mahakama makes legal information accessible through an intuitive, four-step proc
   - Adjustable playback speed
 
 ### 🖼️ Multi-modal LLM Interactions
+
 - **Document Analysis**
   - Upload and analyze legal documents
   - Highlight relevant legal provisions
   - Generate summaries and explanations
 
 ### 📚 Comprehensive Legal Database
+
 - **East African Legal Coverage** - Focused on South Sudan and Uganda, with plans to expand regionally
 - **Local Legal Context** - Includes regional by-laws and customary laws relevant to local communities
 - **Regular Updates** - Continuously updated with the latest legal texts, amendments, and court decisions
 - **Multi-Lingual Support** - Search in English with plans to add local languages
 
 ### 🔍 Source-Verified Information
+
 - **Direct Citations** - Every answer includes references to specific laws and articles
 - **Version Control** - See exactly which version of the law was referenced
 - **Contextual Quotes** - View the exact legal text in its original form
 
 ### 🛠 User-Centric Tools
+
 - **Save & Organize** - Bookmark important information for future reference
 - **Shareable Results** - Easily share legal information with others
 - **Offline Access** - Download key legal texts for offline reading
 
 ### ⚖️ Professional Support
+
 - **Lawyer Matching** - Connect with vetted legal professionals when needed
 - **Document Templates** - Access customizable legal document templates
 - **Case Assessment** - Get preliminary insights about your legal situation
@@ -134,11 +144,11 @@ This repository includes two main types of documentation to support developers w
 
 ### Production Environment
 
-| Documentation Type | Description | Access |
-|--------------------|-------------|--------|
-| **Project Docs** | Comprehensive guides and architecture | [View Online](https://mahakama-api-production.up.railway.app/docs/) |
-| **API Reference** | Interactive API documentation | [Explore API](https://mahakama-api-production.up.railway.app/api-docs/) |
-| **OpenAPI Spec** | Raw OpenAPI JSON specification | [View Spec](https://mahakama-api-production.up.railway.app/api-docs-json) |
+| Documentation Type | Description                           | Access                                                                    |
+| ------------------ | ------------------------------------- | ------------------------------------------------------------------------- |
+| **Project Docs**   | Comprehensive guides and architecture | [View Online](https://mahakama-api-production.up.railway.app/docs/)       |
+| **API Reference**  | Interactive API documentation         | [Explore API](https://mahakama-api-production.up.railway.app/api-docs/)   |
+| **OpenAPI Spec**   | Raw OpenAPI JSON specification        | [View Spec](https://mahakama-api-production.up.railway.app/api-docs-json) |
 
 ### Local Development
 
@@ -157,11 +167,11 @@ npm run serve:docs
 
 Once running, you can access:
 
-| Resource | Local URL |
-|----------|-----------|
-| Project Documentation | [http://localhost:8080](http://localhost:8080) |
-| API Documentation | [http://localhost:3000/api-docs](http://localhost:3000/api-docs) |
-| OpenAPI Spec | [http://localhost:3000/api-docs-json](http://localhost:3000/api-docs-json) |
+| Resource              | Local URL                                                                  |
+| --------------------- | -------------------------------------------------------------------------- |
+| Project Documentation | [http://localhost:8080](http://localhost:8080)                             |
+| API Documentation     | [http://localhost:3000/api-docs](http://localhost:3000/api-docs)           |
+| OpenAPI Spec          | [http://localhost:3000/api-docs-json](http://localhost:3000/api-docs-json) |
 
 The API documentation is automatically generated from JSDoc comments in the source code, particularly in route handlers and model definitions.
 
@@ -169,11 +179,11 @@ The API documentation is automatically generated from JSDoc comments in the sour
 
 Our documentation is organized to provide comprehensive guidance for developers, contributors, and users. Here's an overview of the available resources:
 
-| Category | File | Description |
-|----------|------|-------------|
-| **Architecture** | [./docs/architecture.md](./docs/architecture.md) | Detailed system design, component architecture, and data flow diagrams |
-| **API Reference** | [./docs/api-reference.md](./docs/api-reference.md) | Complete API documentation with endpoint details and usage examples |
-| **Contributing** | [./contributing.md](./contributing.md) | Guidelines for setting up the development environment and contributing to the project |
+| Category          | File                                               | Description                                                                           |
+| ----------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Architecture**  | [./docs/architecture.md](./docs/architecture.md)   | Detailed system design, component architecture, and data flow diagrams                |
+| **API Reference** | [./docs/api-reference.md](./docs/api-reference.md) | Complete API documentation with endpoint details and usage examples                   |
+| **Contributing**  | [./contributing.md](./contributing.md)             | Guidelines for setting up the development environment and contributing to the project |
 
 Each document is designed to be comprehensive yet accessible, with clear examples and practical guidance for both new and experienced contributors.
 
@@ -182,24 +192,28 @@ Each document is designed to be comprehensive yet accessible, with clear example
 Our API is documented using OpenAPI/Swagger, providing interactive documentation and type generation capabilities.
 
 #### Key Features
+
 - Interactive API explorer with request/response examples
 - Automatic schema validation
 - Client SDK generation
 - Authentication details and examples
 
 #### Access Points
+
 - **Interactive UI**: `/api-docs` (e.g., [http://localhost:3000/api-docs](http://localhost:3000/api-docs))
 - **OpenAPI JSON**: `/api-docs-json` (for tooling integration)
 
 ## 🛠 Development Workflow
 
 ### Documenting New Features
+
 1. Update the relevant `.md` files in the `/docs` directory
 2. For API endpoints, add JSDoc comments in your route handlers
 3. Run the documentation server locally to verify changes
 4. Submit a pull request with your updates
 
 ### Building for Production
+
 Documentation is automatically built and deployed with the main application. The build process is handled by the `build:docs` npm script.
 
 ## 📚 API Documentation & Type Generation
@@ -209,12 +223,14 @@ We've implemented Swagger/OpenAPI documentation for our Express.js API, providin
 ### Interactive API Documentation
 
 Access our interactive API documentation at:
+
 - **Production**: [https://mahakama-api-production.up.railway.app/api-docs/](https://mahakama-api-production.up.railway.app/api-docs/)
 - **Development**: [http://localhost:3000/api-docs/](http://localhost:3000/api-docs/)
 
 ### API Specifications
 
 You can access the OpenAPI specification at:
+
 - **Production**: `https://mahakama-api-production.up.railway.app/api-docs-json`
 - **Development**: `http://localhost:3000/api-docs-json`
 
@@ -228,13 +244,13 @@ You can access the OpenAPI specification at:
 
 ### API Servers
 
-| Environment | URL | Description |
-|-------------|-----|-------------|
-| Production | `https://mahakama-api-production.up.railway.app/api`  | Production API server |
-| Development | `http://localhost:3000/api`  | Local development server |
-
+| Environment | URL                                                  | Description              |
+| ----------- | ---------------------------------------------------- | ------------------------ |
+| Production  | `https://mahakama-api-production.up.railway.app/api` | Production API server    |
+| Development | `http://localhost:3000/api`                          | Local development server |
 
 ### Authentication
+
 ```http
 Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
@@ -252,6 +268,7 @@ Mahakama's server follows a **Domain-Driven Design (DDD)** architecture, organiz
 For a comprehensive guide to our architecture, including detailed explanations of our domain structure, technical stack, and development practices, please see our [Architecture Documentation](./docs/architecture.md).
 
 Additional details about our domain structure and development practices can be found in the [Contributing Guide](./CONTRIBUTING.md#domain-driven-architecture).
+
 ### Key Components
 
 - **Domain Modules**: Self-contained business domains (users, lawyers, documents, etc.)
@@ -286,55 +303,65 @@ For a detailed breakdown of the architecture, including how to work with domains
 # 🚀 Getting Started
 
 ## Prerequisites
+
 - Node.js 20+ (we recommend using [nvm](https://github.com/nvm-sh/nvm))
 - PostgreSQL database (local or remote)
 
 ## Installation
 
 1. Clone the repository
+
 ```bash
 git clone https://github.com/your-username/mahakama-api.git
 cd mahakama-api/server
 ```
 
 2. Install dependencies
+
 ```bash
 nvm use 20  # Switch to Node 20
 npm install
 ```
 
 3. Set up environment variables
+
 ```bash
 cp .env.example .env
 # Update the .env file with your database credentials
 ```
 
 4. Install dependencies and run database setup
+
 ```bash
 npm install
 npm run drizzle:migrate
 ```
 
 5. Start the development server
+
 ```bash
 npm run dev
 ```
 
 ### 🔑 Environment Setup
+
 For detailed environment configuration, including required API keys and database setup, see the [Environment Variables](./CONTRIBUTING.md#-environment-variables) section in our Contributing Guide.
 
 ## 🔧 Development
 
 ### 🔍 Code Quality
+
 - Format code: `npm run format`
 - Check formatting: `npm run format:check`
 - Lint code: `npm run lint`
 
 ### 🧪 Testing
+
 - Run tests: `npm test`
 - Run tests in watch mode: `npm test:watch`
 
 ### 🗃️ Database
+
 - Run migrations: `npm run drizzle:migrate`
 - Start database UI: `npm run drizzle:studio`
 
@@ -345,12 +372,14 @@ For more detailed development instructions, including Docker setup, environment 
 We're constantly working to improve Mahakama. Here's what's coming next:
 
 ### Short-term
+
 - 🏗️ **Local Development & Self-hosting**
   - Complete Docker support for easy local development
   - One-command deployment for self-hosting
   - Comprehensive documentation for local setup
 
 ### Upcoming Features
+
 - 🎙️ **Speech-based Queries**
   - Voice input for hands-free legal queries
   - Support for local languages and dialects
@@ -362,6 +391,7 @@ We're constantly working to improve Mahakama. Here's what's coming next:
   - Interactive legal form filling
 
 ### Future Vision
+
 - Expand coverage to more East African countries
 - Mobile app development
 - Offline-first functionality for low-connectivity areas

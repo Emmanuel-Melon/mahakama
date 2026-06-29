@@ -31,11 +31,7 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
-export function ChatItem({
-  chat,
-  onRename,
-  onDelete,
-}: ChatItemProps) {
+export function ChatItem({ chat, onRename, onDelete }: ChatItemProps) {
   const navigate = useNavigate();
   return (
     <div className="group relative">
@@ -49,7 +45,7 @@ export function ChatItem({
           <NavLink
             to={`/chats/${chat.id}`}
             className={({ isActive }) =>
-              `flex-1 min-w-0 cursor-pointer ${isActive ? 'ring-2 ring-yellow-400' : ''}`
+              `flex-1 min-w-0 cursor-pointer ${isActive ? "ring-2 ring-yellow-400" : ""}`
             }
           >
             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -111,11 +107,14 @@ export function ChatItem({
                       <AlertDialogHeader>
                         <AlertDialogTitle>Delete this chat?</AlertDialogTitle>
                         <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete the chat and all its messages.
+                          This action cannot be undone. This will permanently
+                          delete the chat and all its messages.
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+                          Cancel
+                        </AlertDialogCancel>
                         <AlertDialogAction
                           className="bg-red-600 hover:bg-red-700"
                           onClick={(e) => {

@@ -1,4 +1,14 @@
-import { MapPin, Phone, Globe, ChevronRight, Building2, Scale, HeartHandshake, Shield, Building } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Globe,
+  ChevronRight,
+  Building2,
+  Scale,
+  HeartHandshake,
+  Shield,
+  Building,
+} from "lucide-react";
 import { NavLink } from "react-router";
 import { BookmarkButton } from "~/components/bookmark-button";
 import { ShareButton } from "~/components/share-button";
@@ -17,17 +27,17 @@ interface ServiceCardProps {
 }
 
 const categoryIcons = {
-  'government': Building2,
-  'legal-aid': Scale,
-  'dispute-resolution': HeartHandshake,
-  'specialized': Shield
+  government: Building2,
+  "legal-aid": Scale,
+  "dispute-resolution": HeartHandshake,
+  specialized: Shield,
 } as const;
 
 const categoryLabels = {
-  'government': 'Government',
-  'legal-aid': 'Legal Aid',
-  'dispute-resolution': 'Dispute Resolution',
-  'specialized': 'Specialized'
+  government: "Government",
+  "legal-aid": "Legal Aid",
+  "dispute-resolution": "Dispute Resolution",
+  specialized: "Specialized",
 } as const;
 
 export function ServiceCard({
@@ -36,22 +46,23 @@ export function ServiceCard({
   displayMode = "list",
 }: ServiceCardProps) {
   const Icon = categoryIcons[service.category as keyof typeof categoryIcons];
-  const categoryLabel = categoryLabels[service.category as keyof typeof categoryLabels];
+  const categoryLabel =
+    categoryLabels[service.category as keyof typeof categoryLabels];
 
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault();
     // Add save functionality here
-    console.log('Saving service:', service.name);
+    console.log("Saving service:", service.name);
   };
 
   const handleBookmark = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Bookmarking service:', service.name);
+    console.log("Bookmarking service:", service.name);
   };
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('Sharing service:', service.name);
+    console.log("Sharing service:", service.name);
   };
 
   function getColor(arg0: number): string {
@@ -92,9 +103,7 @@ export function ServiceCard({
       </div>
       <div className="flex items-start justify-between mb-4 gap-3">
         <div className="flex-1">
-          <h3 className="text-xl">
-            {service.name}
-          </h3>
+          <h3 className="text-xl">{service.name}</h3>
           {service.location && (
             <div className="flex items-center text-sm text-gray-600 mt-1">
               <MapPin className="h-4 w-4 mr-1.5 flex-shrink-0" />
@@ -113,7 +122,7 @@ export function ServiceCard({
               key={i}
               className={cn(
                 "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
-                getColor(service.services.length - 3)
+                getColor(service.services.length - 3),
               )}
               style={{
                 boxShadow: "2px 2px 0 0 #000",
@@ -124,12 +133,13 @@ export function ServiceCard({
             </span>
           ))}
           {service.services.length > 3 && (
-            <span className={cn(
-              "text-left py-1.5 sm:py-1 px-3 border-2 border-gray-900 bg-white",
-              "transition-all hover:shadow-md font-medium text-xs sm:text-sm flex items-center gap-2",
-              "active:translate-y-0.5 active:shadow-none hover:bg-gray-50",
-              getColor(service.services.length - 3)
-            )}
+            <span
+              className={cn(
+                "text-left py-1.5 sm:py-1 px-3 border-2 border-gray-900 bg-white",
+                "transition-all hover:shadow-md font-medium text-xs sm:text-sm flex items-center gap-2",
+                "active:translate-y-0.5 active:shadow-none hover:bg-gray-50",
+                getColor(service.services.length - 3),
+              )}
             >
               +{service.services.length - 3} more
             </span>

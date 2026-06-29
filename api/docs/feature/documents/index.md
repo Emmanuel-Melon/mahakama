@@ -47,11 +47,13 @@ src/feature/documents/
 Defines the database tables using Drizzle ORM.
 
 **Tables:**
+
 - `documents` - Main document metadata
 - `document_bookmarks` - User bookmarks (many-to-many)
 - `document_downloads` - Download history
 
 **Key Features:**
+
 - Uses UUID for primary keys
 - Cascade deletes for referential integrity
 - Timestamps for audit trails
@@ -103,6 +105,7 @@ export const downloadsTable = pgTable("document_downloads", {
 ```
 
 **Relations:**
+
 ```typescript
 export const documentsRelations = relations(documentsTable, ({ many }) => ({
   bookmarks: many(bookmarksTable),
@@ -117,6 +120,7 @@ export const documentsRelations = relations(documentsTable, ({ many }) => ({
 Contains all TypeScript types and Zod schemas for the feature.
 
 **Drizzle-Generated Types:**
+
 ```typescript
 // For reading from database (SELECT queries)
 export const documentSelectSchema = createSelectSchema(documentsTable);
@@ -134,6 +138,7 @@ export type NewDownload = typeof downloadsTable.$inferInsert;
 ```
 
 **Custom Validation Schemas:**
+
 ```typescript
 // For API input validation
 export const createDocumentSchema = z.object({
@@ -152,6 +157,7 @@ export type CreateDocumentInput = z.infer<typeof createDocumentSchema>;
 ```
 
 **SSE Event Types (for document ingestion):**
+
 ```typescript
 export const documentIngestionEventSchema = z.discriminatedUnion("type", [
   z.object({
@@ -175,10 +181,13 @@ export const documentIngestionEventSchema = z.discriminatedUnion("type", [
   // ... more event types
 ]);
 
-export type DocumentIngestionEvent = z.infer<typeof documentIngestionEventSchema>;
+export type DocumentIngestionEvent = z.infer<
+  typeof documentIngestionEventSchema
+>;
 ```
 
 **Type Usage Pattern:**
+
 - `Document` - Full document from database (has id, timestamps)
 - `NewDocument` - Data for creating document (no id/timestamps)
 - `CreateDocumentInput` - API input (additional validation rules)
@@ -195,7 +204,7 @@ import { Document } from "./documents.types";
 
 export const DocumentsSerializer: JsonApiResourceConfig<Document> = {
   type: "document",
-  
+
   // Define which fields to include in response
   attributes: (doc) => ({
     title: doc.title,
@@ -208,7 +217,7 @@ export const DocumentsSerializer: JsonApiResourceConfig<Document> = {
     createdAt: doc.createdAt,
     updatedAt: doc.updatedAt,
   }),
-  
+
   // Define related resources
   relationships: {
     bookmarks: {
@@ -222,7 +231,7 @@ export const DocumentsSerializer: JsonApiResourceConfig<Document> = {
       }),
     },
   },
-  
+
   // Resource-level links
   links: (doc, req) => ({
     self: `${req.protocol}://${req.get("host")}/v1/documents/${doc.id}`,
@@ -297,6 +306,7 @@ export async function createDocument(
 ```
 
 **Key Characteristics:**
+
 - ✅ Takes typed input (`NewDocument`)
 - ✅ Returns typed output (`Document`)
 - ✅ No HTTP concerns (req/res)
@@ -395,7 +405,7 @@ export async function listDocuments(
       .orderBy(orderFn(sortColumn))
       .limit(limit)
       .offset(offset),
-    
+
     db
       .select({ count: sql<number>`count(*)` })
       .from(documentsTable)
@@ -446,7 +456,7 @@ export const createDocumentHandler = async (
 
   try {
     const documentData: CreateDocumentInput = req.body;
-    
+
     // Format and validate URL
     let storageUrl = documentData.storageUrl;
     if (!storageUrl.startsWith("http")) {
@@ -560,6 +570,7 @@ export const getDocumentsController = async (
 ```
 
 **Collection Response Structure:**
+
 ```json
 {
   "data": [
@@ -682,6 +693,7 @@ export default documentRoutes;
 ```
 
 **Middleware Chain Example:**
+
 ```
 POST /v1/documents/ingest
   ↓
@@ -734,15 +746,22 @@ export const documentsRegistry = new OpenAPIRegistry();
 documentsRegistry.register("Document", documentResponseSchema);
 documentsRegistry.register("CreateDocument", createDocumentSchema);
 documentsRegistry.register("DocumentResource", documentResourceSchema);
-documentsRegistry.register("DocumentSingleResponse", documentSingleResponseSchema);
-documentsRegistry.register("DocumentsCollectionResponse", documentsCollectionResponseSchema);
+documentsRegistry.register(
+  "DocumentSingleResponse",
+  documentSingleResponseSchema,
+);
+documentsRegistry.register(
+  "DocumentsCollectionResponse",
+  documentsCollectionResponseSchema,
+);
 
 // Register endpoints
 documentsRegistry.registerPath({
   method: "get",
   path: "/v1/documents",
   summary: "Get all documents",
-  description: "Returns a list of all documents with optional filtering and pagination",
+  description:
+    "Returns a list of all documents with optional filtering and pagination",
   tags: ["Documents v1"],
   security: [{ bearerAuth: [] }],
   parameters: [
@@ -790,6 +809,7 @@ documentsRegistry.registerPath({
 ```
 
 **Benefits:**
+
 - Auto-generated API docs from code
 - Type-safe documentation
 - Always in sync with actual implementation
@@ -918,7 +938,8 @@ const documentData = [
   {
     id: uuidv4(),
     title: "Landlord and Tenant Act 2022",
-    description: "An Act to provide for the relationship between landlords and tenants...",
+    description:
+      "An Act to provide for the relationship between landlords and tenants...",
     type: "Act",
     sections: 120,
     lastUpdated: "2022",
@@ -1072,4 +1093,4 @@ await documentsQueue.add(DocumentsJobType.PROCESS_DOCUMENT, {
   documentId: document.id,
   storageUrl: document.storageUrl,
 });
-
+```

@@ -1,5 +1,13 @@
 import { useState, useMemo } from "react";
-import { Building2, Scale, HeartHandshake, Shield, Search, MapPin, X } from "lucide-react";
+import {
+  Building2,
+  Scale,
+  HeartHandshake,
+  Shield,
+  Search,
+  MapPin,
+  X,
+} from "lucide-react";
 import { HeroSection } from "~/layouts/HeroSection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { ServicesList } from "~/feature/website/components/legal-hub/services-list";
@@ -10,9 +18,12 @@ import { ScrollArea } from "~/components/ui/scroll-area";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource = components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse = components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse = components["schemas"]["LegalServicesCollectionResponse"];
+export type LegalServiceResource =
+  components["schemas"]["LegalServiceResource"];
+export type LegalServiceSingleResponse =
+  components["schemas"]["LegalServiceSingleResponse"];
+export type LegalServicesCollectionResponse =
+  components["schemas"]["LegalServicesCollectionResponse"];
 export type CategoryLabels = components["schemas"]["CategoryLabels"];
 export type ServiceCategory = components["schemas"]["ServiceCategory"];
 
@@ -25,31 +36,37 @@ interface LegalHubScreenProps {
 
 const categoryIcons = {
   government: Building2,
-  'legal-aid': Scale,
-  'dispute-resolution': HeartHandshake,
-  'specialized': Shield
+  "legal-aid": Scale,
+  "dispute-resolution": HeartHandshake,
+  specialized: Shield,
 } as const;
 
 const categoryLabels = {
-  government: 'Government',
-  'legal-aid': 'Legal Aid',
-  'dispute-resolution': 'Dispute Resolution',
-  'specialized': 'Specialized'
+  government: "Government",
+  "legal-aid": "Legal Aid",
+  "dispute-resolution": "Dispute Resolution",
+  specialized: "Specialized",
 } as const;
 
-
-export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuthenticated, displayMode = "grid", onDisplayModeChange }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [locationFilter, setLocationFilter] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<ServiceCategory>('all');
+export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({
+  services,
+  isAuthenticated,
+  displayMode = "grid",
+  onDisplayModeChange,
+}) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
+  const [selectedCategory, setSelectedCategory] =
+    useState<ServiceCategory>("all");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  const hasActiveFilters = searchTerm !== '' || selectedCategory !== 'all' || locationFilter !== '';
+  const hasActiveFilters =
+    searchTerm !== "" || selectedCategory !== "all" || locationFilter !== "";
 
   const resetFilters = () => {
-    setSearchTerm('');
-    setSelectedCategory('all');
-    setLocationFilter('');
+    setSearchTerm("");
+    setSelectedCategory("all");
+    setLocationFilter("");
   };
 
   return (
@@ -75,19 +92,21 @@ export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({ services, isAuth
             className="w-full flex items-center justify-between"
             onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
           >
-            <span>Filters {hasActiveFilters && `(${services?.length} results)`}</span>
+            <span>
+              Filters {hasActiveFilters && `(${services?.length} results)`}
+            </span>
             <Search className="h-4 w-4" />
           </Button>
         </div>
-          <ServicesList
-            services={services}
-            variant="default"
-            showControls={true}
-            isLoading={false}
-            displayMode={displayMode}
-            onDisplayModeChange={onDisplayModeChange}
-          />
+        <ServicesList
+          services={services}
+          variant="default"
+          showControls={true}
+          isLoading={false}
+          displayMode={displayMode}
+          onDisplayModeChange={onDisplayModeChange}
+        />
       </div>
     </>
   );
-}
+};

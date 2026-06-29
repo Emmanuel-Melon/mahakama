@@ -1,6 +1,6 @@
-"use client"
-import * as React from "react"
-import { ChevronsUpDown } from "lucide-react"
+"use client";
+import * as React from "react";
+import { ChevronsUpDown } from "lucide-react";
 import { useCountry } from "~/context/country-context";
 import {
   DropdownMenu,
@@ -18,31 +18,31 @@ import {
 
 const countries = [
   {
-    id: 'ws-south-sudan',
+    id: "ws-south-sudan",
     name: "South Sudan",
     code: "SS",
     emoji: "🇸🇸",
   },
   {
-    id: 'ws-uganda',
+    id: "ws-uganda",
     name: "Uganda",
     code: "UG",
     emoji: "🇺🇬",
   },
   {
-    id: 'ws-kenya',
+    id: "ws-kenya",
     name: "Kenya",
     code: "KE",
     emoji: "🇰🇪",
   },
   {
-    id: 'ws-rwanda',
+    id: "ws-rwanda",
     name: "Rwanda",
     code: "RW",
     emoji: "🇷🇼",
   },
   {
-    id: 'ws-tanzania',
+    id: "ws-tanzania",
     name: "Tanzania",
     code: "TZ",
     emoji: "🇹🇿",
@@ -50,13 +50,15 @@ const countries = [
 ];
 
 export function CountrySelector() {
-  const { isMobile } = useSidebar()
-  const { selectedCountry, setSelectedCountry } = useCountry()
+  const { isMobile } = useSidebar();
+  const { selectedCountry, setSelectedCountry } = useCountry();
 
-  const activeCountry = countries.find(country => country.name === selectedCountry) || countries[0]
+  const activeCountry =
+    countries.find((country) => country.name === selectedCountry) ||
+    countries[0];
 
   if (!activeCountry) {
-    return null
+    return null;
   }
 
   return (
@@ -72,7 +74,9 @@ export function CountrySelector() {
                 {activeCountry.emoji}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{activeCountry.name}</span>
+                <span className="truncate font-medium">
+                  {activeCountry.name}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -102,5 +106,5 @@ export function CountrySelector() {
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }

@@ -6,9 +6,12 @@ import { EmptyState } from "~/components/async-state/empty";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource = components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse = components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse = components["schemas"]["LegalServicesCollectionResponse"];
+export type LegalServiceResource =
+  components["schemas"]["LegalServiceResource"];
+export type LegalServiceSingleResponse =
+  components["schemas"]["LegalServiceSingleResponse"];
+export type LegalServicesCollectionResponse =
+  components["schemas"]["LegalServicesCollectionResponse"];
 export type CategoryLabels = components["schemas"]["CategoryLabels"];
 export type ServiceCategory = components["schemas"]["ServiceCategory"];
 
@@ -29,8 +32,10 @@ export function ServicesList({
   isLoading = false,
   onDisplayModeChange,
 }: ServicesListProps) {
-  const [displayMode, setDisplayMode] = useState<"list" | "grid">(externalDisplayMode);
-  
+  const [displayMode, setDisplayMode] = useState<"list" | "grid">(
+    externalDisplayMode,
+  );
+
   // Use external display mode if provided, otherwise use internal state
   const currentDisplayMode = externalDisplayMode || displayMode;
   const handleDisplayModeChange = onDisplayModeChange || setDisplayMode;

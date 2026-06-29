@@ -23,20 +23,24 @@ export const AccountStatusCard = ({ user }: AccountStatusCardProps) => {
         <div>
           <p className="text-sm font-medium text-gray-500">Account Status</p>
           <p className="text-lg font-semibold text-gray-900">
-            {user?.isOnboarded ? 'Onboarded' : 'Pending Onboarding'}
+            {user?.isOnboarded ? "Onboarded" : "Pending Onboarding"}
           </p>
         </div>
 
         <div>
           <p className="text-sm font-medium text-gray-500">Account Type</p>
           <p className="text-lg font-semibold text-gray-900">
-            {user?.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : "User"}
+            {user?.role
+              ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
+              : "User"}
           </p>
         </div>
 
         <div>
           <p className="text-sm font-medium text-gray-500">Member Since</p>
-          <p className="text-lg font-semibold text-gray-900">{formatDate(user?.createdAt || "")}</p>
+          <p className="text-lg font-semibold text-gray-900">
+            {formatDate(user?.createdAt || "")}
+          </p>
         </div>
       </div>
     </BorderedBox>

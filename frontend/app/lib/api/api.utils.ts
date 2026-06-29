@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import { jwtVerify } from 'jose';
+import { jwtVerify } from "jose";
 
 export function getForwardHeaders(request: Request): HeadersInit {
   const isProduction = process.env.NODE_ENV === "production";
@@ -75,7 +75,7 @@ export function getAuthHeaders(request: Request): HeadersInit {
 }
 
 const JWT_SECRET = new TextEncoder().encode(
-  import.meta.env.VITE_JWT_SECRET || 'secret'
+  import.meta.env.VITE_JWT_SECRET || "secret",
 );
 
 export async function decodeJWT(token: string): Promise<any> {
@@ -83,7 +83,7 @@ export async function decodeJWT(token: string): Promise<any> {
     const { payload } = await jwtVerify(token, JWT_SECRET);
     return payload;
   } catch (error) {
-    console.error('Failed to decode JWT:', error);
+    console.error("Failed to decode JWT:", error);
     return null;
   }
 }

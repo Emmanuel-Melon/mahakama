@@ -40,7 +40,7 @@ export function HeroSectionAction({
         className={({ isActive }) =>
           cn(
             "relative px-6 py-3 text-sm font-bold text-gray-900 border-2 border-gray-900 bg-yellow-400 hover:bg-yellow-300 transition-all duration-200 transform hover:-translate-y-0.5 hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] inline-flex items-center",
-            isActive ? "ring-2 ring-offset-2 ring-yellow-400" : ""
+            isActive ? "ring-2 ring-offset-2 ring-yellow-400" : "",
           )
         }
         style={{
@@ -62,7 +62,7 @@ export function HeroSectionAction({
             isActive ? "ring-2 ring-offset-2 ring-gray-200" : "",
             {
               "ml-4": true, // Add left margin for better spacing
-            }
+            },
           )
         }
         style={{

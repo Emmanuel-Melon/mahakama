@@ -13,7 +13,8 @@ const dummyNotifications: Notification[] = [
     type: "case_update",
     channel: "in_app",
     title: "Case Update",
-    message: "Your case #12345 has been updated with new information from the court.",
+    message:
+      "Your case #12345 has been updated with new information from the court.",
     status: "read",
     templateKey: "case_update",
     correlationId: "correlation-123",
@@ -29,7 +30,8 @@ const dummyNotifications: Notification[] = [
     type: "appointment_reminder",
     channel: "push",
     title: "Appointment Reminder",
-    message: "You have a scheduled appointment with your lawyer tomorrow at 2:00 PM.",
+    message:
+      "You have a scheduled appointment with your lawyer tomorrow at 2:00 PM.",
     status: "sent",
     templateKey: "appointment_reminder",
     correlationId: "correlation-124",
@@ -45,7 +47,8 @@ const dummyNotifications: Notification[] = [
     type: "document_ready",
     channel: "email",
     title: "Document Ready",
-    message: "Your requested legal document has been prepared and is ready for review.",
+    message:
+      "Your requested legal document has been prepared and is ready for review.",
     status: "delivered",
     templateKey: "document_ready",
     correlationId: "correlation-125",
@@ -57,7 +60,9 @@ const dummyNotifications: Notification[] = [
   },
 ];
 
-export const NotificationsScreen: FC<NotificationsScreenProps> = ({ notifications }) => {
+export const NotificationsScreen: FC<NotificationsScreenProps> = ({
+  notifications,
+}) => {
   const notificationsToDisplay = notifications || dummyNotifications;
 
   return (

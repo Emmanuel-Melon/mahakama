@@ -77,6 +77,7 @@ Explore our interactive API documentation using Swagger UI:
 ### Using the Interactive Documentation
 
 The Swagger UI provides an interactive interface where you can:
+
 - View all available API endpoints
 - Test API calls directly from the browser
 - See request/response schemas
@@ -86,6 +87,7 @@ The Swagger UI provides an interactive interface where you can:
 ## 📋 API Structure
 
 ### Endpoint Naming Conventions
+
 - **GET** `/resource` - List/filter resources
 - **POST** `/resource` - Create a new resource
 - **GET** `/resource/:id` - Get a specific resource
@@ -125,6 +127,7 @@ Standard error responses include:
 > **Note:** Detailed security policies and considerations are currently under development. Please check back soon for updates.
 
 For now, please ensure you follow these basic security practices:
+
 - Always use HTTPS for all API requests
 - Keep your authentication tokens secure and never expose them in client-side code
 - Store sensitive configuration in environment variables
@@ -147,6 +150,7 @@ API documentation is automatically generated from JSDoc comments in the source c
 ## 🚨 Troubleshooting
 
 If you encounter issues:
+
 - Ensure the server is running
 - Check that all required environment variables are set
 - Verify that your JWT token is valid and not expired

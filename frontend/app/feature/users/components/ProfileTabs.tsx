@@ -7,11 +7,19 @@ interface ProfileTabsProps {
   children: React.ReactNode;
 }
 
-export const ProfileTabs = ({ activeTab, onTabChange, children }: ProfileTabsProps) => {
+export const ProfileTabs = ({
+  activeTab,
+  onTabChange,
+  children,
+}: ProfileTabsProps) => {
   return (
-    <Tabs value={activeTab} onValueChange={(value) => onTabChange(value as "personal" | "account")} className="w-full">
+    <Tabs
+      value={activeTab}
+      onValueChange={(value) => onTabChange(value as "personal" | "account")}
+      className="w-full"
+    >
       <TabsList className="bg-transparent border-b-2 border-gray-900 rounded-none h-auto p-0 gap-0">
-        <TabsTrigger 
+        <TabsTrigger
           value="personal"
           className="pb-3 text-sm font-bold transition-colors px-4 py-2 -mb-px flex items-center gap-2 rounded-t-lg data-[state=active]:border-2 data-[state=active]:border-gray-900 data-[state=active]:bg-yellow-400 data-[state=active]:text-gray-900 data-[state=active]:border-b-0 data-[state=active]:shadow-[-2px_-2px_0_0_#000] border-r-0"
           style={{
@@ -21,7 +29,7 @@ export const ProfileTabs = ({ activeTab, onTabChange, children }: ProfileTabsPro
           <User className="w-4 h-4" />
           Personal Information
         </TabsTrigger>
-        <TabsTrigger 
+        <TabsTrigger
           value="account"
           className="pb-3 text-sm font-bold transition-colors px-4 py-2 -mb-px flex items-center gap-2 rounded-t-lg data-[state=active]:border-2 data-[state=active]:border-gray-900 data-[state=active]:bg-yellow-400 data-[state=active]:text-gray-900 data-[state=active]:border-b-0 data-[state=active]:shadow-[-2px_-2px_0_0_#000]"
           style={{

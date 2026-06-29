@@ -15,20 +15,20 @@ export function DocumentCollection({
   displayMode: externalDisplayMode = "grid",
   variant = "default",
   showControls = true,
-  onDisplayModeChange
+  onDisplayModeChange,
 }: DocumentCollectionProps) {
-    const [displayMode, setDisplayMode] = useState<"list" | "grid">(
-      externalDisplayMode,
-    );
-    
-    useEffect(() => {
-      setDisplayMode(externalDisplayMode);
-    }, [externalDisplayMode]);
-    
-    const handleDisplayModeChange = (mode: "list" | "grid") => {
-      setDisplayMode(mode);
-      onDisplayModeChange?.(mode);
-    };
+  const [displayMode, setDisplayMode] = useState<"list" | "grid">(
+    externalDisplayMode,
+  );
+
+  useEffect(() => {
+    setDisplayMode(externalDisplayMode);
+  }, [externalDisplayMode]);
+
+  const handleDisplayModeChange = (mode: "list" | "grid") => {
+    setDisplayMode(mode);
+    onDisplayModeChange?.(mode);
+  };
   return (
     <div className="space-y-6">
       {showControls && (
