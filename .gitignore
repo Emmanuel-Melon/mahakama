@@ -1,11 +1,7 @@
 node_modules/
 dist
 _site/
-<<<<<<< MAH-3
 .env
 .env*
-=======
-.env*
 .env.example
->>>>>>> main
 .DS_Store
