@@ -1,0 +1,122 @@
+import type { Route } from "./+types/root";
+import {
+  Links,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  useLoaderData,
+  useLocation,
+} from "react-router";
+import { AppShell } from "~/layouts/AppShell";
+import { WebsiteLayout } from "~/layouts/WebsiteLayout";
+import { AuthLayout } from "~/layouts/AuthLayout";
+import { QueryClientProviderWrapper } from '~/context/query-client-provider';
+import "./app.css";
+import { userContext, authContext } from "~/middleware/context";
+import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
+import { getPageTitle, isAuthRoute, isAuthPageRoute } from "~/config/routes.config";
+import { UserProvider } from '~/context/user-provider';
+import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
+
+export const links: Route.LinksFunction = () => [
+  { rel: "preconnect", href: "https://fonts.googleapis.com" },
+  {
+    rel: "preconnect",
+    href: "https://fonts.gstatic.com",
+    crossOrigin: "anonymous",
+  },
+  {
+    rel: "stylesheet",
+    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+  },
+];
+
+export async function loader({ context }: Route.LoaderArgs) {
+  const user = context.get(userContext) || null;
+  const auth = context.get(authContext) || null;
+  return { user, token: auth?.token };
+}
+
+export function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className="h-full">
+      <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <Meta />
+        <Links />
+      </head>
+      <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
+        <QueryClientProviderWrapper>
+          {children}
+        </QueryClientProviderWrapper>
+        <ScrollRestoration />
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
+export default function App() {
+  const { user } = useLoaderData<typeof loader>();
+  const location = useLocation();
+  const pageTitle = getPageTitle(location.pathname);
+  const isAppRoute = isAuthRoute(location.pathname);
+  const isAuthRoutePage = isAuthPageRoute(location.pathname);
+
+  return (
+    <UserProvider user={user}>
+      {isAuthRoutePage ? (
+        <AuthLayout><Outlet /></AuthLayout>
+      ) : isAppRoute ? (
+        <AppShell pageTitle={pageTitle}><Outlet /></AppShell>
+      ) : (
+        <WebsiteLayout><Outlet /></WebsiteLayout>
+      )}
+    </UserProvider>
+  );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  return <RootErrorBoundary error={error} />;
+}
+
+async function authMiddleware({ request, context }) {
+  const token = getAuthToken(request);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  if (pathname.startsWith('/login') || pathname.startsWith('/signup')) {
+    return;
+  }
+
+  if (!token) {
+    return;
+  }
+
+  try {
+    const decodedToken = await decodeJWT(token);
+    if (!decodedToken) {
+      return;
+    }
+
+    // Extract user info from decoded token
+    const user = {
+      id: decodedToken.sub,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      isOnboarded: decodedToken.isOnboarded,
+      // Add any other user fields from your token payload
+    };
+
+    context.set(userContext, user);
+    context.set(authContext, { token });
+  } catch (error) {
+    console.error('Auth middleware error:', error);
+  }
+}
+
+export const middleware: Route.MiddlewareFunction[] = [
+  authMiddleware,
+];
+
