@@ -3,10 +3,7 @@ import path from "path";
 import pLimit from "p-limit";
 import { db } from "@/lib/drizzle";
 import { documentsTable } from "../documents.schema";
-import {
-  uploadPublicDocument,
-  uploadFileToBucket,
-} from "@/lib/supabase/storage";
+import { saveUploadedFile } from "@/lib/storage/storage";
 import { logger } from "@/lib/logger";
 import { NewDocument } from "../documents.types";
 import { toResult } from "@/lib/drizzle/drizzle.utils";
@@ -19,11 +16,11 @@ const limit = pLimit(CONCURRENCY_LIMIT);
 export async function ingestDocument(
   file: Express.Multer.File,
 ): Promise<DbResult<Document>> {
-  const uploadResult = await uploadPublicDocument(
-    file.buffer,
-    file.originalname,
-    file.mimetype,
-  );
+  const uploadResult = saveUploadedFile({
+    buffer: file.buffer,
+    fileName: file.originalname,
+    mimeType: file.mimetype,
+  });
   const [document] = await db
     .insert(documentsTable)
     .values({
@@ -45,11 +42,11 @@ async function uploadAndRegisterLocalFile(filePath: string) {
   const fileBuffer = fs.readFileSync(filePath);
 
   try {
-    const uploadResult = await uploadPublicDocument(
-      fileBuffer,
+    const uploadResult = saveUploadedFile({
+      buffer: fileBuffer,
       fileName,
-      "application/pdf",
-    );
+      mimeType: "application/pdf",
+    });
 
     await db.insert(documentsTable).values({
       title: fileName.replace(".pdf", "").replace(/-/g, " "),

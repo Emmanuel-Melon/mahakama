@@ -78,7 +78,6 @@
     "@chroma-core/ollama": "^0.1.7",
     "@faker-js/faker": "^10.1.0",
     "@google/genai": "^1.23.0",
-    "@supabase/supabase-js": "^2.88.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.19",
     "@types/helmet": "^0.0.48",

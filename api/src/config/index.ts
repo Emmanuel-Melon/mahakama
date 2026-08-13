@@ -3,12 +3,12 @@ import {
   ServerConfigSchema,
   DatabaseConfigSchema,
   LLMConfigSchema,
-  PlatformConfigSchema,
+  StorageConfigSchema,
   ServicesConfigSchema,
   IServerConfig,
   IDatabaseConfig,
   ILLMConfig,
-  IPlatformConfig,
+  IStorageConfig,
   IServicesConfig,
 } from "./config.types";
 
@@ -76,13 +76,10 @@ export const llmConfig = LLMConfigSchema.parse({
   },
 }) satisfies ILLMConfig;
 
-// Platform Configuration
-export const platformConfig = PlatformConfigSchema.parse({
-  supabase: {
-    url: process.env.SUPABASE_URL || "https://your-project.supabase.co",
-    serviceKey: process.env.SUPABASE_PUBLISHABLE_KEY || "",
-  },
-}) satisfies IPlatformConfig;
+// Storage Configuration
+export const storageConfig = StorageConfigSchema.parse({
+  dir: process.env.UPLOADS_DIR || "uploads",
+}) satisfies IStorageConfig;
 
 // Services Configuration
 export const servicesConfig = ServicesConfigSchema.parse({
@@ -99,7 +96,7 @@ const config = {
   server: serverConfig,
   db: dbConfig,
   llm: llmConfig,
-  platform: platformConfig,
+  storage: storageConfig,
   services: servicesConfig,
 };
 

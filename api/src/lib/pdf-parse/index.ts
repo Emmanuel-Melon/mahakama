@@ -1,3 +1,4 @@
+import fs from "fs";
 import { PDFParse, TextResult } from "pdf-parse";
 
 export const parsePdf = async (
@@ -8,6 +9,19 @@ export const parsePdf = async (
   const data = await parser.getText();
   return data;
 };
+
+export async function parsePdfFromPath(filePath: string) {
+  try {
+    const buffer = fs.readFileSync(filePath);
+    const data = await parsePdf(buffer.buffer as ArrayBuffer);
+    console.log("\n=== FIRST 500 CHARS ===");
+    console.log(data.text.substring(0, 500));
+    return data;
+  } catch (error) {
+    console.error("Error parsing PDF from path:", error);
+    throw error;
+  }
+}
 
 export async function parsePdfFromUrl(url: string) {
   try {

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createDocument } from "../operations/documents.create";
 import { HttpStatus } from "@/http-status";
 import { DocumentsSerializer } from "../document.config";
-import { uploadFileToBucket } from "@/lib/supabase/storage";
+import { saveUploadedFile } from "@/lib/storage/storage";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { documentsQueue } from "../jobs/documents.queue";
 import { sendSuccessResponse } from "@/lib/express/express.response";
@@ -13,22 +13,14 @@ import { DocumentJobs } from "../document.config";
 export const ingestDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
     const file = req.file;
-    const {
-      bucketName = "legal_documents",
-      title,
-      description,
-      type,
-      sections,
-    } = req.body;
+    const { title, description, type, sections } = req.body;
 
     if (!file) {
       throw new Error("No file provided");
     }
 
-    // Upload file to bucket (defaults to legal_documents for backward compatibility)
-    const uploadResult = await uploadFileToBucket({
-      bucketName,
-      fileBuffer: file.buffer,
+    const uploadResult = saveUploadedFile({
+      buffer: file.buffer,
       fileName: file.originalname,
       mimeType: file.mimetype,
     });

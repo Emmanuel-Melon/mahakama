@@ -1,4 +1,5 @@
-import { parsePdfFromUrl } from "@/lib/pdf-parse/";
+import { parsePdfFromPath } from "@/lib/pdf-parse/";
+import { getStoragePath } from "@/lib/storage/storage";
 import { chunkDocument } from "@/services/rag-service/rag.chunker";
 import { generateDocumentEmbeddings } from "@/services/embedding-service/embeddings.generate";
 import { logger } from "@/lib/logger";
@@ -20,8 +21,8 @@ export class DocumentsJobHandler {
     });
     const { id, storageUrl } = document.data!;
 
-    // 1. Download document and extract text
-    const fileContent = await parsePdfFromUrl(storageUrl);
+    // 1. Read document from local storage and extract text
+    const fileContent = await parsePdfFromPath(getStoragePath(storageUrl));
 
     // 2. Chunk document into sections
     const chunks = chunkDocument(

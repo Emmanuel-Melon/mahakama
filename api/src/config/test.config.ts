@@ -3,12 +3,12 @@ import {
   ServerConfigSchema,
   DatabaseConfigSchema,
   LLMConfigSchema,
-  PlatformConfigSchema,
+  StorageConfigSchema,
   ServicesConfigSchema,
   IServerConfig,
   IDatabaseConfig,
   ILLMConfig,
-  IPlatformConfig,
+  IStorageConfig,
   IServicesConfig,
 } from "./config.types";
 dotenv.config();
@@ -71,13 +71,10 @@ export const testLlmConfig = LLMConfigSchema.parse({
   },
 }) satisfies ILLMConfig;
 
-// Test Platform Configuration
-export const testPlatformConfig = PlatformConfigSchema.parse({
-  supabase: {
-    url: process.env.TEST_SUPABASE_URL || "https://test-project.supabase.co",
-    serviceKey: process.env.TEST_SUPABASE_PUBLISHABLE_KEY || "test-service-key",
-  },
-}) satisfies IPlatformConfig;
+// Test Storage Configuration
+export const testStorageConfig = StorageConfigSchema.parse({
+  dir: process.env.TEST_UPLOADS_DIR || "uploads-test",
+}) satisfies IStorageConfig;
 
 // Test Services Configuration
 export const testServicesConfig = ServicesConfigSchema.parse({
@@ -94,7 +91,7 @@ const testConfig = {
   server: testServerConfig,
   db: testDbConfig,
   llm: testLlmConfig,
-  platform: testPlatformConfig,
+  storage: testStorageConfig,
   services: testServicesConfig,
 };
 
