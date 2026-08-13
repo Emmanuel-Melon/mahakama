@@ -9,13 +9,16 @@ import { sendSuccessResponse } from "@/lib/express/express.response";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
+import { serverConfig } from "@/config";
 
 export const createDocumentHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const documentData: NewDocument = req.validatedBody;
     let storageUrl = documentData.storageUrl;
-    if (!storageUrl.startsWith("http")) {
-      storageUrl = `https://${storageUrl}`;
+    if (!/^https?:\/\//i.test(storageUrl)) {
+      storageUrl = storageUrl.startsWith("/")
+        ? `${serverConfig.baseUrl}${storageUrl}`
+        : `https://${storageUrl}`;
     }
     const document = unwrap(
       await createDocument({

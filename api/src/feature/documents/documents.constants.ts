@@ -9,8 +9,7 @@ export const documentData = [
     type: "Act",
     sections: 120,
     lastUpdated: "2022",
-    storageUrl:
-      "https://otjbvofzuukzoixvbypm.supabase.co/storage/v1/object/public/dev/Landlord%20Tenant%20Act%20-%202022.pdf",
+    storageUrl: "/uploads/samples/landlord-tenant-act-2022.pdf",
   },
   {
     id: uuidv4(),
@@ -20,7 +19,6 @@ export const documentData = [
     type: "Constitution",
     sections: 289,
     lastUpdated: "1995",
-    storageUrl:
-      "https://otjbvofzuukzoixvbypm.supabase.co/storage/v1/object/public/dev/The%20Constitution%20of%20Uganda.pdf",
+    storageUrl: "/uploads/samples/constitution-of-uganda.pdf",
   },
 ];

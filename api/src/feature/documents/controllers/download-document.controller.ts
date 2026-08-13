@@ -4,10 +4,12 @@ import { sendSuccessResponse } from "@/lib/express/express.response";
 import { findDocumentById } from "../operations/document.find";
 import { HttpStatus } from "@/http-status";
 import { DocumentsSerializer } from "../document.config";
-import { parsePdfFromUrl } from "@/lib/pdf-parse/index";
+import { parsePdfFromPath } from "@/lib/pdf-parse/index";
+import { getStoragePath } from "@/lib/storage/storage";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
+import { logger } from "@/lib/logger";
 
 export const downloadDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -45,6 +47,10 @@ export const downloadDocumentController = asyncHandler(
       },
     );
 
-    parsePdfFromUrl(document.storageUrl);
+    try {
+      await parsePdfFromPath(getStoragePath(document.storageUrl));
+    } catch (error) {
+      logger.error({ error }, "Failed to parse document PDF");
+    }
   },
 );

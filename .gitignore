@@ -13,3 +13,7 @@ _site/
 # IDE / OS
 .vscode/
 .idea/
+
+# Storage
+/uploads/
+/uploads-test/

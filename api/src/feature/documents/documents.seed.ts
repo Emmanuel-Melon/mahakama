@@ -3,9 +3,12 @@ import { db } from "@/lib/drizzle";
 import { documentsTable } from "@/feature/documents/documents.schema";
 import { logger } from "@/lib/logger";
 import { documentData } from "@/feature/documents/documents.constants";
+import { generateSamples } from "@/lib/storage/samples";
+import { serverConfig } from "@/config";
 
 export async function seedDocuments() {
   try {
+    await generateSamples();
     await db.delete(documentsTable);
 
     const documentsToInsert = documentData.map((doc) => ({
@@ -14,7 +17,7 @@ export async function seedDocuments() {
       type: doc.type,
       sections: doc.sections,
       lastUpdated: doc.lastUpdated,
-      storageUrl: doc.storageUrl,
+      storageUrl: `${serverConfig.baseUrl}${doc.storageUrl}`,
       downloadCount: 0,
     }));
 

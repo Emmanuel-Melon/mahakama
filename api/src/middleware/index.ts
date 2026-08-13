@@ -1,5 +1,6 @@
 import { Application } from "express";
 import express from "express";
+import path from "path";
 import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import { globalErrorHandler } from "./errors";
@@ -8,12 +9,13 @@ import { getIpAddress } from "./ip-address";
 import { requestLogger } from "./http-request-logger";
 import { userAgentMiddleware } from "./user-agent";
 import { corsMiddleware } from "./cors";
-import { serverConfig } from "@/config";
+import { serverConfig, storageConfig } from "@/config";
 import cookieParser from "cookie-parser";
 import { swaggerSetup, rawJSONDocs } from "@/lib/swagger";
 import { welcomeController, checkServerHealthController } from "@/lib/express";
 import mahakamaRouter from "@/routes";
 import { requestMetadata } from "./request-metadata";
+import { ensureStorageDir } from "@/lib/storage/storage";
 
 export function initializeMiddlewares(app: Application): void {
   // global middleware
@@ -32,6 +34,10 @@ export function initializeMiddlewares(app: Application): void {
   // Request logging
   app.use(requestMetadata);
   app.use(requestLogger);
+
+  // Public file serving (uploads) — before the /api router (auth-guarded)
+  ensureStorageDir();
+  app.use("/uploads", express.static(path.resolve(storageConfig.dir)));
 
   // Apply middlewares to all routes
   app.use(userAgentMiddleware);
