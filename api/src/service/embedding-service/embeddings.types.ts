@@ -15,6 +15,9 @@ export interface DocumentChunk {
   title: string;
   content: string;
   similarity?: number;
+  section?: string;
+  category?: string;
+  source?: string;
 }
 
 export interface EmbeddingResult {

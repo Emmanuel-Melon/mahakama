@@ -139,6 +139,8 @@ export interface DocumentJobMap {
   [DocumentJobs.DocumentUploaded]: {
     documentId: string;
     userId: string;
+    filename?: string;
+    size?: number;
   };
 }
 

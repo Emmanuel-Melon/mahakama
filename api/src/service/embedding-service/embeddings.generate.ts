@@ -28,12 +28,17 @@ export const generateDocumentEmbeddings = async (
   for (const documentChunk of documentChunks) {
     const document = `${documentChunk.title}. ${documentChunk.content}`;
     // Create metadata object
-    const metadata = {
+    const metadata: Record<string, unknown> = {
       id: documentChunk.id.toString(),
       title: documentChunk.title,
       content_length: documentChunk.content.length,
       imported_at: new Date().toISOString(),
     };
+
+    // Legal context metadata (omitted when absent — Chroma rejects undefined)
+    if (documentChunk.section) metadata.section = documentChunk.section;
+    if (documentChunk.category) metadata.category = documentChunk.category;
+    if (documentChunk.source) metadata.source = documentChunk.source;
 
     documents.push(document);
     metadatas.push(metadata);
