@@ -9,7 +9,7 @@ import { HttpError } from "@/lib/http/http.error";
 
 export const getDocumentByIdControlle = asyncHandler(
   async (req: Request, res: Response) => {
-    const { documentId } = req.params;
+    const documentId = req.params.documentId as string;
     const document = unwrap(
       await findDocumentById(documentId),
       new HttpError(HttpStatus.NOT_FOUND, "Document not found"),

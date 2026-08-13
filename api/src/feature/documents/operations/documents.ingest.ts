@@ -5,7 +5,7 @@ import { db } from "@/lib/drizzle";
 import { documentsTable } from "../documents.schema";
 import { saveUploadedFile } from "@/lib/storage/storage";
 import { logger } from "@/lib/logger";
-import { NewDocument } from "../documents.types";
+import { Document } from "../documents.types";
 import { toResult } from "@/lib/drizzle/drizzle.utils";
 import { DbResult } from "@/lib/drizzle/drizzle.types";
 

@@ -8,7 +8,8 @@ import { unwrap } from "@/lib/drizzle/drizzle.utils";
 
 export const upsertPreferenceController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { userId, strategyKey } = req.params;
+    const userId = req.params.userId as string;
+    const strategyKey = req.params.strategyKey as string;
     const { providerId, modelId } = req.body;
 
     const preference = unwrap(

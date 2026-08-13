@@ -1,4 +1,4 @@
-import { getRedisConnection } from "./io-redis";
+import { getRedisConnection } from "./index";
 
 export const redisCache = {
   get: async <T>(key: string): Promise<T | null> => {

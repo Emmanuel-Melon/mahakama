@@ -7,7 +7,8 @@ import { disabletInferencePreference } from "../operations/inference.update";
 // Resets to strategy default, next run will use preferredProvider again.
 export const disablePreferenceController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { userId, strategyKey } = req.params;
+    const userId = req.params.userId as string;
+    const strategyKey = req.params.strategyKey as string;
     await disabletInferencePreference(userId, strategyKey);
     return sendSuccessResponse(
       req,

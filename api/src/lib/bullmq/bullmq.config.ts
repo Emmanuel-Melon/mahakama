@@ -10,6 +10,10 @@ export enum QueueName {
   Documents = "documents",
   Lawyers = "lawyers",
   Notifications = "notifications",
+  Email = "email",
+  Push = "push",
+  InApp = "in_app",
+  Inference = "inference",
   Messages = "messages",
 }
 

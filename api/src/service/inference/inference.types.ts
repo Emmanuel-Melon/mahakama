@@ -1,5 +1,7 @@
 import { z } from "zod";
-import type { LLMResponse, LLMProviderName } from "@/lib/llm/llms.types";
+import type { LLMResponse } from "@/lib/llm/llms.types";
+import type { LLMProviderName } from "@/lib/llm/llm.config";
+import { InferenceJobs } from "./inference.config";
 import {
   inferenceProvidersSchema,
   inferenceModelsSchema,
@@ -86,3 +88,28 @@ export type NewInferenceProvider = z.infer<
 
 export type InferenceModel = z.infer<typeof inferenceModelSelectSchema>;
 export type NewInferenceModel = z.infer<typeof inferenceModelInsertSchema>;
+
+/**
+ * JOB-RELATED TYPES
+ */
+export interface InferenceJobMap {
+  [InferenceJobs.TextGeneration]: {
+    prompt: string;
+    userId: string;
+    sessionId?: string;
+    model?: string;
+    maxTokens?: number;
+  };
+  [InferenceJobs.DocumentAnalysis]: {
+    documentId: string;
+    userId: string;
+    analysisType: string;
+    options?: Record<string, unknown>;
+  };
+  [InferenceJobs.EmbeddingGeneration]: {
+    documentId: string;
+    userId: string;
+    chunkSize?: number;
+    overlapSize?: number;
+  };
+}

@@ -4,7 +4,7 @@ import { getLawyerByIdController } from "./controllers/get-lawyer-by-id.controll
 import { createLawyerController } from "./controllers/create-lawyer.controller";
 import { updateLawyerController } from "./controllers/update-lawyer.controller";
 import { validateRequestBody } from "@/middleware/request-validators";
-import { createLawyerSchema } from "./lawyers.schema";
+import { createLawyerSchema } from "./lawyers.types";
 
 const lawyersRoutes = Router();
 

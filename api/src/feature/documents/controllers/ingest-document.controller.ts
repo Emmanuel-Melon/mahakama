@@ -9,6 +9,7 @@ import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
 import { logger } from "@/lib/logger";
+import type { SSEEvent } from "@/lib/express/express.types";
 import { subscribeIngestion } from "../documents.progress";
 
 const KEEP_ALIVE_INTERVAL_MS = 15_000;
@@ -75,12 +76,12 @@ export const ingestDocumentController = asyncHandler(
         terminated = true;
         stopTimers();
         unsubscribe();
-        sse.sendEvent(event);
+        sse.sendEvent(event as SSEEvent);
         endStream();
         return;
       }
 
-      sse.sendEvent(event);
+      sse.sendEvent(event as SSEEvent);
     });
 
     res.on("close", () => {

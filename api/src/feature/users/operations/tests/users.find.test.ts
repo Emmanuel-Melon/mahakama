@@ -39,7 +39,13 @@ describe("findUsers", () => {
     };
     vi.mocked(paginate).mockResolvedValue(mockPaginatedResult as any);
 
-    const query = { page: 1, limit: 10, order: "asc" as const, role: "user" };
+    const query = {
+      page: 1,
+      limit: 10,
+      order: "asc" as const,
+      role: "user",
+      offset: 0,
+    };
     const result = await findUsers(query);
 
     expect(result).toEqual({

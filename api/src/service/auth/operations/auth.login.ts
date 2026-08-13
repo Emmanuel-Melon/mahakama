@@ -6,7 +6,16 @@ export async function loginUser(
   email: string,
   password: string,
 ): Promise<User> {
-  const user = await findUserByEmail(email);
+  const result = await findUserByEmail(email);
+  if (!result.ok) {
+    throw new Error("Invalid email or password");
+  }
+
+  const user = result.data;
+  if (!user.password) {
+    throw new Error("Invalid email or password");
+  }
+
   const isPasswordValid = await comparePasswords(password, user.password);
   if (!isPasswordValid) {
     throw new Error("Invalid email or password");
