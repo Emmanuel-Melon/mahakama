@@ -30,6 +30,7 @@ describe("findLawyers", () => {
       limit: 10,
       specialization: "Criminal Law",
       order: "asc" as const,
+      offset: 0,
     };
     const result = await findLawyers(query);
 
@@ -63,6 +64,7 @@ describe("findLawyers", () => {
       page: 0,
       limit: 0,
       order: "asc",
+      offset: 0,
     } as const;
     const result = await findLawyers(query);
 

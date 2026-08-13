@@ -9,7 +9,7 @@ import { unwrap } from "@/lib/drizzle/drizzle.utils";
 
 export const getLawyerByIdController = asyncHandler(
   async (req: Request, res: Response) => {
-    const lawyerId = req.params.id;
+    const lawyerId = req.params.id as string;
     const lawyer = unwrap(
       await findLawyerById(lawyerId),
       new HttpError(HttpStatus.NOT_FOUND, "Failed to find lawyer"),

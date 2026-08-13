@@ -60,7 +60,7 @@ async function retrieveLaws(
 
     return laws;
   } catch (error) {
-    logger.error("❌ Error retrieving laws from ChromaDB:", error);
+    logger.error({ error }, "❌ Error retrieving laws from ChromaDB:");
     throw error;
   }
 }
@@ -94,7 +94,7 @@ async function main() {
       );
     });
   } catch (error) {
-    logger.error("❌ An error occurred:", error);
+    logger.error({ error }, "❌ An error occurred:");
   }
 }
 

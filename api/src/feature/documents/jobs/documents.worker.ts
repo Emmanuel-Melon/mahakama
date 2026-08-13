@@ -22,6 +22,7 @@ export const initDocumentsWorker = () => {
   // BullMQ emits `failed` only after all retries are exhausted. Log it, persist
   // the failed status, and close the SSE stream with a terminal error event.
   worker.on("failed", (job, error) => {
+    if (!job) return;
     if (job.name !== DocumentJobs.DocumentUploaded) return;
 
     const { documentId } =

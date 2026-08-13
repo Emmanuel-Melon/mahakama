@@ -75,7 +75,7 @@ export async function downloadDocument({
       .limit(1);
 
     if (!document) {
-      return toResult(null);
+      return toResult<Document>(null);
     }
 
     await tx.insert(downloadsTable).values({
