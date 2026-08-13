@@ -9,7 +9,7 @@ import { dbConfig } from "./src/config";
 
 export default defineConfig({
   out: "./drizzle",
-  schema: ["./src/feature/**/*.schema.ts"],
+  schema: ["./src/feature/**/*.schema.ts", "./src/service/**/*.schema.ts"],
   dialect: "postgresql",
   dbCredentials: {
     url: dbConfig.postgres.url,

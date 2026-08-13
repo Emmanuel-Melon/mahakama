@@ -10,6 +10,7 @@ import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
 import { serverConfig } from "@/config";
+import { logger } from "@/lib/logger";
 
 export const createDocumentHandler = asyncHandler(
   async (req: Request, res: Response) => {
@@ -46,9 +47,18 @@ export const createDocumentHandler = asyncHandler(
       },
     );
 
-    await documentsQueue.add(DocumentJobs.DocumentUploaded, {
-      documentId: document.id,
-      userId: req.user?.id!,
-    });
+    try {
+      await documentsQueue.add(DocumentJobs.DocumentUploaded, {
+        documentId: document.id,
+        userId: req.user?.id!,
+        filename: document.title,
+        size: 0,
+      });
+    } catch (error) {
+      logger.error(
+        { documentId: document.id, error },
+        "Failed to enqueue document upload job",
+      );
+    }
   },
 );

@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { LegalDocumentChunk } from "../documents.types";
-import { searchEmbedding } from "@/services/embedding-service/embeddings.search";
+import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
 
 const COLLECTION_NAME = "legal_questions";
 
