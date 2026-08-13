@@ -14,6 +14,11 @@ import {
   institutionsToServices,
   serviceCategoriesSchema,
 } from "@/feature/services/services.schema";
+import {
+  inferenceProvidersSchema,
+  inferenceModelsSchema,
+  userInferencePreferencesSchema,
+} from "@/service/inference/inference.schema";
 
 // Users Relations
 export const usersRelations = relations(usersSchema, ({ many }) => ({
@@ -106,6 +111,42 @@ export const institutionsToServicesRelations = relations(
   }),
 );
 
+// Inference Relations
+export const inferenceProvidersRelations = relations(
+  inferenceProvidersSchema,
+  ({ many }) => ({
+    models: many(inferenceModelsSchema),
+  }),
+);
+
+export const inferenceModelsRelations = relations(
+  inferenceModelsSchema,
+  ({ one }) => ({
+    provider: one(inferenceProvidersSchema, {
+      fields: [inferenceModelsSchema.providerId],
+      references: [inferenceProvidersSchema.id],
+    }),
+  }),
+);
+
+export const userInferencePreferencesRelations = relations(
+  userInferencePreferencesSchema,
+  ({ one }) => ({
+    user: one(usersSchema, {
+      fields: [userInferencePreferencesSchema.userId],
+      references: [usersSchema.id],
+    }),
+    provider: one(inferenceProvidersSchema, {
+      fields: [userInferencePreferencesSchema.providerId],
+      references: [inferenceProvidersSchema.id],
+    }),
+    model: one(inferenceModelsSchema, {
+      fields: [userInferencePreferencesSchema.modelId],
+      references: [inferenceModelsSchema.id],
+    }),
+  }),
+);
+
 // Combined Relations Export
 export const allRelations = {
   usersRelations,
@@ -118,4 +159,7 @@ export const allRelations = {
   institutionsRelations,
   servicesRelations,
   institutionsToServicesRelations,
+  inferenceProvidersRelations,
+  inferenceModelsRelations,
+  userInferencePreferencesRelations,
 };

@@ -1,4 +1,4 @@
-import { ServiceQueueName } from "@/lib/bullmq/bullmq.config";
+import { QueueName } from "@/lib/bullmq/bullmq.config";
 import { createBullWorker } from "@/lib/bullmq";
 import { InferenceJobs } from "../inference.config";
 import { InferenceJobHandler } from "./inference.jobs";
@@ -16,6 +16,6 @@ const inferenceHandlers: JobHandlerMap<InferenceJobMap> = {
 
 export const initInferenceWorker = () =>
   createBullWorker<InferenceJobMap>(
-    ServiceQueueName.Inference,
+    QueueName.Inference,
     inferenceHandlers,
   );

@@ -2,7 +2,7 @@ import { User } from "@/feature/users/users.types";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { serverConfig } from "@/config";
-import { Response } from "express";
+import { Request, Response } from "express";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const salt = await bcrypt.genSalt(10);

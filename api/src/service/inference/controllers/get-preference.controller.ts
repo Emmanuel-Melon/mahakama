@@ -8,7 +8,8 @@ import { findPreference } from "../operations/inference.find";
 
 export const getPreferenceController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { userId, strategyKey } = req.params;
+    const userId = req.params.userId as string;
+    const strategyKey = req.params.strategyKey as string;
     const preference = unwrap(
       await findPreference(userId, strategyKey),
       new HttpError(

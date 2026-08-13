@@ -1,4 +1,4 @@
-import { GetUsersQuery } from "@/feature/users/users.types";
+import { ilike, or } from "drizzle-orm";
 import {
   PaginationOptions,
   PaginationParams,
@@ -7,7 +7,6 @@ import {
   SortConfig,
   SortConfigOptions,
   GetRequestQuery,
-  BaseFilterParams,
 } from "./express.types";
 
 export function getPaginationParams(
@@ -48,21 +47,20 @@ export function getSortConfig<T extends readonly string[]>({
 }
 
 export const applySearchConditions = (
-  options?: GetRequestQuery,
+  options: GetRequestQuery,
   query: {
     schema: any;
     searchQuery: any;
     fields: readonly string[];
   },
 ) => {
-  const conditions = [];
-  const search = (options as BaseFilterParams)?.search;
-  const { fields, schema, searchQuery } = query;
-  const formattedSearchQuery = `%${searchQuery}%`;
-  const searchFilters = fields.map((field) =>
-    ilike(schema[query.field], formattedSearchQuery),
-  );
-  if (search) {
-    return or(searchFilters);
+  if (!options.search) {
+    return undefined;
   }
+
+  const formattedSearchQuery = `%${query.searchQuery}%`;
+  const searchFilters = query.fields.map((field) =>
+    ilike(query.schema[field], formattedSearchQuery),
+  );
+  return or(...searchFilters);
 };

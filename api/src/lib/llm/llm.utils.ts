@@ -1,4 +1,5 @@
-import { LLMMessage, LLMProvider } from "./llms.types";
+import { Message } from "./llms.types";
+import type { LLMProviderName } from "./llm.config";
 import { z } from "zod";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -8,8 +9,8 @@ export interface FormattedRequest {
 }
 
 export function formatMessagesForProvider(
-  provider: LLMProvider,
-  messages: LLMMessage[],
+  provider: LLMProviderName,
+  messages: Message[],
   options: {
     systemPrompt?: string;
     responseSchema?: z.ZodSchema<any>;
@@ -22,7 +23,7 @@ export function formatMessagesForProvider(
   const baseOptions: Record<string, any> = { ...otherOptions };
 
   if (responseSchema) {
-    const jsonSchema = zodToJsonSchema(responseSchema);
+    const jsonSchema = zodToJsonSchema(responseSchema as never);
     if (provider === "gemini") {
       baseOptions.responseMimeType = "application/json";
       baseOptions.responseJsonSchema = jsonSchema;
@@ -75,7 +76,7 @@ export function formatMessagesForProvider(
 }
 
 export function buildRequestConfig(
-  provider: LLMProvider,
+  provider: LLMProviderName,
   messages: any,
   options: Record<string, any> = {},
 ): any {
@@ -146,7 +147,7 @@ export class SchemaValidator {
    * Convert Zod schema to JSON schema for inclusion in prompts
    */
   static schemaToJSON(schema: z.ZodSchema<any>): object {
-    return zodToJsonSchema(schema);
+    return zodToJsonSchema(schema as never);
   }
 
   /**
@@ -161,7 +162,7 @@ export class SchemaValidator {
   static generateTypeScriptDefinition(schema: z.ZodSchema<any>): string {
     // This is a simplified version - you might want to enhance this
     // based on your specific schema types
-    const jsonSchema = zodToJsonSchema(schema);
+    const jsonSchema = zodToJsonSchema(schema as never);
     return `Your response must be valid JSON matching this structure:\n\`\`\`typescript\n${JSON.stringify(jsonSchema, null, 2)}\n\`\`\``;
   }
 }

@@ -1,12 +1,12 @@
 import { logger } from "@/lib/logger";
-import { LLMProviderRegistry } from "@/lib/llm/llm.registry";
+import { llmProviderManager } from "@/lib/llm";
+import type { LLMProviderName } from "@/lib/llm/llm.config";
 import { InferenceStrategyRegistry } from "./inference.registry";
 import { findPreference } from "./operations/inference.find";
 import type {
   InferenceRunOptions,
   ResolvedInferenceConfig,
 } from "./inference.types";
-import type { LLMProviderName } from "@/lib/llm/llms.types";
 
 async function resolveConfig(
   strategyKey: string,
@@ -24,8 +24,8 @@ async function resolveConfig(
     const pref = await findPreference(options.userId, strategyKey);
     if (pref.data) {
       return {
-        provider: pref.data.provider,
-        model: options.model ?? pref.data.model ?? undefined,
+        provider: pref.data.providerId as LLMProviderName,
+        model: options.model ?? pref.data.modelId ?? undefined,
       };
     }
   }
@@ -57,17 +57,19 @@ export const inferenceRouter = {
     const prompt = strategy.buildPrompt(input);
 
     const requestConfig = {
-      systemPrompt: strategy.systemPrompt,
       outputType: strategy.outputSchema
         ? ("structured" as const)
         : ("text" as const),
-      responseSchema: strategy.outputSchema,
+      responseJsonSchema: strategy.outputSchema,
       model: resolved.model,
     };
 
     const execute = async (providerName: LLMProviderName) => {
-      const provider = LLMProviderRegistry.get(providerName);
-      return provider.generate<TOutput>(prompt, requestConfig);
+      const provider = llmProviderManager.getClient(providerName);
+      if (strategy.systemPrompt) {
+        provider.setSystemPrompt(strategy.systemPrompt);
+      }
+      return provider.generateTextContent<TOutput>(prompt, requestConfig);
     };
 
     let response;
@@ -94,7 +96,7 @@ export const inferenceRouter = {
       {
         strategyKey,
         provider: response.provider,
-        model: response.model,
+        model: resolved.model,
         usage: response.usage,
       },
       "InferenceRouter: request completed",

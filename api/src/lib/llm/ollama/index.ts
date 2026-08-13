@@ -4,6 +4,7 @@ import {
   ILLMProvider,
   BaseLLMOutputConfig,
   GeminiOutputConfig,
+  Message,
 } from "../llms.types";
 import { llmConfig } from "@/config";
 import { logger } from "@/lib/logger";
@@ -50,6 +51,10 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
 
   public getSystemPrompt(): string | undefined {
     return this._systemPrompt || undefined;
+  }
+
+  public async chat(messages: Message[], model: string = this.model) {
+    return this.client.chat({ model, messages });
   }
 
   public async generateTextContent<T = string>(
