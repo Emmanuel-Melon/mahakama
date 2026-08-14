@@ -1,5 +1,9 @@
-import { Link } from "react-router";
+import { Link, data } from "react-router";
 import { Home, Search } from "lucide-react";
+
+export function loader() {
+  return data(null, { status: 404 });
+}
 
 export function NotFound() {
   return (

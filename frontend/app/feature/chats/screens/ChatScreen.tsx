@@ -49,10 +49,10 @@ export const ChatScreen = ({
   } = useForm<SendMessageRequest>({
     resolver: zodResolver(sendMessageRequestSchema),
     defaultValues: {
-      chatId: chat.id,
+      chatId: chat?.id ?? "",
       content: "",
       senderType: "user",
-      userId: chat.userId,
+      userId: chat?.userId ?? "",
     },
   });
 

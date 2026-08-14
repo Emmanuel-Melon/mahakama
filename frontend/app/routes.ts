@@ -28,6 +28,7 @@ export default [
   ...toRouteConfig(messagesRoutes),
   route("onboarding", "routes/users/onboarding.tsx"),
   route("help", "routes/help.tsx"),
+  route("*", "routes/$.tsx"),
 ] satisfies RouteConfig;
 
 function toRouteConfig<K extends string>(feature: RouteDefinition<K>) {

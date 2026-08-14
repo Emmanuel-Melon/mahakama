@@ -20,7 +20,7 @@ export const createMockService = (
     description,
     categoryId: category,
     slug: faker.string.uuid(),
-    // createdAt, updatedAt are omitted
+    createdAt: new Date(),
     ...overrides,
   };
 };

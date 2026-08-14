@@ -39,6 +39,7 @@ export const LoginScreen = () => {
   return (
     <>
       <AuthForm
+        mode="login"
         handleSubmit={handleSubmit(onSubmit)}
         isLoading={isSubmitting || loginMutation.isPending}
         error={

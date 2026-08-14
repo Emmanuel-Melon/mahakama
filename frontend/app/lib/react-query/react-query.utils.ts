@@ -1,36 +1,35 @@
 import type {
   PrefetchConfig,
-  LoaderContext,
   ExtractData,
   PrefetchOptions,
 } from "./react-query.types";
+import { queryClient } from "~/lib/react-query";
 
 export function createPrefetchLoader<T extends PrefetchConfig[]>(
   configs: T,
   options: PrefetchOptions & { returnData: true }, // literal true, not boolean
-): ({ context }: { context: LoaderContext }) => Promise<ExtractData<T>>;
+): () => Promise<ExtractData<T>>;
 
 export function createPrefetchLoader<T extends PrefetchConfig[]>(
   configs: T,
   options?: PrefetchOptions & { returnData?: false },
-): ({ context }: { context: LoaderContext }) => Promise<null>;
+): () => Promise<null>;
 
 export function createPrefetchLoader<T extends PrefetchConfig[]>(
   configs: T,
   options?: PrefetchOptions,
 ) {
-  return async ({ context }: { context: LoaderContext }) => {
+  return async () => {
     if (options?.throwOnError) {
       await Promise.all(
         configs.map(({ queryKey, queryFn, staleTime }) =>
-          context.queryClient.ensureQueryData({ queryKey, queryFn, staleTime }),
+          queryClient.ensureQueryData({ queryKey, queryFn, staleTime }),
         ),
       );
     } else {
-      // your current allSettled logic
       const results = await Promise.allSettled(
         configs.map(({ queryKey, queryFn, staleTime }) =>
-          context.queryClient.ensureQueryData({ queryKey, queryFn, staleTime }),
+          queryClient.ensureQueryData({ queryKey, queryFn, staleTime }),
         ),
       );
       if (options?.returnData) {

@@ -28,6 +28,7 @@ export const servicesSchema = pgTable("services", {
   categoryId: text("category_id").references(() => serviceCategoriesSchema.id),
   slug: text("slug").unique().notNull(),
   description: text("description"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const institutionsToServices = pgTable(
