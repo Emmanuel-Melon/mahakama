@@ -23,7 +23,7 @@ export const authenticateToken = async (
   try {
     const verified = jwt.verify(token!, serverConfig.jwtSecret!) as JwtPayload;
     const user = await findUserById(verified.id);
-    if (!user) {
+    if (!user.ok || !user.data) {
       sendErrorResponse(req, res, {
         status: HttpStatus.NOT_FOUND,
         description: "User not found for valid token",
@@ -81,8 +81,8 @@ export const optionalAuth = async (
     const verified = jwt.verify(token, serverConfig.jwtSecret!) as JwtPayload;
     const user = await findUserById(verified.id);
 
-    if (user) {
-      req.user = user;
+    if (user.ok && user.data) {
+      req.user = user.data;
     } else {
       req.user = null;
     }

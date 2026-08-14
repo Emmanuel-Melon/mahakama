@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { AuthSocialButtons } from "./social-auth-buttons";
-import { Lock, Mail, Loader2 } from "lucide-react";
+import { User, Lock, Mail, Loader2 } from "lucide-react";
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
 import { schemas } from "~/lib/api/generated/api.schemas";
 import type { components } from "~/lib/api/generated/api.types";
@@ -23,22 +23,27 @@ import {
 const loginRequestSchema = schemas.postAuthv1login_Body;
 export type LoginRequest = components["schemas"]["LoginRequest"];
 
-export const AuthForm = ({
+type AuthFormValues = { email?: unknown; password?: unknown; name?: unknown };
+
+export const AuthForm = <T extends AuthFormValues>({
+  mode = "login",
   handleSubmit,
   isLoading,
   error,
   register,
   errors,
 }: {
+  mode?: "login" | "signup";
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
   isLoading: boolean;
   error: string | null;
-  register: UseFormRegister<LoginRequest>;
-  errors: FieldErrors<LoginRequest>;
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
 }) => {
+  const isSignup = mode === "signup";
   return (
     <CardWithLabel
-      label="Login"
+      label={isSignup ? "Sign Up" : "Login"}
       labelClassName="bg-yellow-100 text-yellow-800 font-bold"
       className="space-y-4 border-solid"
     >
@@ -46,6 +51,39 @@ export const AuthForm = ({
         {error && (
           <div className="p-3 bg-red-50 border-2 border-red-900 rounded text-red-900 text-sm font-medium">
             {error}
+          </div>
+        )}
+        {isSignup && (
+          <div>
+            <Label
+              htmlFor="name"
+              className="block text-sm font-bold text-gray-700 mb-2"
+            >
+              Full name
+            </Label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400" />
+              </div>
+              <Input
+                id="name"
+                {...register("name")}
+                type="text"
+                autoComplete="name"
+                disabled={isLoading}
+                className="pl-12 w-full border-2 border-gray-900 font-medium"
+                style={{
+                  boxShadow: "2px 2px 0 0 #000",
+                  borderRadius: "4px 8px 4px 8px",
+                }}
+                placeholder="John Doe"
+              />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600 font-medium">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
           </div>
         )}
         <div>
@@ -87,12 +125,14 @@ export const AuthForm = ({
             >
               Password
             </Label>
-            <NavLink
-              to="/forgot-password"
-              className="text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
-            >
-              Forgot Password?
-            </NavLink>
+            {!isSignup && (
+              <NavLink
+                to="/forgot-password"
+                className="text-sm font-bold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+              >
+                Forgot Password?
+              </NavLink>
+            )}
           </div>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -102,7 +142,7 @@ export const AuthForm = ({
               id="password"
               {...register("password")}
               type="password"
-              autoComplete="current-password"
+              autoComplete={isSignup ? "new-password" : "current-password"}
               disabled={isLoading}
               className="pl-12 w-full border-2 border-gray-900 font-medium"
               style={{
@@ -130,8 +170,10 @@ export const AuthForm = ({
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Signing in...
+              {isSignup ? "Creating account..." : "Signing in..."}
             </>
+          ) : isSignup ? (
+            "Sign Up"
           ) : (
             "Sign In"
           )}

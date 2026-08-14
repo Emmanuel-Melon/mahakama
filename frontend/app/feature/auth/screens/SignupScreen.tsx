@@ -38,6 +38,7 @@ export const SignupScreen = () => {
   return (
     <>
       <AuthForm
+        mode="signup"
         handleSubmit={handleSubmit(onSubmit)}
         isLoading={isSubmitting || registerMutation.isPending}
         error={

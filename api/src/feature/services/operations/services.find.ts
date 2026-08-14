@@ -57,6 +57,7 @@ export const findServices = async (
     {
       ...query,
       filters,
+      defaultSort: servicesSchema.createdAt,
     },
   );
   return toManyResult(result);

@@ -58,8 +58,8 @@ const prefetchDocuments = createPrefetchLoader([
 export async function loader({ context }: Route.LoaderArgs) {
   const user = context.get(userContext);
   const token = context.get(authContext)?.token || null;
-  // Throws → caught by ErrorBoundary, never reaches the component
-  await prefetchDocuments({ context });
+  // Uses allSettled internally, so a failed prefetch never throws the loader.
+  await prefetchDocuments();
 
   return { user, token };
 }
