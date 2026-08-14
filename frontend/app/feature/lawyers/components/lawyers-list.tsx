@@ -1,7 +1,8 @@
 import { LawyerCard } from "./lawyer-card";
 import { ListControls } from "~/components/list-controls";
 import { FilterSection } from "./filter-section";
-import { EmptyState } from "~/components/async-state/empty";
+import EmptyState from "~/components/async-state/EmptyState";
+import LoadingState from "~/components/async-state/LoadingState";
 import type { Lawyer } from "~/lib/api/lawyers.api";
 
 interface LawyersListProps {

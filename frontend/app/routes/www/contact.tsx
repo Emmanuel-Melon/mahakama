@@ -1,5 +1,5 @@
 import type { Route } from "./+types/contact";
-import { ContactScreen } from "~/feature/website/screens/ContactScreen";
+import { ContactScreen } from "~/feature/www/screens/ContactScreen";
 
 export function meta({}: Route.MetaArgs) {
   return [

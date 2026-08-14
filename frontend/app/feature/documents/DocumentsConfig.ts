@@ -1,21 +1,16 @@
-export const DOCUMENTS_ROUTES = {
-  INDEX: {
-    URL_SEGMENT: "documents",
-    PATH: "routes/documents/index.tsx",
-    NAME: "documentsIndex",
-    LABEL: "Documents",
-  },
-  DETAIL: {
-    URL_SEGMENT: ":documentId",
-    PATH: "routes/documents/$documentId.tsx",
-    NAME: "documentDetails",
-    LABEL: "Document Details",
-  },
-} as const;
+import { defineRoutes } from "../../lib/nav/nav.paths";
 
-const API_V1 = "/v1";
+export const documentsRoutes = defineRoutes({
+  index: { path: "documents", file: "routes/documents/index.tsx" },
+  detail: {
+    path: "documents/:documentId",
+    file: "routes/documents/$documentId.tsx",
+  },
+});
+
+export const DocumentsPaths = documentsRoutes.to;
 
 export const DOCUMENTS_API_ROUTES = {
-  ROOT: `${API_V1}/documents`,
-  DOCUMENT: `${API_V1}/documents/:documentId`,
+  ROOT: "/v1/documents",
+  DOCUMENT: "/v1/documents/:documentId",
 } as const;

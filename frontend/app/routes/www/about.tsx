@@ -1,5 +1,5 @@
-import type { Route } from "./+types/about";
-import { AboutScreen } from "~/feature/website/screens/AboutScreen";
+import type { Route } from "../+types/about";
+import { AboutScreen } from "~/feature/www/screens/AboutScreen";
 
 export function meta({}: Route.MetaArgs) {
   return [

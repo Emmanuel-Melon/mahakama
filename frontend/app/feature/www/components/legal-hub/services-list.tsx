@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { ServiceCard } from "./service-card";
 import { ListControls } from "~/components/list-controls";
-import { LoadingState } from "~/components/async-state/loading";
-import { EmptyState } from "~/components/async-state/empty";
 import type { components } from "~/lib/api/generated/api.types";
+import EmptyState from "~/components/async-state/EmptyState";
+import LoadingState from "~/components/async-state/LoadingState";
 
 export type LegalService = components["schemas"]["LegalService"];
 export type LegalServiceResource =

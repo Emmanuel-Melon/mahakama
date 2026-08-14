@@ -1,5 +1,3 @@
-import { Users, Library, History, Scale, Home } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -12,42 +10,13 @@ import {
 import { NavUser } from "~/components/nav-user";
 import { OnboardingProgress } from "~/components/onboarding-progress";
 import { SidebarNav } from "~/components/SidebarNav";
+import type { NavLinkItem } from "~/lib/nav/nav.types";
 
-const userItems = [
-  {
-    id: "nav-home",
-    title: "Home",
-    url: "/",
-    icon: Home,
-  },
-  {
-    id: "nav-recents",
-    title: "Recent Chats",
-    url: "/chats/recents",
-    icon: History,
-  },
-  {
-    id: "nav-find-lawyer",
-    title: "Find a Lawyer",
-    url: "/lawyers",
-    icon: Users,
-  },
-  {
-    id: "nav-justice-hub",
-    title: "Justice Hub",
-    url: "/legal-hub",
-    icon: Scale,
-  },
-  {
-    id: "nav-legal-database",
-    title: "Legal Database",
-    url: "/documents",
-    icon: Library,
-  },
-];
+interface AppSidebarProps {
+  navLinks: NavLinkItem[];
+}
 
-export function AppSidebar() {
-  const navigationItems = userItems;
+export function AppSidebar({ navLinks }: AppSidebarProps) {
   return (
     <Sidebar variant="inset">
       <SidebarHeader></SidebarHeader>
@@ -55,7 +24,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarNav links={navigationItems} />
+            <SidebarNav links={navLinks} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

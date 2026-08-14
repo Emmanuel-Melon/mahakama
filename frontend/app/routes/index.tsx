@@ -1,7 +1,7 @@
 import type { Route } from "./+types/index";
 import { authContext, userContext } from "~/middleware/context";
 import { redirect } from "react-router";
-import { HomeScreen } from "~/feature/website/screens/HomeScreen";
+import { HomeScreen } from "~/feature/www/screens/HomeScreen";
 import { handleRouteError } from "~/lib/errors/errors.utils";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";

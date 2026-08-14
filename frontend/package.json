@@ -13,7 +13,9 @@
     "dev:with-types": "npm run generate:types:local && npm run dev",
     "generate:types:safe": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o app/lib/api/generated/api.types.ts 2>/dev null || true",
     "dev:safe": "npm run generate:types:safe && npm run dev",
-    "generate:zod": "openapi-zod-client http://localhost:3000/api-docs.json --output app/lib/api/generated/api.schemas.ts"
+    "generate:zod": "openapi-zod-client http://localhost:3000/api-docs.json --output app/lib/api/generated/api.schemas.ts",
+    "format": "prettier --write \"app/**/*.{ts,tsx,json,css,md}\"",
+    "format:check": "prettier --check \"app/**/*.{ts,tsx,json,css,md}\""
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

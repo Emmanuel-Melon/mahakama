@@ -1,14 +1,8 @@
-export const USERS_ROUTES = {
-  PROFILE: {
-    URL_SEGMENT: ":profile",
-    PATH: "routes/users/$profile.tsx",
-    NAME: "userProfile",
-    LABEL: "Profile",
-  },
-  SETTINGS: {
-    URL_SEGMENT: "settings",
-    PATH: "routes/users/settings.tsx",
-    NAME: "userSettings",
-    LABEL: "Settings",
-  },
-} as const;
+import { defineRoutes } from "../../lib/nav/nav.paths";
+
+export const usersRoutes = defineRoutes({
+  profile: { path: "users/:profile", file: "routes/users/$profile.tsx" },
+  settings: { path: "users/settings", file: "routes/users/settings.tsx" },
+});
+
+export const UsersPaths = usersRoutes.to;

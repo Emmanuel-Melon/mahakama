@@ -1,7 +1,7 @@
-import type { Route } from "./+types/legal-hub";
-import { LegalHubScreen } from "~/feature/website/screens/LegalHubScreen";
+import type { Route } from "../+types/legal-hub";
+import { LegalHubScreen } from "~/feature/www/screens/LegalHubScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { useServices } from "~/feature/website/hooks/use-services";
+import { useServices } from "~/feature/www/hooks/use-services";
 import { LoadingState } from "~/components/async-state/LoadingState";
 import { ErrorState } from "~/components/async-state/ErrorState";
 import { useState } from "react";

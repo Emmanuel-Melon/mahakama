@@ -1,7 +1,8 @@
 import { DocumentCollection } from "~/feature/documents/components/document-collection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { Library } from "lucide-react";
-import { EmptyState } from "~/components/async-state/empty";
+import EmptyState from "~/components/async-state/EmptyState";
+import LoadingState from "~/components/async-state/LoadingState";
 import { PageLoading } from "~/components/page-loading";
 import { type Document } from "~/lib/api/documents.api";
 import { HeroSection } from "~/layouts/HeroSection";

@@ -178,11 +178,10 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
-                  /** Format: date */
+                    | unknown[];
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -276,11 +275,10 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
-                  /** Format: date */
+                    | unknown[];
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -389,11 +387,10 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
-                  /** Format: date */
+                    | unknown[];
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -504,11 +501,10 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
-                  /** Format: date */
+                    | unknown[];
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -619,9 +615,9 @@ export interface paths {
                   lastUpdated: string;
                   storageUrl: string;
                   downloadCount: number;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -690,9 +686,9 @@ export interface paths {
             lastUpdated: string;
             storageUrl: string;
             downloadCount?: number;
-            /** Format: date */
+            /** Format: date-time */
             createdAt?: string;
-            /** Format: date */
+            /** Format: date-time */
             updatedAt?: string;
           };
         };
@@ -720,9 +716,9 @@ export interface paths {
                   lastUpdated: string;
                   storageUrl: string;
                   downloadCount: number;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -827,9 +823,9 @@ export interface paths {
                   lastUpdated: string;
                   storageUrl: string;
                   downloadCount: number;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -938,9 +934,9 @@ export interface paths {
                   lastUpdated: string;
                   storageUrl: string;
                   downloadCount: number;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -1054,9 +1050,9 @@ export interface paths {
                   lastUpdated: string;
                   storageUrl: string;
                   downloadCount: number;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -1185,415 +1181,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/inference/preferences/{userId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get user inference preferences
-     * @description Retrieve all inference preferences for a specific user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description User ID */
-          userId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "inferencePreference";
-                /** Format: uuid */
-                id: string;
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  strategyKey: string;
-                  /** @enum {string} */
-                  provider: "gemini" | "ollama" | "claude";
-                  model: string | null;
-                  createdAt: string;
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/inference/preferences/{userId}/{strategyKey}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get specific inference preference
-     * @description Retrieve a specific inference preference for a user and strategy
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description User ID */
-          userId: string;
-          /** @description Strategy key (e.g., 'chat', 'qa', 'recommendations') */
-          strategyKey: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "inferencePreference";
-                /** Format: uuid */
-                id: string;
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  strategyKey: string;
-                  /** @enum {string} */
-                  provider: "gemini" | "ollama" | "claude";
-                  model: string | null;
-                  createdAt: string;
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description No preference found for this strategy */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    /**
-     * Disable inference preference
-     * @description Disables a specific inference preference, resetting to strategy default
-     */
-    put: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          /** @description User ID */
-          userId: string;
-          /** @description Strategy key to disable */
-          strategyKey: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                data: unknown;
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description No preference found for this strategy */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/inference/providers": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get available LLM providers
-     * @description Retrieve all registered LLM providers and their default models
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "provider";
-                /** Format: uuid */
-                id: string;
-                attributes: {
-                  /** @enum {string} */
-                  name: "gemini" | "ollama" | "claude";
-                  defaultModel: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/inference/strategies": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get available inference strategies
-     * @description Retrieve all registered inference strategy keys that can be configured
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "strategy";
-                /** Format: uuid */
-                id: string;
-                attributes: {
-                  key: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/v1/lawyers": {
     parameters: {
       query?: never;
@@ -1638,9 +1225,9 @@ export interface paths {
                   isAvailable: boolean;
                   location: string;
                   languages: string[];
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -1711,9 +1298,9 @@ export interface paths {
             isAvailable?: boolean;
             location: string;
             languages: string[];
-            /** Format: date */
+            /** Format: date-time */
             createdAt?: string;
-            /** Format: date */
+            /** Format: date-time */
             updatedAt?: string;
           };
         };
@@ -1743,9 +1330,9 @@ export interface paths {
                   isAvailable: boolean;
                   location: string;
                   languages: string[];
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -1861,9 +1448,9 @@ export interface paths {
                   isAvailable: boolean;
                   location: string;
                   languages: string[];
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -1945,9 +1532,9 @@ export interface paths {
             isAvailable?: boolean;
             location?: string;
             languages?: string[];
-            /** Format: date */
+            /** Format: date-time */
             createdAt?: string;
-            /** Format: date */
+            /** Format: date-time */
             updatedAt?: string;
           };
         };
@@ -1977,9 +1564,9 @@ export interface paths {
                   isAvailable: boolean;
                   location: string;
                   languages: string[];
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -2079,6 +1666,9 @@ export interface paths {
             senderType: "user" | "assistant" | "system";
             /** Format: uuid */
             userId: string | null;
+            metadata?: {
+              [key: string]: unknown;
+            };
           };
         };
       };
@@ -2109,7 +1699,7 @@ export interface paths {
                   senderType: "user" | "assistant" | "system";
                   /** Format: uuid */
                   userId: string | null;
-                  /** Format: date */
+                  /** Format: date-time */
                   timestamp: string;
                   metadata:
                     | string
@@ -2119,8 +1709,7 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
+                    | unknown[];
                 };
                 relationships?: {
                   [key: string]: unknown;
@@ -2242,7 +1831,7 @@ export interface paths {
                   senderType: "user" | "assistant" | "system";
                   /** Format: uuid */
                   userId: string | null;
-                  /** Format: date */
+                  /** Format: date-time */
                   timestamp: string;
                   metadata:
                     | string
@@ -2252,8 +1841,7 @@ export interface paths {
                     | {
                         [key: string]: unknown;
                       }
-                    | unknown[]
-                    | unknown;
+                    | unknown[];
                 };
                 relationships?: {
                   [key: string]: unknown;
@@ -2307,432 +1895,6 @@ export interface paths {
       };
     };
     put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get current user's notifications
-     * @description Returns a paginated list of notifications for the authenticated user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Notification
-                 * @description Response schema for notifications
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  type: string;
-                  /** @enum {string} */
-                  channel: "in_app" | "email" | "push";
-                  title: string;
-                  message: string;
-                  /** @enum {string} */
-                  status: "pending" | "sent" | "delivered" | "failed" | "read";
-                  templateKey: string | null;
-                  /** Format: uuid */
-                  correlationId: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[]
-                    | unknown;
-                  /** Format: date */
-                  scheduledAt: string;
-                  /** Format: date */
-                  sentAt: string | null;
-                  /** Format: date */
-                  createdAt: string;
-                  /** Format: date */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/preferences": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get user's notification preferences
-     * @description Retrieve notification preferences for the authenticated user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification-preferences";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Notification Preferences
-                 * @description Response schema for notification preferences
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  emailEnabled: boolean;
-                  pushEnabled: boolean;
-                  inAppEnabled: boolean;
-                  /** Format: date */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/set": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Set initial notification preferences
-     * @description Create default notification preferences for the authenticated user
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification-preferences";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Notification Preferences
-                 * @description Response schema for notification preferences
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  emailEnabled: boolean;
-                  pushEnabled: boolean;
-                  inAppEnabled: boolean;
-                  /** Format: date */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/preferences/update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Update notification preferences
-     * @description Update notification preferences for the authenticated user
-     */
-    put: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            /** Format: uuid */
-            userId: string;
-            emailEnabled?: boolean;
-            pushEnabled?: boolean;
-            inAppEnabled?: boolean;
-            /** Format: date */
-            updatedAt?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification-preferences";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Notification Preferences
-                 * @description Response schema for notification preferences
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  emailEnabled: boolean;
-                  pushEnabled: boolean;
-                  inAppEnabled: boolean;
-                  /** Format: date */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
     post?: never;
     delete?: never;
     options?: never;
@@ -2899,9 +2061,9 @@ export interface paths {
                   bio: string | null;
                   profilePicture: string | null;
                   isOnboarded: boolean;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -3018,9 +2180,9 @@ export interface paths {
                   bio: string | null;
                   profilePicture: string | null;
                   isOnboarded: boolean;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -3107,9 +2269,9 @@ export interface paths {
             bio?: string | null;
             profilePicture?: string | null;
             isOnboarded?: boolean;
-            /** Format: date */
+            /** Format: date-time */
             createdAt?: string;
-            /** Format: date */
+            /** Format: date-time */
             updatedAt?: string;
           };
         };
@@ -3159,9 +2321,9 @@ export interface paths {
                   bio: string | null;
                   profilePicture: string | null;
                   isOnboarded: boolean;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -3285,9 +2447,9 @@ export interface paths {
                   bio: string | null;
                   profilePicture: string | null;
                   isOnboarded: boolean;
-                  /** Format: date */
+                  /** Format: date-time */
                   createdAt: string;
-                  /** Format: date */
+                  /** Format: date-time */
                   updatedAt: string;
                 };
                 relationships?: {
@@ -3384,11 +2546,10 @@ export interface components {
         | {
             [key: string]: unknown;
           }
-        | unknown[]
-        | unknown;
-      /** Format: date */
+        | unknown[];
+      /** Format: date-time */
       createdAt: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt: string;
     };
     CreateChatRequest: {
@@ -3416,11 +2577,10 @@ export interface components {
           | {
               [key: string]: unknown;
             }
-          | unknown[]
-          | unknown;
-        /** Format: date */
+          | unknown[];
+        /** Format: date-time */
         createdAt: string;
-        /** Format: date */
+        /** Format: date-time */
         updatedAt: string;
       };
       relationships?: {
@@ -3453,11 +2613,10 @@ export interface components {
             | {
                 [key: string]: unknown;
               }
-            | unknown[]
-            | unknown;
-          /** Format: date */
+            | unknown[];
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3500,11 +2659,10 @@ export interface components {
             | {
                 [key: string]: unknown;
               }
-            | unknown[]
-            | unknown;
-          /** Format: date */
+            | unknown[];
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3541,11 +2699,10 @@ export interface components {
         | {
             [key: string]: unknown;
           }
-        | unknown[]
-        | unknown;
-      /** Format: date */
+        | unknown[];
+      /** Format: date-time */
       createdAt: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt: string;
     };
     MessageResource: {
@@ -3567,11 +2724,10 @@ export interface components {
           | {
               [key: string]: unknown;
             }
-          | unknown[]
-          | unknown;
-        /** Format: date */
+          | unknown[];
+        /** Format: date-time */
         createdAt: string;
-        /** Format: date */
+        /** Format: date-time */
         updatedAt: string;
       };
       relationships?: {
@@ -3604,11 +2760,10 @@ export interface components {
             | {
                 [key: string]: unknown;
               }
-            | unknown[]
-            | unknown;
-          /** Format: date */
+            | unknown[];
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3651,11 +2806,10 @@ export interface components {
             | {
                 [key: string]: unknown;
               }
-            | unknown[]
-            | unknown;
-          /** Format: date */
+            | unknown[];
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3688,9 +2842,9 @@ export interface components {
       lastUpdated: string;
       storageUrl: string;
       downloadCount: number;
-      /** Format: date */
+      /** Format: date-time */
       createdAt: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt: string;
     };
     CreateDocument: {
@@ -3703,9 +2857,9 @@ export interface components {
       lastUpdated: string;
       storageUrl: string;
       downloadCount?: number;
-      /** Format: date */
+      /** Format: date-time */
       createdAt?: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt?: string;
     };
     DocumentResource: {
@@ -3723,9 +2877,9 @@ export interface components {
         lastUpdated: string;
         storageUrl: string;
         downloadCount: number;
-        /** Format: date */
+        /** Format: date-time */
         createdAt: string;
-        /** Format: date */
+        /** Format: date-time */
         updatedAt: string;
       };
       relationships?: {
@@ -3754,9 +2908,9 @@ export interface components {
           lastUpdated: string;
           storageUrl: string;
           downloadCount: number;
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3795,9 +2949,9 @@ export interface components {
           lastUpdated: string;
           storageUrl: string;
           downloadCount: number;
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -3863,227 +3017,6 @@ export interface components {
     JsonApiErrorResponse: {
       errors: Record<string, never>[];
     };
-    InferencePreference: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      userId: string;
-      strategyKey: string;
-      /** @enum {string} */
-      provider: "gemini" | "ollama" | "claude";
-      model: string | null;
-      createdAt: string;
-      updatedAt: string;
-    };
-    InferencePreferenceResource: {
-      /** @enum {string} */
-      type: "inferencePreference";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        userId: string;
-        strategyKey: string;
-        /** @enum {string} */
-        provider: "gemini" | "ollama" | "claude";
-        model: string | null;
-        createdAt: string;
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    InferencePreferenceSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "inferencePreference";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          strategyKey: string;
-          /** @enum {string} */
-          provider: "gemini" | "ollama" | "claude";
-          model: string | null;
-          createdAt: string;
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    InferencePreferenceCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "inferencePreference";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          strategyKey: string;
-          /** @enum {string} */
-          provider: "gemini" | "ollama" | "claude";
-          model: string | null;
-          createdAt: string;
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    Provider: {
-      /** @enum {string} */
-      name: "gemini" | "ollama" | "claude";
-      defaultModel: string;
-    };
-    ProviderResource: {
-      /** @enum {string} */
-      type: "provider";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        /** @enum {string} */
-        name: "gemini" | "ollama" | "claude";
-        defaultModel: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    ProviderCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "provider";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** @enum {string} */
-          name: "gemini" | "ollama" | "claude";
-          defaultModel: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    Strategy: {
-      key: string;
-    };
-    StrategyResource: {
-      /** @enum {string} */
-      type: "strategy";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        key: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    StrategyCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "strategy";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          key: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
     Lawyer: {
       /** Format: uuid */
       id: string;
@@ -4096,9 +3029,9 @@ export interface components {
       isAvailable: boolean;
       location: string;
       languages: string[];
-      /** Format: date */
+      /** Format: date-time */
       createdAt: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt: string;
     };
     CreateLawyer: {
@@ -4113,9 +3046,9 @@ export interface components {
       isAvailable?: boolean;
       location: string;
       languages: string[];
-      /** Format: date */
+      /** Format: date-time */
       createdAt?: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt?: string;
     };
     LawyerResource: {
@@ -4135,9 +3068,9 @@ export interface components {
         isAvailable: boolean;
         location: string;
         languages: string[];
-        /** Format: date */
+        /** Format: date-time */
         createdAt: string;
-        /** Format: date */
+        /** Format: date-time */
         updatedAt: string;
       };
       relationships?: {
@@ -4168,9 +3101,9 @@ export interface components {
           isAvailable: boolean;
           location: string;
           languages: string[];
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -4211,9 +3144,9 @@ export interface components {
           isAvailable: boolean;
           location: string;
           languages: string[];
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -4248,6 +3181,9 @@ export interface components {
       senderType: "user" | "assistant" | "system";
       /** Format: uuid */
       userId: string | null;
+      metadata?: {
+        [key: string]: unknown;
+      };
     };
     MessageInput: {
       /** Format: uuid */
@@ -4257,288 +3193,7 @@ export interface components {
       senderType: "user" | "assistant" | "system";
       /** Format: uuid */
       userId: string | null;
-    };
-    /**
-     * Notification
-     * @description Response schema for notifications
-     */
-    Notification: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      userId: string;
-      type: string;
-      /** @enum {string} */
-      channel: "in_app" | "email" | "push";
-      title: string;
-      message: string;
-      /** @enum {string} */
-      status: "pending" | "sent" | "delivered" | "failed" | "read";
-      templateKey: string | null;
-      /** Format: uuid */
-      correlationId: string | null;
-      metadata:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[]
-        | unknown;
-      /** Format: date */
-      scheduledAt: string;
-      /** Format: date */
-      sentAt: string | null;
-      /** Format: date */
-      createdAt: string;
-      /** Format: date */
-      updatedAt: string;
-    };
-    /**
-     * Notification Preferences
-     * @description Response schema for notification preferences
-     */
-    NotificationPreferences: {
-      /** Format: uuid */
-      userId: string;
-      emailEnabled: boolean;
-      pushEnabled: boolean;
-      inAppEnabled: boolean;
-      /** Format: date */
-      updatedAt: string;
-    };
-    /**
-     * Notification Preferences
-     * @description Request schema for adding notification preferences
-     */
-    UpdateNotificationPreferences: {
-      /** Format: uuid */
-      userId: string;
-      emailEnabled?: boolean;
-      pushEnabled?: boolean;
-      inAppEnabled?: boolean;
-      /** Format: date */
-      updatedAt?: string;
-    };
-    NotificationResource: {
-      /** @enum {string} */
-      type: "notification";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Notification
-       * @description Response schema for notifications
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        userId: string;
-        type: string;
-        /** @enum {string} */
-        channel: "in_app" | "email" | "push";
-        title: string;
-        message: string;
-        /** @enum {string} */
-        status: "pending" | "sent" | "delivered" | "failed" | "read";
-        templateKey: string | null;
-        /** Format: uuid */
-        correlationId: string | null;
-        metadata:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[]
-          | unknown;
-        /** Format: date */
-        scheduledAt: string;
-        /** Format: date */
-        sentAt: string | null;
-        /** Format: date */
-        createdAt: string;
-        /** Format: date */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    NotificationSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Notification
-         * @description Response schema for notifications
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          type: string;
-          /** @enum {string} */
-          channel: "in_app" | "email" | "push";
-          title: string;
-          message: string;
-          /** @enum {string} */
-          status: "pending" | "sent" | "delivered" | "failed" | "read";
-          templateKey: string | null;
-          /** Format: uuid */
-          correlationId: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[]
-            | unknown;
-          /** Format: date */
-          scheduledAt: string;
-          /** Format: date */
-          sentAt: string | null;
-          /** Format: date */
-          createdAt: string;
-          /** Format: date */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    NotificationsCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Notification
-         * @description Response schema for notifications
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          type: string;
-          /** @enum {string} */
-          channel: "in_app" | "email" | "push";
-          title: string;
-          message: string;
-          /** @enum {string} */
-          status: "pending" | "sent" | "delivered" | "failed" | "read";
-          templateKey: string | null;
-          /** Format: uuid */
-          correlationId: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[]
-            | unknown;
-          /** Format: date */
-          scheduledAt: string;
-          /** Format: date */
-          sentAt: string | null;
-          /** Format: date */
-          createdAt: string;
-          /** Format: date */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    NotificationPreferencesSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification-preferences";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Notification Preferences
-         * @description Response schema for notification preferences
-         */
-        attributes: {
-          /** Format: uuid */
-          userId: string;
-          emailEnabled: boolean;
-          pushEnabled: boolean;
-          inAppEnabled: boolean;
-          /** Format: date */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
+      metadata?: {
         [key: string]: unknown;
       };
     };
@@ -4693,9 +3348,9 @@ export interface components {
       bio: string | null;
       profilePicture: string | null;
       isOnboarded: boolean;
-      /** Format: date */
+      /** Format: date-time */
       createdAt: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt: string;
     };
     /**
@@ -4725,9 +3380,9 @@ export interface components {
       bio?: string | null;
       profilePicture?: string | null;
       isOnboarded?: boolean;
-      /** Format: date */
+      /** Format: date-time */
       createdAt?: string;
-      /** Format: date */
+      /** Format: date-time */
       updatedAt?: string;
     };
     UserResource: {
@@ -4767,9 +3422,9 @@ export interface components {
         bio: string | null;
         profilePicture: string | null;
         isOnboarded: boolean;
-        /** Format: date */
+        /** Format: date-time */
         createdAt: string;
-        /** Format: date */
+        /** Format: date-time */
         updatedAt: string;
       };
       relationships?: {
@@ -4820,9 +3475,9 @@ export interface components {
           bio: string | null;
           profilePicture: string | null;
           isOnboarded: boolean;
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
@@ -4883,9 +3538,9 @@ export interface components {
           bio: string | null;
           profilePicture: string | null;
           isOnboarded: boolean;
-          /** Format: date */
+          /** Format: date-time */
           createdAt: string;
-          /** Format: date */
+          /** Format: date-time */
           updatedAt: string;
         };
         relationships?: {
