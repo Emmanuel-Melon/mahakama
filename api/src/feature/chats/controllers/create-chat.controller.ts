@@ -3,13 +3,14 @@ import { createChat } from "../operations/chats.create";
 import type { User } from "@/feature/users/users.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/http-status";
-import { ChatSerializer, ChatsJobs } from "../chats.config";
+import { ChatSerializer } from "../chats.config";
 import { sendMessage } from "@/feature/messages/operations/messages.create";
+import { generateAssistantReply } from "@/service/rag-service/rag.answer";
 import { UserRoles } from "@/feature/users/users.schema";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
-import { chatsQueue } from "../jobs/chats.queue";
+import { logger } from "@/lib/logger";
 
 export const createChatController = asyncHandler(
   async (req: Request<{}, {}, any>, res: Response) => {
@@ -24,7 +25,7 @@ export const createChatController = asyncHandler(
       }),
       new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create chat"),
     );
-    unwrap(
+    const userMessage = unwrap(
       await sendMessage({
         chatId: chat.id,
         content: message,
@@ -33,6 +34,23 @@ export const createChatController = asyncHandler(
       }),
       new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send message"),
     );
+
+    // Answer the first message before responding so the reply is already
+    // persisted when the client navigates to the chat. Best-effort — the chat
+    // and user message are created regardless of LLM failure.
+    try {
+      await generateAssistantReply({
+        userMessage,
+        history: [],
+        userId: user.id,
+      });
+    } catch (error) {
+      logger.error(
+        { error, chatId: chat.id },
+        "Failed to generate reply for new chat",
+      );
+    }
+
     sendSuccessResponse(
       req,
       res,
@@ -48,9 +66,5 @@ export const createChatController = asyncHandler(
         status: HttpStatus.CREATED,
       },
     );
-    chatsQueue.add(ChatsJobs.ChatCreated, {
-      userId: user.id,
-      chatId: chat.id,
-    });
   },
 );

@@ -26,13 +26,17 @@ export type UploadProgress = {
 
 export type UploadState = Record<string, UploadProgress>;
 
+// Stable key per file so same-named files don't collide in the uploads map.
+export const getUploadKey = (file: File): string =>
+  `${file.name}|${file.lastModified}|${file.size}`;
+
 export function useUploadDocument() {
   const [uploads, setUploads] = useState<UploadState>({});
 
   const upload = useCallback(async (files: File[]): Promise<boolean> => {
     let allSucceeded = true;
     for (const file of files) {
-      const key = file.name;
+      const key = getUploadKey(file);
       setUploads((prev) => ({
         ...prev,
         [key]: { status: "uploading", percentage: 0 },
@@ -45,7 +49,10 @@ export function useUploadDocument() {
             if (event.type === "progress") {
               setUploads((prev) => ({
                 ...prev,
-                [key]: { status: "uploading", percentage: event.data.percentage },
+                [key]: {
+                  status: "uploading",
+                  percentage: event.data.percentage,
+                },
               }));
             } else if (event.type === "completed") {
               setUploads((prev) => ({
