@@ -1,7 +1,7 @@
 import { PageHeader } from "~/layouts/PageHeader";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
-import { ErrorState } from "~/components/async-state/error";
-import { EmptyState } from "~/components/async-state/empty";
+import EmptyState from "~/components/async-state/EmptyState";
+import LoadingState from "~/components/async-state/LoadingState";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";

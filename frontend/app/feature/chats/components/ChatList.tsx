@@ -1,6 +1,6 @@
 import { ChatItem } from "./ChatItem";
-import { EmptyState } from "~/components/async-state/empty";
-import { ErrorState } from "~/components/async-state/error";
+import EmptyState from "~/components/async-state/EmptyState";
+import LoadingState from "~/components/async-state/LoadingState";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];

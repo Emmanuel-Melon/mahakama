@@ -8,7 +8,7 @@ import {
   BookOpen,
 } from "lucide-react";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { AboutIntro } from "~/feature/website/components/about/Intro";
+import { AboutIntro } from "~/feature/www/components/about/Intro";
 import { HeroSection } from "~/layouts/HeroSection";
 import { FeaturesGrid } from "../components/about/FeaturesGrid";
 import { LegalServicesSection } from "../components/about/LegalServicesSection";

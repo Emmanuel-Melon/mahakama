@@ -1,13 +1,10 @@
-import {
-  SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
-} from "~/components/ui/sidebar";
+import { SidebarProvider, SidebarInset } from "~/components/ui/sidebar";
 import { AppSidebar } from "~/components/app-sidebar";
 import { SiteHeader } from "~/components/site-header";
 import { Toaster } from "sonner";
 import { CountryProvider } from "~/context/country-context";
 import { NavigationLoader } from "~/components/navigation-loader";
+import { useNavLinks } from "~/hooks/use-nav-links";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -15,13 +12,15 @@ interface AppShellProps {
 }
 
 export const AppShell = ({ children, pageTitle }: AppShellProps) => {
+  const navLinks = useNavLinks();
+
   return (
     <CountryProvider>
       <Toaster />
       <main className="flex-1 pb-16 md:pb-0">
         <NavigationLoader />
         <SidebarProvider>
-          <AppSidebar />
+          <AppSidebar navLinks={navLinks} />
           <SidebarInset>
             <SiteHeader title={pageTitle} />
             {children}

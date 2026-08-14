@@ -1,24 +1,15 @@
-export const AUTH_ROUTES = {
-  LAYOUT: "./feature/auth/layout/auth.layout.tsx",
-  LOGIN: {
-    URL_SEGMENT: "login",
-    PATH: "routes/auth/login.tsx",
-    NAME: "authLogin",
-    LABEL: "Login",
+import { defineRoutes } from "../../lib/nav/nav.paths";
+
+export const authRoutes = defineRoutes({
+  login: { path: "login", file: "routes/auth/login.tsx" },
+  signup: { path: "signup", file: "routes/auth/signup.tsx" },
+  forgotPassword: {
+    path: "forgot-password",
+    file: "routes/auth/forgot-password.tsx",
   },
-  SIGNUP: {
-    URL_SEGMENT: "signup",
-    PATH: "routes/auth/signup.tsx",
-    NAME: "authSignup",
-    LABEL: "Sign Up",
-  },
-  FORGOT_PASSWORD: {
-    URL_SEGMENT: "forgot-password",
-    PATH: "routes/auth/forgot-password.tsx",
-    NAME: "authForgotPassword",
-    LABEL: "Forgot Password",
-  },
-} as const;
+});
+
+export const AuthPaths = authRoutes.to;
 
 export const AUTH_API_ROUTES = {
   ROOT: `/v1`,

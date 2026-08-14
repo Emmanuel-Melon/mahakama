@@ -33,8 +33,8 @@ const postV1documents_Body = z
     lastUpdated: z.string().max(4),
     storageUrl: z.string(),
     downloadCount: z.number().int().gte(-2147483648).lte(2147483647).optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: z.string().datetime({ offset: true }).optional(),
+    updatedAt: z.string().datetime({ offset: true }).optional(),
   })
   .passthrough();
 const postV1lawyers_Body = z
@@ -49,8 +49,8 @@ const postV1lawyers_Body = z
     isAvailable: z.boolean().optional(),
     location: z.string().max(100),
     languages: z.array(z.string()),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
+    createdAt: z.string().datetime({ offset: true }).optional(),
+    updatedAt: z.string().datetime({ offset: true }).optional(),
   })
   .passthrough();
 const putV1lawyersId_Body = z
@@ -65,8 +65,8 @@ const putV1lawyersId_Body = z
     isAvailable: z.boolean(),
     location: z.string().max(100),
     languages: z.array(z.string()),
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    createdAt: z.string().datetime({ offset: true }),
+    updatedAt: z.string().datetime({ offset: true }),
   })
   .partial()
   .passthrough();
@@ -76,15 +76,7 @@ const postV1messages_Body = z
     content: z.string().min(1),
     senderType: z.enum(["user", "assistant", "system"]),
     userId: z.string().uuid().nullable(),
-  })
-  .passthrough();
-const putV1notificationspreferencesupdate_Body = z
-  .object({
-    userId: z.string().uuid(),
-    emailEnabled: z.boolean().optional(),
-    pushEnabled: z.boolean().optional(),
-    inAppEnabled: z.boolean().optional(),
-    updatedAt: z.string().optional(),
+    metadata: z.record(z.unknown().nullable()).optional(),
   })
   .passthrough();
 const postV1users_Body = z
@@ -100,7 +92,14 @@ const postV1users_Body = z
     isAnonymous: z.boolean(),
     age: z.number().int().gte(-2147483648).lte(2147483647).nullable(),
     gender: z
-      .enum(["male", "female", "non_binary", "prefer_not_to_say", "other"])
+      .enum([
+        "male",
+        "female",
+        "non_binary",
+        "prefer_not_to_say",
+        "other",
+        null,
+      ])
       .nullable(),
     country: z.string().max(100).nullable(),
     city: z.string().max(100).nullable(),
@@ -109,8 +108,8 @@ const postV1users_Body = z
     bio: z.string().nullable(),
     profilePicture: z.string().nullable(),
     isOnboarded: z.boolean(),
-    createdAt: z.string(),
-    updatedAt: z.string(),
+    createdAt: z.string().datetime({ offset: true }),
+    updatedAt: z.string().datetime({ offset: true }),
   })
   .partial()
   .passthrough();
@@ -124,7 +123,6 @@ export const schemas = {
   postV1lawyers_Body,
   putV1lawyersId_Body,
   postV1messages_Body,
-  putV1notificationspreferencesupdate_Body,
   postV1users_Body,
 };
 
@@ -223,10 +221,9 @@ const endpoints = makeApi([
                   z.unknown(),
                   z.record(z.unknown().nullable()),
                   z.array(z.unknown().nullable()),
-                  z.unknown(),
                 ]),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -281,10 +278,9 @@ const endpoints = makeApi([
                     z.unknown(),
                     z.record(z.unknown().nullable()),
                     z.array(z.unknown().nullable()),
-                    z.unknown(),
                   ]),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
@@ -341,10 +337,9 @@ const endpoints = makeApi([
                   z.unknown(),
                   z.record(z.unknown().nullable()),
                   z.array(z.unknown().nullable()),
-                  z.unknown(),
                 ]),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -406,10 +401,9 @@ const endpoints = makeApi([
                     z.unknown(),
                     z.record(z.unknown().nullable()),
                     z.array(z.unknown().nullable()),
-                    z.unknown(),
                   ]),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
@@ -484,8 +478,8 @@ const endpoints = makeApi([
                     .int()
                     .gte(-2147483648)
                     .lte(2147483647),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
@@ -544,8 +538,8 @@ const endpoints = makeApi([
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -608,8 +602,8 @@ const endpoints = makeApi([
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -672,8 +666,8 @@ const endpoints = makeApi([
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -741,8 +735,8 @@ const endpoints = makeApi([
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -801,224 +795,6 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/v1/inference/preferences/:userId",
-    alias: "getV1inferencepreferencesUserId",
-    description: `Retrieve all inference preferences for a specific user`,
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "userId",
-        type: "Path",
-        schema: z.string().uuid(),
-      },
-    ],
-    response: z
-      .object({
-        data: z.array(
-          z
-            .object({
-              type: z.literal("inferencePreference"),
-              id: z.string().uuid(),
-              attributes: z
-                .object({
-                  id: z.string().uuid(),
-                  userId: z.string().uuid(),
-                  strategyKey: z.string(),
-                  provider: z.enum(["gemini", "ollama", "claude"]),
-                  model: z.string().nullable(),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
-                })
-                .passthrough(),
-              relationships: z.record(z.unknown().nullable()).optional(),
-              meta: z.record(z.unknown().nullable()).optional(),
-              links: z.record(z.string()).optional(),
-            })
-            .passthrough(),
-        ),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `The requested resource could not be found on the server.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/v1/inference/preferences/:userId/:strategyKey",
-    alias: "getV1inferencepreferencesUserIdStrategyKey",
-    description: `Retrieve a specific inference preference for a user and strategy`,
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "userId",
-        type: "Path",
-        schema: z.string().uuid(),
-      },
-      {
-        name: "strategyKey",
-        type: "Path",
-        schema: z.string(),
-      },
-    ],
-    response: z
-      .object({
-        data: z
-          .object({
-            type: z.literal("inferencePreference"),
-            id: z.string().uuid(),
-            attributes: z
-              .object({
-                id: z.string().uuid(),
-                userId: z.string().uuid(),
-                strategyKey: z.string(),
-                provider: z.enum(["gemini", "ollama", "claude"]),
-                model: z.string().nullable(),
-                createdAt: z.string(),
-                updatedAt: z.string(),
-              })
-              .passthrough(),
-            relationships: z.record(z.unknown().nullable()).optional(),
-            meta: z.record(z.unknown().nullable()).optional(),
-            links: z.record(z.string()).optional(),
-          })
-          .passthrough(),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `No preference found for this strategy`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "put",
-    path: "/v1/inference/preferences/:userId/:strategyKey",
-    alias: "putV1inferencepreferencesUserIdStrategyKey",
-    description: `Disables a specific inference preference, resetting to strategy default`,
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "userId",
-        type: "Path",
-        schema: z.string().uuid(),
-      },
-      {
-        name: "strategyKey",
-        type: "Path",
-        schema: z.string(),
-      },
-    ],
-    response: z
-      .object({
-        data: z.object({ data: z.unknown().nullable() }).passthrough(),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `No preference found for this strategy`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/v1/inference/providers",
-    alias: "getV1inferenceproviders",
-    description: `Retrieve all registered LLM providers and their default models`,
-    requestFormat: "json",
-    response: z
-      .object({
-        data: z.array(
-          z
-            .object({
-              type: z.literal("provider"),
-              id: z.string().uuid(),
-              attributes: z
-                .object({
-                  name: z.enum(["gemini", "ollama", "claude"]),
-                  defaultModel: z.string(),
-                })
-                .passthrough(),
-              relationships: z.record(z.unknown().nullable()).optional(),
-              meta: z.record(z.unknown().nullable()).optional(),
-              links: z.record(z.string()).optional(),
-            })
-            .passthrough(),
-        ),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/v1/inference/strategies",
-    alias: "getV1inferencestrategies",
-    description: `Retrieve all registered inference strategy keys that can be configured`,
-    requestFormat: "json",
-    response: z
-      .object({
-        data: z.array(
-          z
-            .object({
-              type: z.literal("strategy"),
-              id: z.string().uuid(),
-              attributes: z.object({ key: z.string() }).passthrough(),
-              relationships: z.record(z.unknown().nullable()).optional(),
-              meta: z.record(z.unknown().nullable()).optional(),
-              links: z.record(z.string()).optional(),
-            })
-            .passthrough(),
-        ),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
     path: "/v1/lawyers",
     alias: "getV1lawyers",
     description: `Returns a list of all registered lawyers with optional filtering and pagination`,
@@ -1050,8 +826,8 @@ const endpoints = makeApi([
                   isAvailable: z.boolean(),
                   location: z.string().max(100),
                   languages: z.array(z.string()),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
@@ -1112,8 +888,8 @@ const endpoints = makeApi([
                 isAvailable: z.boolean(),
                 location: z.string().max(100),
                 languages: z.array(z.string()),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -1183,8 +959,8 @@ const endpoints = makeApi([
                 isAvailable: z.boolean(),
                 location: z.string().max(100),
                 languages: z.array(z.string()),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -1254,8 +1030,8 @@ const endpoints = makeApi([
                 isAvailable: z.boolean(),
                 location: z.string().max(100),
                 languages: z.array(z.string()),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -1316,7 +1092,7 @@ const endpoints = makeApi([
                 content: z.string(),
                 senderType: z.enum(["user", "assistant", "system"]),
                 userId: z.string().uuid().nullable(),
-                timestamp: z.string(),
+                timestamp: z.string().datetime({ offset: true }),
                 metadata: z.union([
                   z.string(),
                   z.number(),
@@ -1324,7 +1100,6 @@ const endpoints = makeApi([
                   z.unknown(),
                   z.record(z.unknown().nullable()),
                   z.array(z.unknown().nullable()),
-                  z.unknown(),
                 ]),
               })
               .passthrough(),
@@ -1397,7 +1172,7 @@ const endpoints = makeApi([
                   content: z.string(),
                   senderType: z.enum(["user", "assistant", "system"]),
                   userId: z.string().uuid().nullable(),
-                  timestamp: z.string(),
+                  timestamp: z.string().datetime({ offset: true }),
                   metadata: z.union([
                     z.string(),
                     z.number(),
@@ -1405,7 +1180,6 @@ const endpoints = makeApi([
                     z.unknown(),
                     z.record(z.unknown().nullable()),
                     z.array(z.unknown().nullable()),
-                    z.unknown(),
                   ]),
                 })
                 .passthrough(),
@@ -1433,215 +1207,6 @@ const endpoints = makeApi([
       {
         status: 500,
         description: `An unexpected condition was encountered and no more specific message is suitable.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/v1/notifications",
-    alias: "getV1notifications",
-    description: `Returns a paginated list of notifications for the authenticated user`,
-    requestFormat: "json",
-    response: z
-      .object({
-        data: z.array(
-          z
-            .object({
-              type: z.literal("notification"),
-              id: z.string().uuid(),
-              attributes: z
-                .object({
-                  id: z.string().uuid(),
-                  userId: z.string().uuid(),
-                  type: z.string().max(50),
-                  channel: z.enum(["in_app", "email", "push"]),
-                  title: z.string().max(255),
-                  message: z.string(),
-                  status: z.enum([
-                    "pending",
-                    "sent",
-                    "delivered",
-                    "failed",
-                    "read",
-                  ]),
-                  templateKey: z.string().max(100).nullable(),
-                  correlationId: z.string().uuid().nullable(),
-                  metadata: z.union([
-                    z.string(),
-                    z.number(),
-                    z.boolean(),
-                    z.unknown(),
-                    z.record(z.unknown().nullable()),
-                    z.array(z.unknown().nullable()),
-                    z.unknown(),
-                  ]),
-                  scheduledAt: z.string(),
-                  sentAt: z.string().nullable(),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
-                })
-                .passthrough(),
-              relationships: z.record(z.unknown().nullable()).optional(),
-              meta: z.record(z.unknown().nullable()).optional(),
-              links: z.record(z.string()).optional(),
-            })
-            .passthrough(),
-        ),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 500,
-        description: `An unexpected condition was encountered and no more specific message is suitable.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
-    path: "/v1/notifications/preferences",
-    alias: "getV1notificationspreferences",
-    description: `Retrieve notification preferences for the authenticated user`,
-    requestFormat: "json",
-    response: z
-      .object({
-        data: z
-          .object({
-            type: z.literal("notification-preferences"),
-            id: z.string().uuid(),
-            attributes: z
-              .object({
-                userId: z.string().uuid(),
-                emailEnabled: z.boolean(),
-                pushEnabled: z.boolean(),
-                inAppEnabled: z.boolean(),
-                updatedAt: z.string(),
-              })
-              .passthrough(),
-            relationships: z.record(z.unknown().nullable()).optional(),
-            meta: z.record(z.unknown().nullable()).optional(),
-            links: z.record(z.string()).optional(),
-          })
-          .passthrough(),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `The requested resource could not be found on the server.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "put",
-    path: "/v1/notifications/preferences/update",
-    alias: "putV1notificationspreferencesupdate",
-    description: `Update notification preferences for the authenticated user`,
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: putV1notificationspreferencesupdate_Body,
-      },
-    ],
-    response: z
-      .object({
-        data: z
-          .object({
-            type: z.literal("notification-preferences"),
-            id: z.string().uuid(),
-            attributes: z
-              .object({
-                userId: z.string().uuid(),
-                emailEnabled: z.boolean(),
-                pushEnabled: z.boolean(),
-                inAppEnabled: z.boolean(),
-                updatedAt: z.string(),
-              })
-              .passthrough(),
-            relationships: z.record(z.unknown().nullable()).optional(),
-            meta: z.record(z.unknown().nullable()).optional(),
-            links: z.record(z.string()).optional(),
-          })
-          .passthrough(),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 400,
-        description: `The request could not be understood or was missing required parameters.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `The requested resource could not be found on the server.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "post",
-    path: "/v1/notifications/set",
-    alias: "postV1notificationsset",
-    description: `Create default notification preferences for the authenticated user`,
-    requestFormat: "json",
-    response: z
-      .object({
-        data: z
-          .object({
-            type: z.literal("notification-preferences"),
-            id: z.string().uuid(),
-            attributes: z
-              .object({
-                userId: z.string().uuid(),
-                emailEnabled: z.boolean(),
-                pushEnabled: z.boolean(),
-                inAppEnabled: z.boolean(),
-                updatedAt: z.string(),
-              })
-              .passthrough(),
-            relationships: z.record(z.unknown().nullable()).optional(),
-            meta: z.record(z.unknown().nullable()).optional(),
-            links: z.record(z.string()).optional(),
-          })
-          .passthrough(),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `The requested resource could not be found on the server.`,
         schema: JsonApiErrorResponse,
       },
     ],
@@ -1742,6 +1307,7 @@ const endpoints = makeApi([
                       "non_binary",
                       "prefer_not_to_say",
                       "other",
+                      null,
                     ])
                     .nullable(),
                   country: z.string().max(100).nullable(),
@@ -1751,8 +1317,8 @@ const endpoints = makeApi([
                   bio: z.string().nullable(),
                   profilePicture: z.string().nullable(),
                   isOnboarded: z.boolean(),
-                  createdAt: z.string(),
-                  updatedAt: z.string(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
@@ -1821,6 +1387,7 @@ const endpoints = makeApi([
                     "non_binary",
                     "prefer_not_to_say",
                     "other",
+                    null,
                   ])
                   .nullable(),
                 country: z.string().max(100).nullable(),
@@ -1830,8 +1397,8 @@ const endpoints = makeApi([
                 bio: z.string().nullable(),
                 profilePicture: z.string().nullable(),
                 isOnboarded: z.boolean(),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -1897,6 +1464,7 @@ const endpoints = makeApi([
                     "non_binary",
                     "prefer_not_to_say",
                     "other",
+                    null,
                   ])
                   .nullable(),
                 country: z.string().max(100).nullable(),
@@ -1906,8 +1474,8 @@ const endpoints = makeApi([
                 bio: z.string().nullable(),
                 profilePicture: z.string().nullable(),
                 isOnboarded: z.boolean(),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),
@@ -1972,6 +1540,7 @@ const endpoints = makeApi([
                     "non_binary",
                     "prefer_not_to_say",
                     "other",
+                    null,
                   ])
                   .nullable(),
                 country: z.string().max(100).nullable(),
@@ -1981,8 +1550,8 @@ const endpoints = makeApi([
                 bio: z.string().nullable(),
                 profilePicture: z.string().nullable(),
                 isOnboarded: z.boolean(),
-                createdAt: z.string(),
-                updatedAt: z.string(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
               })
               .passthrough(),
             relationships: z.record(z.unknown().nullable()).optional(),

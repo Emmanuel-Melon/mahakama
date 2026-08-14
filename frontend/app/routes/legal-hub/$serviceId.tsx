@@ -1,6 +1,6 @@
-import { ServiceDetailScreen } from "~/feature/website/screens/ServiceDetailScreen";
+import { ServiceDetailScreen } from "~/feature/www/screens/ServiceDetailScreen";
 import { authContext } from "~/middleware/context";
-import { useService } from "~/feature/website/hooks/use-services";
+import { useService } from "~/feature/www/hooks/use-services";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
 import { useAppError } from "~/components/errors/useAppError";

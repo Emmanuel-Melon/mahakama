@@ -39,31 +39,6 @@ export const ChatScreen = ({
   const sendMessageMutation = useSendMessage();
   const deleteChatMutation = useDeleteChat();
 
-  // Handle loading and error states
-  if (isLoading)
-    return (
-      <PageDetailsLoading
-        title="Loading Chat"
-        description="Please wait while we load your conversation..."
-      />
-    );
-  if (error)
-    return (
-      <PageDetailsError
-        error="Failed to load chat"
-        title="Error Loading Chat"
-        description="We couldn't load your conversation. Please try again."
-      />
-    );
-  if (!chat)
-    return (
-      <PageDetailsError
-        error="Chat not found"
-        title="Chat Not Found"
-        description="The conversation you're looking for doesn't exist or has been removed."
-      />
-    );
-
   const {
     register,
     handleSubmit,
@@ -129,6 +104,31 @@ export const ChatScreen = ({
       },
     });
   };
+
+  // Handle loading and error states
+  if (isLoading)
+    return (
+      <PageDetailsLoading
+        title="Loading Chat"
+        description="Please wait while we load your conversation..."
+      />
+    );
+  if (error)
+    return (
+      <PageDetailsError
+        error="Failed to load chat"
+        title="Error Loading Chat"
+        description="We couldn't load your conversation. Please try again."
+      />
+    );
+  if (!chat)
+    return (
+      <PageDetailsError
+        error="Chat not found"
+        title="Chat Not Found"
+        description="The conversation you're looking for doesn't exist or has been removed."
+      />
+    );
 
   return (
     <div className="flex flex-col h-full min-h-0">

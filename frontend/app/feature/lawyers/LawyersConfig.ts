@@ -1,21 +1,13 @@
-export const LAWYERS_ROUTES = {
-  INDEX: {
-    URL_SEGMENT: "lawyers",
-    PATH: "routes/lawyers/index.tsx",
-    NAME: "lawyersIndex",
-    LABEL: "Lawyers",
-  },
-  DETAIL: {
-    URL_SEGMENT: ":lawyerId",
-    PATH: "routes/lawyers/$lawyerId.tsx",
-    NAME: "lawyerDetail",
-    LABEL: "Lawyer Details",
-  },
-} as const;
+import { defineRoutes } from "../../lib/nav/nav.paths";
 
-const API_V1 = "/v1";
+export const lawyersRoutes = defineRoutes({
+  index: { path: "lawyers", file: "routes/lawyers/index.tsx" },
+  detail: { path: "lawyers/:lawyerId", file: "routes/lawyers/$lawyerId.tsx" },
+});
+
+export const LawyersPaths = lawyersRoutes.to;
 
 export const LAWYERS_API_ROUTES = {
-  ROOT: `${API_V1}/lawyers`,
-  LAWYER: `${API_V1}/lawyers/:lawyerId`,
+  ROOT: "/v1/lawyers",
+  LAWYER: "/v1/lawyers/:lawyerId",
 } as const;
