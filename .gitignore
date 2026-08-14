@@ -7,6 +7,7 @@ _site/
 
 # Frontend
 /.react-router/
+frontend/.react-router/
 /build/
 .netlify/
 

@@ -15,7 +15,7 @@ import { usersRoutes } from "./feature/users/UsersConfig";
 
 export default [
   index("routes/index.tsx"),
-  layout("./feature/website/layouts/website.layout.tsx", [
+  layout("./feature/www/layouts/website.layout.tsx", [
     ...toRouteConfig(websiteRoutes),
   ]),
   route("app", "routes/app/index.tsx"),

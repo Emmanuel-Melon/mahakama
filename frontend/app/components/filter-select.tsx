@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "app/components/ui/select";
+} from "~/components/ui/select";
 
 interface FilterOption {
   value: string;

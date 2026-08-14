@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 import { AuthForm } from "~/feature/auth/components/auth-form";
 import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
 import { useRegister } from "~/feature/auth/hooks/use-auth";
@@ -13,6 +14,7 @@ const registerRequestSchema = schemas.postAuthv1register_Body;
 
 export const SignupScreen = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
   const registerMutation = useRegister();
 
   const {
@@ -25,11 +27,11 @@ export const SignupScreen = () => {
 
   const onSubmit = (data: RegisterRequest) => {
     registerMutation.mutate(data, {
-      onSuccess: (authResponse) => {
+      onSuccess: () => {
         navigate("/");
       },
-      onError: (error) => {
-        toast.error("Registration failed. Please try again.");
+      onError: () => {
+        toast.error(t("signup.error"));
       },
     });
   };
@@ -39,14 +41,16 @@ export const SignupScreen = () => {
         handleSubmit={handleSubmit(onSubmit)}
         isLoading={isSubmitting || registerMutation.isPending}
         error={
-          registerMutation.error
-            ? "Invalid email or password. Please try again."
-            : null
+          registerMutation.error ? t("signup.invalidCredentials") : null
         }
         register={register}
         errors={errors}
       />
-      <AuthAlternative to="/login" text="Login" message="Have an account?" />
+      <AuthAlternative
+        to="/login"
+        text={t("signup.loginLink")}
+        message={t("signup.loginMessage")}
+      />
     </>
   );
 };

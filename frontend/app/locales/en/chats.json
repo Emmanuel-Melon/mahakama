@@ -1,0 +1,18 @@
+{
+  "new": {
+    "title": "New Chat - Mahakama",
+    "description": "Start a new conversation with our legal AI assistant"
+  },
+  "recents": {
+    "title": "Recent Chats - Mahakama",
+    "description": "View and resume your recent legal chat history"
+  },
+  "chatDetail": {
+    "title": "Chat Session - Mahakama",
+    "description": "Continue your consultation with the legal assistant"
+  },
+  "messages": {
+    "title": "Messages - Mahakama",
+    "description": "Manage your direct communications and messages"
+  }
+}
