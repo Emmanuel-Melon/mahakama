@@ -9,6 +9,7 @@ import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { generateAssistantReply } from "@/service/rag-service/rag.answer";
+import { logger } from "@/lib/logger";
 
 export const sendMessageController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -32,12 +33,20 @@ export const sendMessageController = asyncHandler(
     );
 
     // RAG + LLM: build the prompt with conversation history and persist the
-    // assistant reply (degrades to an un-answered message on failure).
-    await generateAssistantReply({
-      userMessage,
-      history: historyResult.data,
-      userId: user.id,
-    });
+    // assistant reply. Best-effort — the user message is saved regardless of
+    // LLM failure (and the client won't be tempted to retry and duplicate).
+    try {
+      await generateAssistantReply({
+        userMessage,
+        history: historyResult.data,
+        userId: user.id,
+      });
+    } catch (error) {
+      logger.error(
+        { error, chatId },
+        "Failed to generate assistant reply",
+      );
+    }
 
     sendSuccessResponse(
       req,

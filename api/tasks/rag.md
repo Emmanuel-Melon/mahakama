@@ -4,7 +4,7 @@
 > Status legend: ✅ complete · 🟡 partial · ❌ stub/broken · 🔴 dead code (unused or references missing modules) · 🗑 deleted
 >
 > All paths are relative to `api/`. The live message path is now:
-> `POST /api/v1/messages` → `src/feature/messages/controllers/create-messages.controler.ts` → saves user msg → loads history → `buildRagContext` (Chroma `legal_questions`, degrades to empty) → `buildRagChatPrompt` (single composed prompt) → `generateTextContent` → saves AI msg with `metadata.sources`.
+> `POST /api/v1/messages` → `src/feature/messages/controllers/create-messages.controler.ts` → saves user msg → loads history → `generateAssistantReply` (`src/service/rag-service/rag.answer.ts`): `buildRagContext` (Chroma `legal_questions`, degrades to empty) → `buildRagChatPrompt` (single composed prompt) → `generateTextContent` → saves AI msg with `metadata.sources`. The same `generateAssistantReply` answers the first message of a new chat (`create-chat.controller.ts`).
 
 ---
 
@@ -32,6 +32,7 @@
 | `src/service/rag-service/rag.context.ts` | ✅ | `buildRagContext` — real context (degrade-to-empty on failure) + trimmed history (exclude current, last ~10) |
 | `src/service/rag-service/rag.chunker.ts` | ✅ | Real `chunkDocument` (done via ingestion I2.1) |
 | `src/service/rag-service/rag.prompts.ts` | ✅ | `buildRagChatPrompt(question, history, context)` — single composed prompt with `[Title, Section]` citations + no-context branch |
+| `src/service/rag-service/rag.answer.ts` | ✅ | `generateAssistantReply` — shared answer path (context → prompt → LLM → persist assistant msg with `metadata.sources`); called by the messages controller and chat creation |
 | `src/feature/chats/chat.prompts.ts` | 🟡 | `systemPrompt` (structured RELATED_DOCUMENTS/RELEVANT_LAWS) exported, never set on a client |
 | `src/service/inference/inference.prompts.ts` | 🟡 | `chatSystemPrompt` + duplicate `generateResponsePrompt` |
 | `src/service/embedding-service/embeddings.generate.ts` | ✅ | `generateDocumentEmbeddings` (batches, metadata incl. section/category/source) |
@@ -44,10 +45,10 @@
 | File | Status | Notes |
 | --- | --- | --- |
 | `src/feature/messages/messages.routes.ts` | ✅ | `POST /v1/messages`, `GET /v1/messages/:chatId/all`; mounted behind auth in `src/routes/index.ts` |
-| `src/feature/messages/controllers/create-messages.controler.ts` | ✅ | Live flow — save user msg → history → `buildRagContext` → `buildRagChatPrompt` → `generateTextContent` → save assistant msg with `metadata: { sources }` → respond 201 |
+| `src/feature/messages/controllers/create-messages.controler.ts` | ✅ | Live flow — save user msg → history → `generateAssistantReply` (context → prompt → LLM → save assistant msg with `metadata: { sources }`) → respond 201; best-effort (LLM failure is logged, user msg still saved) |
 | `src/feature/messages/controllers/get-messages.controller.ts` | ✅ | Lists messages by chat (sources already surface via `metadata` in the serializer) |
 | `src/service/inference/inference.routes.ts` | 🔴 | Preferences + discovery routes; **not mounted** in `src/routes/index.ts` |
-| `src/feature/chats/controllers/create-chat.controller.ts` | 🟡 | Creates chat + first message; enqueues `ChatCreated` job that is never consumed |
+| `src/feature/chats/controllers/create-chat.controller.ts` | ✅ | Creates chat + first message, then answers the first message via `generateAssistantReply` (best-effort — chat is created regardless of LLM failure) |
 | `src/feature/chats/chats.routes.ts` | ✅ | Chat CRUD |
 
 ### 1.4 Background processing (jobs)
@@ -56,8 +57,8 @@
 | --- | --- | --- |
 | `src/lib/bullmq/` | ✅ | `queueManager`, `createBullWorker`, queue names, retries/backoff |
 | `src/lib/bullmq/bullmq.init.ts` | ✅ | Documents worker enabled; chat/message/inference workers still off |
-| `src/feature/chats/jobs/` | ❌ | `ChatCreated`/`MessageSent` handlers are stubs (`generateTextContent("Hello")`); worker not started |
-| `src/feature/messages/jobs/` | 🟡 | `MessageSent` stub remains; worker queue constant fixed (`QueueName.Messages`), not started |
+| `src/feature/chats/jobs/` | 🔴 | `ChatCreated`/`MessageSent` handlers are `generateTextContent("Hello")` stubs; worker off **and** nothing enqueues these jobs anymore (orphaned — T4.3) |
+| `src/feature/messages/jobs/` | 🔴 | `MessageSent` stub remains; queue constant fixed (`QueueName.Messages`), worker off **and** nothing enqueues it (orphaned — T4.3) |
 | `src/feature/documents/jobs/` | ✅ | `DocumentUploaded` ingest pipeline real (see [`ingestion.md`](./ingestion.md)) |
 | `src/service/inference/jobs/` | ❌ | `TextGeneration`/`DocumentAnalysis`/`EmbeddingGeneration` are TODO stubs; worker never registered |
 
@@ -89,7 +90,7 @@
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `src/lib/llm/index.ts` | ✅ | `LLMProviderManager` — default ollama; Gemini registered only when `GEMINI_API_KEY` set |
+| `src/lib/llm/index.ts` | ✅ | `LLMProviderManager` — default ollama; Gemini registered only when `GEMINI_API_KEY` set; `getClient()` falls back to the first registered provider if the default isn't configured |
 | `src/lib/llm/gemini/index.ts`, `src/lib/llm/ollama/index.ts` | ✅ | `generateTextContent` — single-turn (prompt composed by `buildRagChatPrompt`; no `setSystemPrompt` on the shared singleton) |
 | `src/lib/llm/ollama/ollama.chat.ts` | ✅ | Fixed (imports `ollamaClient` + `Message` from existing modules) |
 | `src/lib/llm/llm.registry.ts` | 🗑 | Never existed; nothing imports it — T5.1 not needed |
@@ -129,7 +130,7 @@
 ### Phase 4 — Background processing (jobs)
 - [x] **T4.1** Un-comment workers selectively in `bullmq.init.ts` (start with ingest worker; keep chat/message/inference workers off until real handlers exist).
 - [x] **T4.2** Fix `messages.worker.ts` wrong queue constant (`QueueName.Documents` → `QueueName.Messages`).
-- [ ] **T4.3** Replace chat/message job stubs with real handlers or remove the unused jobs.
+- [ ] **T4.3** Remove the orphaned chat/message jobs (nothing enqueues them since chat creation answers synchronously via `generateAssistantReply`) or repurpose them.
 - [x] **T4.4** Fix `documents.jobs.ts` `@/services/...` → `@/service/...` imports so the ingest pipeline compiles; chunker is real.
 - [ ] **T4.5** (future) Move inference to async (`inference.worker`) with SSE/polling for progress.
 
@@ -154,7 +155,7 @@
 
 ## 3. Decisions & Constraints
 
-- **Wiring approach**: synchronous in `sendMessageController` (not async jobs, not via `inferenceRouter.run`) — implemented. Smallest change, matches current UX.
+- **Wiring approach**: synchronous `generateAssistantReply` in `rag.answer.ts`, called from `sendMessageController` and `createChatController` (not async jobs, not via `inferenceRouter.run`) — implemented. Smallest change, matches current UX.
 - **Prompt**: single composed prompt via `buildRagChatPrompt` passed to `generateTextContent`; never `setSystemPrompt` (mutates the shared provider singleton).
 - **Sources**: persisted in `chat_messages.metadata` (no migration needed — jsonb exists) and surfaced through `GET /v1/messages/:chatId/all`; response shape stays `void` + frontend refetch.
 - **Dead code**: deleted (T6.5) rather than kept-and-fixed.

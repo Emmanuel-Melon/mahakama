@@ -1,0 +1,10 @@
+{
+  "profile": {
+    "title": "User Profile - Mahakama",
+    "description": "View and manage your Mahakama user profile"
+  },
+  "settings": {
+    "title": "Settings - Mahakama",
+    "description": "Manage your Mahakama account preferences and settings"
+  }
+}

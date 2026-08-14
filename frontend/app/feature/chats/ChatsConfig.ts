@@ -1,4 +1,7 @@
 import { defineRoutes } from "../../lib/nav/nav.paths";
+import en from "../../locales/en/chats.json";
+import ar from "../../locales/ar/chats.json";
+import type { I18nConfig } from "~/lib/i18n/i18next.types";
 
 const API_V1 = "/api/v1";
 
@@ -30,3 +33,11 @@ export const CHATS_API_ROUTES = {
   CHAT: `${API_V1}/chats/:chatId`,
   MESSAGES: `${API_V1}/chats/:chatId/messages`,
 } as const;
+
+export const chatsI18n: I18nConfig<"chats", typeof en> = {
+  namespace: "chats",
+  resources: {
+    en,
+    ar,
+  },
+};

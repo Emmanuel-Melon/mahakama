@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-} from "app/components/ui/dropdown-menu";
+} from "~/components/ui/dropdown-menu";
 
 interface NotificationItem {
   id: string;

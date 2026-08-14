@@ -1,0 +1,24 @@
+{
+  "signIn": "Sign In",
+  "nav": {
+    "home": "Home",
+    "recents": "Recent Chats",
+    "findLawyer": "Find a Lawyer",
+    "justiceHub": "Justice Hub",
+    "legalDatabase": "Legal Database",
+    "clients": "Clients",
+    "group": "Application"
+  },
+  "userMenu": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "locale": {
+    "en": "EN",
+    "ar": "AR"
+  },
+  "actions": {
+    "back": "Back"
+  }
+}

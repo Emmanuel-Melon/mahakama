@@ -120,23 +120,21 @@ export class DocumentsApiClient {
     const formData = new FormData();
     formData.append("file", file);
     if (options.title) formData.append("title", options.title);
-    if (options.description) formData.append("description", options.description);
+    if (options.description)
+      formData.append("description", options.description);
     if (options.type) formData.append("type", options.type);
 
     const baseURL =
       import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
     const token = getClientToken();
 
-    const response = await fetch(
-      `${baseURL}${DOCUMENTS_API_ROUTES.INGEST}`,
-      {
-        method: "POST",
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-        body: formData,
-        credentials: "include",
-        signal,
-      },
-    );
+    const response = await fetch(`${baseURL}${DOCUMENTS_API_ROUTES.INGEST}`, {
+      method: "POST",
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+      body: formData,
+      credentials: "include",
+      signal,
+    });
 
     if (!response.ok) {
       let message = `Upload failed with status ${response.status}`;

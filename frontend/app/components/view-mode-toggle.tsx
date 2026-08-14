@@ -1,6 +1,6 @@
 import { List, LayoutGrid } from "lucide-react";
-import { Button } from "app/components/ui/button";
-import { ButtonGroup } from "app/components/ui/button-group";
+import { Button } from "~/components/ui/button";
+import { ButtonGroup } from "~/components/ui/button-group";
 
 type ViewMode = "list" | "grid";
 

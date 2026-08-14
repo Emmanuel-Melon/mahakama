@@ -61,6 +61,14 @@ export class LLMProviderManager {
     const client = this.providers.get(targetProvider);
 
     if (!client) {
+      // Fall back to the first registered provider when the configured default
+      // isn't available (e.g. default ollama but only Gemini is configured).
+      if (!provider) {
+        const first = this.providers.values().next().value;
+        if (first) {
+          return first;
+        }
+      }
       throw new Error(`No provider found for ${targetProvider}`);
     }
     return client;

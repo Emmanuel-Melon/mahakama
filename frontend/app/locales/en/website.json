@@ -1,0 +1,18 @@
+{
+  "about": {
+    "title": "About Us - Mahakama",
+    "description": "Learn more about Mahakama and our mission"
+  },
+  "contact": {
+    "title": "Contact Us - Mahakama",
+    "description": "Get in touch with the Mahakama team"
+  },
+  "legalHub": {
+    "title": "Justice Hub - Mahakama",
+    "description": "Explore justice resources and legal hub services"
+  },
+  "serviceDetail": {
+    "title": "Service Details - Mahakama",
+    "description": "View detailed information about legal services"
+  }
+}

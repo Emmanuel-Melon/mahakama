@@ -1,0 +1,24 @@
+{
+  "signIn": "تسجيل الدخول",
+  "nav": {
+    "home": "الرئيسية",
+    "recents": "المحادثات الأخيرة",
+    "findLawyer": "البحث عن محامٍ",
+    "justiceHub": "مركز العدالة",
+    "legalDatabase": "قاعدة البيانات القانونية",
+    "clients": "العملاء",
+    "group": "التطبيق"
+  },
+  "userMenu": {
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "locale": {
+    "en": "EN",
+    "ar": "AR"
+  },
+  "actions": {
+    "back": "رجوع"
+  }
+}
