@@ -14,6 +14,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import { Button } from "~/components/ui/button";
+import { useUploadDocument } from "~/feature/documents/hooks/use-documents";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 
@@ -29,6 +30,7 @@ export const ChatForm = ({
   disabled = false,
 }: ChatFormProps) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
+  const { uploads, upload, isUploading } = useUploadDocument();
 
   const {
     register,
@@ -51,7 +53,12 @@ export const ChatForm = ({
     setAttachedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onFormSubmit = (data: CreateChatRequest) => {
+  const onFormSubmit = async (data: CreateChatRequest) => {
+    if (attachedFiles.length > 0) {
+      const allUploaded = await upload(attachedFiles);
+      if (!allUploaded) return;
+      setAttachedFiles([]);
+    }
     onSubmit(data);
   };
 
@@ -70,7 +77,7 @@ export const ChatForm = ({
           <InputGroupAddon align="block-end">
             <UploadDropdown
               onFileUpload={handleFileUpload}
-              disabled={isSubmitting || disabled}
+              disabled={isSubmitting || isUploading || disabled}
             />
             <InputGroupText className="ml-auto font-medium">
               Auto
@@ -81,10 +88,12 @@ export const ChatForm = ({
               variant="default"
               className="rounded-full bg-blue-600 hover:bg-blue-700 border-2 border-gray-900 shadow-[2px_2px_0_0_#000]"
               size="icon-xs"
-              disabled={!question?.trim() || isSubmitting || disabled}
+              disabled={
+                !question?.trim() || isSubmitting || isUploading || disabled
+              }
               onClick={handleSubmit(onFormSubmit)}
             >
-              {isSubmitting ? (
+              {isSubmitting || isUploading ? (
                 <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <ArrowUp className="w-3 h-3" />
@@ -98,25 +107,48 @@ export const ChatForm = ({
       {attachedFiles.length > 0 && (
         <div className="mt-3 space-y-2">
           <p className="text-sm font-medium text-gray-700">Attached files:</p>
-          {attachedFiles.map((file, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
-            >
-              <span className="text-sm text-gray-700 truncate">
-                {file.name}
-              </span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => removeFile(index)}
-                className="text-red-500 hover:text-red-700"
+          {attachedFiles.map((file, index) => {
+            const progress = uploads[file.name];
+            return (
+              <div
+                key={`${file.name}-${index}`}
+                className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-md px-3 py-2"
               >
-                Remove
-              </Button>
-            </div>
-          ))}
+                <div className="flex-1 min-w-0">
+                  <span className="text-sm text-gray-700 truncate block">
+                    {file.name}
+                  </span>
+                  {progress && progress.status !== "completed" && (
+                    <span
+                      className={`text-xs ${
+                        progress.status === "error"
+                          ? "text-red-600"
+                          : "text-blue-600"
+                      }`}
+                    >
+                      {progress.status === "error"
+                        ? progress.message ?? "Upload failed"
+                        : `Uploading... ${progress.percentage}%`}
+                    </span>
+                  )}
+                  {progress?.status === "completed" && (
+                    <span className="text-xs text-green-600">
+                      Uploaded successfully
+                    </span>
+                  )}
+                </div>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeFile(index)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  Remove
+                </Button>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

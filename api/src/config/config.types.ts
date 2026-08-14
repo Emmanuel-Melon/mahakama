@@ -56,6 +56,7 @@ export const GeminiConfigSchema = z.object({
 
 export const StorageConfigSchema = z.object({
   dir: z.string().min(1, "Storage directory is required"),
+  maxUploadMb: z.number().int().positive(),
 });
 
 // Grouped Schemas

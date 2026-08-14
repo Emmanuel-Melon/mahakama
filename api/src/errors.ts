@@ -25,6 +25,14 @@ export const mapErrorToResponse = (error: Error): ErrorResponseData => {
       meta: { validationErrors: error.issues },
     };
   }
+
+  if (error.name === "MulterError" || error.message === "Only PDF files are allowed") {
+    return {
+      status: HttpStatus.BAD_REQUEST,
+      message: error.message,
+    };
+  }
+
   return {
     status: HttpStatus.INTERNAL_SERVER_ERROR,
     message: "An unexpected error occurred",

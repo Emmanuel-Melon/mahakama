@@ -74,6 +74,7 @@ export const testLlmConfig = LLMConfigSchema.parse({
 // Test Storage Configuration
 export const testStorageConfig = StorageConfigSchema.parse({
   dir: process.env.TEST_UPLOADS_DIR || "uploads-test",
+  maxUploadMb: Number(process.env.TEST_MAX_UPLOAD_MB) || 25,
 }) satisfies IStorageConfig;
 
 // Test Services Configuration

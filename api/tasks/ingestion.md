@@ -14,34 +14,34 @@
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `src/feature/documents/documents.routes.ts` | 🟡 | `POST /v1/documents/ingest` (`upload.single("file")`), `POST /v1/documents` (metadata-only), `GET /`, `GET /:documentId`, `POST /:documentId/bookmark`, `GET /:documentId/download`; mounted behind auth in `src/routes/index.ts` |
-| `src/feature/documents/controllers/ingest-document.controller.ts` | 🟡 | Real: multer memory → `saveUploadedFile` (local `uploads/`) → `createDocument` → 201 response → `documentsQueue.add(DocumentUploaded)` **after** response sent |
-| `src/feature/documents/controllers/create-document.controller.ts` | 🟡 | Metadata-only create (normalizes `storageUrl`: `http(s)://` as-is, `/`-relative → `serverConfig.baseUrl` prefix, else `https://`); same enqueue-after-response pattern |
-| `src/feature/documents/controllers/download-document.controller.ts` | 🟡 | Fire-and-forget `parsePdfFromPath(getStoragePath(storageUrl))` after responding, try/catch + log (unused result) |
-| OpenAPI spec + `docs/feature/documents/index.md` | ❌ | Document SSE progress streaming for ingestion (`started/progress/content/completed/error`) + worker `job.updateProgress` — **never implemented**; controller returns plain JSON |
+| `src/feature/documents/documents.routes.ts` | ✅ | `POST /v1/documents/ingest` (`upload.single("file")`), `POST /v1/documents` (metadata-only), `GET /`, `GET /:documentId`, `POST /:documentId/bookmark`, `GET /:documentId/download`; mounted behind auth in `src/routes/index.ts` |
+| `src/feature/documents/controllers/ingest-document.controller.ts` | ✅ | multer memory → `saveUploadedFile` (local `uploads/`) → `createDocument` → SSE (subscribe-before-enqueue, `started`, relay, terminal `completed`/`error`, keep-alive + timeout) → `documentsQueue.add(DocumentUploaded)` in try/catch |
+| `src/feature/documents/controllers/create-document.controller.ts` | 🟡 | Metadata-only create (normalizes `storageUrl`: `http(s)://` as-is, `/`-relative → `serverConfig.baseUrl` prefix, else `https://`); enqueue-after-response wrapped in try/catch + log (no SSE — JSON 201). Only enqueues when `getStoragePath(storageUrl)` resolves locally — external http(s) URLs are skipped (would fail the worker's local PDF parse). Note: enqueues `size: 0` |
+| `src/feature/documents/controllers/download-document.controller.ts` | ✅ | Fire-and-forget `parsePdfFromPath(getStoragePath(storageUrl))` after responding, try/catch + log (unused result) |
+| OpenAPI spec (`documents.docs.ts`) | ✅ | `POST /v1/documents/ingest` documented as `text/event-stream` SSE (`started/progress/content/completed/error`); `docs/feature/documents/index.md` prose is stale (still shows the old pre-SSE pipeline) |
 
 ### 1.2 File handling
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `src/middleware/multer.ts` | 🟡 | `multer.memoryStorage()`; no file-size or type limits |
-| `src/lib/storage/storage.ts` | ✅ | `saveUploadedFile` (writes `uploads/<timestamp>-<name>`, returns `{ storagePath, publicUrl }` where `publicUrl = ${serverConfig.baseUrl}/uploads/<file>`), `getStoragePath` (traversal-guarded), `readStoredFile`, `ensureStorageDir`; served publicly at `/uploads` (see [`storage.md`](./storage.md)) |
-| `src/lib/pdf-parse/index.ts` | ✅ | `parsePdf` (pdf-parse) + `parsePdfFromPath` (disk read, logs first 500 chars) + `parsePdfFromUrl` (kept for external http(s) URLs) |
+| `src/middleware/multer.ts` | ✅ | PDF-only (`application/pdf`) via `fileFilter`; size cap `MAX_UPLOAD_MB` (default 25MB); Multer/filter errors map to 400 in `errors.ts` |
+| `src/lib/storage/storage.ts` | ✅ | `saveUploadedFile` (writes `uploads/<timestamp>-<name>`, returns `{ storagePath, publicUrl }` where `publicUrl = ${serverConfig.baseUrl}/uploads/<file>`), `getStoragePath` (traversal-guarded, **throws on external http(s) URLs**), `readStoredFile`, `ensureStorageDir`; served publicly at `/uploads` (see [`storage.md`](./storage.md)) |
+| `src/lib/pdf-parse/index.ts` | ✅ | `parsePdf` (pdf-parse, accepts `ArrayBuffer | Uint8Array` — Buffer views passed directly, no pooled-`buffer.buffer` bug) + `parsePdfFromPath` + `parsePdfFromUrl` |
 
 ### 1.3 Data layer
 
 | File | Status | Notes |
 | --- | --- | --- |
 | `src/feature/documents/documents.schema.ts` | 🟡 | `documents` table is metadata-only (title, description, type, sections, lastUpdated, storageUrl, downloadCount) — **no status/content columns**; bookmarks/downloads tables used |
-| `src/service/embedding-service/embeddings.schema.ts` | 🟡 | `document_chunks` + `embedding_jobs` tables exist, unused; pgvector column/index commented out |
-| `src/feature/documents/documents.types.ts` | 🟡 | `DocumentIngestionEvent` SSE schema + `LegalDocumentChunk` + `DocumentJobMap` defined; SSE schema unused |
+| `src/service/embedding-service/embeddings.schema.ts` | ✅ | `document_chunks` + `embedding_jobs` tables written by the worker (I3.2); pgvector column/index commented out |
+| `src/feature/documents/documents.types.ts` | ✅ | `DocumentIngestionEvent` SSE schema + `LegalDocumentChunk` + `DocumentJobMap` — used by the ingest flow |
 
 ### 1.4 Business logic
 
 | File | Status | Notes |
 | --- | --- | --- |
 | `src/feature/documents/operations/documents.create.ts` | ✅ | `createDocument` insert — used by both controllers |
-| `src/feature/documents/operations/documents.ingest.ts` | 🔴 | `ingestDocument(file)` + `runBulkImport()` (scans local `./import-queue`, p-limit 10) + `uploadAndRegisterLocalFile` — fully unused; now consistent with the controller (uses `saveUploadedFile`) |
+| `src/feature/documents/operations/documents.ingest.ts` | 🗑 | Deleted (was fully unused — `ingestDocument`/`runBulkImport`/`uploadAndRegisterLocalFile`) |
 | `src/feature/documents/operations/document.find.ts` | ✅ | `findDocumentById`, `findDocuments` (type filter + title/description search) |
 | `src/feature/documents/operations/documents.update.ts` | ✅ | `downloadDocument` (used by download controller) |
 
@@ -50,35 +50,36 @@
 | File | Status | Notes |
 | --- | --- | --- |
 | `src/feature/documents/jobs/documents.queue.ts` | ✅ | `documentsQueue` on `QueueName.Documents`; `DocumentJobMap` = `DocumentUploaded { documentId, userId }` |
-| `src/feature/documents/jobs/documents.worker.ts` | 🟡 | `initDocumentsWorker` registers `DocumentUploaded` → `handleDocumentUploaded` — **never started** |
-| `src/feature/documents/jobs/documents.jobs.ts` | ❌ | Pipeline: `findDocumentById` → `parsePdfFromPath(getStoragePath(storageUrl))` → `chunkDocument` (stub `[]`) → `generateDocumentEmbeddings` (`legal_questions`). **Broken imports** `@/services/...` (correct: `@/service/...`) → does not compile |
-| `src/lib/bullmq/bullmq.init.ts` | ❌ | `initAllWorkers()` — every worker commented out; `server.ts` calls it |
+| `src/feature/documents/jobs/documents.worker.ts` | ✅ | `initDocumentsWorker` registers `DocumentUploaded` → `handleDocumentUploaded`; started via `bullmq.init.ts` |
+| `src/feature/documents/jobs/documents.jobs.ts` | ✅ | Pipeline: `findDocumentById` → `parsePdfFromPath(getStoragePath(storageUrl))` → `chunkDocument` → `generateDocumentEmbeddings` (`legal_questions`) → `chromaClient.addDocuments`; `content`/`progress` SSE emitted **per completed embed batch** (via `onBatchProgress`), then `job.updateProgress(100)`; `markEmbeddingJobFailed` on final failure |
+| `src/lib/bullmq/bullmq.init.ts` | ✅ | Documents worker enabled (`initDocumentsWorker()`); chat/message/inference workers off |
 | `src/lib/bullmq/bullmq.config.ts` | ✅ | 3 attempts, exponential backoff 2s; worker concurrency 5 |
 
 ### 1.6 Chunking & embeddings
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `src/service/rag-service/rag.chunker.ts` | ❌ | `chunkDocument` returns `[]` (stub) |
-| `src/service/embedding-service/embeddings.generate.ts` | 🟡 | `generateDocumentEmbeddings` ✅ real (batches of 20, ids `law_${id}`, metadata id/title/content_length/imported_at) — metadata **lacks section/category/source**; `generateTextEmbedding` 🔴 misnamed (actually a Chroma query) |
-| `src/service/embedding-service/embeddings.store.ts` | 🔴 | `storeEmbedding` misnamed (actually a query); unused |
-| `src/lib/chroma/index.ts` | 🟡 | CloudClient + Ollama `nomic-embed-text`; add/query/peek/count; `getOrCreateCollection` swallows errors (logs and returns `undefined`) |
+| `src/service/rag-service/rag.chunker.ts` | ✅ | Real `chunkDocument` (I2.1): ~1000 chars, 200 overlap, word-boundary aware; `id = ${documentId}-${index}` |
+| `src/service/embedding-service/embeddings.generate.ts` | ✅ | `generateDocumentEmbeddings` (batches of 20, ids `law_${id}`, metadata id/title/section/category/source/content_length/imported_at); per-batch progress callback; **verifies collection count grew before returning** (throws otherwise) |
+| `src/service/embedding-service/embeddings.store.ts` | 🗑 | Deleted (dead code) |
+| `src/lib/chroma/index.ts` | ✅ | CloudClient + Ollama `nomic-embed-text`; add/query/peek/count; `getOrCreateCollection` **throws on failure** (no longer silently returns `undefined`) |
 
 ### 1.7 Seed / import tooling
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `src/feature/documents/scripts/import-laws-to-chroma.ts` | ❌ | `importLawsToChroma(laws)` implemented but **never invoked**; `process.exit` in `finally` |
-| `src/feature/lawyers/scripts/import-laws-to-chroma.ts` | ❌ | Self-invokes `importLawsToChroma()` but `laws: any[] = []` — imports nothing |
-| `api/package.json` `chroma:import-laws` | ❌ | Points to `scripts/import-laws-to-chroma.ts` — `api/scripts/` does not exist |
-| `src/service/rag-service/dataset/laws.dataset.ts` | ✅ | ~596 lines of Uganda laws (id/title/category/source/content) — matches `LegalDocumentChunk`, imported nowhere |
+| `src/feature/documents/scripts/import-laws-to-chroma.ts` | ✅ | Self-invoking entry importing `laws.dataset.ts` (I5.1); batches of 20, clean `process.exit(0/1)` |
+| `src/feature/lawyers/scripts/*` | 🗑 | Deleted (empty `laws` variant + duplicate retrieve script) |
+| `api/package.json` `chroma:import-laws` / `chroma:search-laws` | ✅ | Repointed to the documents scripts |
+| `src/service/rag-service/dataset/laws.dataset.ts` | ✅ | ~596 lines of Uganda laws (id/title/category/source/content) — imported by `chroma:import-laws` |
 
 ### 1.8 Frontend touchpoints
 
 | File | Status | Notes |
 | --- | --- | --- |
-| `frontend/app/lib/api/documents.api.ts` | 🟡 | `getDocuments` / `getDocumentById` only — **no upload client** |
-| `frontend/app/components/ui/upload-dropdown.tsx` + `frontend/app/feature/chats/components/chat-form.tsx` | ❌ | Upload UI only accumulates `attachedFiles` in local state; files never sent (no FormData call, no `postV1documentsingest` usage despite it existing in generated types) |
+| `frontend/app/lib/api/documents.api.ts` | ✅ | `getDocuments` / `getDocumentById` + **`uploadDocument`** (FormData → `POST /v1/documents/ingest`, streams SSE: `started/progress/content/completed/error`, auth token from cookie) |
+| `frontend/app/feature/documents/hooks/use-documents.ts` | ✅ | `useUploadDocument` — sequential per-file upload with per-file `uploading/completed/error` + percentage, returns success boolean |
+| `frontend/app/components/ui/upload-dropdown.tsx` + `frontend/app/feature/chats/components/chat-form.tsx` | ✅ | Dropdown narrowed to `.pdf` (image option removed); files uploaded on submit before the chat is created; per-file progress/error surfaced in the attachment list |
 
 ---
 
@@ -86,16 +87,15 @@
 
 Uploading a document today:
 
-1. **File upload** → multer in-memory, no validation of size/type.
+1. **File upload** → multer in-memory, **PDF-only, max `MAX_UPLOAD_MB` (25MB default)**; violations → 400.
 2. **Local disk** → written under `uploads/<timestamp>-<name>`, served publicly at `/uploads`, `publicUrl = <baseUrl>/uploads/<file>`.
-3. **DB** → a metadata-only `documents` row (title, description, type, sections, year, storageUrl).
-4. **Response** → 201 with the document JSON:API resource.
-5. **Queue** → `DocumentUploaded` job enqueued to Redis **after** the response is sent. If Redis is down, `documentsQueue.add(...)` throws post-response (unhandled).
-6. **Worker** → **never runs** (all workers commented out in `bullmq.init.ts`). Jobs accumulate in Redis indefinitely.
+3. **DB** → a metadata-only `documents` row (title, description, type, sections, year, storageUrl). Documents are **global — no ownership column** (anyone can and should upload; deliberate decision).
+4. **Response** → SSE `text/event-stream` on `POST /v1/documents/ingest` (`started` immediately), 201 JSON on `POST /v1/documents`.
+5. **Queue** → `DocumentUploaded` job enqueued to Redis after the SSE stream is set up (subscribe-before-enqueue; try/catch + terminal `error` event on failure). If Redis is down, the request still responds with the terminal error via SSE.
+6. **Worker** → `initDocumentsWorker()` runs in `bullmq.init.ts`. The job handler: extracts PDF text (`pdf-parse`) → `chunkDocument` → `generateDocumentEmbeddings` → `chromaClient.addDocuments` into `legal_questions`; `content`/`progress` SSE events emitted **per completed embed batch** via `documents.progress.ts`; persists chunk/status rows in `document_chunks` + `embedding_jobs`; terminal `completed`/`error` events; `failed` listener calls `markEmbeddingJobFailed` after retries are exhausted. Chroma failures now **throw** (collection errors are not swallowed, and the embed count is verified) so the job fails loudly instead of silently reporting COMPLETED.
+7. **Seeding** → `npm run chroma:import-laws` seeds `legal_questions` from `laws.dataset.ts` (I5.1).
 
-The intended next steps (PDF parse → chunk → embed into Chroma `legal_questions`) exist only in `documents.jobs.ts`, which additionally **does not compile** (`@/services/...` imports) and depends on the `chunkDocument` stub.
-
-**Conclusion: nothing reaches Chroma.** The connection between uploads and the RAG read-path (`legal_questions`) is design intent only.
+**Conclusion:** uploads now reach Chroma — the ingest write-path and the RAG read-path (`legal_questions`) share the same store, and chat answers retrieve from it (see [`rag.md`](./rag.md)).
 
 ---
 
@@ -113,7 +113,7 @@ The intended next steps (PDF parse → chunk → embed into Chroma `legal_questi
 - [ ] **I2.2** (defer) Parse `[Title, Section]` from extracted text to enrich chunk metadata.
 
 ### Phase III — Embeddings metadata & persistence
-- [x] **I3.1** Extend `generateDocumentEmbeddings` metadata with `section`/`category`/`source` so retrieval sources carry titles/sections (aligns with `RAGSource` in rag.md T1.3). `DocumentChunk` gained optional `section`/`category`/`source`; metadata keys match what `rag.retrieval.ts` already reads (`category`, `source`). Fields omitted when absent (Chroma rejects `undefined`).
+- [x] **I3.1** Extend `generateDocumentEmbeddings` metadata with `section`/`category`/`source` so retrieval sources carry titles/sections (aligns with `RAGSource` in rag.md T1.3). `DocumentChunk` gained optional `section`/`category`/`source`; metadata keys match what `rag.service.retrieveContext` reads (`title`, `section`, `category`, `source`). Fields omitted when absent (Chroma rejects `undefined`).
 - [x] **I3.2** Persist chunk/status rows in `document_chunks` + `embedding_jobs`. New `embeddings.persistence.ts` (`upsertEmbeddingJob` — insert-or-update per documentId, `saveDocumentChunks` — idempotent across retries, `markEmbeddingJobFailed`); job handler now records `processing → completed/failed` and persists chunk rows. Postgres stays an audit/cache — Chroma remains the vector store, no pgvector. Requires `document_chunks` + `embedding_jobs` to exist in the DB: `drizzle.config.ts` schema glob widened `src/feature/**` → + `src/service/**` (these service tables were never migrated); run `drizzle:generate` + review + `drizzle:migrate`. Note: the generated migration will also create other schema-only service tables (`auth_events`, `notifications`, `inference_models`, `inference_providers`, `user_inference_preferences`, `user_notification_preferences`).
 
 ### Phase IV — Progress & error handling
@@ -121,11 +121,11 @@ The intended next steps (PDF parse → chunk → embed into Chroma `legal_questi
 - [x] **I4.2** Final-failure handling centralized in the worker's `failed` listener (BullMQ emits `failed` only after retries are exhausted, per `defaultBullJobOptions` attempts: 3). It logs the failure, calls `markEmbeddingJobFailed`, and publishes the terminal SSE `error` event — which also covers failures occurring before the chunk/embed pipeline (PDF parse/chunk errors). Guard `job.attemptsMade >= (job.opts.attempts ?? 1)` is kept defensively; `removeOnFail` stays `false`. The error-event emission + per-attempt `markEmbeddingJobFailed` were removed from `documents.jobs.ts` (single source of truth; intermediate retries stay `processing`).
 
 ### Phase V — Seeding & tests
-- [ ] **I5.1** Fix `chroma:import-laws` npm script → runnable entry that calls `importLawsToChroma(laws.dataset.ts)`; delete/redirect the empty `lawyers/scripts` variant. (Unblocks end-to-end verification.)
+- [x] **I5.1** Fix `chroma:import-laws` npm script → runnable entry that calls `importLawsToChroma(laws.dataset.ts)`; delete/redirect the empty `lawyers/scripts` variant. (Unblocks end-to-end verification.) Done: `src/feature/documents/scripts/import-laws-to-chroma.ts` rewritten as a self-invoking entry importing `laws.dataset.ts`; both `chroma:import-laws` and `chroma:search-laws` repointed; the two `lawyers/scripts/*` files deleted.
 - [ ] **I5.2** Unit tests: `chunkDocument` (length/overlap/empty), `generateDocumentEmbeddings` (batch size, metadata, ids), job handler with mocked Chroma/LLM (success + retry-on-failure).
 
 ### Phase VI — Frontend
-- [ ] **I6.1** Add `uploadDocument(file)` to `documents.api.ts` (FormData → `POST /v1/documents/ingest`); wire `UploadDropdown` in `chat-form.tsx` to call it; surface status/progress.
+- [x] **I6.1** Add `uploadDocument(file)` to `documents.api.ts` (FormData → `POST /v1/documents/ingest`, streaming SSE); wire `UploadDropdown` in `chat-form.tsx` to call it; surface status/progress. Done: `uploadDocument` streams SSE events (`started/progress/content/completed/error`), `useUploadDocument` hook tracks per-file status/percentage, chat-form uploads attached files before creating the chat.
 - [ ] **I6.2** (defer) Dedicated documents-management screen with upload + per-document status.
 
 ---

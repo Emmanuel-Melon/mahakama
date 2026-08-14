@@ -79,6 +79,7 @@ export const llmConfig = LLMConfigSchema.parse({
 // Storage Configuration
 export const storageConfig = StorageConfigSchema.parse({
   dir: process.env.UPLOADS_DIR || "uploads",
+  maxUploadMb: Number(process.env.MAX_UPLOAD_MB) || 25,
 }) satisfies IStorageConfig;
 
 // Services Configuration

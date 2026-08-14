@@ -11,4 +11,4 @@ const messagesHandlers: JobHandlerMap<MessageJobMap> = {
 };
 
 export const initMessagesWorker = () =>
-  createBullWorker<MessageJobMap>(QueueName.Documents, messagesHandlers);
+  createBullWorker<MessageJobMap>(QueueName.Messages, messagesHandlers);

@@ -48,10 +48,11 @@ export class ChromaClient {
         name,
         embeddingFunction: this._embedder,
       });
-      logger.info(`Connected to existing collection: ${name}`);
+      logger.info(`Connected to collection: ${name}`);
       return collection;
     } catch (error) {
-      logger.info(`Creating new collection: ${name}`);
+      logger.error({ error, collectionName: name }, "Failed to connect to Chroma collection");
+      throw error;
     }
   }
 
@@ -72,7 +73,7 @@ export class ChromaClient {
         (_, i) => `doc_${Date.now()}_${i}`,
       );
 
-    await collection?.upsert({
+    await collection.upsert({
       ids: documentIds,
       documents,
       metadatas,
@@ -89,7 +90,7 @@ export class ChromaClient {
 
     const collection = await this.getOrCreateCollection(collectionName);
 
-    return collection?.query({
+    return collection.query({
       queryTexts: Array.isArray(queryTexts) ? queryTexts : [queryTexts],
       nResults,
     });
@@ -97,12 +98,12 @@ export class ChromaClient {
 
   public async peekCollection(collectionName: string) {
     const collection = await this.getOrCreateCollection(collectionName);
-    return collection?.peek({ limit: 10 });
+    return collection.peek({ limit: 10 });
   }
 
   public async countCollection(collectionName: string) {
     const collection = await this.getOrCreateCollection(collectionName);
-    return collection?.count();
+    return collection.count();
   }
 }
 

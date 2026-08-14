@@ -13,4 +13,5 @@ export const DocumentsPaths = documentsRoutes.to;
 export const DOCUMENTS_API_ROUTES = {
   ROOT: "/v1/documents",
   DOCUMENT: "/v1/documents/:documentId",
+  INGEST: "/v1/documents/ingest",
 } as const;

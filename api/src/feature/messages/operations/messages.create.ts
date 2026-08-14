@@ -10,7 +10,7 @@ import { DbResult } from "@/lib/drizzle/drizzle.types";
 export const sendMessage = async (
   input: MessageInput,
 ): Promise<DbResult<ChatMessage>> => {
-  const { chatId, content, senderType, userId } = input;
+  const { chatId, content, senderType, userId, metadata } = input;
   const timestamp = new Date();
 
   const chat = await getChatById(chatId);
@@ -40,6 +40,7 @@ export const sendMessage = async (
       senderType,
       userId,
       timestamp,
+      metadata,
     })
     .returning();
 

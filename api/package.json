@@ -36,8 +36,8 @@
     "drizzle:reset": "npx drizzle-kit drop && npx drizzle-kit push",
     "db:reset": "tsx src/lib/drizzle/drizzle.reset.ts",
     "seed": "tsx src/lib/drizzle/drizzle.seed.ts",
-    "chroma:import-laws": "tsx scripts/import-laws-to-chroma.ts",
-    "chroma:search-laws": "tsx scripts/retrieve-laws-from-chroma.ts",
+    "chroma:import-laws": "tsx src/feature/documents/scripts/import-laws-to-chroma.ts",
+    "chroma:search-laws": "tsx src/feature/documents/scripts/retrieve-laws-from-chroma.ts",
     "test:embeddings": "ts-node src/lib/llm/ollama/ollama.embeddings.ts",
     "ollama:list": "ts-node scripts/manage-ollama-models.ts list",
     "ollama:pull": "ts-node scripts/manage-ollama-models.ts pull nomic-embed-text"
