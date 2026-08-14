@@ -14,7 +14,10 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import { Button } from "~/components/ui/button";
-import { useUploadDocument } from "~/feature/documents/hooks/use-documents";
+import {
+  useUploadDocument,
+  getUploadKey,
+} from "~/feature/documents/hooks/use-documents";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 
@@ -30,7 +33,7 @@ export const ChatForm = ({
   disabled = false,
 }: ChatFormProps) => {
   const [attachedFiles, setAttachedFiles] = useState<File[]>([]);
-  const { uploads, upload, isUploading } = useUploadDocument();
+  const { uploads, upload, clearUploads, isUploading } = useUploadDocument();
 
   const {
     register,
@@ -58,6 +61,7 @@ export const ChatForm = ({
       const allUploaded = await upload(attachedFiles);
       if (!allUploaded) return;
       setAttachedFiles([]);
+      clearUploads();
     }
     onSubmit(data);
   };
@@ -108,7 +112,7 @@ export const ChatForm = ({
         <div className="mt-3 space-y-2">
           <p className="text-sm font-medium text-gray-700">Attached files:</p>
           {attachedFiles.map((file, index) => {
-            const progress = uploads[file.name];
+            const progress = uploads[getUploadKey(file)];
             return (
               <div
                 key={`${file.name}-${index}`}
@@ -127,7 +131,7 @@ export const ChatForm = ({
                       }`}
                     >
                       {progress.status === "error"
-                        ? progress.message ?? "Upload failed"
+                        ? (progress.message ?? "Upload failed")
                         : `Uploading... ${progress.percentage}%`}
                     </span>
                   )}

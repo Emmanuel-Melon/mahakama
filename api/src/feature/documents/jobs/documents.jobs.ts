@@ -1,10 +1,12 @@
 import { Job } from "bullmq";
-import { parsePdfFromPath } from "@/lib/pdf-parse/";
+import { parsePdfFromPath, parsePdfFromUrl } from "@/lib/pdf-parse/";
 import { getStoragePath } from "@/lib/storage/storage";
+import { serverConfig } from "@/config";
 import { chunkDocument } from "@/service/rag-service/rag.chunker";
 import { generateDocumentEmbeddings } from "@/service/embedding-service/embeddings.generate";
 import {
   EmbeddingJobStatus,
+  markEmbeddingJobFailed,
   saveDocumentChunks,
   upsertEmbeddingJob,
 } from "@/service/embedding-service/embeddings.persistence";
@@ -30,8 +32,14 @@ export class DocumentsJobHandler {
     });
     const { id, storageUrl, title } = document.data!;
 
-    // 1. Read document from local storage and extract text
-    const fileContent = await parsePdfFromPath(getStoragePath(storageUrl));
+    // 1. Read document and extract text. External http(s) URLs are fetched and
+    //    parsed remotely; anything else is resolved to local storage.
+    const isExternalUrl =
+      /^https?:\/\//i.test(storageUrl) &&
+      !storageUrl.startsWith(serverConfig.baseUrl);
+    const fileContent = isExternalUrl
+      ? await parsePdfFromUrl(storageUrl)
+      : await parsePdfFromPath(getStoragePath(storageUrl));
 
     // 2. Chunk document into sections
     const chunks = chunkDocument(
@@ -45,6 +53,29 @@ export class DocumentsJobHandler {
         overlapSize: 200,
       },
     );
+
+    // Image-only/scanned PDFs produce no text. Fail loudly instead of
+    // silently "completing" with 0 chunks — and don't throw (no pointless
+    // retries for a permanent condition).
+    if (chunks.length === 0) {
+      logger.warn(
+        { documentId: id },
+        "Document contains no extractable text; marking embedding job failed",
+      );
+      markEmbeddingJobFailed(
+        id,
+        new Error("PDF contains no extractable text"),
+      );
+      publishIngestionEvent(id, {
+        type: "error",
+        data: {
+          message:
+            "The PDF contains no extractable text. It may be scanned or image-only.",
+          code: "NO_EXTRACTABLE_TEXT",
+        },
+      });
+      return { success: false, documentId: id, userId };
+    }
 
     await upsertEmbeddingJob(id, {
       status: EmbeddingJobStatus.PROCESSING,

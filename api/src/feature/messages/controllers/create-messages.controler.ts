@@ -4,13 +4,11 @@ import { getMessagesByChatId } from "../operations/messages.list";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/http-status";
 import { MessageSerializer } from "../messages.config";
-import { llmProviderManager } from "@/lib/llm";
 import { type User } from "@/feature/users/users.types";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
-import { buildRagContext } from "@/service/rag-service/rag.context";
-import { buildRagChatPrompt } from "@/service/rag-service/rag.prompts";
+import { generateAssistantReply } from "@/service/rag-service/rag.answer";
 
 export const sendMessageController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -33,28 +31,13 @@ export const sendMessageController = asyncHandler(
       new HttpError(HttpStatus.BAD_REQUEST, "Failed to load chat history"),
     );
 
-    // RAG: retrieve legal context (degrades to empty on failure) and build the
-    // prompt with conversation history.
-    const { context, conversationHistory } = await buildRagContext(
+    // RAG + LLM: build the prompt with conversation history and persist the
+    // assistant reply (degrades to an un-answered message on failure).
+    await generateAssistantReply({
       userMessage,
-      historyResult.data,
-    );
-
-    const prompt = buildRagChatPrompt(content, conversationHistory, context);
-
-    const client = llmProviderManager.getClient();
-    const result = await client.generateTextContent(prompt);
-
-    const aiMessage = unwrap(
-      await sendMessage({
-        chatId,
-        content: result.content,
-        senderType: "assistant",
-        userId: user.id,
-        metadata: context.sources.length ? { sources: context.sources } : undefined,
-      }),
-      new HttpError(HttpStatus.BAD_REQUEST, "Failed to create AI message"),
-    );
+      history: historyResult.data,
+      userId: user.id,
+    });
 
     sendSuccessResponse(
       req,

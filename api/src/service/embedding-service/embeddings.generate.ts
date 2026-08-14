@@ -42,7 +42,6 @@ export const generateDocumentEmbeddings = async (
   // Add documents to ChromaDB in batches to avoid timeouts
   const BATCH_SIZE = 20;
   const totalBatches = Math.ceil(documents.length / BATCH_SIZE);
-  const initialCount = await chromaClient.countCollection(collectionName);
   let importedCount = 0;
   for (let i = 0; i < documents.length; i += BATCH_SIZE) {
     const batchDocs = documents.slice(i, i + BATCH_SIZE);
@@ -59,6 +58,21 @@ export const generateDocumentEmbeddings = async (
       metadatas: batchMetadatas,
       ids: batchIds,
     });
+
+    // Verify the batch was actually stored. `get` returns the ids regardless
+    // of whether they were written by this attempt or a previous (retried)
+    // one, so this check is retry-safe — unlike a raw count delta, which
+    // would not grow for ids re-upserted after a partial failure.
+    const stored = await chromaClient.getDocumentsByIds(
+      collectionName,
+      batchIds,
+    );
+    if ((stored?.ids?.length ?? 0) < batchIds.length) {
+      throw new Error(
+        `Embedding verification failed: batch ${i / BATCH_SIZE + 1} expected ${batchIds.length} documents in "${collectionName}" but only ${stored?.ids?.length ?? 0} were stored`,
+      );
+    }
+
     importedCount += batchDocs.length;
 
     onBatchProgress?.({
@@ -71,12 +85,5 @@ export const generateDocumentEmbeddings = async (
     logger.info(`Imported ${importedCount}/${documents.length} documents`);
   }
 
-  const collectionCount = await chromaClient.countCollection(collectionName);
-  const expectedCount = (initialCount ?? 0) + documents.length;
-  if ((collectionCount ?? 0) < expectedCount) {
-    throw new Error(
-      `Embedding verification failed: expected at least ${expectedCount} documents in "${collectionName}" but found ${collectionCount}`,
-    );
-  }
-  return collectionCount;
+  return importedCount;
 };

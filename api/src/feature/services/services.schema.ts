@@ -33,10 +33,12 @@ export const servicesSchema = pgTable("services", {
 export const institutionsToServices = pgTable(
   "institutions_to_services",
   {
-    institutionId: uuid("institution_id").references(
-      () => institutionsSchema.id,
-    ),
-    serviceId: uuid("service_id").references(() => servicesSchema.id),
+    institutionId: uuid("institution_id")
+      .notNull()
+      .references(() => institutionsSchema.id),
+    serviceId: uuid("service_id")
+      .notNull()
+      .references(() => servicesSchema.id),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.institutionId, t.serviceId] }),

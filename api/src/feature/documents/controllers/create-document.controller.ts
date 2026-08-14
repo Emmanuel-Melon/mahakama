@@ -11,6 +11,7 @@ import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
 import { serverConfig } from "@/config";
 import { getStoragePath } from "@/lib/storage/storage";
+import { statSync } from "fs";
 import { logger } from "@/lib/logger";
 
 export const createDocumentHandler = asyncHandler(
@@ -48,16 +49,28 @@ export const createDocumentHandler = asyncHandler(
       },
     );
 
-    // The worker reads files from local storage only — skip enqueueing when
-    // the storage URL can't be resolved locally (e.g. an external http(s) URL).
+    // Enqueue processing for both locally-resolvable paths and external
+    // http(s) URLs (the worker fetches remote PDFs via `parsePdfFromUrl`).
+    // For local files, pass the real size on disk instead of 0.
     let enqueued = false;
     try {
-      getStoragePath(storageUrl);
+      let size = 0;
+      const isExternalUrl =
+        /^https?:\/\//i.test(storageUrl) &&
+        !storageUrl.startsWith(serverConfig.baseUrl);
+      if (!isExternalUrl) {
+        const localPath = getStoragePath(storageUrl);
+        try {
+          size = statSync(localPath).size;
+        } catch {
+          // File missing on disk — still enqueue; the worker will fail loudly.
+        }
+      }
       await documentsQueue.add(DocumentJobs.DocumentUploaded, {
         documentId: document.id,
         userId: req.user?.id!,
         filename: document.title,
-        size: 0,
+        size,
       });
       enqueued = true;
     } catch (error) {

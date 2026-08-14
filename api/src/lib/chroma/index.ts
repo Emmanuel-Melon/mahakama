@@ -105,6 +105,11 @@ export class ChromaClient {
     const collection = await this.getOrCreateCollection(collectionName);
     return collection.count();
   }
+
+  public async getDocumentsByIds(collectionName: string, ids: string[]) {
+    const collection = await this.getOrCreateCollection(collectionName);
+    return collection.get({ ids });
+  }
 }
 
 const chromaClient = ChromaClient.getInstance();
