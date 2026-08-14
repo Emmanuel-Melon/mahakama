@@ -56,33 +56,41 @@ export class DocumentsJobHandler {
     // 3. Persist chunk rows (Postgres audit cache — Chroma remains the vector store)
     await saveDocumentChunks(id, chunks);
 
-    // 4. Stream per-chunk content + progress ahead of embedding
-    chunks.forEach((chunk, index) => {
-      publishIngestionEvent(id, {
-        type: "content",
-        data: {
-          chunk: index + 1,
-          preview: chunk.content.slice(0, CONTENT_PREVIEW_LENGTH),
-        },
-      });
-      publishIngestionEvent(id, {
-        type: "progress",
-        data: {
-          processed: index + 1,
-          total: chunks.length,
-          percentage: Math.round(((index + 1) / chunks.length) * 100),
-          chunk: index + 1,
-          totalChunks: chunks.length,
-        },
-      });
-    });
+    // 4. Generate and store embeddings, streaming progress per completed batch
+    await generateDocumentEmbeddings(
+      chunks,
+      {
+        collectionName: COLLECTION_NAME,
+        limit: 20,
+      },
+      ({ batchIndex, processedChunks, totalChunks }) => {
+        const previewChunk = chunks[processedChunks - 1];
+        publishIngestionEvent(id, {
+          type: "content",
+          data: {
+            chunk: batchIndex,
+            preview: (previewChunk?.content ?? "").slice(
+              0,
+              CONTENT_PREVIEW_LENGTH,
+            ),
+          },
+        });
+        publishIngestionEvent(id, {
+          type: "progress",
+          data: {
+            processed: processedChunks,
+            total: totalChunks,
+            percentage:
+              totalChunks > 0
+                ? Math.round((processedChunks / totalChunks) * 100)
+                : 100,
+            chunk: batchIndex,
+            totalChunks,
+          },
+        });
+      },
+    );
     job?.updateProgress(100);
-
-    // 5. Generate and store embeddings
-    await generateDocumentEmbeddings(chunks, {
-      collectionName: COLLECTION_NAME,
-      limit: 20,
-    });
 
     await upsertEmbeddingJob(id, {
       status: EmbeddingJobStatus.COMPLETED,

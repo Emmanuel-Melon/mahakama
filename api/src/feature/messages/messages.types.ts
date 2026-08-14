@@ -33,6 +33,7 @@ export const messageInputSchema = z.object({
     SenderType.SYSTEM,
   ]),
   userId: z.string().uuid().nullable(),
+  metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
 // ============================================================================

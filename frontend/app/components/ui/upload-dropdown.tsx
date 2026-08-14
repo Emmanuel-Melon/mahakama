@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Plus, Image, File } from "lucide-react";
+import { Plus, File } from "lucide-react";
 import { Button } from "~/components/ui/button";
 
 interface UploadDropdownProps {
@@ -14,7 +14,6 @@ export function UploadDropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const imageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -42,14 +41,6 @@ export function UploadDropdown({
     event.target.value = "";
   };
 
-  const handleUploadType = (type: "file" | "image") => {
-    if (type === "file") {
-      fileInputRef.current?.click();
-    } else {
-      imageInputRef.current?.click();
-    }
-  };
-
   return (
     <div className="relative" ref={dropdownRef}>
       <Button
@@ -68,43 +59,25 @@ export function UploadDropdown({
           <div className="py-1">
             <Button
               type="button"
-              onClick={() => handleUploadType("file")}
+              onClick={() => fileInputRef.current?.click()}
               variant="ghost"
               size="sm"
             >
               <File className="w-4 h-4" />
-              <span>Upload File</span>
-            </Button>
-
-            <Button
-              type="button"
-              onClick={() => handleUploadType("image")}
-              variant="ghost"
-              size="sm"
-            >
-              <Image className="w-4 h-4" />
-              <span>Upload Image</span>
+              <span>Upload PDF</span>
             </Button>
           </div>
         </div>
       )}
 
-      {/* Hidden file inputs */}
+      {/* Hidden file input */}
       <input
         ref={fileInputRef}
         type="file"
         multiple
         onChange={handleFileSelect}
         className="hidden"
-        accept=".pdf,.doc,.docx,.txt,.csv,.xls,.xlsx"
-      />
-      <input
-        ref={imageInputRef}
-        type="file"
-        multiple
-        onChange={handleFileSelect}
-        className="hidden"
-        accept="image/*"
+        accept=".pdf,application/pdf"
       />
     </div>
   );

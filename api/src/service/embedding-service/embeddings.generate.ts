@@ -1,24 +1,18 @@
 import { chromaClient } from "@/lib/chroma";
 import { logger } from "@/lib/logger";
 import type { DocumentChunk, QueryEmbeddingOptions } from "./embeddings.types";
-import { documentChunksTable } from "./embeddings.schema";
 
-export const generateTextEmbedding = async (
-  queryString: string,
-  options: QueryEmbeddingOptions,
-) => {
-  const { collectionName } = options;
-  // we need to ensure that chunks work well with chroma's expected `documents`
-  const embedding = await chromaClient.query({
-    collectionName: collectionName,
-    queryTexts: queryString,
-  });
-  return embedding;
+export type EmbeddingBatchProgress = {
+  batchIndex: number; // 1-based
+  totalBatches: number;
+  processedChunks: number;
+  totalChunks: number;
 };
 
 export const generateDocumentEmbeddings = async (
   documentChunks: DocumentChunk[],
   options: QueryEmbeddingOptions,
+  onBatchProgress?: (progress: EmbeddingBatchProgress) => void,
 ) => {
   const { collectionName } = options;
   // Prepare documents and metadata
@@ -47,6 +41,8 @@ export const generateDocumentEmbeddings = async (
 
   // Add documents to ChromaDB in batches to avoid timeouts
   const BATCH_SIZE = 20;
+  const totalBatches = Math.ceil(documents.length / BATCH_SIZE);
+  const initialCount = await chromaClient.countCollection(collectionName);
   let importedCount = 0;
   for (let i = 0; i < documents.length; i += BATCH_SIZE) {
     const batchDocs = documents.slice(i, i + BATCH_SIZE);
@@ -54,7 +50,7 @@ export const generateDocumentEmbeddings = async (
     const batchIds = ids.slice(i, i + BATCH_SIZE);
 
     logger.info(
-      `Importing batch ${i / BATCH_SIZE + 1} of ${Math.ceil(documents.length / BATCH_SIZE)}...`,
+      `Importing batch ${i / BATCH_SIZE + 1} of ${totalBatches}...`,
     );
 
     await chromaClient.addDocuments({
@@ -64,9 +60,23 @@ export const generateDocumentEmbeddings = async (
       ids: batchIds,
     });
     importedCount += batchDocs.length;
+
+    onBatchProgress?.({
+      batchIndex: i / BATCH_SIZE + 1,
+      totalBatches,
+      processedChunks: importedCount,
+      totalChunks: documents.length,
+    });
+
     logger.info(`Imported ${importedCount}/${documents.length} documents`);
   }
 
   const collectionCount = await chromaClient.countCollection(collectionName);
+  const expectedCount = (initialCount ?? 0) + documents.length;
+  if ((collectionCount ?? 0) < expectedCount) {
+    throw new Error(
+      `Embedding verification failed: expected at least ${expectedCount} documents in "${collectionName}" but found ${collectionCount}`,
+    );
+  }
   return collectionCount;
 };

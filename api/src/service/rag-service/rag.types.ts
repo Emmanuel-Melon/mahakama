@@ -1,52 +1,35 @@
 import { z } from "zod";
 
+export interface RAGChunk {
+  content: string;
+  title: string;
+  section?: string | null;
+  similarity: number;
+}
+
+export interface RAGSource {
+  id: string;
+  title: string;
+  category?: string;
+  source?: string;
+  section?: string | null;
+  similarity: number;
+}
+
 export interface RAGContext {
-  chunks: Array<{
-    content: string;
-    documentTitle: string;
-    section: string | null;
-    similarity: number;
-  }>;
-  sources: Array<{
-    documentId: string;
-    documentTitle: string;
-    sections: string[];
-  }>;
+  chunks: RAGChunk[];
+  sources: RAGSource[];
 }
 
 export interface RetrievalOptions {
   collectionName: string;
   topK?: number;
   minSimilarity?: number;
-  documentTypes?: string[]; // Filter by document type
 }
 
-export interface SimilarityResult {
-  id: number;
-  title: string;
+export interface ConversationTurn {
+  role: "user" | "assistant";
   content: string;
-  embeddingLength: number;
-  similarityCosineScore: number;
-  category?: string;
-  source?: string;
-}
-
-// Local interface that extends SimilarityResult but allows string IDs
-export interface ChromaSimilarityResult extends Omit<
-  SimilarityResult,
-  "id" | "embeddingLength"
-> {
-  id: string; // Allow string IDs from ChromaDB
-  title: string;
-  content: string;
-  embedding: number[];
-  category?: string;
-  source?: string;
-  model?: string;
-  metadata?: Record<string, any>;
-  distance?: number;
-  similarityCosineScore: number;
-  embeddingLength: number;
 }
 
 export const ragQuerySchema = z.object({

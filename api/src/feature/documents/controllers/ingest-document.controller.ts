@@ -13,7 +13,7 @@ import type { SSEEvent } from "@/lib/express/express.types";
 import { subscribeIngestion } from "../documents.progress";
 
 const KEEP_ALIVE_INTERVAL_MS = 15_000;
-const MAX_WAIT_MS = 60_000;
+const MAX_WAIT_MS = 600_000; // 10 minutes — embeddings of large docs take a while
 
 export const ingestDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -21,7 +21,7 @@ export const ingestDocumentController = asyncHandler(
     const { title, description, type, sections } = req.body;
 
     if (!file) {
-      throw new Error("No file provided");
+      throw new HttpError(HttpStatus.BAD_REQUEST, "No file provided");
     }
 
     const uploadResult = saveUploadedFile({
