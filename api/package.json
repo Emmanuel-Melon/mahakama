@@ -38,6 +38,7 @@
     "seed": "tsx src/lib/drizzle/drizzle.seed.ts",
     "chroma:import-laws": "tsx src/feature/documents/scripts/import-laws-to-chroma.ts",
     "chroma:search-laws": "tsx src/feature/documents/scripts/retrieve-laws-from-chroma.ts",
+    "reingest:uploads": "tsx src/feature/documents/scripts/reingest-uploads.ts",
     "test:embeddings": "ts-node src/lib/llm/ollama/ollama.embeddings.ts",
     "ollama:list": "ts-node scripts/manage-ollama-models.ts list",
     "ollama:pull": "ts-node scripts/manage-ollama-models.ts pull nomic-embed-text"

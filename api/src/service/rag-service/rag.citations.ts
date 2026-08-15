@@ -35,3 +35,31 @@ export const extractCitations = (text: string): CitationScan => {
     hasCitation: seen.size > 0,
   };
 };
+
+// Cross-checks extracted citations against the set of full citations that were
+// actually retrieved for the answer. A citation is trusted when it equals or is
+// contained in one of the retrieved full citations (case-insensitive), so
+// "Section 26" passes when "Landlord and Tenant Act 2022, Section 26" was in
+// the context, while a free-generated "Section 3" is flagged as fabricated.
+export const filterCitationsAgainstWhitelist = (
+  citations: string[],
+  whitelist: string[],
+): { valid: string[]; fabricated: string[] } => {
+  if (!whitelist.length) {
+    return { valid: [], fabricated: citations };
+  }
+
+  const normalizedWhitelist = whitelist.map((entry) => entry.toLowerCase());
+  const valid: string[] = [];
+  const fabricated: string[] = [];
+
+  for (const citation of citations) {
+    const normalized = citation.toLowerCase();
+    const isKnown = normalizedWhitelist.some(
+      (entry) => entry === normalized || entry.includes(normalized),
+    );
+    (isKnown ? valid : fabricated).push(citation);
+  }
+
+  return { valid, fabricated };
+};

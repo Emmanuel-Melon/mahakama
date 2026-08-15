@@ -4,8 +4,14 @@ import { PDFParse, TextResult } from "pdf-parse";
 export const parsePdf = async (
   source: ArrayBuffer | Uint8Array,
 ): Promise<TextResult> => {
+  // pdfjs-dist rejects Node Buffers and sliced/pooled views. Copy Buffer and
+  // ArrayBuffer sources into a plain Uint8Array with an exactly-sized backing
+  // buffer so `val instanceof Buffer` and `byteLength === buffer.byteLength`
+  // both pass.
   const dataUint8Array =
-    source instanceof ArrayBuffer ? new Uint8Array(source) : source;
+    source instanceof Buffer || source instanceof ArrayBuffer
+      ? new Uint8Array(source)
+      : source;
   const parser = await new PDFParse(dataUint8Array);
   const data = await parser.getText();
   return data;

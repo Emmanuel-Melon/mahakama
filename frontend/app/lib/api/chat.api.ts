@@ -5,7 +5,7 @@ export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
-  components["schemas"]["ChatsCollectionResponse"];
+  components["schemas"]["ChatCollectionResponse"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 
