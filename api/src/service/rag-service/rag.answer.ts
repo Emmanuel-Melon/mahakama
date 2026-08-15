@@ -1,6 +1,6 @@
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { llmProviderManager } from "@/lib/llm";
 import { sendMessage } from "@/feature/messages/operations/messages.create";
 import type { ChatMessage } from "@/feature/messages/messages.types";

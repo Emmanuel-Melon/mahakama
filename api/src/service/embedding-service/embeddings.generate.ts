@@ -46,7 +46,8 @@ export const generateDocumentEmbeddings = async (
       metadata.last_updated = documentChunk.lastUpdated;
 
     // Versioning metadata (see metadata-updates.md U1)
-    if (documentChunk.documentId) metadata.document_id = documentChunk.documentId;
+    if (documentChunk.documentId)
+      metadata.document_id = documentChunk.documentId;
     if (documentChunk.version !== undefined)
       metadata.version = documentChunk.version;
 
@@ -69,9 +70,7 @@ export const generateDocumentEmbeddings = async (
     const batchMetadatas = metadatas.slice(i, i + BATCH_SIZE);
     const batchIds = ids.slice(i, i + BATCH_SIZE);
 
-    logger.info(
-      `Importing batch ${i / BATCH_SIZE + 1} of ${totalBatches}...`,
-    );
+    logger.info(`Importing batch ${i / BATCH_SIZE + 1} of ${totalBatches}...`);
 
     await chromaClient.addDocuments({
       collectionName: collectionName,

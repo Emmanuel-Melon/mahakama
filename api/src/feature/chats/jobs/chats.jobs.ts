@@ -10,7 +10,7 @@ import { getMessagesByChatId } from "@/feature/messages/operations/messages.list
 import { generateAssistantReply } from "@/service/rag-service/rag.answer";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 
 export class ChatsJobHandler {
   static async handleMessageSent(

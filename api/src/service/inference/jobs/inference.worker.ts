@@ -15,7 +15,4 @@ const inferenceHandlers: JobHandlerMap<InferenceJobMap> = {
 };
 
 export const initInferenceWorker = () =>
-  createBullWorker<InferenceJobMap>(
-    QueueName.Inference,
-    inferenceHandlers,
-  );
+  createBullWorker<InferenceJobMap>(QueueName.Inference, inferenceHandlers);

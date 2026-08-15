@@ -37,17 +37,13 @@ describe("extractCitations", () => {
   });
 
   it("detects a Section range", () => {
-    const result = extractCitations(
-      "Sections 8-9 of the Act cover repairs.",
-    );
+    const result = extractCitations("Sections 8-9 of the Act cover repairs.");
 
     expect(result.citations).toContain("Sections 8-9");
   });
 
   it("detects an Article reference", () => {
-    const result = extractCitations(
-      "Article 237(2)(c) of the Constitution.",
-    );
+    const result = extractCitations("Article 237(2)(c) of the Constitution.");
 
     expect(result.citations).toContain("Article 237(2)(c)");
   });
@@ -73,6 +69,8 @@ describe("extractCitations", () => {
       "Section 3 applies. section 3 again. Act 2022.",
     );
 
-    expect(result.citations.filter((c) => c.toLowerCase() === "section 3")).toHaveLength(1);
+    expect(
+      result.citations.filter((c) => c.toLowerCase() === "section 3"),
+    ).toHaveLength(1);
   });
 });

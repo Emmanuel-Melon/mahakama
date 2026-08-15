@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  parseDateToken,
-  scrapeLastUpdated,
-} from "../law-source.scrape";
+import { parseDateToken, scrapeLastUpdated } from "../law-source.scrape";
 
 describe("parseDateToken", () => {
   it("parses ISO dates", () => {

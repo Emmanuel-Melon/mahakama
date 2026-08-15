@@ -91,9 +91,7 @@ export class UlIiApiLawSourceClient implements LawSourceClient {
       signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     });
     if (!response.ok) {
-      throw new Error(
-        `Law source API responded with HTTP ${response.status}`,
-      );
+      throw new Error(`Law source API responded with HTTP ${response.status}`);
     }
 
     const body: unknown = await response.json();

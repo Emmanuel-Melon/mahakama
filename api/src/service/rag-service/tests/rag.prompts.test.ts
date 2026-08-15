@@ -23,7 +23,11 @@ const context = (overrides: Partial<RAGContext> = {}): RAGContext => ({
 
 describe("buildRagChatPrompt", () => {
   it("includes context with [Title, Section] citations", () => {
-    const prompt = buildRagChatPrompt("Who is a citizen by birth?", [], context());
+    const prompt = buildRagChatPrompt(
+      "Who is a citizen by birth?",
+      [],
+      context(),
+    );
 
     expect(prompt).toContain("[Citizenship by Birth, Article 10]");
     expect(prompt).toContain("[Dual Citizenship]");
@@ -109,6 +113,8 @@ describe("buildRagChatPrompt", () => {
     const prompt = buildRagChatPrompt("Question", [], context());
 
     expect(prompt.toLowerCase()).toContain("do not invent laws");
-    expect(prompt.toLowerCase()).toContain("never give definitive legal advice");
+    expect(prompt.toLowerCase()).toContain(
+      "never give definitive legal advice",
+    );
   });
 });
