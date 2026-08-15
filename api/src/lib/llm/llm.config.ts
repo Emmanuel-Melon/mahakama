@@ -1,4 +1,5 @@
-import { HttpStatus, StatusConfig } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
+import { StatusConfig } from "../http/http.types";
 
 export type LlmErrorCode =
   | "CONTEXT_WINDOW_EXCEEDED"

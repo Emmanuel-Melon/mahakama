@@ -1,6 +1,6 @@
-import { HttpStatus } from "@/http-status";
 import { AppError } from "@/lib/http/http.error";
 import { ZodError } from "zod";
+import { HttpStatus } from "./lib/http/http.status";
 
 type ErrorResponseData = {
   status: (typeof HttpStatus)[keyof typeof HttpStatus];
@@ -26,7 +26,10 @@ export const mapErrorToResponse = (error: Error): ErrorResponseData => {
     };
   }
 
-  if (error.name === "MulterError" || error.message === "Only PDF files are allowed") {
+  if (
+    error.name === "MulterError" ||
+    error.message === "Only PDF files are allowed"
+  ) {
     return {
       status: HttpStatus.BAD_REQUEST,
       message: error.message,

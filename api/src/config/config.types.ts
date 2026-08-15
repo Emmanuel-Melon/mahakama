@@ -71,16 +71,16 @@ export const DatabaseConfigSchema = z.object({
   chroma: ChromaConfigSchema.optional(),
 });
 
-export const ServicesConfigSchema = z.object({
-  upstash: UpstashConfigSchema.optional(),
-  lawSources: LawSourceConfigSchema.optional(),
-});
-
 export const LawSourceConfigSchema = z.object({
   enabled: z.boolean().default(false),
   uliiBaseUrl: z.string().url().optional(),
   uliiApiKey: z.string().optional(),
   checkCron: z.string().default("0 0 1 * *"),
+});
+
+export const ServicesConfigSchema = z.object({
+  upstash: UpstashConfigSchema.optional(),
+  lawSources: LawSourceConfigSchema.optional(),
 });
 
 export const RagConfigSchema = z.object({

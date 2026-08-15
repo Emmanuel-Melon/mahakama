@@ -1,15 +1,16 @@
-import { Request, Response, RequestHandler } from "express";
-import swaggerUi from "swagger-ui-express";
-import { mahakamaServers } from "@/config";
+import { Request, RequestHandler, Response } from "express";
 import {
+  extendZodWithOpenApi,
   OpenApiGeneratorV3,
   OpenAPIRegistry,
 } from "@asteasolutions/zod-to-openapi";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import swaggerUi from "swagger-ui-express";
 import { z } from "zod";
+import { mahakamaServers } from "@/config";
+
 import { usersRegistry } from "@/feature/users/users.docs";
 import { authRegistry } from "@/service/auth/auth.docs";
-import { expressRegistry } from "./express/express.schema";
+import { expressRegistry } from "../express/express.schema";
 import { lawyersRegistry } from "@/feature/lawyers/lawyers.docs";
 import { documentsRegistry } from "@/feature/documents/documents.docs";
 import { messagesRegistry } from "@/feature/messages/messages.docs";
@@ -18,7 +19,6 @@ import { servicesRegistry } from "@/feature/services/services.docs";
 
 extendZodWithOpenApi(z);
 
-// Create a registry for security schemes
 const securityRegistry = new OpenAPIRegistry();
 securityRegistry.registerComponent("securitySchemes", "bearerAuth", {
   type: "http",

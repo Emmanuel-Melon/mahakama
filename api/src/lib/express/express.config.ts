@@ -1,10 +1,10 @@
 import {
-  JsonApiResourceConfig,
   HealthCheckResponse,
+  JsonApiResourceConfig,
   WelcomeResponse,
 } from "./express.types";
 
-export const HealthCheckSerializerConfig: JsonApiResourceConfig<HealthCheckResponse> =
+export const healthCheckSerializerConfig: JsonApiResourceConfig<HealthCheckResponse> =
   {
     type: "health-check",
     attributes: (field) => ({
@@ -16,7 +16,7 @@ export const HealthCheckSerializerConfig: JsonApiResourceConfig<HealthCheckRespo
     }),
   };
 
-export const WelcomeResponseSerializerConfig: JsonApiResourceConfig<WelcomeResponse> =
+export const welcomeResponseSerializerConfig: JsonApiResourceConfig<WelcomeResponse> =
   {
     type: "welcome",
     attributes: (field) => ({

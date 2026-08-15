@@ -39,7 +39,7 @@ export async function paginate<K extends SchemaKeys, T>(
         const sortCol =
           params.sort && fields[params.sort]
             ? fields[params.sort]
-            : params.defaultSort ?? fields.createdAt ?? fields.id;
+            : (params.defaultSort ?? fields.createdAt ?? fields.id);
         return params.order === "asc" ? asc(sortCol) : desc(sortCol);
       },
     }),
