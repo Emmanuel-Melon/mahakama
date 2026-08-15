@@ -144,7 +144,9 @@ describe("ragService.retrieveContext", () => {
       collectionName,
     });
 
-    expect(result.chunks[0].content).toBe("Provision text for Citizenship by Birth");
+    expect(result.chunks[0].content).toBe(
+      "Provision text for Citizenship by Birth",
+    );
   });
 
   it("marks chunks and sources stale on a newer document version or old text", async () => {

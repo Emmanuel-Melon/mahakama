@@ -2,10 +2,7 @@ import { db } from "@/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import type { DocumentChunk } from "./embeddings.types";
-import {
-  documentChunksTable,
-  embeddingJobsTable,
-} from "./embeddings.schema";
+import { documentChunksTable, embeddingJobsTable } from "./embeddings.schema";
 
 export const EmbeddingJobStatus = {
   PENDING: "pending",

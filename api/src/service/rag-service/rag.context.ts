@@ -27,7 +27,10 @@ export const buildRagContext = async (
       minSimilarity: MIN_SIMILARITY,
     });
   } catch (error) {
-    logger.error({ error }, "Failed to retrieve RAG context; continuing without it");
+    logger.error(
+      { error },
+      "Failed to retrieve RAG context; continuing without it",
+    );
   }
 
   const conversationHistory = history

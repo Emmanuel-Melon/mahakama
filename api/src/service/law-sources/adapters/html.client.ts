@@ -35,7 +35,12 @@ export class HtmlLawSourceClient implements LawSourceClient {
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
         logger.warn(
-          { client: this.name, documentId: doc.id, sourceUrl: doc.sourceUrl, error: message },
+          {
+            client: this.name,
+            documentId: doc.id,
+            sourceUrl: doc.sourceUrl,
+            error: message,
+          },
           "Law source page fetch failed",
         );
         results.push({

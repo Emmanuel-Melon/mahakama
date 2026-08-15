@@ -22,7 +22,10 @@ export const buildRagChatPrompt = (
 
   const historyText = history.length
     ? history
-        .map((turn) => `${turn.role === "user" ? "User" : "Assistant"}: ${turn.content}`)
+        .map(
+          (turn) =>
+            `${turn.role === "user" ? "User" : "Assistant"}: ${turn.content}`,
+        )
         .join("\n")
     : "(no prior conversation)";
 

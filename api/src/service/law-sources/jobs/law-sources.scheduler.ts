@@ -10,7 +10,9 @@ import { LawSourceJobs } from "./law-sources.config";
  */
 export const registerLawSourceScheduler = async () => {
   if (!lawSourcesConfig.enabled) {
-    logger.info("Law source diff check disabled — set LAW_SOURCES_ENABLED=true");
+    logger.info(
+      "Law source diff check disabled — set LAW_SOURCES_ENABLED=true",
+    );
     return;
   }
 

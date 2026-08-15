@@ -1,4 +1,8 @@
-import { type RAGContext, type RetrievalOptions, ragQuerySchema } from "./rag.types";
+import {
+  type RAGContext,
+  type RetrievalOptions,
+  ragQuerySchema,
+} from "./rag.types";
 import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
 import { loadDocumentVersions } from "./rag.documents";
 import { isChunkStale } from "./rag.staleness";

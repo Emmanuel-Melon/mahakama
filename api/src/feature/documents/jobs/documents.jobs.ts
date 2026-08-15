@@ -78,10 +78,7 @@ export class DocumentsJobHandler {
         { documentId: id },
         "Document contains no extractable text; marking embedding job failed",
       );
-      markEmbeddingJobFailed(
-        id,
-        new Error("PDF contains no extractable text"),
-      );
+      markEmbeddingJobFailed(id, new Error("PDF contains no extractable text"));
       publishIngestionEvent(id, {
         type: "error",
         data: {
