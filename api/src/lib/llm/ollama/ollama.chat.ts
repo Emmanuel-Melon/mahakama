@@ -3,7 +3,7 @@ import { Message } from "../llms.types";
 
 export const chat = async (
   messages: Message[],
-  model: string = "gemma3:1b",
+  model: string = ollamaClient.model,
 ) => {
   const response = await ollamaClient.chat(messages, model);
 

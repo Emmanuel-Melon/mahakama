@@ -6,7 +6,7 @@ import { sendMessage } from "@/feature/messages/operations/messages.create";
 import type { ChatMessage } from "@/feature/messages/messages.types";
 import { buildRagContext } from "./rag.context";
 import { buildRagChatPrompt } from "./rag.prompts";
-import { extractCitations } from "./rag.citations";
+import { extractCitations, filterCitationsAgainstWhitelist } from "./rag.citations";
 
 // Shared "answer the user's latest message" path used by both the messages
 // controller (POST /v1/messages) and chat creation (POST /v1/chats), so the
@@ -34,12 +34,25 @@ export const generateAssistantReply = async ({
   const result = await client.generateTextContent(prompt);
 
   // Post-generation citation validation — flag (never block) answers that
-  // carry no citation (citations.md C4).
+  // carry no citation (citations.md C4), and cross-check every citation the
+  // model produced against the full citations that were actually retrieved.
   const { citations, hasCitation } = extractCitations(result.content);
+
+  const citationWhitelist = context.chunks
+    .map((chunk) => chunk.fullCitation)
+    .filter((citation): citation is string => Boolean(citation));
+
+  const { fabricated } = filterCitationsAgainstWhitelist(
+    citations,
+    citationWhitelist,
+  );
 
   const metadata: Record<string, unknown> = {
     citationStatus: hasCitation ? "ok" : "missing",
     citations,
+    citationWhitelist,
+    fabricatedCitations: fabricated,
+    hasFabricatedCitations: fabricated.length > 0,
   };
   if (context.sources.length) {
     metadata.sources = context.sources;

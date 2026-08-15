@@ -7,6 +7,7 @@ import {
   Message,
 } from "../llms.types";
 import { llmConfig } from "@/config";
+import { LLM_PROVIDERS } from "../llm.config";
 import { logger } from "@/lib/logger";
 import { z } from "zod";
 
@@ -25,7 +26,7 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
 
   private constructor(config: OllamaProviderConfig = {}) {
     this.provider = "ollama";
-    this.model = config.model || "gemma3:1b";
+    this.model = config.model || LLM_PROVIDERS.OLLAMA.DEFAULT_MODEL;
     this._systemPrompt = config.systemPrompt || "";
 
     const ollamaConfig = {
@@ -131,4 +132,7 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
   }
 }
 
-export const ollamaClient = OllamaClient.getInstance();
+export const ollamaClient = OllamaClient.getInstance({
+  host: llmConfig.ollama.url,
+  model: llmConfig.ollama.model || LLM_PROVIDERS.OLLAMA.DEFAULT_MODEL,
+});

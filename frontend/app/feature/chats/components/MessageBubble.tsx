@@ -7,46 +7,12 @@ import {
   isStalePendingReply,
   isUserMessage,
 } from "../hooks/use-chats";
+import { MessageMetadata } from "./MessageMetadata";
 
 interface MessageBubbleProps {
   message: ChatMessage;
   onRetry?: (messageId: string) => void;
   isRetrying?: boolean;
-}
-
-export function TypingIndicator() {
-  return (
-    <div className="flex justify-start">
-      <div
-        className="bg-gray-100 text-gray-900 rounded-lg p-4"
-        style={{
-          borderRadius: "4px 8px 4px 8px",
-          maxWidth: "calc(100% - 2rem)",
-        }}
-      >
-        <div className="flex items-center gap-2 mb-2">
-          <Bot className="w-4 h-4 mt-1 flex-shrink-0" />
-          <span className="text-xs font-medium opacity-75">
-            Legal Assistant
-          </span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <div
-            className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-            style={{ animationDelay: "0ms" }}
-          ></div>
-          <div
-            className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-            style={{ animationDelay: "150ms" }}
-          ></div>
-          <div
-            className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"
-            style={{ animationDelay: "300ms" }}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
 }
 
 export function MessageBubble({
@@ -144,69 +110,8 @@ export function MessageBubble({
             </div>
           )}
 
-          {!isUser && (message.metadata.sources?.length || message.metadata.citationStatus === "missing") && (
-            <div className="mt-3 border-t border-gray-200 pt-2 space-y-2">
-              {message.metadata.sources?.length ? (
-                message.metadata.sources.map((source, index) => (
-                  <div
-                    key={source.id ?? index}
-                    className="text-xs text-gray-700"
-                  >
-                    <span className="font-semibold">Source:</span>{" "}
-                    {source.url ? (
-                      <a
-                        href={source.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline"
-                      >
-                        {source.fullCitation ?? source.title}
-                      </a>
-                    ) : (
-                      source.fullCitation ?? source.title
-                    )}
-                    {(source.jurisdiction || source.lastUpdated) && (
-                      <span className="block text-gray-500 mt-0.5">
-                        {[source.jurisdiction, source.lastUpdated && `as of ${source.lastUpdated}`]
-                          .filter(Boolean)
-                          .join(" \u00b7 ")}
-                      </span>
-                    )}
-                    {source.content && (
-                      <span className="block text-gray-500 mt-0.5">
-                        Full text: &ldquo;{source.content}&rdquo;
-                      </span>
-                    )}
-                  </div>
-                ))
-              ) : null}
-
-              {message.metadata.citationStatus === "missing" && (
-                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                  No specific legal source was found for this answer — treat it
-                  as general information and verify with a lawyer.
-                </p>
-              )}
-
-              {message.metadata.hasStaleSources && (
-                <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
-                  <p className="font-semibold">
-                    Some cited information may be out of date.
-                  </p>
-                  {message.metadata.sources
-                    ?.filter((source) => source.stale)
-                    .map((source, index) => (
-                      <p key={source.id ?? index} className="mt-0.5">
-                        {source.fullCitation ?? source.title}
-                        {source.lastUpdated &&
-                          ` — based on text as of ${source.lastUpdated}`}
-                        . A more recent amendment may exist.
-                      </p>
-                    ))}
-                </div>
-              )}
-            </div>
-          )}
+          {/* Delegated to the isolated MessageMetadata component */}
+          {!isUser && <MessageMetadata metadata={message.metadata} />}
 
           <div className="text-xs opacity-60 mt-2">
             {new Date(message.timestamp).toLocaleTimeString([], {

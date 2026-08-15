@@ -1,9 +1,13 @@
-import type { components } from "~/lib/api/generated/api.types";
 import type {
   ChatMessage,
   SendMessageRequest,
+  Chat,
+  ChatResource,
+  ChatSingleResponse,
+  ChatsCollectionResponse,
+  CreateChatRequest,
 } from "~/lib/api/chat.api";
-import { ChatHeader } from "~/feature/chats/components/ChatHeader";
+import { ActiveChatHeader } from "~/feature/chats/components/ChatHeader";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { PageDetailsLoading } from "~/components/page-details-loading";
@@ -18,13 +22,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-
-export type Chat = components["schemas"]["Chat"];
-export type ChatResource = components["schemas"]["ChatResource"];
-export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type ChatsCollectionResponse =
-  components["schemas"]["ChatsCollectionResponse"];
-export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 
 const sendMessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty"),
@@ -65,12 +62,13 @@ export const ChatScreen = ({
   const messageContent = watch("content");
 
   const handleRenameChat = () => {
-    const newTitle = window.prompt("Enter new chat title:", chat.title || "");
-    if (newTitle && newTitle.trim() && newTitle !== chat.title) {
+    const newTitle = window.prompt("Enter new chat title:", chat?.title || "");
+    if (newTitle && newTitle.trim() && newTitle !== chat?.title) {
     }
   };
 
   const handleDeleteChat = () => {
+    if (!chat) return;
     deleteChatMutation.mutate(chat.id, {
       onSuccess: () => {
         navigate("/chats/recents");
@@ -78,9 +76,8 @@ export const ChatScreen = ({
     });
   };
 
-  const handleFavoriteChat = () => {};
-
   const handleShareChat = () => {
+    if (!chat) return;
     const shareUrl = `${window.location.origin}/chats/${chat.id}`;
     if (navigator.share) {
       navigator.share({
@@ -95,6 +92,7 @@ export const ChatScreen = ({
   };
 
   const onSubmit = (data: SendMessageForm) => {
+    if (!chat) return;
     const payload: SendMessageRequest = {
       chatId: chat.id,
       content: data.content,
@@ -143,9 +141,8 @@ export const ChatScreen = ({
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <div className="flex-shrink-0 sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <ChatHeader
-          variant="chat"
+      <div className="flex-shrink-0 sticky top-0 z-10">
+        <ActiveChatHeader
           title={chat.title!}
           onDeleteChat={handleDeleteChat}
           onRenameChat={handleRenameChat}
