@@ -18,17 +18,27 @@ export async function seedUsers() {
       createMockUser(),
     );
 
-    const insertedUsers = await db
-      .insert(usersSchema)
-      .values(users)
-      .onConflictDoUpdate({
-        target: usersSchema.email,
-        set: { name: sql`EXCLUDED.name` },
-      })
-      .returning();
+    // Define batch size to prevent parameter overflow
+    const BATCH_SIZE = 50;
+    let insertedCount = 0;
 
-    logger.info(`✅ Successfully seeded ${insertedUsers.length} users`);
-    return insertedUsers;
+    for (let i = 0; i < users.length; i += BATCH_SIZE) {
+      const batch = users.slice(i, i + BATCH_SIZE);
+
+      const insertedBatch = await db
+        .insert(usersSchema)
+        .values(batch)
+        .onConflictDoUpdate({
+          target: usersSchema.email,
+          set: { name: sql`EXCLUDED.name` },
+        })
+        .returning();
+
+      insertedCount += insertedBatch.length;
+    }
+
+    logger.info(`✅ Successfully seeded ${insertedCount} users`);
+    return insertedCount;
   } catch (error) {
     logger.error({ error }, "❌ Error seeding users");
     throw error;

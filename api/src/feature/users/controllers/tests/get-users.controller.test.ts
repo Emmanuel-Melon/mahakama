@@ -13,7 +13,6 @@ describe("GET /api/v1/users", () => {
       email: "test@example.com",
       name: "Test User",
       password: "hashed_password",
-      role: "user",
     });
 
     if (!userResult.ok || !userResult.data) {

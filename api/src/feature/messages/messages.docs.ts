@@ -1,14 +1,18 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { chatSelectSchema, messageInputSchema } from "./messages.types";
 import { z } from "zod";
-import { HttpStatus } from "@/http-status";
-import {
-  createJsonApiResourceSchema,
-  createJsonApiSingleResponseSchema,
-  createJsonApiCollectionResponseSchema,
-} from "@/lib/express/express.serializer";
 
-const ErrorResponseRef = { $ref: "#/components/schemas/JsonApiErrorResponse" };
+import { HttpStatus } from "@/lib/http/http.status";
+import {
+  defineApiResource,
+  registerJsonApiSchemas,
+  registerRoutes,
+} from "@/lib/openapi/openapi.core";
+import type { PathDefinition } from "@/lib/openapi/openapi.types";
+
+import { messagesApi } from "./messages.routes";
+import { chatSelectSchema, messageInputSchema } from "./messages.types";
+
+export const messagesRegistry = new OpenAPIRegistry();
 
 // Define message sender schema for API documentation
 const messageSenderSchema = z.object({
@@ -16,217 +20,64 @@ const messageSenderSchema = z.object({
   displayName: z.string().optional(),
 });
 
-const messageResourceSchema = createJsonApiResourceSchema(
-  "message",
-  chatSelectSchema,
-);
-const messageSingleResponseSchema = createJsonApiSingleResponseSchema(
-  messageResourceSchema,
-);
-const messagesCollectionResponseSchema = createJsonApiCollectionResponseSchema(
-  messageResourceSchema,
-);
+const messageApiResource = defineApiResource({
+  select: chatSelectSchema,
+  insert: messageInputSchema,
+  update: messageInputSchema.partial(),
+});
 
-// Create registry and register schemas
-export const messagesRegistry = new OpenAPIRegistry();
+export const MessageApiSchemas = registerJsonApiSchemas({
+  registry: messagesRegistry,
+  resourceType: "message",
+  pascalName: "Message",
+  schemas: messageApiResource,
+});
+
+const messagePaths: PathDefinition[] = [
+  {
+    handlerName: "createMessageController",
+    method: "post",
+    path: messagesApi.path,
+    summary: "Send a message",
+    description: "Send a new message to a chat",
+    security: [{ bearerAuth: [] }],
+    requestBodySchema: messageInputSchema,
+    successStatus: HttpStatus.CREATED,
+    successSchema: MessageApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 404, 500],
+  },
+  {
+    handlerName: "getMessagesByChatIdController",
+    method: "get",
+    path: `${messagesApi.path}/{chatId}/all`,
+    summary: "Get messages by chat ID",
+    description: "Retrieve all messages for a specific chat",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MessageApiSchemas.colResSchema,
+    errorCodes: [401, 404, 500],
+  },
+  {
+    handlerName: "retryMessageController",
+    method: "post",
+    path: `${messagesApi.path}/{messageId}/retry`,
+    summary: "Retry a failed assistant reply",
+    description:
+      "Reset the reply status to pending and re-enqueue the reply job for a user message",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MessageApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 404, 500],
+  },
+];
+
+registerRoutes({
+  registry: messagesRegistry,
+  defaultTag: "Messages v1",
+  routes: messagePaths,
+});
+
 messagesRegistry.register("Message", chatSelectSchema);
 messagesRegistry.register("MessageSender", messageSenderSchema);
 messagesRegistry.register("SendMessageRequest", messageInputSchema);
-messagesRegistry.register("MessageResource", messageResourceSchema);
-messagesRegistry.register("MessageSingleResponse", messageSingleResponseSchema);
-messagesRegistry.register(
-  "MessagesCollectionResponse",
-  messagesCollectionResponseSchema,
-);
 messagesRegistry.register("MessageInput", messageInputSchema);
-
-// 1. POST /v1/messages (Send a message)
-messagesRegistry.registerPath({
-  method: "post",
-  path: "/v1/messages",
-  summary: "Send a message",
-  description: "Send a new message to a chat",
-  tags: ["Messages v1"],
-  security: [{ bearerAuth: [] }],
-  request: {
-    body: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: messageInputSchema,
-        },
-      },
-    },
-  },
-  responses: {
-    [HttpStatus.CREATED.statusCode]: {
-      description: HttpStatus.CREATED.description,
-      content: {
-        "application/json": {
-          schema: messageSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.BAD_REQUEST.statusCode]: {
-      description: HttpStatus.BAD_REQUEST.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 2. GET /v1/messages/{chatId}/all (Get messages by chat ID)
-messagesRegistry.registerPath({
-  method: "get",
-  path: "/v1/messages/{chatId}/all",
-  summary: "Get messages by chat ID",
-  description: "Retrieve all messages for a specific chat",
-  tags: ["Messages v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "chatId",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Chat's unique identifier",
-    },
-    {
-      name: "limit",
-      in: "query",
-      required: false,
-      schema: { type: "integer", default: 50 },
-      description: "Number of messages to return",
-    },
-    {
-      name: "offset",
-      in: "query",
-      required: false,
-      schema: { type: "integer", default: 0 },
-      description: "Number of messages to skip",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: messagesCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 3. POST /v1/messages/{messageId}/retry (Retry a failed assistant reply)
-messagesRegistry.registerPath({
-  method: "post",
-  path: "/v1/messages/{messageId}/retry",
-  summary: "Retry a failed assistant reply",
-  description:
-    "Reset the reply status to pending and re-enqueue the reply job for a user message",
-  tags: ["Messages v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "messageId",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Message's unique identifier",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: messageSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.BAD_REQUEST.statusCode]: {
-      description: HttpStatus.BAD_REQUEST.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});

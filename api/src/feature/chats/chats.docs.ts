@@ -1,14 +1,18 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { chatSelectSchema } from "./chats.types";
 import { z } from "zod";
-import { HttpStatus } from "@/http-status";
-import {
-  createJsonApiResourceSchema,
-  createJsonApiSingleResponseSchema,
-  createJsonApiCollectionResponseSchema,
-} from "@/lib/express/express.serializer";
 
-const ErrorResponseRef = { $ref: "#/components/schemas/JsonApiErrorResponse" };
+import { HttpStatus } from "@/lib/http/http.status";
+import {
+  defineApiResource,
+  registerJsonApiSchemas,
+  registerRoutes,
+} from "@/lib/openapi/openapi.core";
+import type { PathDefinition } from "@/lib/openapi/openapi.types";
+
+import { chatsApi } from "./chats.routes";
+import { chatSelectSchema } from "./chats.types";
+
+export const chatsRegistry = new OpenAPIRegistry();
 
 // Define create chat request schema
 const createChatRequestSchema = z.object({
@@ -16,165 +20,61 @@ const createChatRequestSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
-const chatResourceSchema = createJsonApiResourceSchema(
-  "chat",
-  chatSelectSchema,
-);
-const chatSingleResponseSchema =
-  createJsonApiSingleResponseSchema(chatResourceSchema);
-const chatsCollectionResponseSchema =
-  createJsonApiCollectionResponseSchema(chatResourceSchema);
+const chatApiResource = defineApiResource({
+  select: chatSelectSchema,
+  insert: createChatRequestSchema,
+  update: createChatRequestSchema.partial(),
+});
 
-// Create registry and register schemas
-export const chatsRegistry = new OpenAPIRegistry();
+export const ChatApiSchemas = registerJsonApiSchemas({
+  registry: chatsRegistry,
+  resourceType: "chat",
+  pascalName: "Chat",
+  schemas: chatApiResource,
+});
+
+const chatPaths: PathDefinition[] = [
+  {
+    handlerName: "createChatController",
+    method: "post",
+    path: chatsApi.path,
+    summary: "Create a new chat",
+    description: "Creates a new chat session with an optional initial message",
+    security: [{ bearerAuth: [] }],
+    requestBodySchema: createChatRequestSchema,
+    successStatus: HttpStatus.CREATED,
+    successSchema: ChatApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 500],
+  },
+  {
+    handlerName: "getAllChatsController",
+    method: "get",
+    path: chatsApi.path,
+    summary: "Get user's chats",
+    description: "Returns a list of chats for the authenticated user",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: ChatApiSchemas.colResSchema,
+    errorCodes: [401, 500],
+  },
+  {
+    handlerName: "getChatByIdController",
+    method: "get",
+    path: `${chatsApi.path}/{chatId}`,
+    summary: "Get chat by ID",
+    description: "Returns a specific chat by its ID",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: ChatApiSchemas.singleResSchema,
+    errorCodes: [401, 404, 500],
+  },
+];
+
+registerRoutes({
+  registry: chatsRegistry,
+  defaultTag: "Chats v1",
+  routes: chatPaths,
+});
+
 chatsRegistry.register("Chat", chatSelectSchema);
 chatsRegistry.register("CreateChatRequest", createChatRequestSchema);
-chatsRegistry.register("ChatResource", chatResourceSchema);
-chatsRegistry.register("ChatSingleResponse", chatSingleResponseSchema);
-chatsRegistry.register(
-  "ChatsCollectionResponse",
-  chatsCollectionResponseSchema,
-);
-
-// 1. POST /v1/chats (Create a new chat)
-chatsRegistry.registerPath({
-  method: "post",
-  path: "/v1/chats",
-  summary: "Create a new chat",
-  description: "Creates a new chat session with an optional initial message",
-  tags: ["Chats v1"],
-  security: [{ bearerAuth: [] }],
-  request: {
-    body: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: createChatRequestSchema,
-        },
-      },
-    },
-  },
-  responses: {
-    [HttpStatus.CREATED.statusCode]: {
-      description: HttpStatus.CREATED.description,
-      content: {
-        "application/json": {
-          schema: chatSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.BAD_REQUEST.statusCode]: {
-      description: HttpStatus.BAD_REQUEST.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 2. GET /v1/chats (Get user's chats)
-chatsRegistry.registerPath({
-  method: "get",
-  path: "/v1/chats",
-  summary: "Get user's chats",
-  description: "Returns a list of chats for the authenticated user",
-  tags: ["Chats v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: chatsCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 3. GET /v1/chats/{chatId} (Get chat by ID)
-chatsRegistry.registerPath({
-  method: "get",
-  path: "/v1/chats/{chatId}",
-  summary: "Get chat by ID",
-  description: "Returns a specific chat by its ID",
-  tags: ["Chats v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "chatId",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Chat's unique identifier",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: chatSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});

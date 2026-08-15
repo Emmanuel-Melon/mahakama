@@ -6,72 +6,79 @@ import { UserJobs } from "./users.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { NotificationTrackingSchema } from "@/service/notifications/notifications.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
+import { generateDrizzleCrudSchemas } from "@/lib/drizzle/drizzle.utils";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
 extendZodWithOpenApi(z);
 
-// ============================================================================
-// ZOD SCHEMAS
-// ============================================================================
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
+ */
 
-export const userInsertSchema = createInsertSchema(usersSchema).openapi({
-  title: "NewUser",
-  description: "Request schema for creating a new user",
-});
+const baseInsert = createInsertSchema(usersSchema);
+const baseSelect = createSelectSchema(usersSchema);
 
-export const userSelectSchema = createSelectSchema(usersSchema).openapi({
-  title: "User",
-  description:
-    "User response schema (excluding sensitive fields like password)",
-});
+export const usersInsertSchema = crudMeta(
+  baseInsert.omit({ id: true, role: true, createdAt: true }),
+  "insert",
+  "User",
+);
 
+export const usersSelectSchema = crudMeta(
+  baseSelect.omit({ password: true, fingerprint: true }),
+  "select",
+  "User",
+);
+
+export const usersUpdateSchema = crudMeta(
+  baseInsert.omit({ id: true, createdAt: true, password: true }).partial(),
+  "update",
+  "User",
+);
 export const userQuerySchema = baseQuerySchema.extend({
   role: z.string().optional(),
 });
 
-// ============================================================================
-// DOMAIN TYPES
-// ============================================================================
+/*
+ * DOMAIN-RELATED TYPES
+ */
 
-// Use inferred types from schemas
-export type User = z.infer<typeof userSelectSchema>;
-export type NewUser = z.infer<typeof userInsertSchema>;
-
-// Type for user with relations included
+export type User = z.infer<typeof usersSelectSchema>;
+export type NewUser = z.infer<typeof usersInsertSchema>;
 export type UserWithChats = User & {
   chats: (typeof chatsSchema.$inferSelect)[];
 };
-
 export type UserFilters = z.infer<typeof userQuerySchema>;
-
-// ============================================================================
-// API PARAMETER TYPES
-// ============================================================================
-
 export type GetUsersParams = {
   id?: string;
 };
 
-// ============================================================================
-// JOB TYPES
-// ============================================================================
+/*
+ * DATABASE QUERY TYPES
+ */
+export type UserColumn = typeof usersSchema._.columns;
+export type UserColumnKey = keyof UserColumn;
+
+/*
+ * QUEUE-RELATED TYPES
+ */
+export const BaseUserPayloadSchema = z.object({
+  userId: z.string(),
+});
+
+export const UserVerifiedPayloadSchema = BaseUserPayloadSchema.extend({
+  verifiedAt: z.string(),
+});
+
+export type BaseUserPayload = z.infer<typeof BaseUserPayloadSchema>;
+export type UserVerifiedPayload = z.infer<typeof UserVerifiedPayloadSchema>;
 
 export interface UserJobMap {
-  [UserJobs.UserCreated]: {
-    userId: string;
-  };
-  [UserJobs.UserUpdated]: {
-    userId: string;
-  };
-  [UserJobs.UserDeleted]: {
-    userId: string;
-  };
-  [UserJobs.UserOnboarded]: {
-    userId: string;
-  };
-  [UserJobs.UserVerified]: {
-    userId: string;
-    verifiedAt: string;
-  };
+  [UserJobs.UserCreated]: BaseUserPayload;
+  [UserJobs.UserUpdated]: BaseUserPayload;
+  [UserJobs.UserDeleted]: BaseUserPayload;
+  [UserJobs.UserOnboarded]: BaseUserPayload;
+  [UserJobs.UserVerified]: UserVerifiedPayload;
 }
 
 /*

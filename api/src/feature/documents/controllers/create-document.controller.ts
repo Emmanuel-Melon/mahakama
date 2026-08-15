@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { createDocument } from "../operations/documents.create";
 import { NewDocument } from "../documents.types";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { documentsQueue } from "../jobs/documents.queue";
 import { DocumentsSerializer } from "../document.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
@@ -16,7 +16,7 @@ import { logger } from "@/lib/logger";
 
 export const createDocumentHandler = asyncHandler(
   async (req: Request, res: Response) => {
-    const documentData: NewDocument = req.validatedBody;
+    const documentData: NewDocument = req.body;
     let storageUrl = documentData.storageUrl;
     if (!/^https?:\/\//i.test(storageUrl)) {
       storageUrl = storageUrl.startsWith("/")

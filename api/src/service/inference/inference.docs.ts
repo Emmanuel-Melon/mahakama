@@ -1,361 +1,165 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
+
 import { HttpStatus } from "@/lib/http/http.status";
 import {
-  createJsonApiResourceSchema,
-  createJsonApiSingleResponseSchema,
-  createJsonApiCollectionResponseSchema,
-} from "@/lib/express/express.serializer";
+  defineApiResource,
+  registerJsonApiSchemas,
+  registerRoutes,
+} from "@/lib/openapi/openapi.core";
+import type { PathDefinition } from "@/lib/openapi/openapi.types";
+
+import { inferenceApi } from "./inference.routes";
 import {
   inferencePreferenceSelectSchema,
   strategySchema,
   inferenceProviderSelectSchema,
   inferenceModelSelectSchema,
+  inferencePreferenceInsertSchema,
 } from "./inference.types";
 
-const preferenceResourceSchema = createJsonApiResourceSchema(
-  "inferencePreference",
-  inferencePreferenceSelectSchema,
-);
-const providerResourceSchema = createJsonApiResourceSchema(
-  "provider",
-  inferenceProviderSelectSchema,
-);
-const strategyResourceSchema = createJsonApiResourceSchema(
-  "strategy",
-  strategySchema,
-);
-const modelResourceSchema = createJsonApiResourceSchema(
-  "model",
-  inferenceModelSelectSchema,
-);
-
-const preferenceSingleResponseSchema = createJsonApiSingleResponseSchema(
-  preferenceResourceSchema,
-);
-const preferenceCollectionResponseSchema =
-  createJsonApiCollectionResponseSchema(preferenceResourceSchema);
-const providerCollectionResponseSchema = createJsonApiCollectionResponseSchema(
-  providerResourceSchema,
-);
-const strategyCollectionResponseSchema = createJsonApiCollectionResponseSchema(
-  strategyResourceSchema,
-);
-const modelCollectionResponseSchema =
-  createJsonApiCollectionResponseSchema(modelResourceSchema);
-
-// Error response reference
-const ErrorResponseRef = { $ref: "#/components/schemas/JsonApiErrorResponse" };
-
-// Create registry and register schemas
 export const inferenceRegistry = new OpenAPIRegistry();
+
+const preferenceApiResource = defineApiResource({
+  select: inferencePreferenceSelectSchema,
+  insert: inferencePreferenceInsertSchema,
+  update: inferencePreferenceInsertSchema.partial(),
+});
+
+export const PreferenceApiSchemas = registerJsonApiSchemas({
+  registry: inferenceRegistry,
+  resourceType: "inferencePreference",
+  pascalName: "InferencePreference",
+  schemas: preferenceApiResource,
+});
+
+const providerApiResource = defineApiResource({
+  select: inferenceProviderSelectSchema,
+  insert: inferenceProviderSelectSchema,
+  update: inferenceProviderSelectSchema.partial(),
+});
+
+export const ProviderApiSchemas = registerJsonApiSchemas({
+  registry: inferenceRegistry,
+  resourceType: "provider",
+  pascalName: "Provider",
+  schemas: providerApiResource,
+});
+
+const strategyApiResource = defineApiResource({
+  select: strategySchema,
+  insert: strategySchema,
+  update: strategySchema.partial(),
+});
+
+export const StrategyApiSchemas = registerJsonApiSchemas({
+  registry: inferenceRegistry,
+  resourceType: "strategy",
+  pascalName: "Strategy",
+  schemas: strategyApiResource,
+});
+
+const modelApiResource = defineApiResource({
+  select: inferenceModelSelectSchema,
+  insert: inferenceModelSelectSchema,
+  update: inferenceModelSelectSchema.partial(),
+});
+
+export const ModelApiSchemas = registerJsonApiSchemas({
+  registry: inferenceRegistry,
+  resourceType: "model",
+  pascalName: "Model",
+  schemas: modelApiResource,
+});
+
+const inferencePaths: PathDefinition[] = [
+  {
+    handlerName: "getUserInferencePreferencesController",
+    method: "get",
+    path: `${inferenceApi.path}/preferences/{userId}`,
+    summary: "Get user inference preferences",
+    description: "Retrieve all inference preferences for a specific user",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: PreferenceApiSchemas.colResSchema,
+    errorCodes: [401, 404, 500],
+  },
+  {
+    handlerName: "getSpecificInferencePreferenceController",
+    method: "get",
+    path: `${inferenceApi.path}/preferences/{userId}/{strategyKey}`,
+    summary: "Get specific inference preference",
+    description:
+      "Retrieve a specific inference preference for a user and strategy",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: PreferenceApiSchemas.singleResSchema,
+    errorCodes: [401, 404, 500],
+  },
+  {
+    handlerName: "upsertInferencePreferenceController",
+    method: "put",
+    path: `${inferenceApi.path}/preferences/{userId}/{strategyKey}`,
+    summary: "Create or update inference preference",
+    description:
+      "Create a new preference or update existing preference for a user and strategy",
+    security: [{ bearerAuth: [] }],
+    requestBodySchema: z.object({
+      provider: z.enum(["geminit", "ollama", "claude"]),
+      model: z.string().optional(),
+    }),
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: PreferenceApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 500],
+  },
+  {
+    handlerName: "disableInferencePreferenceController",
+    method: "put",
+    path: `${inferenceApi.path}/preferences/{userId}/{strategyKey}`,
+    summary: "Disable inference preference",
+    description:
+      "Disables a specific inference preference, resetting to strategy default",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: z.object({ data: z.null() }),
+    errorCodes: [401, 404, 500],
+  },
+  {
+    handlerName: "getAvailableProvidersController",
+    method: "get",
+    path: `${inferenceApi.path}/providers`,
+    summary: "Get available LLM providers",
+    description:
+      "Retrieve all registered LLM providers and their default models",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: ProviderApiSchemas.colResSchema,
+    errorCodes: [401, 500],
+  },
+  {
+    handlerName: "getAvailableStrategiesController",
+    method: "get",
+    path: `${inferenceApi.path}/strategies`,
+    summary: "Get available inference strategies",
+    description:
+      "Retrieve all registered inference strategy keys that can be configured",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: StrategyApiSchemas.colResSchema,
+    errorCodes: [401, 500],
+  },
+];
+
+registerRoutes({
+  registry: inferenceRegistry,
+  defaultTag: "Inference v1",
+  routes: inferencePaths,
+});
+
 inferenceRegistry.register(
   "InferencePreference",
   inferencePreferenceSelectSchema,
 );
-inferenceRegistry.register(
-  "InferencePreferenceResource",
-  preferenceResourceSchema,
-);
-inferenceRegistry.register(
-  "InferencePreferenceSingleResponse",
-  preferenceSingleResponseSchema,
-);
-inferenceRegistry.register(
-  "InferencePreferenceCollectionResponse",
-  preferenceCollectionResponseSchema,
-);
 inferenceRegistry.register("Provider", inferenceProviderSelectSchema);
-inferenceRegistry.register("ProviderResource", providerResourceSchema);
-inferenceRegistry.register(
-  "ProviderCollectionResponse",
-  providerCollectionResponseSchema,
-);
 inferenceRegistry.register("Strategy", strategySchema);
-inferenceRegistry.register("StrategyResource", strategyResourceSchema);
-inferenceRegistry.register(
-  "StrategyCollectionResponse",
-  strategyCollectionResponseSchema,
-);
 inferenceRegistry.register("Model", inferenceModelSelectSchema);
-inferenceRegistry.register("ModelResource", modelResourceSchema);
-inferenceRegistry.register(
-  "ModelCollectionResponse",
-  modelCollectionResponseSchema,
-);
-
-// 1. GET /v1/inference/preferences/:userId (Get User Preferences)
-inferenceRegistry.registerPath({
-  method: "get",
-  path: "/v1/inference/preferences/{userId}",
-  summary: "Get user inference preferences",
-  description: "Retrieve all inference preferences for a specific user",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "userId",
-      in: "path",
-      required: true,
-      schema: { type: "string", format: "uuid" },
-      description: "User ID",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: preferenceCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 2. GET /v1/inference/preferences/:userId/:strategyKey (Get Specific Preference)
-inferenceRegistry.registerPath({
-  method: "get",
-  path: "/v1/inference/preferences/{userId}/{strategyKey}",
-  summary: "Get specific inference preference",
-  description:
-    "Retrieve a specific inference preference for a user and strategy",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "userId",
-      in: "path",
-      required: true,
-      schema: { type: "string", format: "uuid" },
-      description: "User ID",
-    },
-    {
-      name: "strategyKey",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Strategy key (e.g., 'chat', 'qa', 'recommendations')",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: preferenceSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: "No preference found for this strategy",
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 3. PUT /v1/inference/preferences/:userId/:strategyKey (Upsert Preference)
-inferenceRegistry.registerPath({
-  method: "put",
-  path: "/v1/inference/preferences/{userId}/{strategyKey}",
-  summary: "Create or update inference preference",
-  description:
-    "Create a new preference or update existing preference for a user and strategy",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "userId",
-      in: "path",
-      required: true,
-      schema: { type: "string", format: "uuid" },
-      description: "User ID",
-    },
-    {
-      name: "strategyKey",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Strategy key (e.g., 'chat', 'qa', 'recommendations')",
-    },
-  ],
-  request: {
-    body: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: z.object({
-            provider: z.enum(["gemini", "ollama", "claude"]),
-            model: z.string().optional(),
-          }),
-        },
-      },
-    },
-  },
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: preferenceSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.BAD_REQUEST.statusCode]: {
-      description: "Invalid provider or strategy key",
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 4. PUT  /v1/inference/preferences/:userId/:strategyKey (Disable Preference)
-inferenceRegistry.registerPath({
-  method: "put",
-  path: "/v1/inference/preferences/{userId}/{strategyKey}",
-  summary: "Disable inference preference",
-  description:
-    "Disables a specific inference preference, resetting to strategy default",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "userId",
-      in: "path",
-      required: true,
-      schema: { type: "string", format: "uuid" },
-      description: "User ID",
-    },
-    {
-      name: "strategyKey",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Strategy key to disable",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: createJsonApiSingleResponseSchema(
-            z.object({ data: z.null() }),
-          ),
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: "No preference found for this strategy",
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 5. GET /v1/inference/providers (Get Available Providers)
-inferenceRegistry.registerPath({
-  method: "get",
-  path: "/v1/inference/providers",
-  summary: "Get available LLM providers",
-  description: "Retrieve all registered LLM providers and their default models",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: providerCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 6. GET /v1/inference/strategies (Get Available Strategies)
-inferenceRegistry.registerPath({
-  method: "get",
-  path: "/v1/inference/strategies",
-  summary: "Get available inference strategies",
-  description:
-    "Retrieve all registered inference strategy keys that can be configured",
-  tags: ["Inference v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: strategyCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
