@@ -15,6 +15,7 @@ export enum QueueName {
   InApp = "in_app",
   Inference = "inference",
   Messages = "messages",
+  Scheduled = "scheduled",
 }
 
 export const WorkerEvents = {

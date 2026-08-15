@@ -11,4 +11,11 @@ export interface DocumentChunk {
   section?: string;
   category?: string;
   source?: string;
+  fullCitation?: string;
+  url?: string;
+  actName?: string;
+  jurisdiction?: string;
+  lastUpdated?: string;
+  version?: number;
+  documentId?: string;
 }

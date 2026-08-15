@@ -56,6 +56,55 @@ describe("buildRagChatPrompt", () => {
     expect(prompt).not.toContain("RELEVANT LEGAL CONTEXT:\n[");
   });
 
+  it("uses the full citation verbatim when present", () => {
+    const prompt = buildRagChatPrompt(
+      "Landlord notice",
+      [],
+      context({
+        chunks: [
+          {
+            content: "A landlord shall not evict without notice...",
+            title: "Landlord Rights",
+            section: "Section 3",
+            fullCitation: "Landlord and Tenant Act 2022, Section 3",
+            similarity: 0.94,
+          },
+        ],
+      }),
+    );
+
+    expect(prompt).toContain("Landlord and Tenant Act 2022, Section 3");
+    expect(prompt).not.toContain("[Landlord Rights, Section 3]");
+    expect(prompt).toContain("reproduce that citation string verbatim");
+    expect(prompt).not.toContain("POTENTIALLY OUTDATED PASSAGES");
+  });
+
+  it("lists stale passages and instructs the LLM to flag them", () => {
+    const prompt = buildRagChatPrompt(
+      "Landlord notice",
+      [],
+      context({
+        chunks: [
+          {
+            content: "A landlord shall not evict without notice...",
+            title: "Landlord Rights",
+            section: "Section 3",
+            fullCitation: "Landlord and Tenant Act 2022, Section 3",
+            similarity: 0.94,
+            lastUpdated: "2020-01-01",
+            stale: true,
+          },
+        ],
+      }),
+    );
+
+    expect(prompt).toContain("POTENTIALLY OUTDATED PASSAGES:");
+    expect(prompt).toContain(
+      "- Landlord and Tenant Act 2022, Section 3 (as of 2020-01-01)",
+    );
+    expect(prompt).toContain("A more recent amendment may exist");
+  });
+
   it("instructs against inventing laws and gives a non-legal-advice caveat", () => {
     const prompt = buildRagChatPrompt("Question", [], context());
 

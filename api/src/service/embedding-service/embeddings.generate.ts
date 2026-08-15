@@ -34,9 +34,30 @@ export const generateDocumentEmbeddings = async (
     if (documentChunk.category) metadata.category = documentChunk.category;
     if (documentChunk.source) metadata.source = documentChunk.source;
 
+    // Citation metadata (omitted when absent — Chroma rejects undefined)
+    if (documentChunk.actName) metadata.act_name = documentChunk.actName;
+    if (documentChunk.section) metadata.section_number = documentChunk.section;
+    if (documentChunk.fullCitation)
+      metadata.full_citation = documentChunk.fullCitation;
+    if (documentChunk.url) metadata.url = documentChunk.url;
+    if (documentChunk.jurisdiction)
+      metadata.jurisdiction = documentChunk.jurisdiction;
+    if (documentChunk.lastUpdated)
+      metadata.last_updated = documentChunk.lastUpdated;
+
+    // Versioning metadata (see metadata-updates.md U1)
+    if (documentChunk.documentId) metadata.document_id = documentChunk.documentId;
+    if (documentChunk.version !== undefined)
+      metadata.version = documentChunk.version;
+
     documents.push(document);
     metadatas.push(metadata);
-    ids.push(`law_${documentChunk.id}`);
+    // Version-scoped ids so re-ingesting a newer version never collides with
+    // chunks of a previous version: `law_<chunkId>[-v<version>]`.
+    const versionSuffix = documentChunk.version
+      ? `-v${documentChunk.version}`
+      : "";
+    ids.push(`law_${documentChunk.id}${versionSuffix}`);
   }
 
   // Add documents to ChromaDB in batches to avoid timeouts

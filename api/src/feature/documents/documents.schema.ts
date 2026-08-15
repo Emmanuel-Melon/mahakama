@@ -1,7 +1,7 @@
 import {
   pgTable,
   text,
-  varchar,
+  date,
   integer,
   timestamp,
   uuid,
@@ -19,9 +19,13 @@ export const documentsTable = pgTable("documents", {
   description: text("description").notNull(),
   type: text("type").notNull(),
   sections: integer("sections").notNull(),
-  lastUpdated: varchar("last_updated", { length: 4 }).notNull(),
+  lastUpdated: date("last_updated").notNull(), // date of last amendment / ingest
   storageUrl: text("storage_url").notNull(),
   downloadCount: integer("download_count").default(0).notNull(),
+  actName: text("act_name"), // e.g., "Land Act, 2012"
+  jurisdiction: text("jurisdiction"), // e.g., "Uganda"
+  sourceUrl: text("source_url"), // authoritative URL for the act
+  version: integer("version").default(1).notNull(), // bumped on every re-ingest
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -55,8 +59,26 @@ export const downloadsTable = pgTable("document_downloads", {
   downloadedAt: timestamp("downloaded_at").defaultNow().notNull(),
 });
 
+// Audit trail for scheduled law-source diff checks (metadata-updates.md U3.4).
+// One row per detected change; `action` records what the diff job did.
+export const lawSourceChecksTable = pgTable("law_source_checks", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  client: text("client").notNull(),
+  documentId: uuid("document_id").references(() => documentsTable.id, {
+    onDelete: "set null",
+  }),
+  title: text("title").notNull(),
+  sourceUrl: text("source_url"),
+  detectedLastUpdated: date("detected_last_updated"),
+  previousLastUpdated: date("previous_last_updated"),
+  action: text("action").notNull(), // no-change | reingest | new-act | detection-failed
+  detail: text("detail"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const combinedDocumentsSchema = {
   documentsTable,
   bookmarksTable,
   downloadsTable,
+  lawSourceChecksTable,
 };

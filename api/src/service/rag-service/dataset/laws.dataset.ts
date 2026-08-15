@@ -1,4 +1,14 @@
 // Uganda Legal Database - Extracted from Constitution and Landlord Tenant Act
+import type { DocumentChunk } from "@/service/embedding-service/embeddings.types";
+
+export interface LawEntry {
+  id: number;
+  title: string;
+  category: string;
+  source: string;
+  content: string;
+}
+
 export const laws = [
   // CITIZENSHIP & IDENTITY
   {
@@ -594,3 +604,34 @@ export const laws = [
       "A currency point is equivalent to twenty thousand shillings. This is used for calculating values in the Landlord and Tenant Act, such as minimum written agreement requirements and penalty amounts.",
   },
 ];
+
+// Derive the canonical citation fields from a dataset `source` string, e.g.
+// "Constitution of Uganda, Article 10" → actName "Constitution of Uganda",
+// section "Article 10". `source` itself is already a full citation.
+const splitSource = (source: string): { actName: string; section?: string } => {
+  const commaIndex = source.indexOf(", ");
+  if (commaIndex === -1) {
+    return { actName: source.trim() };
+  }
+  return {
+    actName: source.slice(0, commaIndex).trim(),
+    section: source.slice(commaIndex + 2).trim(),
+  };
+};
+
+// Map a raw dataset entry to the canonical DocumentChunk shape, carrying the
+// citation metadata into Chroma (see citations.md C1.5).
+export const toLawDocument = (law: LawEntry): DocumentChunk => {
+  const { actName, section } = splitSource(law.source);
+  return {
+    id: law.id.toString(),
+    title: law.title,
+    content: law.content,
+    category: law.category,
+    source: law.source,
+    actName,
+    fullCitation: law.source,
+    section,
+    jurisdiction: "Uganda",
+  };
+};

@@ -1,5 +1,8 @@
 import { type RAGContext, type RetrievalOptions, ragQuerySchema } from "./rag.types";
 import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
+import { loadDocumentVersions } from "./rag.documents";
+import { isChunkStale } from "./rag.staleness";
+import { ragConfig } from "@/config";
 import { logger } from "@/lib/logger";
 
 const RELEVANCE_THRESHOLD = 0.7;
@@ -26,6 +29,24 @@ export class RAGService {
 
     const chunks: RAGContext["chunks"] = [];
     const seenSources = new Map<string, RAGContext["sources"][number]>();
+    const documentIds = new Set<string>();
+
+    // Collect document ids first so a single batched query gives us the
+    // current version of every cited document (metadata-updates.md U4.1).
+    for (let i = 0; i < results.ids[0].length; i++) {
+      const metadata = (results.metadatas?.[0]?.[i] ?? {}) as Record<
+        string,
+        unknown
+      >;
+      const documentId = metadata.document_id
+        ? String(metadata.document_id)
+        : undefined;
+      if (documentId) documentIds.add(documentId);
+    }
+
+    const documentVersions = await loadDocumentVersions(
+      Array.from(documentIds),
+    );
 
     for (let i = 0; i < results.ids[0].length; i++) {
       const metadata = (results.metadatas?.[0]?.[i] ?? {}) as Record<
@@ -46,6 +67,31 @@ export class RAGService {
       const id = String(results.ids[0][i]);
       const title = String(metadata.title ?? "Unknown source");
       const section = metadata.section ? String(metadata.section) : null;
+      const fullCitation = metadata.full_citation
+        ? String(metadata.full_citation)
+        : undefined;
+      const url = metadata.url ? String(metadata.url) : undefined;
+      const actName = metadata.act_name ? String(metadata.act_name) : undefined;
+      const jurisdiction = metadata.jurisdiction
+        ? String(metadata.jurisdiction)
+        : undefined;
+      const lastUpdated = metadata.last_updated
+        ? String(metadata.last_updated)
+        : undefined;
+      const documentId = metadata.document_id
+        ? String(metadata.document_id)
+        : undefined;
+      const version =
+        metadata.version !== undefined ? Number(metadata.version) : undefined;
+      const stale = isChunkStale({
+        version,
+        documentId,
+        lastUpdated,
+        currentVersion: documentId
+          ? documentVersions.get(documentId)
+          : undefined,
+        stalenessMonths: ragConfig.stalenessMonths,
+      });
 
       // Documents are stored as "<title>. <content>" — strip the leading
       // title so the LLM sees the raw provision text.
@@ -55,9 +101,20 @@ export class RAGService {
         if (content.startsWith(". ")) content = content.slice(1).trim();
       }
 
-      chunks.push({ content, title, section, similarity });
+      chunks.push({
+        content,
+        title,
+        section,
+        similarity,
+        fullCitation,
+        url,
+        actName,
+        jurisdiction,
+        lastUpdated,
+        stale,
+      });
 
-      const sourceKey = `${title}|${section ?? ""}`;
+      const sourceKey = fullCitation ?? `${title}|${section ?? ""}`;
       if (!seenSources.has(sourceKey)) {
         seenSources.set(sourceKey, {
           id,
@@ -66,12 +123,24 @@ export class RAGService {
           source: metadata.source ? String(metadata.source) : undefined,
           section,
           similarity,
+          fullCitation,
+          url,
+          actName,
+          jurisdiction,
+          lastUpdated,
+          content,
+          stale,
         });
       }
     }
 
     logger.info(
-      { chunks: chunks.length, sources: seenSources.size, query: question },
+      {
+        chunks: chunks.length,
+        sources: seenSources.size,
+        staleChunks: chunks.filter((chunk) => chunk.stale).length,
+        query: question,
+      },
       "Retrieved RAG context",
     );
 

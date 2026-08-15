@@ -5,9 +5,15 @@ vi.mock("@/service/embedding-service/embeddings.search", () => ({
   searchEmbedding: vi.fn(),
 }));
 
+vi.mock("../rag.documents", () => ({
+  loadDocumentVersions: vi.fn(),
+}));
+
 import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
+import { loadDocumentVersions } from "../rag.documents";
 
 const mockedSearch = vi.mocked(searchEmbedding);
+const mockedLoadDocumentVersions = vi.mocked(loadDocumentVersions);
 
 const chromaHit = (
   id: string,
@@ -41,6 +47,7 @@ describe("ragService.retrieveContext", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
+    mockedLoadDocumentVersions.mockResolvedValue(new Map());
   });
 
   it("returns empty context when there are no hits", async () => {
@@ -95,6 +102,39 @@ describe("ragService.retrieveContext", () => {
     });
   });
 
+  it("maps citation metadata from Chroma into sources and chunks", async () => {
+    mockedSearch.mockResolvedValue(
+      buildResults([
+        chromaHit("law_1", "Landlord Rights", 0.1, {
+          act_name: "Landlord and Tenant Act 2022",
+          full_citation: "Landlord and Tenant Act 2022, Section 3",
+          url: "https://ulii.org/landlord-tenant",
+          jurisdiction: "Uganda",
+          last_updated: "2023-06-01",
+        }),
+      ]) as never,
+    );
+
+    const result = await ragService.retrieveContext("landlord question", {
+      collectionName,
+    });
+
+    expect(result.chunks[0]).toMatchObject({
+      fullCitation: "Landlord and Tenant Act 2022, Section 3",
+      url: "https://ulii.org/landlord-tenant",
+      actName: "Landlord and Tenant Act 2022",
+      jurisdiction: "Uganda",
+      lastUpdated: "2023-06-01",
+    });
+    expect(result.sources[0]).toMatchObject({
+      fullCitation: "Landlord and Tenant Act 2022, Section 3",
+      url: "https://ulii.org/landlord-tenant",
+      actName: "Landlord and Tenant Act 2022",
+      jurisdiction: "Uganda",
+      lastUpdated: "2023-06-01",
+    });
+  });
+
   it("strips the leading title from stored document text", async () => {
     mockedSearch.mockResolvedValue(
       buildResults([chromaHit("law_1", "Citizenship by Birth", 0.1)]) as never,
@@ -105,6 +145,40 @@ describe("ragService.retrieveContext", () => {
     });
 
     expect(result.chunks[0].content).toBe("Provision text for Citizenship by Birth");
+  });
+
+  it("marks chunks and sources stale on a newer document version or old text", async () => {
+    mockedSearch.mockResolvedValue(
+      buildResults([
+        chromaHit("law_1-v1", "Land Act", 0.1, {
+          document_id: "doc-1",
+          version: 1,
+          last_updated: "2025-06-01",
+        }),
+        chromaHit("law_2-v1", "Tax Act", 0.1, {
+          document_id: "doc-2",
+          version: 1,
+          last_updated: "2015-01-01",
+        }),
+        chromaHit("law_3", "Seed Act", 0.1),
+      ]) as never,
+    );
+    mockedLoadDocumentVersions.mockResolvedValue(
+      new Map([
+        ["doc-1", 2], // newer version exists → stale
+        ["doc-2", 1], // at current version, but text is old → stale by window
+      ]),
+    );
+
+    const result = await ragService.retrieveContext("question", {
+      collectionName,
+    });
+
+    expect(mockedLoadDocumentVersions).toHaveBeenCalledWith(["doc-1", "doc-2"]);
+    expect(result.chunks[0].stale).toBe(true);
+    expect(result.chunks[1].stale).toBe(true);
+    expect(result.chunks[2].stale).toBe(false);
+    expect(result.sources.some((source) => source.stale)).toBe(true);
   });
 
   it("honours topK and minSimilarity options", async () => {

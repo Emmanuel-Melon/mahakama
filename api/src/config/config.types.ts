@@ -73,6 +73,18 @@ export const DatabaseConfigSchema = z.object({
 
 export const ServicesConfigSchema = z.object({
   upstash: UpstashConfigSchema.optional(),
+  lawSources: LawSourceConfigSchema.optional(),
+});
+
+export const LawSourceConfigSchema = z.object({
+  enabled: z.boolean().default(false),
+  uliiBaseUrl: z.string().url().optional(),
+  uliiApiKey: z.string().optional(),
+  checkCron: z.string().default("0 0 1 * *"),
+});
+
+export const RagConfigSchema = z.object({
+  stalenessMonths: z.number().int().positive().default(24),
 });
 
 // Type definitions
@@ -87,3 +99,5 @@ export type IGeminiConfig = z.infer<typeof GeminiConfigSchema>;
 export type IStorageConfig = z.infer<typeof StorageConfigSchema>;
 export type ILLMConfig = z.infer<typeof LLMConfigSchema>;
 export type IServicesConfig = z.infer<typeof ServicesConfigSchema>;
+export type ILawSourceConfig = z.infer<typeof LawSourceConfigSchema>;
+export type IRagConfig = z.infer<typeof RagConfigSchema>;

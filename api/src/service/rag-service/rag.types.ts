@@ -5,6 +5,12 @@ export interface RAGChunk {
   title: string;
   section?: string | null;
   similarity: number;
+  fullCitation?: string;
+  url?: string;
+  actName?: string;
+  jurisdiction?: string;
+  lastUpdated?: string;
+  stale?: boolean;
 }
 
 export interface RAGSource {
@@ -14,6 +20,13 @@ export interface RAGSource {
   source?: string;
   section?: string | null;
   similarity: number;
+  fullCitation?: string;
+  url?: string;
+  actName?: string;
+  jurisdiction?: string;
+  lastUpdated?: string;
+  content?: string;
+  stale?: boolean;
 }
 
 export interface RAGContext {

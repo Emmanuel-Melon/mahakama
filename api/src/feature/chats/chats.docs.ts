@@ -25,18 +25,6 @@ const chatSingleResponseSchema =
 const chatsCollectionResponseSchema =
   createJsonApiCollectionResponseSchema(chatResourceSchema);
 
-// Also create message schemas for the messages endpoint
-const messageResourceSchema = createJsonApiResourceSchema(
-  "message",
-  chatSelectSchema,
-);
-const messageSingleResponseSchema = createJsonApiSingleResponseSchema(
-  messageResourceSchema,
-);
-const messagesCollectionResponseSchema = createJsonApiCollectionResponseSchema(
-  messageResourceSchema,
-);
-
 // Create registry and register schemas
 export const chatsRegistry = new OpenAPIRegistry();
 chatsRegistry.register("Chat", chatSelectSchema);
@@ -46,13 +34,6 @@ chatsRegistry.register("ChatSingleResponse", chatSingleResponseSchema);
 chatsRegistry.register(
   "ChatsCollectionResponse",
   chatsCollectionResponseSchema,
-);
-chatsRegistry.register("Message", chatSelectSchema);
-chatsRegistry.register("MessageResource", messageResourceSchema);
-chatsRegistry.register("MessageSingleResponse", messageSingleResponseSchema);
-chatsRegistry.register(
-  "MessagesCollectionResponse",
-  messagesCollectionResponseSchema,
 );
 
 // 1. POST /v1/chats (Create a new chat)
@@ -168,59 +149,6 @@ chatsRegistry.registerPath({
       content: {
         "application/json": {
           schema: chatSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 4. GET /v1/chats/{chatId}/messages (Get chat messages)
-chatsRegistry.registerPath({
-  method: "get",
-  path: "/v1/chats/{chatId}/messages",
-  summary: "Get chat messages",
-  description: "Retrieve messages for a specific chat",
-  tags: ["Chats v1"],
-  security: [{ bearerAuth: [] }],
-  parameters: [
-    {
-      name: "chatId",
-      in: "path",
-      required: true,
-      schema: { type: "string" },
-      description: "Chat's unique identifier",
-    },
-  ],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: messagesCollectionResponseSchema,
         },
       },
     },

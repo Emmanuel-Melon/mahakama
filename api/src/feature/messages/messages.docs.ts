@@ -102,10 +102,10 @@ messagesRegistry.registerPath({
   },
 });
 
-// 2. GET /v1/messages/{chatId} (Get messages by chat ID)
+// 2. GET /v1/messages/{chatId}/all (Get messages by chat ID)
 messagesRegistry.registerPath({
   method: "get",
-  path: "/v1/messages/{chatId}",
+  path: "/v1/messages/{chatId}/all",
   summary: "Get messages by chat ID",
   description: "Retrieve all messages for a specific chat",
   tags: ["Messages v1"],
@@ -139,6 +139,68 @@ messagesRegistry.registerPath({
       content: {
         "application/json": {
           schema: messagesCollectionResponseSchema,
+        },
+      },
+    },
+    [HttpStatus.UNAUTHORIZED.statusCode]: {
+      description: HttpStatus.UNAUTHORIZED.description,
+      content: {
+        "application/json": {
+          schema: ErrorResponseRef,
+        },
+      },
+    },
+    [HttpStatus.NOT_FOUND.statusCode]: {
+      description: HttpStatus.NOT_FOUND.description,
+      content: {
+        "application/json": {
+          schema: ErrorResponseRef,
+        },
+      },
+    },
+    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
+      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
+      content: {
+        "application/json": {
+          schema: ErrorResponseRef,
+        },
+      },
+    },
+  },
+});
+
+// 3. POST /v1/messages/{messageId}/retry (Retry a failed assistant reply)
+messagesRegistry.registerPath({
+  method: "post",
+  path: "/v1/messages/{messageId}/retry",
+  summary: "Retry a failed assistant reply",
+  description:
+    "Reset the reply status to pending and re-enqueue the reply job for a user message",
+  tags: ["Messages v1"],
+  security: [{ bearerAuth: [] }],
+  parameters: [
+    {
+      name: "messageId",
+      in: "path",
+      required: true,
+      schema: { type: "string" },
+      description: "Message's unique identifier",
+    },
+  ],
+  responses: {
+    [HttpStatus.SUCCESS.statusCode]: {
+      description: HttpStatus.SUCCESS.description,
+      content: {
+        "application/json": {
+          schema: messageSingleResponseSchema,
+        },
+      },
+    },
+    [HttpStatus.BAD_REQUEST.statusCode]: {
+      description: HttpStatus.BAD_REQUEST.description,
+      content: {
+        "application/json": {
+          schema: ErrorResponseRef,
         },
       },
     },
