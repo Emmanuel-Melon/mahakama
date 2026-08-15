@@ -7,7 +7,7 @@ import {
 } from "@/middleware/request-validators";
 import type { ApiManifest } from "@/routes/api.types";
 
-import { sendMessageController } from "./controllers/create-messages.controler";
+import { sendMessageController } from "./controllers/create-messages.controller";
 import { getMessagesByChatIdController } from "./controllers/get-messages.controller";
 import { retryMessageController } from "./controllers/retry-message.controller";
 import { messageInputSchema } from "./messages.types";

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { HttpError } from "@/lib/http/http.error";

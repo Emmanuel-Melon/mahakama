@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { updateLawyer } from "../operations/lawyers.update";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedLawyer } from "../lawyers.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 

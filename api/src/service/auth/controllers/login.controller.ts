@@ -4,20 +4,19 @@ import {
   getCookieOptions,
   comparePasswords,
 } from "../auth.utils";
-import { findUserByEmail } from "@/feature/users/operations/users.find";
 import { authQueue } from "../jobs/auth.queue";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedUser } from "@/feature/users/users.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { AuthJobs } from "../auth.config";
-import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
+import { findAuthUser } from "../operations/auth.find";
 
 export const loginUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const { email, password } = req.body ?? {};
-    const user = await findUserByEmail(email);
+    const user = await findAuthUser("email", email);
 
     if (!user.ok) {
       throw new HttpError(HttpStatus.NOT_FOUND, "User not found");

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { createDocument } from "../operations/documents.create";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { saveUploadedFile } from "@/lib/storage/storage";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { documentsQueue } from "../jobs/documents.queue";
-import { initSSE } from "@/lib/express/express.response";
+import { initSSE } from "@/lib/express/express.sse";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";

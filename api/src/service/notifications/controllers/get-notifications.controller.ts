@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { findNotifications } from "../operations/notifications.find";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedNotification } from "../notifications.config";

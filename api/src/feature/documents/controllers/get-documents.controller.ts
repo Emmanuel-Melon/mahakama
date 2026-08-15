@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { findDocuments } from "../operations/document.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { DocumentsSerializer } from "../document.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { parsePagination } from "@/lib/express/express.query";
 
 export const getDocumentsController = asyncHandler(

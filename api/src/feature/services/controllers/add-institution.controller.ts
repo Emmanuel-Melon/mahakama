@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedInstitution } from "../services.config";
 import { createInstitution } from "../operations/services.create";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { institutionInsertSchema } from "../services.types";
