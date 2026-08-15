@@ -110,6 +110,18 @@ export class ChromaClient {
     const collection = await this.getOrCreateCollection(collectionName);
     return collection.get({ ids });
   }
+
+  public async deleteDocuments(
+    collectionName: string,
+    criteria: { ids?: string[]; where?: Record<string, unknown> },
+  ): Promise<number> {
+    const collection = await this.getOrCreateCollection(collectionName);
+    const result = await collection.delete({
+      ids: criteria.ids,
+      where: criteria.where as never,
+    });
+    return result.deleted ?? 0;
+  }
 }
 
 const chromaClient = ChromaClient.getInstance();

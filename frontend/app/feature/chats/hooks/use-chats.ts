@@ -1,6 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { chatApi } from "~/lib/api/chat.api";
+import {
+  chatApi,
+  type ChatMessage,
+  type ReplyStatus,
+} from "~/lib/api/chat.api";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];
@@ -8,11 +12,51 @@ export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
   components["schemas"]["ChatsCollectionResponse"];
-export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 export type JsonApiErrorResponse =
   components["schemas"]["JsonApiErrorResponse"];
+
+const REPLY_POLL_INTERVAL_MS = 2000;
+const REPLY_TIMEOUT_MS = 60_000;
+
+export function getMessageReplyStatus(
+  message: ChatMessage,
+): ReplyStatus | undefined {
+  return message.metadata?.replyStatus;
+}
+
+export function isUserMessage(message: ChatMessage): boolean {
+  return message.senderType === "user";
+}
+
+export function isReplyAwaiting(
+  message: ChatMessage,
+  now: number = Date.now(),
+): boolean {
+  return (
+    isUserMessage(message) &&
+    getMessageReplyStatus(message) === "pending" &&
+    now - new Date(message.timestamp).getTime() < REPLY_TIMEOUT_MS
+  );
+}
+
+export function hasFailedReply(message: ChatMessage): boolean {
+  return (
+    isUserMessage(message) && getMessageReplyStatus(message) === "failed"
+  );
+}
+
+export function isStalePendingReply(
+  message: ChatMessage,
+  now: number = Date.now(),
+): boolean {
+  return (
+    isUserMessage(message) &&
+    getMessageReplyStatus(message) === "pending" &&
+    !isReplyAwaiting(message, now)
+  );
+}
 
 export const chatsKeys = {
   all: ["chats"] as const,
@@ -116,6 +160,13 @@ export function useMessages(chatId: string) {
       return await chatApi.getChatMessages(chatId);
     },
     enabled: !!chatId,
+    refetchInterval: (query) => {
+      const messages = query.state.data;
+      const lastMessage = messages?.[messages.length - 1];
+      return lastMessage && isReplyAwaiting(lastMessage)
+        ? REPLY_POLL_INTERVAL_MS
+        : false;
+    },
     meta: {
       errorToast: true,
       errorMessage: "Failed to load messages",
@@ -143,6 +194,26 @@ export function useSendMessage() {
     onError: (error) => {
       toast.error("Failed to send message. Please try again.");
       console.error("Send message error:", error);
+    },
+  });
+}
+
+export function useRetryMessage(chatId: string) {
+  const queryClient = useQueryClient();
+
+  return useMutation<ChatMessage, JsonApiErrorResponse, string>({
+    mutationFn: async (messageId: string) => {
+      return await chatApi.retryMessage(messageId);
+    },
+    onSuccess: () => {
+      toast.success("Reply generation restarted.");
+      queryClient.invalidateQueries({
+        queryKey: chatsKeys.messages(chatId),
+      });
+    },
+    onError: (error) => {
+      toast.error("Failed to retry reply. Please try again.");
+      console.error("Retry message error:", error);
     },
   });
 }

@@ -2,6 +2,7 @@ import { Job } from "bullmq";
 import { parsePdfFromPath, parsePdfFromUrl } from "@/lib/pdf-parse/";
 import { getStoragePath } from "@/lib/storage/storage";
 import { serverConfig } from "@/config";
+import { chromaClient } from "@/lib/chroma";
 import { chunkDocument } from "@/service/rag-service/rag.chunker";
 import { generateDocumentEmbeddings } from "@/service/embedding-service/embeddings.generate";
 import {
@@ -31,6 +32,8 @@ export class DocumentsJobHandler {
       shouldRetry: false,
     });
     const { id, storageUrl, title } = document.data!;
+    const { actName, jurisdiction, sourceUrl, lastUpdated, version } =
+      document.data!;
 
     // 1. Read document and extract text. External http(s) URLs are fetched and
     //    parsed remotely; anything else is resolved to local storage.
@@ -53,6 +56,19 @@ export class DocumentsJobHandler {
         overlapSize: 200,
       },
     );
+
+    // 2b. Carry version + document-level citation metadata onto every chunk so
+    //     Chroma and document_chunks record which version they belong to.
+    const chunkVersion = version ?? 1;
+    const enrichedChunks = chunks.map((chunk) => ({
+      ...chunk,
+      version: chunkVersion,
+      documentId: id,
+      actName: actName ?? undefined,
+      jurisdiction: jurisdiction ?? undefined,
+      url: sourceUrl ?? undefined,
+      lastUpdated: lastUpdated ?? undefined,
+    }));
 
     // Image-only/scanned PDFs produce no text. Fail loudly instead of
     // silently "completing" with 0 chunks — and don't throw (no pointless
@@ -79,23 +95,23 @@ export class DocumentsJobHandler {
 
     await upsertEmbeddingJob(id, {
       status: EmbeddingJobStatus.PROCESSING,
-      totalChunks: chunks.length,
+      totalChunks: enrichedChunks.length,
       error: null,
       startedAt: new Date(),
     });
 
     // 3. Persist chunk rows (Postgres audit cache — Chroma remains the vector store)
-    await saveDocumentChunks(id, chunks);
+    await saveDocumentChunks(id, enrichedChunks);
 
     // 4. Generate and store embeddings, streaming progress per completed batch
     await generateDocumentEmbeddings(
-      chunks,
+      enrichedChunks,
       {
         collectionName: COLLECTION_NAME,
         limit: 20,
       },
       ({ batchIndex, processedChunks, totalChunks }) => {
-        const previewChunk = chunks[processedChunks - 1];
+        const previewChunk = enrichedChunks[processedChunks - 1];
         publishIngestionEvent(id, {
           type: "content",
           data: {
@@ -123,9 +139,24 @@ export class DocumentsJobHandler {
     );
     job?.updateProgress(100);
 
+    // 4b. Re-ingest policy (U1.4 default): delete the previous version's chunks
+    //     from Chroma so stale law text is never retrieved. Newer versions have
+    //     version-scoped ids, so the old ones remain addressable by metadata.
+    if (chunkVersion > 1) {
+      const deleted = await chromaClient.deleteDocuments(COLLECTION_NAME, {
+        where: {
+          $and: [{ document_id: id }, { version: chunkVersion - 1 }],
+        },
+      });
+      logger.info(
+        { documentId: id, deleted, fromVersion: chunkVersion - 1 },
+        "Deleted previous version chunks from Chroma",
+      );
+    }
+
     await upsertEmbeddingJob(id, {
       status: EmbeddingJobStatus.COMPLETED,
-      processedChunks: chunks.length,
+      processedChunks: enrichedChunks.length,
       completedAt: new Date(),
     });
 
@@ -135,7 +166,7 @@ export class DocumentsJobHandler {
         filename: filename ?? title,
         size: size ?? 0,
         processedAt: new Date().toISOString(),
-        totalChunks: chunks.length,
+        totalChunks: enrichedChunks.length,
       },
     });
 

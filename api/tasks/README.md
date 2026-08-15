@@ -39,6 +39,8 @@ Both paths target the same Chroma collection, `legal_questions`, embedded with O
 | --- | --- | --- |
 | [`ingestion.md`](./ingestion.md) | Write-path | Upload → storage → document record → background job → PDF parse → chunk → embed → Chroma. Current state + backlog (Phases I–VI). |
 | [`rag.md`](./rag.md) | Read-path | Chat message → history + context retrieval → prompt → LLM → response with sources. Current state + backlog (Phases 1–7). |
+| [`citations.md`](./citations.md) | Read-path | Citation metadata model, retrieval returning `full_citation`/`url`, post-generation citation validation, Sources UI. Current state + backlog (Phases 1–5). |
+| [`metadata-updates.md`](./metadata-updates.md) | Write-path / lifecycle | Versioned chunks, real `last_updated`, monthly law-source diff checks, outdated-answer flagging, AKN amendment tracking. Current state + backlog (Phases 1–5). |
 
 ---
 

@@ -5,7 +5,8 @@ import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/http-status";
 import { ChatSerializer } from "../chats.config";
 import { sendMessage } from "@/feature/messages/operations/messages.create";
-import { generateAssistantReply } from "@/service/rag-service/rag.answer";
+import { chatsQueue } from "../jobs/chats.queue";
+import { ChatsJobs } from "../chats.config";
 import { UserRoles } from "@/feature/users/users.schema";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
@@ -31,23 +32,23 @@ export const createChatController = asyncHandler(
         content: message,
         senderType,
         userId: user.id,
+        metadata: { ...(bodyMetadata || {}), replyStatus: "pending" },
       }),
       new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to send message"),
     );
 
-    // Answer the first message before responding so the reply is already
-    // persisted when the client navigates to the chat. Best-effort — the chat
-    // and user message are created regardless of LLM failure.
+    // Answer the first message asynchronously so the chat and user message are
+    // returned immediately. Best-effort — the chat + user message are created
+    // regardless of whether the job can be enqueued (e.g. Redis down).
     try {
-      await generateAssistantReply({
-        userMessage,
-        history: [],
+      await chatsQueue.add(ChatsJobs.MessageSent, {
         userId: user.id,
+        messageId: userMessage.id,
       });
     } catch (error) {
       logger.error(
         { error, chatId: chat.id },
-        "Failed to generate reply for new chat",
+        "Failed to enqueue reply job for new chat",
       );
     }
 

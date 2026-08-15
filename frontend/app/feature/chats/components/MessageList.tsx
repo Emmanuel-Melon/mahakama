@@ -1,19 +1,21 @@
-import type { components } from "~/lib/api/generated/api.types";
 import { MessageCircle } from "lucide-react";
-import { MessageBubble } from "./MessageBubble";
-
-export type ChatMessage = components["schemas"]["Chat"];
+import { MessageBubble, TypingIndicator } from "./MessageBubble";
+import type { ChatMessage } from "~/lib/api/chat.api";
 
 interface MessageListProps {
   messages: ChatMessage[];
   isLoading?: boolean;
-  isSending?: boolean;
+  showTyping?: boolean;
+  onRetry?: (messageId: string) => void;
+  isRetrying?: boolean;
 }
 
 export function MessageList({
   messages,
   isLoading,
-  isSending = false,
+  showTyping = false,
+  onRetry,
+  isRetrying = false,
 }: MessageListProps) {
   if (isLoading) {
     return (
@@ -35,11 +37,14 @@ export function MessageList({
   return (
     <div className="space-y-4 px-4">
       {messages.map((message) => (
-        <MessageBubble key={message.id} message={message} />
+        <MessageBubble
+          key={message.id}
+          message={message}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
+        />
       ))}
-      {isSending && (
-        <MessageBubble message={{} as ChatMessage} isSending={true} />
-      )}
+      {showTyping && <TypingIndicator />}
     </div>
   );
 }

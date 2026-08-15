@@ -8,7 +8,7 @@ export const documentData = [
       "An Act to provide for the relationship between landlords and tenants, the responsibilities of each party, and the resolution of disputes arising from tenancy agreements in Uganda.",
     type: "Act",
     sections: 120,
-    lastUpdated: "2022",
+    lastUpdated: "2022-01-01",
     storageUrl: "/uploads/samples/landlord-tenant-act-2022.pdf",
   },
   {
@@ -18,7 +18,7 @@ export const documentData = [
       "The supreme law of the Republic of Uganda, establishing the country as a sovereign state, defining its structure, and guaranteeing fundamental rights and freedoms.",
     type: "Constitution",
     sections: 289,
-    lastUpdated: "1995",
+    lastUpdated: "1995-01-01",
     storageUrl: "/uploads/samples/constitution-of-uganda.pdf",
   },
 ];

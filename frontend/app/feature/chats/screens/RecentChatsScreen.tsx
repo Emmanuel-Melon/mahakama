@@ -7,7 +7,6 @@ export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
   components["schemas"]["ChatsCollectionResponse"];
-export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 
 export const RecentChatsScreen = ({

@@ -19,6 +19,10 @@ export const ingestDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
     const file = req.file;
     const { title, description, type, sections } = req.body;
+    const { actName, jurisdiction, sourceUrl } = req.body as Record<
+      string,
+      string | undefined
+    >;
 
     if (!file) {
       throw new HttpError(HttpStatus.BAD_REQUEST, "No file provided");
@@ -37,8 +41,11 @@ export const ingestDocumentController = asyncHandler(
         description: description || "No description",
         type: type || "contract",
         sections: Number(sections) || 1,
-        lastUpdated: new Date().getFullYear().toString(),
+        lastUpdated: new Date().toISOString().slice(0, 10),
         storageUrl: uploadResult.publicUrl,
+        actName,
+        jurisdiction,
+        sourceUrl,
       }),
       new HttpError(
         HttpStatus.INTERNAL_SERVER_ERROR,

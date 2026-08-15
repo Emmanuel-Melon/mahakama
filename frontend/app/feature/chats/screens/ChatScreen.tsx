@@ -1,13 +1,21 @@
 import type { components } from "~/lib/api/generated/api.types";
+import type {
+  ChatMessage,
+  SendMessageRequest,
+} from "~/lib/api/chat.api";
 import { ChatHeader } from "~/feature/chats/components/ChatHeader";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
-import { useSendMessage, useDeleteChat } from "../hooks/use-chats";
+import {
+  useSendMessage,
+  useDeleteChat,
+  useRetryMessage,
+  isReplyAwaiting,
+} from "../hooks/use-chats";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { schemas } from "~/lib/api/generated/api.schemas";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
@@ -16,11 +24,12 @@ export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
   components["schemas"]["ChatsCollectionResponse"];
-export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 
-const sendMessageRequestSchema = schemas.postV1messages_Body;
-export type SendMessageRequest = z.infer<typeof sendMessageRequestSchema>;
+const sendMessageSchema = z.object({
+  content: z.string().min(1, "Message cannot be empty"),
+});
+export type SendMessageForm = z.infer<typeof sendMessageSchema>;
 
 export const ChatScreen = ({
   chat,
@@ -38,21 +47,18 @@ export const ChatScreen = ({
   const navigate = useNavigate();
   const sendMessageMutation = useSendMessage();
   const deleteChatMutation = useDeleteChat();
+  const retryMessageMutation = useRetryMessage(chat?.id ?? "");
 
   const {
-    register,
     handleSubmit,
     setValue,
     watch,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<SendMessageRequest>({
-    resolver: zodResolver(sendMessageRequestSchema),
+  } = useForm<SendMessageForm>({
+    resolver: zodResolver(sendMessageSchema),
     defaultValues: {
-      chatId: chat?.id ?? "",
       content: "",
-      senderType: "user",
-      userId: chat?.userId ?? "",
     },
   });
 
@@ -88,10 +94,11 @@ export const ChatScreen = ({
     }
   };
 
-  const onSubmit = (data: SendMessageRequest) => {
-    const payload = {
-      ...data,
+  const onSubmit = (data: SendMessageForm) => {
+    const payload: SendMessageRequest = {
       chatId: chat.id,
+      content: data.content,
+      senderType: "user",
       userId: chat.userId,
     };
 
@@ -104,6 +111,10 @@ export const ChatScreen = ({
       },
     });
   };
+
+  const lastMessage = messages?.[messages.length - 1];
+  const isReplyPending = lastMessage ? isReplyAwaiting(lastMessage) : false;
+  const showTyping = sendMessageMutation.isPending || isReplyPending;
 
   // Handle loading and error states
   if (isLoading)
@@ -147,7 +158,9 @@ export const ChatScreen = ({
           <MessageList
             messages={messages || []}
             isLoading={messagesLoading}
-            isSending={sendMessageMutation.isPending}
+            showTyping={showTyping}
+            onRetry={(messageId) => retryMessageMutation.mutate(messageId)}
+            isRetrying={retryMessageMutation.isPending}
           />
         </div>
       </div>

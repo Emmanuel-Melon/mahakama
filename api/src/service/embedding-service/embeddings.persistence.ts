@@ -65,6 +65,12 @@ export async function saveDocumentChunks(
       content: chunk.content,
       chunkIndex: index,
       section: chunk.section ?? null,
+      actName: chunk.actName ?? null,
+      fullCitation: chunk.fullCitation ?? null,
+      url: chunk.url ?? null,
+      jurisdiction: chunk.jurisdiction ?? null,
+      lastUpdated: chunk.lastUpdated ?? null,
+      version: chunk.version ?? null,
       tokenCount: chunk.content.split(/\s+/).filter(Boolean).length,
     })),
   );

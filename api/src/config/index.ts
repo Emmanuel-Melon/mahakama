@@ -5,11 +5,15 @@ import {
   LLMConfigSchema,
   StorageConfigSchema,
   ServicesConfigSchema,
+  LawSourceConfigSchema,
+  RagConfigSchema,
   IServerConfig,
   IDatabaseConfig,
   ILLMConfig,
   IStorageConfig,
   IServicesConfig,
+  ILawSourceConfig,
+  IRagConfig,
 } from "./config.types";
 
 dotenv.config({
@@ -93,12 +97,27 @@ export const servicesConfig = ServicesConfigSchema.parse({
     : undefined,
 }) satisfies IServicesConfig;
 
+// Law source diff-check configuration (metadata-updates.md U3.3)
+export const lawSourcesConfig = LawSourceConfigSchema.parse({
+  enabled: process.env.LAW_SOURCES_ENABLED === "true",
+  uliiBaseUrl: process.env.ULII_BASE_URL,
+  uliiApiKey: process.env.ULII_API_KEY,
+  checkCron: process.env.LAW_SOURCES_CRON || "0 0 1 * *",
+}) satisfies ILawSourceConfig;
+
+// RAG configuration (metadata-updates.md U4.1)
+export const ragConfig = RagConfigSchema.parse({
+  stalenessMonths: Number(process.env.RAG_STALENESS_MONTHS) || 24,
+}) satisfies IRagConfig;
+
 const config = {
   server: serverConfig,
   db: dbConfig,
   llm: llmConfig,
   storage: storageConfig,
   services: servicesConfig,
+  lawSources: lawSourcesConfig,
+  rag: ragConfig,
 };
 
 // Export everything

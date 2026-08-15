@@ -6,9 +6,47 @@ export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
   components["schemas"]["ChatsCollectionResponse"];
-export type ChatMessage = components["schemas"]["Message"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
+
+export type SenderType = "user" | "assistant" | "system";
+
+export type ReplyStatus = "pending" | "completed" | "failed";
+
+export type CitationStatus = "ok" | "missing";
+
+export interface RAGSource {
+  id: string;
+  title: string;
+  category?: string;
+  source?: string;
+  section?: string | null;
+  similarity: number;
+  fullCitation?: string;
+  url?: string;
+  actName?: string;
+  jurisdiction?: string;
+  lastUpdated?: string;
+  content?: string;
+  stale?: boolean;
+}
+
+export interface ChatMessage {
+  id: string;
+  chatId: string;
+  content: string;
+  senderType: SenderType;
+  userId: string | null;
+  timestamp: string;
+  metadata: Record<string, unknown> & {
+    replyStatus?: ReplyStatus;
+    errorMessage?: string;
+    sources?: RAGSource[];
+    citationStatus?: CitationStatus;
+    citations?: string[];
+    hasStaleSources?: boolean;
+  };
+}
 
 export interface MessageSender {
   id: string;
@@ -146,6 +184,30 @@ export class ChatApiClient {
       });
     } catch (error) {
       console.error("Failed to send message:", error);
+      throw error;
+    }
+  }
+
+  public async retryMessage(
+    messageId: string,
+    options: { headers: HeadersInit } = { headers: {} },
+  ): Promise<ChatMessage> {
+    try {
+      const response = await this.api.request<{
+        data: { attributes: ChatMessage };
+      }>(`/v1/messages/${messageId}/retry`, {
+        method: "POST",
+        headers: options.headers,
+      });
+
+      if (!response.data.attributes) {
+        console.error("Invalid message data:", response);
+        throw new Error("Invalid message data received from the server");
+      }
+
+      return response.data.attributes;
+    } catch (error) {
+      console.error("Failed to retry message:", error);
       throw error;
     }
   }

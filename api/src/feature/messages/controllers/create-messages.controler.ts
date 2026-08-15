@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { sendMessage } from "../operations/messages.create";
-import { getMessagesByChatId } from "../operations/messages.list";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/http-status";
 import { MessageSerializer } from "../messages.config";
@@ -8,12 +7,13 @@ import { type User } from "@/feature/users/users.types";
 import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
-import { generateAssistantReply } from "@/service/rag-service/rag.answer";
+import { chatsQueue } from "@/feature/chats/jobs/chats.queue";
+import { ChatsJobs } from "@/feature/chats/chats.config";
 import { logger } from "@/lib/logger";
 
 export const sendMessageController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { chatId, content, userId } = req.body;
+    const { chatId, content, userId, metadata: bodyMetadata } = req.body;
     const user = req.user as User;
     const senderType = user.role === "user" ? "user" : "assistant";
 
@@ -23,29 +23,21 @@ export const sendMessageController = asyncHandler(
         content,
         senderType,
         userId,
+        metadata: { ...(bodyMetadata || {}), replyStatus: "pending" },
       }),
       new HttpError(HttpStatus.BAD_REQUEST, "Failed to create user message"),
     );
 
-    const historyResult = unwrap(
-      await getMessagesByChatId(chatId),
-      new HttpError(HttpStatus.BAD_REQUEST, "Failed to load chat history"),
-    );
-
-    // RAG + LLM: build the prompt with conversation history and persist the
-    // assistant reply. Best-effort — the user message is saved regardless of
-    // LLM failure (and the client won't be tempted to retry and duplicate).
+    // Answer the message asynchronously so the user message is returned
+    // immediately. Best-effort — the user message is saved regardless of
+    // whether the job can be enqueued (e.g. Redis down).
     try {
-      await generateAssistantReply({
-        userMessage,
-        history: historyResult.data,
+      await chatsQueue.add(ChatsJobs.MessageSent, {
         userId: user.id,
+        messageId: userMessage.id,
       });
     } catch (error) {
-      logger.error(
-        { error, chatId },
-        "Failed to generate assistant reply",
-      );
+      logger.error({ error, chatId }, "Failed to enqueue reply job");
     }
 
     sendSuccessResponse(

@@ -13,7 +13,13 @@ import { baseQuerySchema } from "@/lib/express/express.types";
 // ============================================================================
 
 export const documentSelectSchema = createSelectSchema(documentsTable);
-export const documentInsertSchema = createInsertSchema(documentsTable);
+export const documentInsertSchema = createInsertSchema(documentsTable).refine(
+  (data) => /^\d{4}-\d{2}-\d{2}$/.test(data.lastUpdated),
+  {
+    message: "lastUpdated must be a date in YYYY-MM-DD format",
+    path: ["lastUpdated"],
+  },
+);
 
 export const documentIngestionEventSchema = z.discriminatedUnion("type", [
   z.object({

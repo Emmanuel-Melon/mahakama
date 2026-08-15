@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { MessageBubble, type ChatMessage } from "./MessageBubble";
+import { MessageBubble } from "./MessageBubble";
+import type { ChatMessage } from "~/lib/api/chat.api";
 
 export const ListMessages = () => {
   const [showProblem, setShowProblem] = useState(false);
