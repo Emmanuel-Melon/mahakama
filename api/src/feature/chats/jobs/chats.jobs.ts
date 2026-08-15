@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { ChatsJobs } from "../chats.config";
-import { ChatsJobMap } from "../chats.types";
+import { ChatCreatedPayload, MessageSentPayload } from "../chats.types";
 import { getMessageById } from "@/feature/messages/operations/messages.find";
 import {
   updateMessageReplyStatus,
@@ -13,9 +13,7 @@ import { HttpError } from "@/lib/http/http.error";
 import { HttpStatus } from "@/lib/http/http.status";
 
 export class ChatsJobHandler {
-  static async handleMessageSent(
-    data: ChatsJobMap[typeof ChatsJobs.MessageSent],
-  ) {
+  static async handleMessageSent(data: MessageSentPayload) {
     const { messageId, userId } = data;
     logger.info({ userId, messageId }, "Processing message sent job");
 
@@ -51,9 +49,7 @@ export class ChatsJobHandler {
     }
   }
 
-  static async handleChatCreated(
-    data: ChatsJobMap[typeof ChatsJobs.ChatCreated],
-  ) {
+  static async handleChatCreated(data: ChatCreatedPayload) {
     const { userId, chatId } = data;
     logger.info({ userId, chatId }, "Processing chat created job");
     const { data: history } = await getMessagesByChatId(chatId);

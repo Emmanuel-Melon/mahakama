@@ -7,38 +7,42 @@ import {
 } from "./notifications.schema";
 import { NotificationChannel, NotificationJobs } from "./notifications.config";
 import { JobOptions } from "@/lib/bullmq/bullmq.types";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 extendZodWithOpenApi(z);
 
-/**
- * ZOD Schemas
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
  */
-export const notificationInsertSchema = createInsertSchema(
-  notificationsSchema,
-).openapi({
-  title: "CreateUnotification",
-  description: "Request schema for creating a new notification",
-});
 
-export const notificationSelectSchema = createSelectSchema(
-  notificationsSchema,
-).openapi({
-  title: "Notification",
-  description: "Response schema for notifications",
-});
+const baseNotificationInsert = createInsertSchema(notificationsSchema);
+const baseNotificationSelect = createSelectSchema(notificationsSchema);
 
-export const notificationPreferencesInsertSchema = createInsertSchema(
-  userNotificationPreferences,
-).openapi({
-  title: "Notification Preferences",
-  description: "Request schema for adding notification preferences",
-});
+export const notificationInsertSchema = crudMeta(
+  baseNotificationInsert,
+  "insert",
+  "Unotification",
+);
 
-export const notificationPreferencesSelectSchema = createSelectSchema(
-  userNotificationPreferences,
-).openapi({
-  title: "Notification Preferences",
-  description: "Response schema for notification preferences",
-});
+export const notificationSelectSchema = crudMeta(
+  baseNotificationSelect,
+  "select",
+  "Notification",
+);
+
+const basePreferencesInsert = createInsertSchema(userNotificationPreferences);
+const basePreferencesSelect = createSelectSchema(userNotificationPreferences);
+
+export const notificationPreferencesInsertSchema = crudMeta(
+  basePreferencesInsert,
+  "insert",
+  "NotificationPreferences",
+);
+
+export const notificationPreferencesSelectSchema = crudMeta(
+  basePreferencesSelect,
+  "select",
+  "NotificationPreferences",
+);
 
 export const NotificationTrackingSchema = z.object({
   actorId: z.string().optional(),
@@ -47,8 +51,9 @@ export const NotificationTrackingSchema = z.object({
   entityType: z.string().optional(),
   occurredAt: z.string().optional(),
 });
+
 /*
- * DOMAIN-SPECIFIC TYPES (core business types)
+ * DOMAIN-RELATED TYPES
  */
 export type Notification = z.infer<typeof notificationSelectSchema>;
 export type NewNotification = z.infer<typeof notificationInsertSchema>;
@@ -61,6 +66,17 @@ export type NewNotificationPreferences = z.infer<
 
 export type NotificationDomain =
   "auth" | "relationship" | "occasion" | "decision" | "gifting" | "system";
+
+/*
+ * DATABASE QUERY TYPES
+ */
+export type NotificationColumn = typeof notificationsSchema._.columns;
+export type NotificationColumnKey = keyof NotificationColumn;
+
+export type UserNotificationPreferencesColumn =
+  typeof userNotificationPreferences._.columns;
+export type UserNotificationPreferencesColumnKey =
+  keyof UserNotificationPreferencesColumn;
 
 /*
  * NOTIFICATION CONTENT TYPES
@@ -84,7 +100,7 @@ export type BaseNotificationContentGenerator<T = any> = (
 ) => BaseNotificationContent | Promise<BaseNotificationContent>;
 
 /*
- * JOB-RELATED TYPES
+ * QUEUE-RELATED TYPES
  */
 
 // Central trigger queue job
@@ -110,21 +126,29 @@ export interface ChannelNotificationJob {
   email?: string; // only required for email channel; validate at send time
 }
 
+export const SetPreferencesPayloadSchema = z.object({
+  userId: z.string(),
+  preferences: notificationPreferencesSelectSchema,
+});
+
+export const TriggerNotificationPayloadSchema =
+  z.custom<TriggerNotificationJob>();
+export const ChannelNotificationPayloadSchema =
+  z.custom<ChannelNotificationJob>();
+
+export type SetPreferencesPayload = z.infer<typeof SetPreferencesPayloadSchema>;
+export type TriggerNotificationPayload = TriggerNotificationJob;
+export type ChannelNotificationPayload = ChannelNotificationJob;
+
 // Map of job names to their payloads
 export interface NotificationJobMap {
-  [NotificationJobs.SetPreferences]: {
-    userId: string;
-    preferences: NotificationPreferences;
-  };
+  [NotificationJobs.SetPreferences]: SetPreferencesPayload;
   [NotificationJobs.TriggerNotification]: TriggerNotificationJob;
   [NotificationJobs.SendEmailNotification]: ChannelNotificationJob;
   [NotificationJobs.SendInAppNotification]: ChannelNotificationJob;
   [NotificationJobs.SendPushNotification]: ChannelNotificationJob;
 }
 
-/*
- * QUEUE-RELATED TYPES
- */
 export type TriggerQueueJob = Pick<
   NotificationJobMap,
   typeof NotificationJobs.TriggerNotification

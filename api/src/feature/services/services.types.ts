@@ -7,67 +7,84 @@ import {
   institutionsToServices,
 } from "./services.schema";
 import { baseQuerySchema } from "@/lib/express/express.types";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
-// ============================================================================
-// ZOD SCHEMAS
-// ============================================================================
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
+ */
 
-export const serviceSelectSchema = createSelectSchema(servicesSchema).openapi({
-  title: "LegalService",
-  description: "Legal service response schema",
-});
+const baseServiceInsert = createInsertSchema(servicesSchema);
+const baseServiceSelect = createSelectSchema(servicesSchema);
 
-export const serviceInsertSchema = createInsertSchema(servicesSchema).openapi({
-  title: "NewService",
-  description: "Request schema for creating a new service",
-});
+export const serviceSelectSchema = crudMeta(
+  baseServiceSelect,
+  "select",
+  "LegalService",
+);
 
-export const institutionSelectSchema = createSelectSchema(
-  institutionsSchema,
-).openapi({
-  title: "Institution",
-  description: "Institution response schema",
-});
+export const serviceInsertSchema = crudMeta(
+  baseServiceInsert,
+  "insert",
+  "LegalService",
+);
 
-export const institutionInsertSchema = createInsertSchema(
-  institutionsSchema,
-).openapi({
-  title: "NewInstitution",
-  description: "Request schema for creating a new institution",
-});
+const baseInstitutionInsert = createInsertSchema(institutionsSchema);
+const baseInstitutionSelect = createSelectSchema(institutionsSchema);
 
-export const categorySelectSchema = createSelectSchema(
-  serviceCategoriesSchema,
-).openapi({
-  title: "ServiceCategory",
-  description: "Service category response schema",
-});
+export const institutionSelectSchema = crudMeta(
+  baseInstitutionSelect,
+  "select",
+  "Institution",
+);
 
-export const categoryInsertSchema = createInsertSchema(
-  serviceCategoriesSchema,
-).openapi({
-  title: "NewServiceCategory",
-  description: "Request schema for creating a new service category",
-});
+export const institutionInsertSchema = crudMeta(
+  baseInstitutionInsert,
+  "insert",
+  "Institution",
+);
 
-export const institutionsToServicesSelectSchema = createSelectSchema(
+const baseCategoryInsert = createInsertSchema(serviceCategoriesSchema);
+const baseCategorySelect = createSelectSchema(serviceCategoriesSchema);
+
+export const categorySelectSchema = crudMeta(
+  baseCategorySelect,
+  "select",
+  "ServiceCategory",
+);
+
+export const categoryInsertSchema = crudMeta(
+  baseCategoryInsert,
+  "insert",
+  "ServiceCategory",
+);
+
+const baseInstitutionsToServicesInsert = createInsertSchema(
   institutionsToServices,
-).openapi({
-  title: "InstitutionToService",
-  description: "Institution to service relationship response schema",
-});
-
-export const institutionsToServicesInsertSchema = createInsertSchema(
+);
+const baseInstitutionsToServicesSelect = createSelectSchema(
   institutionsToServices,
-).openapi({
-  title: "NewInstitutionToService",
-  description:
-    "Request schema for creating a new institution to service relationship",
+);
+
+export const institutionsToServicesSelectSchema = crudMeta(
+  baseInstitutionsToServicesSelect,
+  "select",
+  "InstitutionToService",
+);
+
+export const institutionsToServicesInsertSchema = crudMeta(
+  baseInstitutionsToServicesInsert,
+  "insert",
+  "InstitutionToService",
+);
+
+export const serviceQuerySchema = baseQuerySchema.extend({
+  category: z.string().optional(),
+  institution: z.string().optional(),
 });
 
-// ============================================================================
-// DOMAIN TYPES
-// ============================================================================
+/*
+ * DOMAIN-RELATED TYPES
+ */
 
 export type LegalService = typeof servicesSchema.$inferSelect;
 export type NewLegalService = typeof servicesSchema.$inferInsert;
@@ -88,9 +105,23 @@ export type InstitutionToServiceResponse = z.infer<
   typeof institutionsToServicesSelectSchema
 >;
 
-// ============================================================================
-// CONSTANTS
-// ============================================================================
+export type ServiceFilters = z.infer<typeof serviceQuerySchema>;
+
+/*
+ * DATABASE QUERY TYPES
+ */
+export type ServiceColumn = typeof servicesSchema._.columns;
+export type ServiceColumnKey = keyof ServiceColumn;
+
+export type InstitutionColumn = typeof institutionsSchema._.columns;
+export type InstitutionColumnKey = keyof InstitutionColumn;
+
+export type ServiceCategoryColumn = typeof serviceCategoriesSchema._.columns;
+export type ServiceCategoryColumnKey = keyof ServiceCategoryColumn;
+
+/*
+ * CONSTANTS
+ */
 
 export const categoryIcons = {
   government: "Building2",
@@ -105,10 +136,3 @@ export const categoryLabels = {
   "dispute-resolution": "Dispute Resolution",
   specialized: "Specialized",
 } as const;
-
-export const serviceQuerySchema = baseQuerySchema.extend({
-  category: z.string().optional(),
-  institution: z.string().optional(),
-});
-
-export type ServiceFilters = z.infer<typeof serviceQuerySchema>;

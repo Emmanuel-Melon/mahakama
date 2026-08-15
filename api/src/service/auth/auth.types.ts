@@ -4,12 +4,19 @@ import { authEventsSchema } from "./auth.schema";
 import { createSelectSchema, createInsertSchema } from "drizzle-zod";
 import { usersSchema } from "@/feature/users/users.schema";
 import { NotificationTrackingSchema } from "@/service/notifications/notifications.types";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
-// ============================================================================
-// ZOD SCHEMAS
-// ============================================================================
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
+ */
 
-export const authUserSelectSchema = createSelectSchema(usersSchema);
+const baseUserSelect = createSelectSchema(usersSchema);
+
+export const authUserSelectSchema = crudMeta(
+  baseUserSelect,
+  "select",
+  "AuthUser",
+);
 
 // Create auth schemas directly from the base schema
 export const loginRequestSchema = authUserSelectSchema
@@ -44,23 +51,25 @@ export const authHeadersSchema = z
     description: "Request headers for authentication",
   });
 
-export const authEventSelectSchema = createSelectSchema(
-  authEventsSchema,
-).openapi({
-  title: "AuthEvent",
-  description: "Auth event response schema",
-});
+const baseAuthEventSelect = createSelectSchema(authEventsSchema);
+const baseAuthEventInsert = createInsertSchema(authEventsSchema);
 
-export const authEventInsertSchema = createInsertSchema(
-  authEventsSchema,
-).openapi({
-  title: "NewAuthEvent",
-  description: "Request schema for creating auth events",
-});
+export const authEventSelectSchema = crudMeta(
+  baseAuthEventSelect,
+  "select",
+  "AuthEvent",
+);
 
-// ============================================================================
-// DOMAIN TYPES
-// ============================================================================
+export const authEventInsertSchema = crudMeta(
+  baseAuthEventInsert,
+  "insert",
+  "AuthEvent",
+);
+
+/*
+ * DOMAIN-RELATED TYPES
+ */
+
 export type AuthUser = z.infer<typeof authUserSelectSchema>;
 export type LoginAttrs = z.infer<typeof loginRequestSchema>;
 export type AuthResponseData = z.infer<typeof loginRequestSchema>;
@@ -76,20 +85,31 @@ export type UserWithoutPassword = Omit<
 /*
  * DATABASE QUERY TYPES
  */
+
 export type AuthColumn = typeof usersSchema._.columns;
 export type AuthColumnKey = keyof AuthColumn;
 
-// ============================================================================
-// JOB TYPES
-// ============================================================================
+/*
+ * QUEUE-RELATED TYPES
+ */
+
+export const LoginPayloadSchema = z.object({
+  userId: z.string(),
+  device: z.string(),
+  loginTime: z.string(),
+});
+
+export const RegistrationPayloadSchema = z.object({
+  userId: z.string(),
+  email: z.string(),
+});
+
+export type LoginPayload = z.infer<typeof LoginPayloadSchema>;
+export type RegistrationPayload = z.infer<typeof RegistrationPayloadSchema>;
 
 export interface AuthJobMap {
-  [AuthJobs.Login]: {
-    userId: string;
-    device: string;
-    loginTime: string;
-  };
-  [AuthJobs.Registration]: { userId: string; email: string };
+  [AuthJobs.Login]: LoginPayload;
+  [AuthJobs.Registration]: RegistrationPayload;
 }
 
 /*

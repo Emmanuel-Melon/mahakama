@@ -10,14 +10,18 @@ import {
 import type { PathDefinition } from "@/lib/openapi/openapi.types";
 
 import { documentsApi } from "./documents.routes";
-import { documentInsertSchema, documentSelectSchema } from "./documents.types";
+import {
+  documentInsertSchema,
+  documentSelectSchema,
+  documentUpdateSchema,
+} from "./documents.types";
 
 export const documentsRegistry = new OpenAPIRegistry();
 
 const documentApiResource = defineApiResource({
   select: documentSelectSchema,
   insert: documentInsertSchema,
-  update: documentInsertSchema.partial(),
+  update: documentUpdateSchema,
 });
 
 export const DocumentApiSchemas = registerJsonApiSchemas({

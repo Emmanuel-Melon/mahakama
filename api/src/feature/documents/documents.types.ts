@@ -7,18 +7,40 @@ import {
 } from "./documents.schema";
 import { DocumentJobs } from "./document.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
-// ============================================================================
-// ZOD SCHEMAS
-// ============================================================================
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
+ */
 
-export const documentSelectSchema = createSelectSchema(documentsTable);
-export const documentInsertSchema = createInsertSchema(documentsTable).refine(
-  (data) => /^\d{4}-\d{2}-\d{2}$/.test(data.lastUpdated),
-  {
+const baseInsert = createInsertSchema(documentsTable);
+const baseSelect = createSelectSchema(documentsTable);
+
+export const documentSelectSchema = crudMeta(baseSelect, "select", "Document");
+
+export const documentInsertSchema = crudMeta(
+  baseInsert.refine((data) => /^\d{4}-\d{2}-\d{2}$/.test(data.lastUpdated), {
     message: "lastUpdated must be a date in YYYY-MM-DD format",
     path: ["lastUpdated"],
-  },
+  }),
+  "insert",
+  "Document",
+);
+
+export const documentUpdateSchema = crudMeta(
+  baseInsert
+    .partial()
+    .refine(
+      (data) =>
+        data.lastUpdated === undefined ||
+        /^\d{4}-\d{2}-\d{2}$/.test(data.lastUpdated),
+      {
+        message: "lastUpdated must be a date in YYYY-MM-DD format",
+        path: ["lastUpdated"],
+      },
+    ),
+  "update",
+  "Document",
 );
 
 export const documentIngestionEventSchema = z.discriminatedUnion("type", [
@@ -66,9 +88,13 @@ export const documentIngestionEventSchema = z.discriminatedUnion("type", [
   }),
 ]);
 
-// ============================================================================
-// DOMAIN TYPES
-// ============================================================================
+export const documentsQuerySchema = baseQuerySchema.extend({
+  type: z.string().optional(),
+});
+
+/*
+ * DOMAIN-RELATED TYPES
+ */
 
 export type Document = z.infer<typeof documentSelectSchema>;
 export type NewDocument = z.infer<typeof documentInsertSchema>;
@@ -124,9 +150,35 @@ export type DocumentIngestionEvent = Extract<
   { type: string; data: any }
 >;
 
-// ============================================================================
-// RAG/SEARCH TYPES
-// ============================================================================
+export type DocumentsFilters = z.infer<typeof documentsQuerySchema>;
+
+/*
+ * DATABASE QUERY TYPES
+ */
+export type DocumentColumn = typeof documentsTable._.columns;
+export type DocumentColumnKey = keyof DocumentColumn;
+
+/*
+ * QUEUE-RELATED TYPES
+ */
+export const DocumentUploadedPayloadSchema = z.object({
+  documentId: z.string(),
+  userId: z.string(),
+  filename: z.string().optional(),
+  size: z.number().optional(),
+});
+
+export type DocumentUploadedPayload = z.infer<
+  typeof DocumentUploadedPayloadSchema
+>;
+
+export interface DocumentJobMap {
+  [DocumentJobs.DocumentUploaded]: DocumentUploadedPayload;
+}
+
+/*
+ * RAG/SEARCH TYPES
+ */
 
 export interface LegalDocumentChunk {
   id: string;
@@ -137,22 +189,9 @@ export interface LegalDocumentChunk {
   similarity?: number;
 }
 
-// ============================================================================
-// JOB TYPES
-// ============================================================================
-
-export interface DocumentJobMap {
-  [DocumentJobs.DocumentUploaded]: {
-    documentId: string;
-    userId: string;
-    filename?: string;
-    size?: number;
-  };
-}
-
-// ============================================================================
-// API PARAMETER TYPES
-// ============================================================================
+/*
+ * API PARAMETER TYPES
+ */
 
 export interface BookmarkDocumentParams {
   documentId: string;
@@ -168,9 +207,9 @@ export interface ShareDocumentParams {
   documentId: string;
 }
 
-// ============================================================================
-// RESPONSE TYPES
-// ============================================================================
+/*
+ * RESPONSE TYPES
+ */
 
 export interface DocumentShareInfo {
   documentId: string;
@@ -184,9 +223,3 @@ export interface DocumentShareInfo {
     email: string;
   };
 }
-
-export const documentsQuerySchema = baseQuerySchema.extend({
-  type: z.string().optional(),
-});
-
-export type DocumentsFilters = z.infer<typeof documentsQuerySchema>;

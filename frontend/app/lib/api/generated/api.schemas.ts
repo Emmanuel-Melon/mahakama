@@ -1,17 +1,32 @@
 import { makeApi, Zodios, type ZodiosOptions } from "@zodios/core";
 import { z } from "zod";
 
-const postAuthv1register_Body = z
+const postV1register_Body = z
   .object({
     email: z.string().max(255).nullable(),
     password: z.string().max(255).nullable(),
     name: z.string().max(255).nullable(),
   })
   .passthrough();
-const JsonApiErrorResponse = z
-  .object({ errors: z.array(z.object({}).partial().passthrough()) })
+const JsonApiError = z
+  .object({
+    id: z.string().uuid(),
+    status: z.string(),
+    code: z.string(),
+    title: z.string(),
+    detail: z.string(),
+    metadata: z.record(z.unknown().nullable()),
+    source: z
+      .object({ pointer: z.string(), method: z.string() })
+      .partial()
+      .passthrough()
+      .optional(),
+  })
   .passthrough();
-const postAuthv1login_Body = z
+const JsonApiErrorResponse = z
+  .object({ errors: z.array(JsonApiError) })
+  .passthrough();
+const postV1login_Body = z
   .object({
     email: z.string().max(255).nullable(),
     password: z.string().max(255).nullable(),
@@ -30,9 +45,13 @@ const postV1documents_Body = z
     description: z.string(),
     type: z.string(),
     sections: z.number().int().gte(-2147483648).lte(2147483647),
-    lastUpdated: z.string().max(4),
+    lastUpdated: z.string(),
     storageUrl: z.string(),
     downloadCount: z.number().int().gte(-2147483648).lte(2147483647).optional(),
+    actName: z.string().nullish(),
+    jurisdiction: z.string().nullish(),
+    sourceUrl: z.string().nullish(),
+    version: z.number().int().gte(-2147483648).lte(2147483647).optional(),
     createdAt: z.string().datetime({ offset: true }).optional(),
     updatedAt: z.string().datetime({ offset: true }).optional(),
   })
@@ -81,11 +100,9 @@ const postV1messages_Body = z
   .passthrough();
 const postV1users_Body = z
   .object({
-    id: z.string().uuid(),
     name: z.string().max(255).nullable(),
     email: z.string().max(255).nullable(),
     password: z.string().max(255).nullable(),
-    role: z.enum(["user", "admin", "lawyer"]),
     fingerprint: z.string().max(255).nullable(),
     userAgent: z.string().nullable(),
     lastIp: z.string().max(45).nullable(),
@@ -108,16 +125,16 @@ const postV1users_Body = z
     bio: z.string().nullable(),
     profilePicture: z.string().nullable(),
     isOnboarded: z.boolean(),
-    createdAt: z.string().datetime({ offset: true }),
     updatedAt: z.string().datetime({ offset: true }),
   })
   .partial()
   .passthrough();
 
 export const schemas = {
-  postAuthv1register_Body,
+  postV1register_Body,
+  JsonApiError,
   JsonApiErrorResponse,
-  postAuthv1login_Body,
+  postV1login_Body,
   postV1chats_Body,
   postV1documents_Body,
   postV1lawyers_Body,
@@ -127,69 +144,6 @@ export const schemas = {
 };
 
 const endpoints = makeApi([
-  {
-    method: "post",
-    path: "/auth/v1/login",
-    alias: "postAuthv1login",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: postAuthv1login_Body,
-      },
-    ],
-    response: z
-      .object({
-        email: z.string().max(255).nullable(),
-        password: z.string().max(255).nullable(),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 400,
-        description: `The request could not be understood or was missing required parameters.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "post",
-    path: "/auth/v1/register",
-    alias: "postAuthv1register",
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "body",
-        type: "Body",
-        schema: postAuthv1register_Body,
-      },
-    ],
-    response: z
-      .object({
-        email: z.string().max(255).nullable(),
-        password: z.string().max(255).nullable(),
-        name: z.string().max(255).nullable(),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 400,
-        description: `The request could not be understood or was missing required parameters.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 409,
-        description: `User already exists`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
   {
     method: "post",
     path: "/v1/chats",
@@ -287,10 +241,30 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -312,13 +286,6 @@ const endpoints = makeApi([
     alias: "getV1chatsChatId",
     description: `Returns a specific chat by its ID`,
     requestFormat: "json",
-    parameters: [
-      {
-        name: "chatId",
-        type: "Path",
-        schema: z.string(),
-      },
-    ],
     response: z
       .object({
         data: z
@@ -371,92 +338,10 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/v1/chats/:chatId/messages",
-    alias: "getV1chatsChatIdmessages",
-    description: `Retrieve messages for a specific chat`,
-    requestFormat: "json",
-    parameters: [
-      {
-        name: "chatId",
-        type: "Path",
-        schema: z.string(),
-      },
-    ],
-    response: z
-      .object({
-        data: z.array(
-          z
-            .object({
-              type: z.literal("message"),
-              id: z.string().uuid(),
-              attributes: z
-                .object({
-                  id: z.string().uuid(),
-                  userId: z.string().uuid(),
-                  title: z.string().nullable(),
-                  metadata: z.union([
-                    z.string(),
-                    z.number(),
-                    z.boolean(),
-                    z.unknown(),
-                    z.record(z.unknown().nullable()),
-                    z.array(z.unknown().nullable()),
-                  ]),
-                  createdAt: z.string().datetime({ offset: true }),
-                  updatedAt: z.string().datetime({ offset: true }),
-                })
-                .passthrough(),
-              relationships: z.record(z.unknown().nullable()).optional(),
-              meta: z.record(z.unknown().nullable()).optional(),
-              links: z.record(z.string()).optional(),
-            })
-            .passthrough(),
-        ),
-        links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
-      })
-      .passthrough(),
-    errors: [
-      {
-        status: 401,
-        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 404,
-        description: `The requested resource could not be found on the server.`,
-        schema: JsonApiErrorResponse,
-      },
-      {
-        status: 500,
-        description: `An unexpected condition was encountered and no more specific message is suitable.`,
-        schema: JsonApiErrorResponse,
-      },
-    ],
-  },
-  {
-    method: "get",
     path: "/v1/documents",
     alias: "getV1documents",
     description: `Returns a list of all documents with optional filtering and pagination`,
     requestFormat: "json",
-    parameters: [
-      {
-        name: "type",
-        type: "Query",
-        schema: z.string().optional(),
-      },
-      {
-        name: "limit",
-        type: "Query",
-        schema: z.number().int().optional().default(10),
-      },
-      {
-        name: "offset",
-        type: "Query",
-        schema: z.number().int().optional().default(0),
-      },
-    ],
     response: z
       .object({
         data: z.array(
@@ -471,13 +356,17 @@ const endpoints = makeApi([
                   description: z.string(),
                   type: z.string(),
                   sections: z.number().int().gte(-2147483648).lte(2147483647),
-                  lastUpdated: z.string().max(4),
+                  lastUpdated: z.string(),
                   storageUrl: z.string(),
                   downloadCount: z
                     .number()
                     .int()
                     .gte(-2147483648)
                     .lte(2147483647),
+                  actName: z.string().nullable(),
+                  jurisdiction: z.string().nullable(),
+                  sourceUrl: z.string().nullable(),
+                  version: z.number().int().gte(-2147483648).lte(2147483647),
                   createdAt: z.string().datetime({ offset: true }),
                   updatedAt: z.string().datetime({ offset: true }),
                 })
@@ -486,10 +375,30 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -531,13 +440,17 @@ const endpoints = makeApi([
                 description: z.string(),
                 type: z.string(),
                 sections: z.number().int().gte(-2147483648).lte(2147483647),
-                lastUpdated: z.string().max(4),
+                lastUpdated: z.string(),
                 storageUrl: z.string(),
                 downloadCount: z
                   .number()
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
+                actName: z.string().nullable(),
+                jurisdiction: z.string().nullable(),
+                sourceUrl: z.string().nullable(),
+                version: z.number().int().gte(-2147483648).lte(2147483647),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -579,7 +492,7 @@ const endpoints = makeApi([
       {
         name: "id",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().uuid(),
       },
     ],
     response: z
@@ -595,13 +508,17 @@ const endpoints = makeApi([
                 description: z.string(),
                 type: z.string(),
                 sections: z.number().int().gte(-2147483648).lte(2147483647),
-                lastUpdated: z.string().max(4),
+                lastUpdated: z.string(),
                 storageUrl: z.string(),
                 downloadCount: z
                   .number()
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
+                actName: z.string().nullable(),
+                jurisdiction: z.string().nullable(),
+                sourceUrl: z.string().nullable(),
+                version: z.number().int().gte(-2147483648).lte(2147483647),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -643,7 +560,7 @@ const endpoints = makeApi([
       {
         name: "id",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().uuid(),
       },
     ],
     response: z
@@ -659,13 +576,17 @@ const endpoints = makeApi([
                 description: z.string(),
                 type: z.string(),
                 sections: z.number().int().gte(-2147483648).lte(2147483647),
-                lastUpdated: z.string().max(4),
+                lastUpdated: z.string(),
                 storageUrl: z.string(),
                 downloadCount: z
                   .number()
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
+                actName: z.string().nullable(),
+                jurisdiction: z.string().nullable(),
+                sourceUrl: z.string().nullable(),
+                version: z.number().int().gte(-2147483648).lte(2147483647),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -712,7 +633,7 @@ const endpoints = makeApi([
       {
         name: "id",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().uuid(),
       },
     ],
     response: z
@@ -728,13 +649,17 @@ const endpoints = makeApi([
                 description: z.string(),
                 type: z.string(),
                 sections: z.number().int().gte(-2147483648).lte(2147483647),
-                lastUpdated: z.string().max(4),
+                lastUpdated: z.string(),
                 storageUrl: z.string(),
                 downloadCount: z
                   .number()
                   .int()
                   .gte(-2147483648)
                   .lte(2147483647),
+                actName: z.string().nullable(),
+                jurisdiction: z.string().nullable(),
+                sourceUrl: z.string().nullable(),
+                version: z.number().int().gte(-2147483648).lte(2147483647),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -771,7 +696,7 @@ const endpoints = makeApi([
     path: "/v1/documents/ingest",
     alias: "postV1documentsingest",
     description: `Upload and process a document with real-time progress updates via Server-Sent Events`,
-    requestFormat: "form-data",
+    requestFormat: "json",
     parameters: [
       {
         name: "body",
@@ -779,7 +704,7 @@ const endpoints = makeApi([
         schema: z.object({ file: z.instanceof(File) }).passthrough(),
       },
     ],
-    response: z.void(),
+    response: z.instanceof(File),
     errors: [
       {
         status: 400,
@@ -834,10 +759,30 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -914,7 +859,7 @@ const endpoints = makeApi([
       },
       {
         status: 409,
-        description: `Lawyer with this email already exists`,
+        description: `The request could not be completed due to a conflict with the current state of the target resource.`,
         schema: JsonApiErrorResponse,
       },
       {
@@ -934,7 +879,7 @@ const endpoints = makeApi([
       {
         name: "id",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().uuid(),
       },
     ],
     response: z
@@ -1005,7 +950,7 @@ const endpoints = makeApi([
       {
         name: "id",
         type: "Path",
-        schema: z.string(),
+        schema: z.string().uuid(),
       },
     ],
     response: z
@@ -1057,6 +1002,43 @@ const endpoints = makeApi([
       {
         status: 404,
         description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/login",
+    alias: "postV1login",
+    description: `Authenticates an existing user account`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1login_Body,
+      },
+    ],
+    response: z
+      .object({
+        email: z.string().max(255).nullable(),
+        password: z.string().max(255).nullable(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
         schema: JsonApiErrorResponse,
       },
       {
@@ -1137,27 +1119,10 @@ const endpoints = makeApi([
   },
   {
     method: "get",
-    path: "/v1/messages/:chatId",
-    alias: "getV1messagesChatId",
+    path: "/v1/messages/:chatId/all",
+    alias: "getV1messagesChatIdall",
     description: `Retrieve all messages for a specific chat`,
     requestFormat: "json",
-    parameters: [
-      {
-        name: "chatId",
-        type: "Path",
-        schema: z.string(),
-      },
-      {
-        name: "limit",
-        type: "Query",
-        schema: z.number().int().optional().default(50),
-      },
-      {
-        name: "offset",
-        type: "Query",
-        schema: z.number().int().optional().default(0),
-      },
-    ],
     response: z
       .object({
         data: z.array(
@@ -1187,10 +1152,30 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -1212,25 +1197,111 @@ const endpoints = makeApi([
     ],
   },
   {
+    method: "post",
+    path: "/v1/messages/:messageId/retry",
+    alias: "postV1messagesMessageIdretry",
+    description: `Reset the reply status to pending and re-enqueue the reply job for a user message`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("message"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                chatId: z.string().uuid(),
+                content: z.string(),
+                senderType: z.enum(["user", "assistant", "system"]),
+                userId: z.string().uuid().nullable(),
+                timestamp: z.string().datetime({ offset: true }),
+                metadata: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/register",
+    alias: "postV1register",
+    description: `Creates a new user account profile`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1register_Body,
+      },
+    ],
+    response: z
+      .object({
+        email: z.string().max(255).nullable(),
+        password: z.string().max(255).nullable(),
+        name: z.string().max(255).nullable(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 409,
+        description: `The request could not be completed due to a conflict with the current state of the target resource.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
     method: "get",
     path: "/v1/services",
     alias: "getV1services",
     description: `Returns a list of all available legal services with optional category filtering`,
     requestFormat: "json",
-    parameters: [
-      {
-        name: "category",
-        type: "Query",
-        schema: z
-          .enum([
-            "government",
-            "legal-aid",
-            "dispute-resolution",
-            "specialized",
-          ])
-          .optional(),
-      },
-    ],
     response: z
       .object({
         data: z.array(
@@ -1245,16 +1316,37 @@ const endpoints = makeApi([
                   categoryId: z.string().nullable(),
                   slug: z.string(),
                   description: z.string().nullable(),
+                  createdAt: z.string().datetime({ offset: true }),
                 })
                 .passthrough(),
               relationships: z.record(z.unknown().nullable()).optional(),
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -1288,9 +1380,7 @@ const endpoints = makeApi([
                   id: z.string().uuid(),
                   name: z.string().max(255).nullable(),
                   email: z.string().max(255).nullable(),
-                  password: z.string().max(255).nullable(),
                   role: z.enum(["user", "admin", "lawyer"]),
-                  fingerprint: z.string().max(255).nullable(),
                   userAgent: z.string().nullable(),
                   lastIp: z.string().max(45).nullable(),
                   isAnonymous: z.boolean(),
@@ -1325,10 +1415,30 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
-        metadata: z.record(z.unknown().nullable()),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
       })
       .passthrough(),
     errors: [
@@ -1339,7 +1449,7 @@ const endpoints = makeApi([
       },
       {
         status: 403,
-        description: `Forbidden - Admin access required`,
+        description: `The server understood the request but refuses to authorize it.`,
         schema: JsonApiErrorResponse,
       },
     ],
@@ -1368,9 +1478,7 @@ const endpoints = makeApi([
                 id: z.string().uuid(),
                 name: z.string().max(255).nullable(),
                 email: z.string().max(255).nullable(),
-                password: z.string().max(255).nullable(),
                 role: z.enum(["user", "admin", "lawyer"]),
-                fingerprint: z.string().max(255).nullable(),
                 userAgent: z.string().nullable(),
                 lastIp: z.string().max(45).nullable(),
                 isAnonymous: z.boolean(),
@@ -1423,7 +1531,7 @@ const endpoints = makeApi([
       },
       {
         status: 409,
-        description: `Email already in use`,
+        description: `The request could not be completed due to a conflict with the current state of the target resource.`,
         schema: JsonApiErrorResponse,
       },
     ],
@@ -1434,6 +1542,13 @@ const endpoints = makeApi([
     alias: "getV1usersId",
     description: `Retrieve user details by user ID. Users can only view their own profile unless they are admins.`,
     requestFormat: "json",
+    parameters: [
+      {
+        name: "id",
+        type: "Path",
+        schema: z.string().uuid(),
+      },
+    ],
     response: z
       .object({
         data: z
@@ -1445,9 +1560,7 @@ const endpoints = makeApi([
                 id: z.string().uuid(),
                 name: z.string().max(255).nullable(),
                 email: z.string().max(255).nullable(),
-                password: z.string().max(255).nullable(),
                 role: z.enum(["user", "admin", "lawyer"]),
-                fingerprint: z.string().max(255).nullable(),
                 userAgent: z.string().nullable(),
                 lastIp: z.string().max(45).nullable(),
                 isAnonymous: z.boolean(),
@@ -1495,7 +1608,7 @@ const endpoints = makeApi([
       },
       {
         status: 403,
-        description: `Forbidden - Not authorized to view this user`,
+        description: `The server understood the request but refuses to authorize it.`,
         schema: JsonApiErrorResponse,
       },
       {
@@ -1509,6 +1622,7 @@ const endpoints = makeApi([
     method: "get",
     path: "/v1/users/me",
     alias: "getV1usersme",
+    description: `Returns the currently authenticated user&#x27;s profile information.`,
     requestFormat: "json",
     response: z
       .object({
@@ -1521,9 +1635,7 @@ const endpoints = makeApi([
                 id: z.string().uuid(),
                 name: z.string().max(255).nullable(),
                 email: z.string().max(255).nullable(),
-                password: z.string().max(255).nullable(),
                 role: z.enum(["user", "admin", "lawyer"]),
-                fingerprint: z.string().max(255).nullable(),
                 userAgent: z.string().nullable(),
                 lastIp: z.string().max(45).nullable(),
                 isAnonymous: z.boolean(),

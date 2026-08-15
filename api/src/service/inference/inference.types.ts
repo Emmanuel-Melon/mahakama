@@ -8,71 +8,64 @@ import {
   userInferencePreferencesSchema,
 } from "./inference.schema";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
-/**
- * INFERENCE STRATEGY
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
  */
-export interface IInferenceStrategy<TInput = unknown, TOutput = string> {
-  readonly key: string;
-  readonly preferredProvider: LLMProviderName;
-  readonly fallbackProvider?: LLMProviderName;
-  readonly systemPrompt?: string;
-  readonly defaultModel?: string;
-  readonly outputSchema?: z.ZodType<TOutput>;
 
-  buildPrompt(input: TInput): string;
-  parseResponse?(raw: LLMResponse<TOutput>): TOutput;
-}
+const basePreferenceInsert = createInsertSchema(userInferencePreferencesSchema);
+const basePreferenceSelect = createSelectSchema(userInferencePreferencesSchema);
 
-/**
- * RUN OPTIONS
- */
-export interface InferenceRunOptions {
-  provider?: LLMProviderName; // call-time override — highest priority
-  model?: string; // call-time model override
-  userId?: string; // used to load persisted user preferences
-}
+export const inferencePreferenceInsertSchema = crudMeta(
+  basePreferenceInsert,
+  "insert",
+  "InferencePreference",
+);
 
-/**
- * RESOLVED CONFIG
- */
-export interface ResolvedInferenceConfig {
-  provider: LLMProviderName;
-  model?: string;
-}
+export const inferencePreferenceSelectSchema = crudMeta(
+  basePreferenceSelect,
+  "select",
+  "InferencePreference",
+);
+
+const baseProviderSelect = createSelectSchema(inferenceProvidersSchema);
+const baseProviderInsert = createInsertSchema(inferenceProvidersSchema);
+
+export const inferenceProviderSelectSchema = crudMeta(
+  baseProviderSelect,
+  "select",
+  "InferenceProvider",
+);
+
+export const inferenceProviderInsertSchema = crudMeta(
+  baseProviderInsert,
+  "insert",
+  "InferenceProvider",
+);
+
+const baseModelSelect = createSelectSchema(inferenceModelsSchema);
+const baseModelInsert = createInsertSchema(inferenceModelsSchema);
+
+export const inferenceModelSelectSchema = crudMeta(
+  baseModelSelect,
+  "select",
+  "InferenceModel",
+);
+
+export const inferenceModelInsertSchema = crudMeta(
+  baseModelInsert,
+  "insert",
+  "InferenceModel",
+);
 
 export const strategySchema = z.object({
   key: z.string(),
 });
 
-export interface ChatInput {
-  message: string;
-  history?: Array<{ role: "user" | "assistant"; content: string }>;
-}
-
-/**
- *  DOMAIN types
+/*
+ * DOMAIN-RELATED TYPES
  */
-export const inferencePreferenceInsertSchema = createInsertSchema(
-  userInferencePreferencesSchema,
-);
-export const inferencePreferenceSelectSchema = createSelectSchema(
-  userInferencePreferencesSchema,
-);
-
-export const inferenceProviderSelectSchema = createSelectSchema(
-  inferenceProvidersSchema,
-);
-export const inferenceProviderInsertSchema = createInsertSchema(
-  inferenceProvidersSchema,
-);
-
-export const inferenceModelSelectSchema = createSelectSchema(
-  inferenceModelsSchema,
-);
-export const inferenceModelInsertSchema = createInsertSchema(
-  inferenceModelsSchema,
-);
 
 export type InferencePreference = z.infer<
   typeof inferencePreferenceSelectSchema
@@ -89,27 +82,84 @@ export type NewInferenceProvider = z.infer<
 export type InferenceModel = z.infer<typeof inferenceModelSelectSchema>;
 export type NewInferenceModel = z.infer<typeof inferenceModelInsertSchema>;
 
-/**
- * JOB-RELATED TYPES
+export interface IInferenceStrategy<TInput = unknown, TOutput = string> {
+  readonly key: string;
+  readonly preferredProvider: LLMProviderName;
+  readonly fallbackProvider?: LLMProviderName;
+  readonly systemPrompt?: string;
+  readonly defaultModel?: string;
+  readonly outputSchema?: z.ZodType<TOutput>;
+
+  buildPrompt(input: TInput): string;
+  parseResponse?(raw: LLMResponse<TOutput>): TOutput;
+}
+
+export interface InferenceRunOptions {
+  provider?: LLMProviderName; // call-time override — highest priority
+  model?: string; // call-time model override
+  userId?: string; // used to load persisted user preferences
+}
+
+export interface ResolvedInferenceConfig {
+  provider: LLMProviderName;
+  model?: string;
+}
+
+export interface ChatInput {
+  message: string;
+  history?: Array<{ role: "user" | "assistant"; content: string }>;
+}
+
+/*
+ * DATABASE QUERY TYPES
  */
+
+export type InferencePreferenceColumn =
+  typeof userInferencePreferencesSchema._.columns;
+export type InferencePreferenceColumnKey = keyof InferencePreferenceColumn;
+
+export type InferenceProviderColumn = typeof inferenceProvidersSchema._.columns;
+export type InferenceProviderColumnKey = keyof InferenceProviderColumn;
+
+export type InferenceModelColumn = typeof inferenceModelsSchema._.columns;
+export type InferenceModelColumnKey = keyof InferenceModelColumn;
+
+/*
+ * QUEUE-RELATED TYPES
+ */
+
+export const TextGenerationPayloadSchema = z.object({
+  prompt: z.string(),
+  userId: z.string(),
+  sessionId: z.string().optional(),
+  model: z.string().optional(),
+  maxTokens: z.number().optional(),
+});
+
+export const DocumentAnalysisPayloadSchema = z.object({
+  documentId: z.string(),
+  userId: z.string(),
+  analysisType: z.string(),
+  options: z.record(z.string(), z.unknown()).optional(),
+});
+
+export const EmbeddingGenerationPayloadSchema = z.object({
+  documentId: z.string(),
+  userId: z.string(),
+  chunkSize: z.number().optional(),
+  overlapSize: z.number().optional(),
+});
+
+export type TextGenerationPayload = z.infer<typeof TextGenerationPayloadSchema>;
+export type DocumentAnalysisPayload = z.infer<
+  typeof DocumentAnalysisPayloadSchema
+>;
+export type EmbeddingGenerationPayload = z.infer<
+  typeof EmbeddingGenerationPayloadSchema
+>;
+
 export interface InferenceJobMap {
-  [InferenceJobs.TextGeneration]: {
-    prompt: string;
-    userId: string;
-    sessionId?: string;
-    model?: string;
-    maxTokens?: number;
-  };
-  [InferenceJobs.DocumentAnalysis]: {
-    documentId: string;
-    userId: string;
-    analysisType: string;
-    options?: Record<string, unknown>;
-  };
-  [InferenceJobs.EmbeddingGeneration]: {
-    documentId: string;
-    userId: string;
-    chunkSize?: number;
-    overlapSize?: number;
-  };
+  [InferenceJobs.TextGeneration]: TextGenerationPayload;
+  [InferenceJobs.DocumentAnalysis]: DocumentAnalysisPayload;
+  [InferenceJobs.EmbeddingGeneration]: EmbeddingGenerationPayload;
 }

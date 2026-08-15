@@ -1,11 +1,13 @@
 import { logger } from "@/lib/logger";
 import { InferenceJobs } from "../inference.config";
-import { InferenceJobMap } from "../inference.types";
+import {
+  TextGenerationPayload,
+  DocumentAnalysisPayload,
+  EmbeddingGenerationPayload,
+} from "../inference.types";
 
 export class InferenceJobHandler {
-  static async handleTextGeneration(
-    data: InferenceJobMap[typeof InferenceJobs.TextGeneration],
-  ) {
+  static async handleTextGeneration(data: TextGenerationPayload) {
     const { prompt, userId, sessionId, model, maxTokens } = data;
 
     logger.info({ userId, sessionId, model }, "Processing text generation job");
@@ -27,9 +29,7 @@ export class InferenceJobHandler {
     };
   }
 
-  static async handleDocumentAnalysis(
-    data: InferenceJobMap[typeof InferenceJobs.DocumentAnalysis],
-  ) {
+  static async handleDocumentAnalysis(data: DocumentAnalysisPayload) {
     const { documentId, userId, analysisType, options } = data;
 
     logger.info(
@@ -54,9 +54,7 @@ export class InferenceJobHandler {
     };
   }
 
-  static async handleEmbeddingGeneration(
-    data: InferenceJobMap[typeof InferenceJobs.EmbeddingGeneration],
-  ) {
+  static async handleEmbeddingGeneration(data: EmbeddingGenerationPayload) {
     const { documentId, userId, chunkSize, overlapSize } = data;
 
     logger.info(
