@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedNotificationPreferences } from "../notifications.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { getNotificationPreferences } from "../operations/notifications.find";
 import { HttpError } from "@/lib/http/http.error";

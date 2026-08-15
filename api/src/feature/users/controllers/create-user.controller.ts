@@ -7,15 +7,15 @@ import {
   sendErrorResponse,
   sendSuccessResponse,
 } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedUser } from "../users.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 
 export const createUserController = asyncHandler(
   async (req: Request, res: Response) => {
-    const { name, email } = req.body ?? ({} as NewUser);
+    const { name, email } = req.body as NewUser;
     const userId = req.user?.id || "";
 
     const userById = unwrap(
@@ -33,7 +33,6 @@ export const createUserController = asyncHandler(
 
     const user = unwrap(
       await createUserOperation({
-        id: uuid(),
         name: name as string,
         email: email as string,
         fingerprint: req.fingerprint?.hash,

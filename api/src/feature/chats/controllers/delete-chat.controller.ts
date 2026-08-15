@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { deleteChat } from "../operations/chats.update";
 import { User } from "@/feature/users/users.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { HttpStatus } from "@/lib/http/http.status";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 

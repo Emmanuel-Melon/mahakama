@@ -9,10 +9,10 @@ import { NotificationTrackingSchema } from "@/service/notifications/notification
 // ZOD SCHEMAS
 // ============================================================================
 
-export const authUserSchema = createSelectSchema(usersSchema);
+export const authUserSelectSchema = createSelectSchema(usersSchema);
 
 // Create auth schemas directly from the base schema
-export const loginRequestSchema = authUserSchema
+export const loginRequestSchema = authUserSelectSchema
   .pick({
     email: true,
     password: true,
@@ -22,7 +22,7 @@ export const loginRequestSchema = authUserSchema
     description: "Request schema for user login",
   });
 
-export const registerRequestSchema = authUserSchema
+export const registerRequestSchema = authUserSelectSchema
   .pick({
     email: true,
     password: true,
@@ -61,7 +61,7 @@ export const authEventInsertSchema = createInsertSchema(
 // ============================================================================
 // DOMAIN TYPES
 // ============================================================================
-
+export type AuthUser = z.infer<typeof authUserSelectSchema>;
 export type LoginAttrs = z.infer<typeof loginRequestSchema>;
 export type AuthResponseData = z.infer<typeof loginRequestSchema>;
 export type RegisterUserAttrs = z.infer<typeof registerRequestSchema>;
@@ -69,9 +69,15 @@ export type LoginUserAttrs = z.infer<typeof loginRequestSchema>;
 export type AuthEvent = z.infer<typeof authEventSelectSchema>;
 export type NewAuthEvent = z.infer<typeof authEventInsertSchema>;
 export type UserWithoutPassword = Omit<
-  z.infer<typeof authUserSchema>,
+  z.infer<typeof authUserSelectSchema>,
   "password"
 >;
+
+/*
+ * DATABASE QUERY TYPES
+ */
+export type AuthColumn = typeof usersSchema._.columns;
+export type AuthColumnKey = keyof AuthColumn;
 
 // ============================================================================
 // JOB TYPES

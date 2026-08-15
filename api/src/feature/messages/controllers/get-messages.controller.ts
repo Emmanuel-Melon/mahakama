@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { getMessagesByChatId } from "../operations/messages.list";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { MessageSerializer } from "../messages.config";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 
 export const getMessagesByChatIdController = asyncHandler(
   async (req: Request, res: Response) => {

@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { sendMessage } from "../operations/messages.create";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 import { MessageSerializer } from "../messages.config";
 import { type User } from "@/feature/users/users.types";
-import { asyncHandler } from "@/lib/express/express.asyncHandler";
+import { asyncHandler } from "@/lib/express/express.async-handler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { chatsQueue } from "@/feature/chats/jobs/chats.queue";
