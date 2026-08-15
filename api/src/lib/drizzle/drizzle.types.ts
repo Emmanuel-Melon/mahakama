@@ -33,3 +33,14 @@ export interface PaginatedResult<T> {
     totalPages: number;
   };
 }
+
+export interface SchemaConfig {
+  omit?: string[];
+}
+
+export interface GenerateSchemasOptions {
+  titlePrefix: string;
+  select?: SchemaConfig;
+  insert?: SchemaConfig;
+  update?: SchemaConfig;
+}

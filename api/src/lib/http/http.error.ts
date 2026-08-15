@@ -1,4 +1,4 @@
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 
 export class AppError extends Error {
   public readonly isOperational: boolean;

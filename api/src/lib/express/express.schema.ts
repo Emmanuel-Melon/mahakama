@@ -1,8 +1,8 @@
-import { z } from "zod";
 import {
   extendZodWithOpenApi,
   OpenAPIRegistry,
 } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
 
 extendZodWithOpenApi(z);
 
@@ -74,31 +74,14 @@ export const JsonApiErrorSchema = z
         method: z.string().optional().describe("HTTP method of the request"),
       })
       .optional(),
-    meta: z.object(z.any()).optional().describe("Additional error metadata"),
   })
-  .openapi({
-    type: "object",
-    description: "JSON:API error format",
-    example: {
-      id: "error_123",
-      status: "400",
-      code: "BAD_REQUEST",
-      title: "Bad Request",
-      detail: "Request validation failed",
-      metadata: {
-        timestamp: "2023-12-09T15:39:00Z",
-        requestId: "req_12345",
-      },
-    },
-  });
+  .openapi("JsonApiError");
 
 export const JsonApiErrorResponseSchema = z
   .object({
     errors: z.array(JsonApiErrorSchema),
   })
-  .openapi({
-    description: "JSON:API error response format",
-  });
+  .openapi("JsonApiErrorResponse");
 
 export const ResponseLinksSchema = z
   .object({
@@ -127,13 +110,60 @@ export const ResponseLinksSchema = z
     description: "Links related to the response",
   });
 
+export const JsonApiResourceSchema = z
+  .object({
+    type: z.string(),
+    id: z.string(),
+    attributes: z.record(z.string(), z.unknown()),
+    relationships: z.record(z.string(), z.unknown()).optional(),
+    metadata: z.record(z.string(), z.unknown()).optional(),
+    links: z.record(z.string(), z.string()).optional(),
+  })
+  .openapi({ description: "JSON:API resource object" });
+
+export const JsonApiResponseSchema = z
+  .object({
+    data: z.union([JsonApiResourceSchema, z.null()]),
+    metadata: ResponseMetadataSchema.optional(),
+  })
+  .openapi({
+    description: "JSON:API single resource response",
+    example: {
+      data: { id: "123", type: "user", attributes: { name: "John" } },
+      meta: { timestamp: "2023-12-09T15:39:00Z", requestId: "req_12345" },
+    },
+  });
+
+export const JsonApiCollectionResponseSchema = z
+  .object({
+    data: z.array(JsonApiResourceSchema),
+    metadata: ResponseMetadataSchema.optional(),
+  })
+  .openapi({
+    description: "JSON:API collection response",
+    example: {
+      data: [
+        { id: "123", type: "user", attributes: { name: "John" } },
+        { id: "456", type: "user", attributes: { name: "Jane" } },
+      ],
+      meta: { timestamp: "2023-12-09T15:39:00Z", requestId: "req_12345" },
+    },
+  });
+
 // Register all schemas
 expressRegistry.register("ResponseMetadata", ResponseMetadataSchema);
 expressRegistry.register("JsonApiError", JsonApiErrorSchema);
 expressRegistry.register("JsonApiErrorResponse", JsonApiErrorResponseSchema);
+expressRegistry.register("JsonApiResource", JsonApiResourceSchema);
+expressRegistry.register("JsonApiResponse", JsonApiResponseSchema);
+expressRegistry.register(
+  "JsonApiCollectionResponse",
+  JsonApiCollectionResponseSchema,
+);
 // expressRegistry.register('ValidationError', ValidationErrorSchema);
 // expressRegistry.register('ResponseLinks', ResponseLinksSchema);
 
 export type ResponseMetadata = z.infer<typeof ResponseMetadataSchema>;
 export type ResponseLinks = z.infer<typeof ResponseLinksSchema>;
 export type JsonApiError = z.infer<typeof JsonApiErrorSchema>;
+export type JsonApiErrorResponse = z.infer<typeof JsonApiErrorResponseSchema>;

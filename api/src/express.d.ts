@@ -15,10 +15,12 @@ interface UserAgentInfo extends useragent.Details {
 declare global {
   namespace Express {
     interface Request {
-      validatedParams?: any;
-      validatedBody?: any;
-      validatedQuery?: any;
-      validatedHeaders?: any;
+      validated: {
+        body?: unknown;
+        params?: unknown;
+        query?: unknown;
+        headers?: unknown;
+      };
       validatedData?: UserAttrs;
       fingerprint?: RequestFingerprint;
       user?: User | null;

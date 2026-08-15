@@ -4,7 +4,7 @@ import { serverConfig } from "@/config";
 import { findUserById } from "@/feature/users/operations/users.find";
 import { logger } from "@/lib/logger";
 import { sendErrorResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/http-status";
+import { HttpStatus } from "@/lib/http/http.status";
 
 export const authenticateToken = async (
   req: Request,

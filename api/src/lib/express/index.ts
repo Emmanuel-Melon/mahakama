@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
+
 import { serverConfig } from "@/config";
-import { sendErrorResponse, sendSuccessResponse } from "./express.response";
-import { HttpStatus } from "../../http-status";
-import { HealthCheckResponse, WelcomeResponse } from "./express.types";
+import { HttpStatus } from "@/lib/http/http.status";
+
 import {
-  HealthCheckSerializerConfig,
-  WelcomeResponseSerializerConfig,
+  healthCheckSerializerConfig,
+  welcomeResponseSerializerConfig,
 } from "./express.config";
+import { sendErrorResponse, sendSuccessResponse } from "./express.response";
+import type { HealthCheckResponse, WelcomeResponse } from "./express.types";
 
 export const testServerHealth = (): Promise<HealthCheckResponse> => {
   return Promise.resolve({
     status: "healthy",
-    message: "StorySense API is up and running! ✨",
+    message: "Mahakama API is up and running! ✨",
     environment: serverConfig.environment,
     timestamp: new Date().toISOString(),
     services: {
@@ -34,7 +36,7 @@ export const checkServerHealthController = async (
           ...healthCheck,
           id: req.requestId,
         },
-        serializerConfig: HealthCheckSerializerConfig,
+        serializerConfig: healthCheckSerializerConfig,
         type: "single",
       },
       {
@@ -77,7 +79,7 @@ export const welcomeController = (req: Request, res: Response) => {
         ...response,
         id: "welcome",
       },
-      serializerConfig: WelcomeResponseSerializerConfig,
+      serializerConfig: welcomeResponseSerializerConfig,
       type: "single",
     },
     {

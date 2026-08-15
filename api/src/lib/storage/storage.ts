@@ -57,7 +57,10 @@ export function getStoragePath(urlOrPath: string): string {
   const storageRoot = path.resolve(storageConfig.dir);
   const resolved = path.resolve(storageRoot, relative);
 
-  if (resolved !== storageRoot && !resolved.startsWith(`${storageRoot}${path.sep}`)) {
+  if (
+    resolved !== storageRoot &&
+    !resolved.startsWith(`${storageRoot}${path.sep}`)
+  ) {
     throw new Error(`Invalid storage path: ${urlOrPath}`);
   }
 

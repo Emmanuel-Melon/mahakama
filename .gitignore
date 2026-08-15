@@ -18,3 +18,4 @@ frontend/.react-router/
 # Storage
 /uploads/
 /uploads-test/
+/api/uploads/

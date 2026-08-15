@@ -1,15 +1,16 @@
 import { Request } from "express";
-import {
+import { v4 as uuidv4 } from "uuid";
+import { z } from "zod";
+
+import { type JsonApiError, type ResponseMetadata } from "./express.schema";
+import type {
+  ErrorResponseConfig,
   JsonApiResourceConfig,
   ResourceObject,
-  ErrorResponseConfig,
   SerializedError,
   SerializedResponse,
   SerializeJsonApiOptions,
 } from "./express.types";
-import { type ResponseMetadata, type JsonApiError } from "./express.schema";
-import { v4 as uuidv4 } from "uuid";
-import { z } from "zod";
 
 export const serializeResource = <T>(
   resource: T & { id: string },
@@ -114,42 +115,55 @@ export const createJsonApiResourceSchema = <T extends z.ZodType>(
     type: z.literal(type),
     id: z.string().uuid(),
     attributes: attributesSchema,
-    relationships: z.record(z.string(), z.any()).optional(), // Fixed: z.record needs (key, value)
-    meta: z.record(z.string(), z.any()).optional(), // Fixed: z.record needs (key, value)
-    links: z.record(z.string(), z.string()).optional(), // Fixed: z.record needs (key, value)
+    relationships: z.record(z.string(), z.any()).optional(),
+    meta: z.record(z.string(), z.any()).optional(),
+    links: z.record(z.string(), z.string()).optional(),
   });
 };
 
 export const createJsonApiSingleResponseSchema = <T extends z.ZodType>(
   resourceSchema: T,
+  customMetaSchema?: z.ZodObject<any>,
 ) => {
+  const baseMeta = z.object({
+    requestId: z.string(),
+    timestamp: z.string(),
+  });
+
+  const finalMeta = customMetaSchema
+    ? baseMeta.merge(customMetaSchema)
+    : baseMeta.catchall(z.any());
+
   return z.object({
     data: resourceSchema,
     links: z.object({
       self: z.string(),
     }),
-    metadata: z
-      .object({
-        requestId: z.string(),
-        timestamp: z.string(),
-      })
-      .catchall(z.any()), // Allows additionalMeta
+    metadata: finalMeta,
   });
 };
 
-export const createJsonApiCollectionResponseSchema = <T extends z.ZodType>(
+export const createJsonApiCollectionResponseSchema = <
+  T extends z.ZodType,
+  M extends z.ZodObject<any> = z.ZodObject<any>,
+>(
   resourceSchema: T,
+  customMetaSchema?: M,
 ) => {
+  const baseMeta = z.object({
+    requestId: z.string(),
+    timestamp: z.string(),
+  });
+
+  const finalMeta = customMetaSchema
+    ? baseMeta.merge(customMetaSchema)
+    : baseMeta.catchall(z.any());
+
   return z.object({
     data: z.array(resourceSchema),
     links: z.object({
       self: z.string(),
     }),
-    metadata: z
-      .object({
-        requestId: z.string(),
-        timestamp: z.string(),
-      })
-      .catchall(z.any()), // Allows additionalMeta like total
+    metadata: finalMeta,
   });
 };

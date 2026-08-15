@@ -1,4 +1,5 @@
-import { ZodError, ZodSchema } from "zod";
+import { z, ZodError, ZodRawShape, ZodSchema, ZodTypeAny } from "zod";
+
 export interface ValidationResult<T = any> {
   success: true;
   data: T;
@@ -39,3 +40,5 @@ export const validateWithZod = <T>(
     data: result.data,
   };
 };
+
+export type AnyZodObject = z.ZodObject<ZodRawShape>;

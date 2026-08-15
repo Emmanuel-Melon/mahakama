@@ -1,21 +1,23 @@
 import { Application } from "express";
 import express from "express";
-import path from "path";
-import helmet from "helmet";
-import swaggerUi from "swagger-ui-express";
-import { globalErrorHandler } from "./errors";
-import { authRouter } from "@/service/auth/auth.routes";
-import { getIpAddress } from "./ip-address";
-import { requestLogger } from "./http-request-logger";
-import { userAgentMiddleware } from "./user-agent";
-import { corsMiddleware } from "./cors";
-import { serverConfig, storageConfig } from "@/config";
 import cookieParser from "cookie-parser";
-import { swaggerSetup, rawJSONDocs } from "@/lib/swagger";
-import { welcomeController, checkServerHealthController } from "@/lib/express";
-import mahakamaRouter from "@/routes";
-import { requestMetadata } from "./request-metadata";
+import helmet from "helmet";
+import path from "path";
+import swaggerUi from "swagger-ui-express";
+
+import { serverConfig, storageConfig } from "@/config";
+import { checkServerHealthController, welcomeController } from "@/lib/express";
+import { rawJSONDocs, swaggerSetup } from "@/lib/openapi";
 import { ensureStorageDir } from "@/lib/storage/storage";
+import mahakamaRouter from "@/routes";
+import { authRouter } from "@/service/auth/auth.routes";
+
+import { corsMiddleware } from "./cors";
+import { globalErrorHandler } from "./errors";
+import { requestLogger } from "./http-request-logger";
+import { getIpAddress } from "./ip-address";
+import { requestMetadata } from "./request-metadata";
+import { userAgentMiddleware } from "./user-agent";
 
 export function initializeMiddlewares(app: Application): void {
   // global middleware

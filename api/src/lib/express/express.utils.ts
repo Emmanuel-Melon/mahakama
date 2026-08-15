@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+
 import { logger } from "@/lib/logger";
 
 export const getBaseUrl = (req: Request): string => {
@@ -28,7 +29,6 @@ export function logRoute(req: Request, res: Response) {
   }
 
   const logData = {
-    reqId: req.requestId,
     method,
     url: originalUrl,
     status: res.statusCode,

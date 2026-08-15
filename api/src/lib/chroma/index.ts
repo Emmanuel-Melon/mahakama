@@ -51,7 +51,10 @@ export class ChromaClient {
       logger.info(`Connected to collection: ${name}`);
       return collection;
     } catch (error) {
-      logger.error({ error, collectionName: name }, "Failed to connect to Chroma collection");
+      logger.error(
+        { error, collectionName: name },
+        "Failed to connect to Chroma collection",
+      );
       throw error;
     }
   }
