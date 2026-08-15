@@ -1,6 +1,10 @@
 import { logger } from "@/lib/logger";
 import { NotificationJobs } from "../notifications.config";
-import { NotificationJobMap } from "../notifications.types";
+import {
+  SetPreferencesPayload,
+  TriggerNotificationPayload,
+  ChannelNotificationPayload,
+} from "../notifications.types";
 import { NotificationsRegistry } from "../notifications.registry";
 import { getNotificationPreferences } from "../operations/notifications.find";
 import {
@@ -10,17 +14,13 @@ import {
 } from "../notifications.utils";
 
 export class NotificationsJobHandler {
-  static async handleSetPreferences(
-    data: NotificationJobMap[typeof NotificationJobs.SetPreferences],
-  ) {
+  static async handleSetPreferences(data: SetPreferencesPayload) {
     // TODO: Implement set preferences logic
     logger.info({ data }, "Set preferences job received");
     return { success: true, data };
   }
 
-  static async handleTriggerNotification(
-    data: NotificationJobMap[typeof NotificationJobs.TriggerNotification],
-  ) {
+  static async handleTriggerNotification(data: TriggerNotificationPayload) {
     const { recipientId, templateKey, correlationId } = data;
     const userPreferences = await getNotificationPreferences(recipientId);
     if (!userPreferences.ok) {
@@ -77,9 +77,7 @@ export class NotificationsJobHandler {
     };
   }
 
-  static async handleSendEmailNotification(
-    data: NotificationJobMap[typeof NotificationJobs.SendEmailNotification],
-  ) {
+  static async handleSendEmailNotification(data: ChannelNotificationPayload) {
     const { recipientId } = data;
 
     logger.info({ recipientId }, "Processing send email notification job");
@@ -93,9 +91,7 @@ export class NotificationsJobHandler {
     return { success: true, recipientId };
   }
 
-  static async handleSendInAppNotification(
-    data: NotificationJobMap[typeof NotificationJobs.SendInAppNotification],
-  ) {
+  static async handleSendInAppNotification(data: ChannelNotificationPayload) {
     const { recipientId } = data;
 
     logger.info({ recipientId }, "Processing send in-app notification job");
@@ -109,9 +105,7 @@ export class NotificationsJobHandler {
     return { success: true, recipientId };
   }
 
-  static async handleSendPushNotification(
-    data: NotificationJobMap[typeof NotificationJobs.SendPushNotification],
-  ) {
+  static async handleSendPushNotification(data: ChannelNotificationPayload) {
     const { recipientId } = data;
 
     logger.info({ recipientId }, "Processing send push notification job");

@@ -4,17 +4,26 @@ import { chatsSchema } from "./chats.schema";
 import { chatMessages } from "@/feature/messages/messages.schema";
 import { ChatsJobs } from "./chats.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
+import { crudMeta } from "@/lib/openapi/openapi.utils";
 
-// ============================================================================
-// ZOD SCHEMAS
-// ============================================================================
+/*
+ * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
+ */
 
-export const chatSelectSchema = createSelectSchema(chatsSchema);
-export const chatInsertSchema = createInsertSchema(chatsSchema);
+const baseInsert = createInsertSchema(chatsSchema);
+const baseSelect = createSelectSchema(chatsSchema);
 
-// ============================================================================
-// DOMAIN TYPES
-// ============================================================================
+export const chatSelectSchema = crudMeta(baseSelect, "select", "ChatSession");
+
+export const chatInsertSchema = crudMeta(baseInsert, "insert", "ChatSession");
+
+export const chatsQuerySchema = baseQuerySchema.extend({
+  userId: z.string().optional(),
+});
+
+/*
+ * DOMAIN-RELATED TYPES
+ */
 
 export type ChatSession = z.infer<typeof chatSelectSchema>;
 export type NewChatSession = z.infer<typeof chatInsertSchema>;
@@ -24,25 +33,38 @@ export type ChatSessionWithMessages = ChatSession & {
 
 export type ChatSessionAttrs = z.infer<typeof chatsSchema>;
 export type ChatSessionResponse = z.infer<typeof chatSelectSchema>;
+export type ChatsFilters = z.infer<typeof chatsQuerySchema>;
 
-// ============================================================================
-// JOB TYPES
-// ============================================================================
+/*
+ * DATABASE QUERY TYPES
+ */
+export type ChatColumn = typeof chatsSchema._.columns;
+export type ChatColumnKey = keyof ChatColumn;
+
+/*
+ * QUEUE-RELATED TYPES
+ */
+export const ChatCreatedPayloadSchema = z.object({
+  userId: z.string(),
+  chatId: z.string(),
+});
+
+export const MessageSentPayloadSchema = z.object({
+  userId: z.string(),
+  messageId: z.string(),
+});
+
+export type ChatCreatedPayload = z.infer<typeof ChatCreatedPayloadSchema>;
+export type MessageSentPayload = z.infer<typeof MessageSentPayloadSchema>;
 
 export interface ChatsJobMap {
-  [ChatsJobs.ChatCreated]: {
-    userId: string;
-    chatId: string;
-  };
-  [ChatsJobs.MessageSent]: {
-    userId: string;
-    messageId: string;
-  };
+  [ChatsJobs.ChatCreated]: ChatCreatedPayload;
+  [ChatsJobs.MessageSent]: MessageSentPayload;
 }
 
-// ============================================================================
-// API PARAMETER TYPES
-// ============================================================================
+/*
+ * API PARAMETER TYPES
+ */
 
 export interface CreateChatParams {
   userId: string;
@@ -63,9 +85,9 @@ export interface UpdateChatParams {
   metadata?: Record<string, unknown> | null;
 }
 
-// ============================================================================
-// RESPONSE TYPES
-// ============================================================================
+/*
+ * RESPONSE TYPES
+ */
 
 export interface ChatListEntry extends Omit<ChatSession, "userId"> {
   lastMessage?: {
@@ -74,5 +96,3 @@ export interface ChatListEntry extends Omit<ChatSession, "userId"> {
   };
   messageCount: number;
 }
-
-export type ChatsFilters = z.infer<typeof baseQuerySchema>;

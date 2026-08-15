@@ -20,7 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-const loginRequestSchema = schemas.postAuthv1login_Body;
+const loginRequestSchema = schemas.postV1login_Body;
 export type LoginRequest = components["schemas"]["LoginRequest"];
 
 type AuthFormValues = { email?: unknown; password?: unknown; name?: unknown };

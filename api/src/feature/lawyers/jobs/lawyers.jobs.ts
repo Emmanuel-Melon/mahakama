@@ -2,12 +2,13 @@ import { logger } from "@/lib/logger";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
 import { findLawyerById } from "../operations/lawyers.find";
 import { LawyerJobs } from "../lawyers.config";
-import { LawyersJobMap } from "../lawyers.types";
+import {
+  LawyerOnboardedPayload,
+  LawyerVerifiedPayload,
+} from "../lawyers.types";
 
 export class LawyersJobHandler {
-  static async handleLawyerOnboarded(
-    data: LawyersJobMap[typeof LawyerJobs.LawyerOnboarded],
-  ) {
+  static async handleLawyerOnboarded(data: LawyerOnboardedPayload) {
     const { lawyerId, userId } = data;
 
     // Find the lawyer record
@@ -30,9 +31,7 @@ export class LawyersJobHandler {
     return { success: true, lawyerId, userId };
   }
 
-  static async handleLawyerVerified(
-    data: LawyersJobMap[typeof LawyerJobs.LawyerVerified],
-  ) {
+  static async handleLawyerVerified(data: LawyerVerifiedPayload) {
     const { lawyerId, userId, verifiedBy } = data;
 
     // Find the lawyer record

@@ -10,7 +10,7 @@ import { schemas } from "~/lib/api/generated/api.schemas";
 import type { components } from "~/lib/api/generated/api.types";
 
 export type RegisterRequest = components["schemas"]["RegisterRequest"];
-const registerRequestSchema = schemas.postAuthv1register_Body;
+const registerRequestSchema = schemas.postV1register_Body;
 
 export const SignupScreen = () => {
   const navigate = useNavigate();

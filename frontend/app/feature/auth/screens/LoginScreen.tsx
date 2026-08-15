@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-const loginRequestSchema = schemas.postAuthv1login_Body;
+const loginRequestSchema = schemas.postV1login_Body;
 export type LoginRequest = components["schemas"]["LoginRequest"];
 
 export const LoginScreen = () => {

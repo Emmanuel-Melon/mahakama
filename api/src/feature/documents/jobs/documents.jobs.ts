@@ -15,7 +15,7 @@ import { logger } from "@/lib/logger";
 import { findDocumentById } from "../operations/document.find";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
 import { DocumentJobs } from "../document.config";
-import { DocumentJobMap } from "../documents.types";
+import { DocumentUploadedPayload } from "../documents.types";
 import { publishIngestionEvent } from "../documents.progress";
 
 const COLLECTION_NAME = "legal_questions";
@@ -23,7 +23,7 @@ const CONTENT_PREVIEW_LENGTH = 200;
 
 export class DocumentsJobHandler {
   static async handleDocumentUploaded(
-    data: DocumentJobMap[typeof DocumentJobs.DocumentUploaded],
+    data: DocumentUploadedPayload,
     job?: Job,
   ) {
     const { documentId, userId, filename, size } = data;

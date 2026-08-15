@@ -1,11 +1,9 @@
 import { logger } from "@/lib/logger";
 import { UserJobs } from "../users.config";
-import { UserJobMap } from "../users.types";
+import { BaseUserPayload, UserVerifiedPayload } from "../users.types";
 
 export class UsersJobHandler {
-  static async handleUserCreated(
-    data: UserJobMap[typeof UserJobs.UserCreated],
-  ) {
+  static async handleUserCreated(data: BaseUserPayload) {
     const { userId } = data;
 
     logger.info({ userId }, "Processing user created job");
@@ -19,9 +17,7 @@ export class UsersJobHandler {
     return { success: true, userId };
   }
 
-  static async handleUserUpdated(
-    data: UserJobMap[typeof UserJobs.UserUpdated],
-  ) {
+  static async handleUserUpdated(data: BaseUserPayload) {
     const { userId } = data;
 
     logger.info({ userId }, "Processing user updated job");
@@ -35,9 +31,7 @@ export class UsersJobHandler {
     return { success: true, userId };
   }
 
-  static async handleUserDeleted(
-    data: UserJobMap[typeof UserJobs.UserDeleted],
-  ) {
+  static async handleUserDeleted(data: BaseUserPayload) {
     const { userId } = data;
 
     logger.info({ userId }, "Processing user deleted job");
@@ -51,9 +45,7 @@ export class UsersJobHandler {
     return { success: true, userId };
   }
 
-  static async handleUserOnboarded(
-    data: UserJobMap[typeof UserJobs.UserOnboarded],
-  ) {
+  static async handleUserOnboarded(data: BaseUserPayload) {
     const { userId } = data;
 
     logger.info({ userId }, "Processing user onboarded job");
@@ -67,9 +59,7 @@ export class UsersJobHandler {
     return { success: true, userId };
   }
 
-  static async handleUserVerified(
-    data: UserJobMap[typeof UserJobs.UserVerified],
-  ) {
+  static async handleUserVerified(data: UserVerifiedPayload) {
     const { userId, verifiedAt } = data;
 
     logger.info({ userId, verifiedAt }, "Processing user verified job");
