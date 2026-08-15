@@ -18,9 +18,7 @@ export const createMockUser = (overrides?: Partial<User>): User => {
     id: faker.string.uuid(),
     name: `${firstName} ${lastName}`,
     email,
-    password: "hashed-test-password", // plain string, we'll mock the hasher
     role: getRandomRole(0), // default role, can override
-    fingerprint: null,
     userAgent: null,
     lastIp: null,
     isAnonymous: false,
@@ -30,7 +28,7 @@ export const createMockUser = (overrides?: Partial<User>): User => {
     city: faker.location.city(),
     phoneNumber: faker.phone.number(),
     occupation: faker.person.jobTitle(),
-    bio: faker.lorem.paragraphs(2),
+    bio: faker.lorem.paragraphs(1),
     profilePicture: null,
     isOnboarded: false,
     createdAt: faker.date.past({ years: 1 }),
@@ -51,7 +49,6 @@ export const createMockNewUser = (overrides?: Partial<NewUser>): NewUser => {
     name: `${firstName} ${lastName}`,
     email,
     password: "plain-test-password", // raw password; will be hashed by the function
-    role: "user", // default role
     fingerprint: null,
     userAgent: null,
     lastIp: null,

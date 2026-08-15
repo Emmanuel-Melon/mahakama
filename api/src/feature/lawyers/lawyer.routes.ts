@@ -1,26 +1,41 @@
 import { Router } from "express";
-import { getLawyersController } from "./controllers/get-lawyers.controller";
-import { getLawyerByIdController } from "./controllers/get-lawyer-by-id.controller";
+import { z } from "zod";
+
+import {
+  HttpLocation,
+  validateHttpRequest,
+} from "@/middleware/request-validators";
+import type { ApiManifest } from "@/routes/api.types";
+
 import { createLawyerController } from "./controllers/create-lawyer.controller";
+import { getLawyerByIdController } from "./controllers/get-lawyer-by-id.controller";
+import { getLawyersController } from "./controllers/get-lawyers.controller";
 import { updateLawyerController } from "./controllers/update-lawyer.controller";
-import { validateRequestBody } from "@/middleware/request-validators";
 import { createLawyerSchema } from "./lawyers.types";
 
 const lawyersRoutes = Router();
 
 lawyersRoutes.get("/", getLawyersController);
-lawyersRoutes.get("/:id", getLawyerByIdController);
+lawyersRoutes.get(
+  "/:id",
+  validateHttpRequest(z.object({ id: z.string() }), HttpLocation.Params),
+  getLawyerByIdController,
+);
 lawyersRoutes.post(
   "/",
-  validateRequestBody(createLawyerSchema),
+  validateHttpRequest(createLawyerSchema, HttpLocation.Body),
   createLawyerController,
 );
 lawyersRoutes.put(
   "/:id",
-  validateRequestBody(createLawyerSchema),
+  validateHttpRequest(z.object({ id: z.string() }), HttpLocation.Params),
+  validateHttpRequest(createLawyerSchema.partial(), HttpLocation.Body),
   updateLawyerController,
 );
 
-export default lawyersRoutes;
+export const lawyersApi: ApiManifest = {
+  path: "/v1/lawyers",
+  router: lawyersRoutes,
+};
 
-export const LAWYERS_PATH = "/v1/lawyers";
+export default lawyersRoutes;

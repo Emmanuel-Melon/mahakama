@@ -1,5 +1,5 @@
 import { db } from "@/lib/drizzle";
-import { usersSchema, type UserRole } from "../users.schema";
+import { usersSchema } from "../users.schema";
 import type { NewUser, User } from "../users.types";
 import { eq } from "drizzle-orm";
 import { findUserById } from "./users.find";
@@ -17,7 +17,6 @@ export async function updateUser(
     .set({
       ...userAttrs,
       updatedAt: new Date(),
-      role: userAttrs.role as UserRole,
     })
     .where(eq(usersSchema.id, userId))
     .returning();

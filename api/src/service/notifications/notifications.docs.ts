@@ -1,36 +1,105 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
+import { z } from "zod";
+
+import { HttpStatus } from "@/lib/http/http.status";
+import {
+  defineApiResource,
+  registerJsonApiSchemas,
+  registerRoutes,
+} from "@/lib/openapi/openapi.core";
+import type { PathDefinition } from "@/lib/openapi/openapi.types";
+
+import { notificationsApi } from "./notifications.routes";
 import {
   notificationSelectSchema,
   notificationPreferencesSelectSchema,
   notificationPreferencesInsertSchema,
 } from "./notifications.types";
-import { HttpStatus } from "@/http-status";
-import {
-  createJsonApiResourceSchema,
-  createJsonApiSingleResponseSchema,
-  createJsonApiCollectionResponseSchema,
-} from "@/lib/express/express.serializer";
 
-const ErrorResponseRef = { $ref: "#/components/schemas/JsonApiErrorResponse" };
-const notificationResourceSchema = createJsonApiResourceSchema(
-  "notification",
-  notificationSelectSchema,
-);
-const notificationSingleResponseSchema = createJsonApiSingleResponseSchema(
-  notificationResourceSchema,
-);
-const notificationsCollectionResponseSchema =
-  createJsonApiCollectionResponseSchema(notificationResourceSchema);
-
-const notificationPreferencesResourceSchema = createJsonApiResourceSchema(
-  "notification-preferences",
-  notificationPreferencesSelectSchema,
-);
-const notificationPreferencesSingleResponseSchema =
-  createJsonApiSingleResponseSchema(notificationPreferencesResourceSchema);
-
-// Create registry and register schemas
 export const notificationsRegistry = new OpenAPIRegistry();
+
+const notificationApiResource = defineApiResource({
+  select: notificationSelectSchema,
+  insert: notificationPreferencesInsertSchema,
+  update: notificationPreferencesInsertSchema.partial(),
+});
+
+export const NotificationApiSchemas = registerJsonApiSchemas({
+  registry: notificationsRegistry,
+  resourceType: "notification",
+  pascalName: "Notification",
+  schemas: notificationApiResource,
+});
+
+const notificationPreferencesApiResource = defineApiResource({
+  select: notificationPreferencesSelectSchema,
+  insert: notificationPreferencesInsertSchema,
+  update: notificationPreferencesInsertSchema.partial(),
+});
+
+export const NotificationPreferencesApiSchemas = registerJsonApiSchemas({
+  registry: notificationsRegistry,
+  resourceType: "notification-preferences",
+  pascalName: "NotificationPreferences",
+  schemas: notificationPreferencesApiResource,
+});
+
+const notificationPaths: PathDefinition[] = [
+  {
+    handlerName: "getNotificationsController",
+    method: "get",
+    path: notificationsApi.path,
+    summary: "Get current user's notifications",
+    description:
+      "Returns a paginated list of notifications for the authenticated user",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: NotificationApiSchemas.colResSchema,
+    errorCodes: [401, 500],
+  },
+  {
+    handlerName: "getNotificationPreferencesController",
+    method: "get",
+    path: `${notificationsApi.path}/preferences`,
+    summary: "Get user's notification preferences",
+    description: "Retrieve notification preferences for the authenticated user",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: NotificationPreferencesApiSchemas.singleResSchema,
+    errorCodes: [401, 404],
+  },
+  {
+    handlerName: "setInitialNotificationPreferencesController",
+    method: "post",
+    path: `${notificationsApi.path}/set`,
+    summary: "Set initial notification preferences",
+    description:
+      "Create default notification preferences for the authenticated user",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: NotificationPreferencesApiSchemas.singleResSchema,
+    errorCodes: [401, 404],
+  },
+  {
+    handlerName: "updateNotificationPreferencesController",
+    method: "put",
+    path: `${notificationsApi.path}/preferences/update`,
+    summary: "Update notification preferences",
+    description: "Update notification preferences for the authenticated user",
+    security: [{ bearerAuth: [] }],
+    requestBodySchema: notificationPreferencesInsertSchema,
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: NotificationPreferencesApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 404],
+  },
+];
+
+registerRoutes({
+  registry: notificationsRegistry,
+  defaultTag: "Notifications v1",
+  routes: notificationPaths,
+});
+
 notificationsRegistry.register("Notification", notificationSelectSchema);
 notificationsRegistry.register(
   "NotificationPreferences",
@@ -40,183 +109,3 @@ notificationsRegistry.register(
   "UpdateNotificationPreferences",
   notificationPreferencesInsertSchema,
 );
-notificationsRegistry.register(
-  "NotificationResource",
-  notificationResourceSchema,
-);
-notificationsRegistry.register(
-  "NotificationSingleResponse",
-  notificationSingleResponseSchema,
-);
-notificationsRegistry.register(
-  "NotificationsCollectionResponse",
-  notificationsCollectionResponseSchema,
-);
-notificationsRegistry.register(
-  "NotificationPreferencesSingleResponse",
-  notificationPreferencesSingleResponseSchema,
-);
-
-// 1. GET /v1/notifications (Get All Notifications)
-notificationsRegistry.registerPath({
-  method: "get",
-  path: "/v1/notifications",
-  summary: "Get current user's notifications",
-  description:
-    "Returns a paginated list of notifications for the authenticated user",
-  tags: ["Notifications v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: notificationsCollectionResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.INTERNAL_SERVER_ERROR.statusCode]: {
-      description: HttpStatus.INTERNAL_SERVER_ERROR.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 2. GET /v1/notifications/preferences (Get Notification Preferences)
-notificationsRegistry.registerPath({
-  method: "get",
-  path: "/v1/notifications/preferences",
-  summary: "Get user's notification preferences",
-  description: "Retrieve notification preferences for the authenticated user",
-  tags: ["Notifications v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: notificationPreferencesSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 3. POST /v1/notifications/set (Set Initial Notification Preferences)
-notificationsRegistry.registerPath({
-  method: "post",
-  path: "/v1/notifications/set",
-  summary: "Set initial notification preferences",
-  description:
-    "Create default notification preferences for the authenticated user",
-  tags: ["Notifications v1"],
-  security: [{ bearerAuth: [] }],
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: notificationPreferencesSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
-
-// 4. PUT /v1/notifications/preferences/update (Update Notification Preferences)
-notificationsRegistry.registerPath({
-  method: "put",
-  path: "/v1/notifications/preferences/update",
-  summary: "Update notification preferences",
-  description: "Update notification preferences for the authenticated user",
-  tags: ["Notifications v1"],
-  security: [{ bearerAuth: [] }],
-  request: {
-    body: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: notificationPreferencesInsertSchema,
-        },
-      },
-    },
-  },
-  responses: {
-    [HttpStatus.SUCCESS.statusCode]: {
-      description: HttpStatus.SUCCESS.description,
-      content: {
-        "application/json": {
-          schema: notificationPreferencesSingleResponseSchema,
-        },
-      },
-    },
-    [HttpStatus.UNAUTHORIZED.statusCode]: {
-      description: HttpStatus.UNAUTHORIZED.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.BAD_REQUEST.statusCode]: {
-      description: HttpStatus.BAD_REQUEST.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-    [HttpStatus.NOT_FOUND.statusCode]: {
-      description: HttpStatus.NOT_FOUND.description,
-      content: {
-        "application/json": {
-          schema: ErrorResponseRef,
-        },
-      },
-    },
-  },
-});
