@@ -3,6 +3,7 @@ import { SidebarTrigger } from "~/components/ui/sidebar";
 import { HelpCircle, PhoneCall } from "lucide-react";
 import { NavLink } from "react-router";
 import { NotificationsDropdown } from "./notifications-dropdown";
+import { LanguageSwitcher } from "./language-switcher";
 
 interface SiteHeaderProps {
   title?: string;
@@ -56,6 +57,7 @@ export function SiteHeader({ title = "Documents" }: SiteHeaderProps) {
             onMarkAsRead={(id) => console.log("Mark as read:", id)}
             onShowAll={() => console.log("Show all notifications")}
           />
+          <LanguageSwitcher />
           <NavLink
             to="/help"
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"

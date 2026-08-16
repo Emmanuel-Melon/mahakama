@@ -16,7 +16,8 @@
   },
   "locale": {
     "en": "EN",
-    "ar": "AR"
+    "ar": "AR",
+    "switch": "تبديل اللغة"
   },
   "actions": {
     "back": "رجوع"

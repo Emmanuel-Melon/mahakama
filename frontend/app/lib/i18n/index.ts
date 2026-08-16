@@ -25,7 +25,7 @@ const i18nConfigs = [
 ];
 
 const resources: Resource = i18nConfigs.reduce<Resource>(
-  (acc,Config) => {
+  (acc, Config) => {
     acc.en[Config.namespace] = Config.resources.en;
     acc.ar[Config.namespace] = Config.resources.ar;
     return acc;

@@ -42,9 +42,7 @@ export function isReplyAwaiting(
 }
 
 export function hasFailedReply(message: ChatMessage): boolean {
-  return (
-    isUserMessage(message) && getMessageReplyStatus(message) === "failed"
-  );
+  return isUserMessage(message) && getMessageReplyStatus(message) === "failed";
 }
 
 export function isStalePendingReply(

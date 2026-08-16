@@ -12,6 +12,7 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "~/components/icon-container";
+import { LanguageSwitcher } from "~/components/language-switcher";
 const links = [
   {
     id: 1,
@@ -140,6 +141,7 @@ export function Header() {
                   );
                 })}
               </nav>
+              <LanguageSwitcher />
               <NavLink
                 to="/login"
                 className={({ isActive }) =>
@@ -226,6 +228,8 @@ export function Header() {
                   })}
 
                   <div className="border-t border-gray-200 my-2"></div>
+
+                  <LanguageSwitcher />
 
                   <NavLink
                     to="/login"

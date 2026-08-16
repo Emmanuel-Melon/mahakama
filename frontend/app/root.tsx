@@ -22,6 +22,8 @@ import {
 } from "~/config/routes.config";
 import { UserProvider } from "~/context/user-provider";
 import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useEffect } from "react";
+import i18n from "~/lib/i18n";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -43,6 +45,11 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    document.documentElement.lang = i18n.language;
+    document.documentElement.dir = i18n.dir();
+  }, []);
+
   return (
     <html lang="en" className="h-full">
       <head>

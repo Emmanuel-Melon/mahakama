@@ -9,6 +9,8 @@ interface MessageListProps {
   showTyping?: boolean;
   onRetry?: (messageId: string) => void;
   isRetrying?: boolean;
+  citationMessageId?: string;
+  onCitationClick?: (index: number) => void;
 }
 
 export function MessageList({
@@ -17,6 +19,8 @@ export function MessageList({
   showTyping = false,
   onRetry,
   isRetrying = false,
+  citationMessageId,
+  onCitationClick,
 }: MessageListProps) {
   if (isLoading) {
     return (
@@ -36,13 +40,15 @@ export function MessageList({
   }
 
   return (
-    <div className="space-y-4 px-4">
+    <div className="space-y-4">
       {messages.map((message) => (
         <MessageBubble
           key={message.id}
           message={message}
           onRetry={onRetry}
           isRetrying={isRetrying}
+          showCitationRefs={message.id === citationMessageId}
+          onCitationClick={onCitationClick}
         />
       ))}
       {showTyping && <TypingIndicator />}

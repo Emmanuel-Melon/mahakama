@@ -7,7 +7,6 @@ import {
   isStalePendingReply,
   isUserMessage,
 } from "../hooks/use-chats";
-import { MessageMetadata } from "./MessageMetadata";
 
 interface MessageBubbleProps {
   message: ChatMessage;
@@ -49,4 +48,3 @@ export function TypingIndicator() {
     </div>
   );
 }
-

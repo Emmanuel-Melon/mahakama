@@ -16,7 +16,8 @@
   },
   "locale": {
     "en": "EN",
-    "ar": "AR"
+    "ar": "AR",
+    "switch": "Switch language"
   },
   "actions": {
     "back": "Back"
