@@ -1,7 +1,7 @@
 import { Job } from "bullmq";
 import { db } from "@/lib/drizzle";
 import { documentsTable } from "@/feature/documents/documents.schema";
-import { findDocumentById } from "@/feature/documents/operations/document.find";
+import { findDocument } from "@/feature/documents/operations/documents.find";
 import { updateDocument } from "@/feature/documents/operations/documents.update";
 import { documentsQueue } from "@/feature/documents/jobs/documents.queue";
 import { DocumentJobs } from "@/feature/documents/document.config";
@@ -112,10 +112,13 @@ export class LawSourceJobHandler {
    * ids and deletes the previous version's chunks (U1.4).
    */
   private static async handleReingest(check: SourceCheck) {
-    const result = unwrapJobResult(await findDocumentById(check.documentId!), {
-      message: "Document disappeared before re-ingest",
-      shouldRetry: false,
-    });
+    const result = unwrapJobResult(
+      await findDocument("id", check.documentId!),
+      {
+        message: "Document disappeared before re-ingest",
+        shouldRetry: false,
+      },
+    );
     const current = result.data!;
     const nextVersion = (current.version ?? 1) + 1;
     const detectedLastUpdated = check.detectedLastUpdated;
@@ -128,7 +131,7 @@ export class LawSourceJobHandler {
       return;
     }
 
-    await updateDocument(check.documentId!, {
+    await updateDocument("id", check.documentId!, {
       version: nextVersion,
       lastUpdated: detectedLastUpdated,
     });

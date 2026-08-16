@@ -6,7 +6,10 @@ import { sendMessage } from "@/feature/messages/operations/messages.create";
 import type { ChatMessage } from "@/feature/messages/messages.types";
 import { buildRagContext } from "./rag.context";
 import { buildRagChatPrompt } from "./rag.prompts";
-import { extractCitations, filterCitationsAgainstWhitelist } from "./rag.citations";
+import {
+  extractCitations,
+  filterCitationsAgainstWhitelist,
+} from "./rag.citations";
 
 // Shared "answer the user's latest message" path used by both the messages
 // controller (POST /v1/messages) and chat creation (POST /v1/chats), so the

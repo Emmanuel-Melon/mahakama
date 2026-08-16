@@ -42,9 +42,7 @@ export const LoginScreen = () => {
         mode="login"
         handleSubmit={handleSubmit(onSubmit)}
         isLoading={isSubmitting || loginMutation.isPending}
-        error={
-          loginMutation.error ? t("login.invalidCredentials") : null
-        }
+        error={loginMutation.error ? t("login.invalidCredentials") : null}
         register={register}
         errors={errors}
       />

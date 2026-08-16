@@ -5,12 +5,12 @@ import { combinedChatsSchema } from "@/feature/chats/chats.schema";
 import { combinedDocumentsSchema } from "@/feature/documents/documents.schema";
 import { combinedMessagesSchema } from "@/feature/messages/messages.schema";
 import { lawyersTable } from "@/feature/lawyers/lawyers.schema";
-import { combinedNotificationsSchema } from "@/service/notifications/notifications.schema";
+import { combinedNotificationsSchema } from "@/feature/notifications/notifications.schema";
 import { combinedLawyersSchema } from "@/feature/lawyers/lawyers.schema";
 import { combinedUsersSchema } from "@/feature/users/users.schema";
-import { combinedAuthSchema } from "@/service/auth/auth.schema";
+import { combinedAuthSchema } from "@/feature/auth/auth.schema";
 import { combinedServiceSchema } from "@/feature/services/services.schema";
-import { combinedInferenceSchema } from "@/service/inference/inference.schema";
+import { combinedInferenceSchema } from "@/feature/inference/inference.schema";
 import { allRelations } from "./drizzle.relations";
 
 const pool = new Pool({

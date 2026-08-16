@@ -41,9 +41,7 @@ export const SignupScreen = () => {
         mode="signup"
         handleSubmit={handleSubmit(onSubmit)}
         isLoading={isSubmitting || registerMutation.isPending}
-        error={
-          registerMutation.error ? t("signup.invalidCredentials") : null
-        }
+        error={registerMutation.error ? t("signup.invalidCredentials") : null}
         register={register}
         errors={errors}
       />

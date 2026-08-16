@@ -10,7 +10,7 @@ import { checkServerHealthController, welcomeController } from "@/lib/express";
 import { rawJSONDocs, swaggerSetup } from "@/lib/openapi";
 import { ensureStorageDir } from "@/lib/storage/storage";
 import mahakamaRouter from "@/routes";
-import { authRouter } from "@/service/auth/auth.routes";
+import { authRouter } from "@/feature/auth/auth.routes";
 
 import { corsMiddleware } from "./cors";
 import { globalErrorHandler } from "./errors";

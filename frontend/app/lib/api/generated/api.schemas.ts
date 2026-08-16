@@ -241,7 +241,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -375,7 +375,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -759,7 +759,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1152,7 +1152,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1323,7 +1323,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1415,7 +1415,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
