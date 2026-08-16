@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
-import { findLawyerById } from "../operations/lawyers.find";
+import { findLawyer } from "../operations/lawyers.find";
 import { LawyerJobs } from "../lawyers.config";
 import {
   LawyerOnboardedPayload,
@@ -12,7 +12,7 @@ export class LawyersJobHandler {
     const { lawyerId, userId } = data;
 
     // Find the lawyer record
-    const lawyer = unwrapJobResult(await findLawyerById(lawyerId), {
+    const lawyer = unwrapJobResult(await findLawyer("id", lawyerId), {
       message: "Could not find lawyer",
       shouldRetry: false,
     });
@@ -35,7 +35,7 @@ export class LawyersJobHandler {
     const { lawyerId, userId, verifiedBy } = data;
 
     // Find the lawyer record
-    const lawyer = unwrapJobResult(await findLawyerById(lawyerId), {
+    const lawyer = unwrapJobResult(await findLawyer("id", lawyerId), {
       message: "Could not find lawyer",
       shouldRetry: false,
     });

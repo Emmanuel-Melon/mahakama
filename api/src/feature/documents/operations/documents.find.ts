@@ -1,25 +1,80 @@
 import { db } from "@/lib/drizzle";
 import { documentsTable, bookmarksTable } from "../documents.schema";
-import { eq, and, desc, sql } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import {
   Document,
   DocumentShareInfo,
   ShareDocumentParams,
   Bookmark,
   DocumentsFilters,
+  BookmarkColumn,
+  BookmarkColumnKey,
+  DocumentColumn,
+  DocumentColumnKey,
+  FindBookmarkOptions,
 } from "../documents.types";
-import { toManyResult, toResult } from "@/lib/drizzle/drizzle.utils";
+import {
+  toManyResult,
+  toResult,
+  toSingleResult,
+} from "@/lib/drizzle/drizzle.utils";
 import { DbManyResult, DbResult } from "@/lib/drizzle/drizzle.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
-export async function findDocumentById(
-  id: string,
-): Promise<DbResult<Document>> {
-  const [document] = await db
+export const findDocument = async <K extends DocumentColumnKey>(
+  field: K,
+  value: DocumentColumn[K]["_"]["data"],
+): Promise<DbResult<Document>> => {
+  const document = await db.query.documentsTable.findFirst({
+    where: eq(documentsTable[field], value),
+  });
+  return toSingleResult(document);
+};
+
+export const findBookmark = async <K extends BookmarkColumnKey>(
+  field: K,
+  value: BookmarkColumn[K]["_"]["data"],
+  options?: FindBookmarkOptions,
+): Promise<DbResult<Bookmark>> => {
+  const conditions = [eq(bookmarksTable[field], value)];
+
+  if (options?.userId) {
+    conditions.push(eq(bookmarksTable.user_id, options.userId));
+  }
+
+  const bookmark = await db
     .select()
-    .from(documentsTable)
-    .where(eq(documentsTable.id, id));
-  return toResult(document);
+    .from(bookmarksTable)
+    .where(and(...conditions))
+    .limit(1)
+    .then(([result]) => result);
+
+  return toSingleResult(bookmark);
+};
+
+export async function findDocuments(
+  query: DocumentsFilters,
+): Promise<DbManyResult<Document>> {
+  const filters = [];
+
+  if (query.type) {
+    filters.push(sql`LOWER(${documentsTable.type}) = LOWER(${query.type})`);
+  }
+
+  const result = await paginate<"documentsTable", Document>(
+    "documentsTable",
+    documentsTable,
+    {
+      ...query,
+      filters,
+      search: {
+        q: query.q,
+        columns: [documentsTable.title, documentsTable.description],
+      },
+    },
+  );
+
+  return toManyResult(result);
 }
 
 export async function getDocumentShareInfo({
@@ -52,46 +107,4 @@ export async function getDocumentShareInfo({
   };
 
   return shareInfo;
-}
-
-export async function findBookmarkById(
-  documentId: string,
-  userId: string,
-): Promise<DbResult<Bookmark>> {
-  const [bookmark] = await db
-    .select()
-    .from(bookmarksTable)
-    .where(
-      and(
-        eq(bookmarksTable.user_id, userId),
-        eq(bookmarksTable.documentId, documentId),
-      ),
-    )
-    .limit(1);
-  return toResult(bookmark);
-}
-
-export async function findDocuments(
-  query: DocumentsFilters,
-): Promise<DbManyResult<Document>> {
-  const filters = [];
-
-  if (query.type) {
-    filters.push(sql`LOWER(${documentsTable.type}) = LOWER(${query.type})`);
-  }
-
-  const result = await paginate<"documentsTable", Document>(
-    "documentsTable",
-    documentsTable,
-    {
-      ...query,
-      filters,
-      search: {
-        q: query.q,
-        columns: [documentsTable.title, documentsTable.description],
-      },
-    },
-  );
-
-  return toManyResult(result);
 }

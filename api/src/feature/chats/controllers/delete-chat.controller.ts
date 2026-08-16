@@ -13,7 +13,7 @@ export const deleteChatController = asyncHandler(
     const user = req.user as User;
 
     const deleted = unwrap(
-      await deleteChat(chatId, user.id),
+      await deleteChat("id", chatId, { userId: user.id }),
       new HttpError(HttpStatus.NOT_FOUND, "Chat not found"),
     );
 

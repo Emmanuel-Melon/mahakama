@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedLegalService } from "../services.config";
-import { findServiceBySlug } from "../operations/services.find";
+import { findService } from "../operations/services.find";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
@@ -12,7 +12,7 @@ export const getLegalServiceByIdController = asyncHandler(
     const serviceId = req.params.serviceId as string;
 
     const service = unwrap(
-      await findServiceBySlug(serviceId),
+      await findService("id", serviceId),
       new HttpError(HttpStatus.NOT_FOUND, "Service not found"),
     );
 

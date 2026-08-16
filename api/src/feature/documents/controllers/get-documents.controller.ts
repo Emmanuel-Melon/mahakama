@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findDocuments } from "../operations/document.find";
+import { findDocuments } from "../operations/documents.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { DocumentsSerializer } from "../document.config";

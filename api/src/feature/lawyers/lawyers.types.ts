@@ -16,6 +16,12 @@ export const createLawyerSchema = crudMeta(baseInsert, "insert", "Lawyer");
 
 export const lawyerSelectSchema = crudMeta(baseSelect, "select", "Lawyer");
 
+export const lawyersUpdateSchema = crudMeta(
+  baseInsert.omit({ id: true, createdAt: true }).partial(),
+  "update",
+  "Lawyer",
+);
+
 export const lawyersListResponseSchema = z.array(lawyerSelectSchema);
 
 export const lawyerQuerySchema = baseQuerySchema.extend({
@@ -30,6 +36,7 @@ export const lawyerQuerySchema = baseQuerySchema.extend({
 
 export type NewLawyer = z.infer<typeof createLawyerSchema>;
 export type Lawyer = z.infer<typeof lawyerSelectSchema>;
+export type UpdateLawyer = z.infer<typeof lawyersUpdateSchema>;
 export type LawyerFilters = z.infer<typeof lawyerQuerySchema>;
 
 /*

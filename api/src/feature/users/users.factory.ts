@@ -71,5 +71,16 @@ export const createMockUsers = (
   count: number,
   overrides?: Partial<User>,
 ): User[] => {
-  return Array.from({ length: count }, () => createMockUser(overrides));
+  const seenEmails = new Set<string>();
+  const users: User[] = [];
+
+  while (users.length < count) {
+    const user = createMockUser(overrides);
+    const email = user.email; // string | null
+    if (!email || seenEmails.has(email)) continue; // regenerate on collision or (impossible) null
+    seenEmails.add(email);
+    users.push(user);
+  }
+
+  return users;
 };

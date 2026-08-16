@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { updateUser } from "../operations/users.update";
 import { type UserRole } from "../users.schema";
-import { findUserById } from "../operations/users.find";
+import { findUser } from "../operations/users.find";
 import {
   sendErrorResponse,
   sendSuccessResponse,
@@ -16,7 +16,7 @@ export const updateUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.params.id as string;
     const existingUser = unwrap(
-      await findUserById(userId),
+      await findUser("id", userId),
       new HttpError(HttpStatus.NOT_FOUND, "User not found"),
     );
     if (req.user?.id !== userId && req.user?.role !== "admin") {
@@ -25,7 +25,7 @@ export const updateUserController = asyncHandler(
       });
     }
     const data = unwrap(
-      await updateUser(userId, {
+      await updateUser("id", userId, {
         ...req.body,
         role: req.body.role as UserRole,
       }),

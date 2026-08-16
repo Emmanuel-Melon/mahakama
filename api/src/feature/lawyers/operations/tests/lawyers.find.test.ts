@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { db } from "@/lib/drizzle";
-import { findLawyerById } from "../lawyers.find";
+import { findLawyer } from "../lawyers.find";
 import { createMockLawyer } from "../../lawyers.factory";
 import { eq } from "drizzle-orm";
 import { lawyersTable } from "../../lawyers.schema";
@@ -77,14 +77,14 @@ describe("findLawyers", () => {
   });
 });
 
-describe("findLawyerById", () => {
+describe("findLawyer", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
   it("should return ok:true with lawyer data", async () => {
     const mockLawyer = createMockLawyer();
     mockDrizzleQuery("lawyers", "findFirst", mockLawyer);
-    const result = await findLawyerById(mockLawyer.id);
+    const result = await findLawyer("id", mockLawyer.id);
     expect(result).toEqual({ ok: true, data: mockLawyer });
   });
 
@@ -92,7 +92,7 @@ describe("findLawyerById", () => {
     // Mock findFirst to return undefined (no lawyer found)
     vi.mocked(db.query.lawyers.findFirst).mockResolvedValue(undefined);
 
-    const result = await findLawyerById("non-existent-id");
+    const result = await findLawyer("id", "non-existent-id");
 
     expect(result).toEqual({ ok: false, data: null });
     expect(db.query.lawyers.findFirst).toHaveBeenCalledWith({

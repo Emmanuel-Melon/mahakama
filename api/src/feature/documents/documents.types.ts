@@ -8,6 +8,8 @@ import {
 import { DocumentJobs } from "./document.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
+import { DocumentChunk } from "@/service/embedding-service/embeddings.types";
+import { EmbeddingBatchProgress } from "@/service/embedding-service/embeddings.generate";
 
 /*
  * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
@@ -98,65 +100,30 @@ export const documentsQuerySchema = baseQuerySchema.extend({
 
 export type Document = z.infer<typeof documentSelectSchema>;
 export type NewDocument = z.infer<typeof documentInsertSchema>;
+export type UpdateDocument = z.infer<typeof documentUpdateSchema>;
 export type Bookmark = typeof bookmarksTable.$inferSelect;
 export type NewBookmark = typeof bookmarksTable.$inferInsert;
 export type Download = typeof downloadsTable.$inferSelect;
 export type NewDownload = typeof downloadsTable.$inferInsert;
-
-export type DocumentEventType =
-  "started" | "progress" | "content" | "completed" | "error";
-
-export type DocumentIngestionEventType = DocumentIngestionEvent["type"];
-
-export type DocumentIngestionEvent = Extract<
-  {
-    [K in DocumentEventType]: {
-      type: K;
-      data: K extends "started"
-        ? {
-            timestamp: string;
-            filename: string;
-            size: number;
-          }
-        : K extends "progress"
-          ? {
-              processed: number;
-              total: number;
-              percentage: number;
-              chunk: number;
-              totalChunks: number;
-            }
-          : K extends "content"
-            ? {
-                chunk: number;
-                preview: string;
-              }
-            : K extends "completed"
-              ? {
-                  filename: string;
-                  size: number;
-                  processedAt: string;
-                  totalChunks: number;
-                }
-              : K extends "error"
-                ? {
-                    message: string;
-                    code?: string;
-                    details?: unknown;
-                  }
-                : never;
-    };
-  }[DocumentEventType],
-  { type: string; data: any }
->;
+export type RemoveDocumentOptions = {
+  userId?: string;
+};
 
 export type DocumentsFilters = z.infer<typeof documentsQuerySchema>;
+export type FindBookmarkOptions = {
+  userId?: string;
+};
+export type RemoveBookmarkOptions = {
+  userId?: string;
+};
 
 /*
  * DATABASE QUERY TYPES
  */
 export type DocumentColumn = typeof documentsTable._.columns;
 export type DocumentColumnKey = keyof DocumentColumn;
+export type BookmarkColumn = typeof bookmarksTable._.columns;
+export type BookmarkColumnKey = keyof BookmarkColumn;
 
 /*
  * QUEUE-RELATED TYPES
@@ -223,3 +190,66 @@ export interface DocumentShareInfo {
     email: string;
   };
 }
+
+/*
+ * INGESTION PIPELINE
+ */
+export type DocumentEventType =
+  "started" | "progress" | "content" | "completed" | "error";
+
+export type DocumentIngestionEventType = DocumentIngestionEvent["type"];
+
+export type DocumentIngestionEvent = Extract<
+  {
+    [K in DocumentEventType]: {
+      type: K;
+      data: K extends "started"
+        ? {
+            timestamp: string;
+            filename: string;
+            size: number;
+          }
+        : K extends "progress"
+          ? {
+              processed: number;
+              total: number;
+              percentage: number;
+              chunk: number;
+              totalChunks: number;
+            }
+          : K extends "content"
+            ? {
+                chunk: number;
+                preview: string;
+              }
+            : K extends "completed"
+              ? {
+                  filename: string;
+                  size: number;
+                  processedAt: string;
+                  totalChunks: number;
+                }
+              : K extends "error"
+                ? {
+                    message: string;
+                    code?: string;
+                    details?: unknown;
+                  }
+                : never;
+    };
+  }[DocumentEventType],
+  { type: string; data: any }
+>;
+
+export type DocumentPipelineResult = {
+  totalChunks: number;
+  chunkVersion: number;
+  title: string;
+};
+
+export type DocumentPipelineOptions = {
+  onBatchProgress?: (
+    progress: EmbeddingBatchProgress,
+    latestChunk?: DocumentChunk,
+  ) => void;
+};

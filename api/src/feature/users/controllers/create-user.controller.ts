@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { createUser as createUserOperation } from "../operations/users.create";
 import type { NewUser } from "../users.types";
-import { findUserById } from "../operations/users.find";
+import { findUser } from "../operations/users.find";
 import { v4 as uuid } from "uuid";
 import {
   sendErrorResponse,
@@ -19,7 +19,7 @@ export const createUserController = asyncHandler(
     const userId = req.user?.id || "";
 
     const userById = unwrap(
-      await findUserById(userId),
+      await findUser("id", userId),
       new HttpError(HttpStatus.NOT_FOUND, "User not found"),
     );
 

@@ -4,7 +4,7 @@ import { ChatMessage } from "../messages.types";
 import { eq } from "drizzle-orm";
 import { toResult } from "@/lib/drizzle/drizzle.utils";
 import { DbResult } from "@/lib/drizzle/drizzle.types";
-import { getMessageById } from "./messages.find";
+import { findMessage } from "./messages.find";
 
 export const REPLY_STATUS = {
   PENDING: "pending",
@@ -19,7 +19,7 @@ export const updateMessageReplyStatus = async (
   status: ReplyStatus,
   errorMessage?: string,
 ): Promise<DbResult<ChatMessage>> => {
-  const existing = await getMessageById(messageId);
+  const existing = await findMessage("id", messageId);
   if (!existing.ok || !existing.data) {
     return existing;
   }

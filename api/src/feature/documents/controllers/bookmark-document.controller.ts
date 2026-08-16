@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { bookmarkDocument } from "../operations/documents.update";
+import { bookmarkDocument } from "../operations/documents.bookmarks";
 import { HttpStatus } from "@/lib/http/http.status";
 import { DocumentsSerializer } from "../document.config";
 import { asyncHandler } from "@/lib/express/express.async-handler";

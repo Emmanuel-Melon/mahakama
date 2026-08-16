@@ -2,7 +2,7 @@ import { db } from "@/lib/drizzle";
 import { chatMessages } from "../messages.schema";
 import { ChatMessage, MessageInput } from "../messages.types";
 import { eq } from "drizzle-orm";
-import { getChatById } from "@/feature/chats/operations/chats.find";
+import { findChat } from "@/feature/chats/operations/chats.find";
 import { SenderType } from "@/feature/chats/shared.types";
 import { toResult } from "@/lib/drizzle/drizzle.utils";
 import { DbResult } from "@/lib/drizzle/drizzle.types";
@@ -13,7 +13,7 @@ export const sendMessage = async (
   const { chatId, content, senderType, userId, metadata } = input;
   const timestamp = new Date();
 
-  const chat = await getChatById(chatId);
+  const chat = await findChat("id", chatId);
   if (!chat) {
     throw new Error("Chat not found");
   }

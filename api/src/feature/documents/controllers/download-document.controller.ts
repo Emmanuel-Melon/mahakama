@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { downloadDocument } from "../operations/documents.update";
+import { downloadDocument } from "../operations/documents.download";
 import { sendSuccessResponse } from "@/lib/express/express.response";
-import { findDocumentById } from "../operations/document.find";
+import { findDocument } from "../operations/documents.find";
 import { HttpStatus } from "@/lib/http/http.status";
 import { DocumentsSerializer } from "../document.config";
 import { asyncHandler } from "@/lib/express/express.async-handler";
@@ -25,7 +25,7 @@ export const downloadDocumentController = asyncHandler(
     );
 
     const document = unwrap(
-      await findDocumentById(documentId),
+      await findDocument("id", documentId),
       new HttpError(HttpStatus.NOT_FOUND, "Document not found"),
     );
 
