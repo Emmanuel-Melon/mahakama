@@ -10,7 +10,7 @@ export type LegalServiceResource =
 export type LegalServiceSingleResponse =
   components["schemas"]["LegalServiceSingleResponse"];
 export type LegalServicesCollectionResponse =
-  components["schemas"]["LegalServicesCollectionResponse"];
+  components["schemas"]["LegalServiceCollectionResponse"];
 export type JsonApiErrorResponse =
   components["schemas"]["JsonApiErrorResponse"];
 

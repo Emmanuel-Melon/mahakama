@@ -8,7 +8,7 @@ export type DocumentResource = components["schemas"]["DocumentResource"];
 export type DocumentSingleResponse =
   components["schemas"]["DocumentSingleResponse"];
 export type DocumentsCollectionResponse =
-  components["schemas"]["DocumentsCollectionResponse"];
+  components["schemas"]["DocumentCollectionResponse"];
 export type JsonApiErrorResponse =
   components["schemas"]["JsonApiErrorResponse"];
 
