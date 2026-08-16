@@ -6,7 +6,7 @@ import {
   hasFailedReply,
   isStalePendingReply,
   isUserMessage,
-} from "../hooks/use-chats";
+} from "@mah/api/hooks/use-chats";
 import { MessageMetadata } from "./MessageMetadata";
 
 interface MessageBubbleProps {

@@ -12,7 +12,7 @@ import {
   useDeleteChat,
   useRetryMessage,
   isReplyAwaiting,
-} from "../hooks/use-chats";
+} from "@mah/api/hooks/use-chats";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";

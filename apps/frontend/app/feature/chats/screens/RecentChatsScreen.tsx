@@ -7,7 +7,7 @@ import type {
 } from "@mah/api/clients/chat.api";
 import { ChatListHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
-import { useDeleteChat, useUpdateChatTitle } from "../hooks/use-chats";
+import { useDeleteChat, useUpdateChatTitle } from "@mah/api/hooks/use-chats";
 
 export const RecentChatsScreen = ({
   chats,

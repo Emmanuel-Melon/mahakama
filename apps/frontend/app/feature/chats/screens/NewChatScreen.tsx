@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useCreateChat } from "../hooks/use-chats";
+import { useCreateChat } from "@mah/api/hooks/use-chats";
 import type { CreateChatRequest } from "@mah/api/clients/chat.api";
 import { ChatForm, SuggestedQuestions } from "../components";
 import { IconContainer } from "~/components/icon-container";
