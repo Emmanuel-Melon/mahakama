@@ -19,3 +19,6 @@ frontend/.react-router/
 /uploads/
 /uploads-test/
 /api/uploads/
+
+# Turborepo
++ .turbo

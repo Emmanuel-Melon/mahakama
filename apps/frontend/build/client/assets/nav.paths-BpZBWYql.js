@@ -1,0 +1,1 @@
+function e(e,t={}){let n=e.startsWith(`/`)?e:`/${e}`;return Object.entries(t).forEach(([e,t])=>{n=n.replace(`:${e}`,String(t))}),n}function t(t){let n=Object.keys(t),r={},i={},a={};return n.forEach(n=>{let o=t[n].path;r[n]=o,i[n]=`/${o}`,a[n]=(t=>e(o,t))}),{routes:r,paths:i,entries:n.map(e=>({path:t[e].path,file:t[e].file})),to:a}}export{t};
