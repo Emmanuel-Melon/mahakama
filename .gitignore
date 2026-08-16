@@ -6,9 +6,9 @@ dist/
 _site/
 
 # Frontend
-/.react-router/
-frontend/.react-router/
-/build/
+apps/frontend/.react-router/
+apps/frontend/build/
+apps/frontend/.vercel/
 .netlify/
 
 # IDE / OS
@@ -19,3 +19,6 @@ frontend/.react-router/
 /uploads/
 /uploads-test/
 /api/uploads/
+
+# Turborepo
+.turbo/

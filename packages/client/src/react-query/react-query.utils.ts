@@ -3,7 +3,7 @@ import type {
   ExtractData,
   PrefetchOptions,
 } from "./react-query.types";
-import { queryClient } from "~/lib/react-query";
+import { queryClient } from ".";
 
 export function createPrefetchLoader<T extends PrefetchConfig[]>(
   configs: T,
