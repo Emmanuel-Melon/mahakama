@@ -4,7 +4,7 @@ import { createSelectSchema, createInsertSchema } from "drizzle-zod";
 import { chatsSchema } from "@/feature/chats/chats.schema";
 import { UserJobs } from "./users.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
-import { NotificationTrackingSchema } from "@/service/notifications/notifications.types";
+import { NotificationTrackingSchema } from "@/feature/notifications/notifications.types";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import { generateDrizzleCrudSchemas } from "@/lib/drizzle/drizzle.utils";
 import { crudMeta } from "@/lib/openapi/openapi.utils";

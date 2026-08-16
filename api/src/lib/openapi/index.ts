@@ -9,7 +9,7 @@ import { z } from "zod";
 import { mahakamaServers } from "@/config";
 
 import { usersRegistry } from "@/feature/users/users.docs";
-import { authRegistry } from "@/service/auth/auth.docs";
+import { authRegistry } from "@/feature/auth/auth.docs";
 import { expressRegistry } from "../express/express.schema";
 import { lawyersRegistry } from "@/feature/lawyers/lawyers.docs";
 import { documentsRegistry } from "@/feature/documents/documents.docs";

@@ -1,6 +1,10 @@
 import { CardWithLabel } from "~/components/ui/card-with-label";
 
-export const AnswerDisclaimer = ({ className = "" }: { className?: string }) => {
+export const AnswerDisclaimer = ({
+  className = "",
+}: {
+  className?: string;
+}) => {
   return (
     <CardWithLabel
       label="Legal Notice"
@@ -19,9 +23,7 @@ export const AnswerDisclaimer = ({ className = "" }: { className?: string }) => 
 
 export const Disclaimer = ({ text }: { text: string }) => {
   return (
-    <CardWithLabel
-      label="Legal Notice"
-    >
+    <CardWithLabel label="Legal Notice">
       <p className="text-xs text-gray-600 leading-relaxed">
         <strong className="text-gray-900">Disclaimer:</strong> {text}
       </p>

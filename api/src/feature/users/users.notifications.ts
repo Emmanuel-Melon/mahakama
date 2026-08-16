@@ -1,5 +1,5 @@
 import { UserCreatedNotificationSchema } from "./users.types";
-import { createNotificationGenerators } from "@/service/notifications/notifications.factory";
+import { createNotificationGenerators } from "@/feature/notifications/notifications.factory";
 
 export const UserNotificationTemplateMap = {
   USER_CREATED: {
