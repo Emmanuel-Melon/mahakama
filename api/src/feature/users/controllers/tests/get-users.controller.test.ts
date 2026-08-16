@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
 import { authedRequest, expectSuccess } from "@/tests/tests.requests";
 import { generateTestToken } from "@/tests/tests.auth";
 import { truncateTables } from "@/tests/tests.utils";
-import { createUser } from "@/feature/users/operations/users.create";
+import { createUser } from "@/feature/users/operations/users.insert";
 
 let token: string;
 

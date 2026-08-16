@@ -2,8 +2,7 @@ import { db } from "@/lib/drizzle";
 import { bookmarksTable } from "../documents.schema";
 import type { BookmarkDocumentParams, Document } from "../documents.types";
 import { findDocument, findBookmark } from "./documents.find";
-import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import { type DbResult } from "@/lib/drizzle/results/results.single";
 import { eq, and } from "drizzle-orm";
 import {
   BookmarkColumn,
@@ -34,14 +33,11 @@ export async function bookmarkDocument({
     userId: user_id,
   });
 
-  let bookmarked: boolean;
-
   if (bookmarkResult.ok) {
     // Bookmark exists, remove it
     await removeBookmark("documentId", documentId, {
       userId: user_id,
     });
-    bookmarked = false;
   } else {
     // Bookmark doesn't exist, create it
     await db
@@ -51,7 +47,6 @@ export async function bookmarkDocument({
         documentId,
       })
       .onConflictDoNothing();
-    bookmarked = true;
   }
 
   return documentResult;

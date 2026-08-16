@@ -2,8 +2,10 @@ import { db } from "@/lib/drizzle";
 import { chatMessages } from "../messages.schema";
 import { ChatMessage } from "../messages.types";
 import { eq } from "drizzle-orm";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 import { findMessage } from "./messages.find";
 
 export const REPLY_STATUS = {
@@ -30,11 +32,12 @@ export const updateMessageReplyStatus = async (
     ...(errorMessage ? { errorMessage } : {}),
   };
 
-  const [message] = await db
-    .update(chatMessages)
-    .set({ metadata })
-    .where(eq(chatMessages.id, messageId))
-    .returning();
-
-  return toResult(message);
+  return executeSingle(
+    db
+      .update(chatMessages)
+      .set({ metadata })
+      .where(eq(chatMessages.id, messageId))
+      .returning()
+      .then(([message]) => message),
+  );
 };

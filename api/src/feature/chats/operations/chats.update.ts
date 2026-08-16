@@ -8,8 +8,10 @@ import {
   UpdateChat,
   type ChatSession,
 } from "../chats.types";
-import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 
 export const deleteChat = async <K extends ChatColumnKey>(
   field: K,
@@ -22,13 +24,13 @@ export const deleteChat = async <K extends ChatColumnKey>(
     conditions.push(eq(chatsSchema.userId, options.userId));
   }
 
-  const deletedChat = await db
-    .delete(chatsSchema)
-    .where(and(...conditions))
-    .returning()
-    .then(([result]) => result);
-
-  return toSingleResult(deletedChat);
+  return executeSingle(
+    db
+      .delete(chatsSchema)
+      .where(and(...conditions))
+      .returning()
+      .then(([result]) => result),
+  );
 };
 
 export const updateChat = async <K extends ChatColumnKey>(
@@ -36,15 +38,15 @@ export const updateChat = async <K extends ChatColumnKey>(
   value: ChatColumn[K]["_"]["data"],
   data: UpdateChat,
 ): Promise<DbResult<ChatSession>> => {
-  const updatedChat = await db
-    .update(chatsSchema)
-    .set({
-      ...data,
-      updatedAt: new Date(),
-    })
-    .where(eq(chatsSchema[field], value))
-    .returning()
-    .then(([result]) => result);
-
-  return toSingleResult(updatedChat);
+  return executeSingle(
+    db
+      .update(chatsSchema)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(chatsSchema[field], value))
+      .returning()
+      .then(([result]) => result),
+  );
 };

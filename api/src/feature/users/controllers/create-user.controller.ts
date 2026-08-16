@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createUser as createUserOperation } from "../operations/users.create";
+import { createUser as createUserOperation } from "../operations/users.insert";
 import type { NewUser } from "../users.types";
 import { findUser } from "../operations/users.find";
 import { v4 as uuid } from "uuid";

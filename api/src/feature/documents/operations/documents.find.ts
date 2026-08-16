@@ -14,21 +14,22 @@ import {
   FindBookmarkOptions,
 } from "../documents.types";
 import {
-  toManyResult,
-  toResult,
-  toSingleResult,
-} from "@/lib/drizzle/drizzle.utils";
-import { DbManyResult, DbResult } from "@/lib/drizzle/drizzle.types";
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
 export const findDocument = async <K extends DocumentColumnKey>(
   field: K,
   value: DocumentColumn[K]["_"]["data"],
 ): Promise<DbResult<Document>> => {
-  const document = await db.query.documentsTable.findFirst({
-    where: eq(documentsTable[field], value),
-  });
-  return toSingleResult(document);
+  return executeSingle(
+    db.query.documentsTable.findFirst({
+      where: eq(documentsTable[field], value),
+    }),
+  );
 };
 
 export const findBookmark = async <K extends BookmarkColumnKey>(
@@ -42,14 +43,14 @@ export const findBookmark = async <K extends BookmarkColumnKey>(
     conditions.push(eq(bookmarksTable.user_id, options.userId));
   }
 
-  const bookmark = await db
-    .select()
-    .from(bookmarksTable)
-    .where(and(...conditions))
-    .limit(1)
-    .then(([result]) => result);
-
-  return toSingleResult(bookmark);
+  return executeSingle(
+    db
+      .select()
+      .from(bookmarksTable)
+      .where(and(...conditions))
+      .limit(1)
+      .then(([result]) => result),
+  );
 };
 
 export async function findDocuments(

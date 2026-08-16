@@ -4,8 +4,12 @@ import {
   userInferencePreferencesSchema,
 } from "../inference.schema";
 import { and, eq } from "drizzle-orm";
-import { toSingleResult, toManyResult } from "@/lib/drizzle/drizzle.utils";
-import type { DbSingleResult, DbManyResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import type { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import type {
   InferenceModel,
   InferenceModelColumn,
@@ -18,14 +22,15 @@ import { InferenceStrategyRegistry } from "../inference.registry";
 export const findPreference = async (
   userId: string,
   strategyKey: string,
-): Promise<DbSingleResult<InferencePreference>> => {
-  const result = await db.query.userInferencePreferencesSchema.findFirst({
-    where: and(
-      eq(userInferencePreferencesSchema.userId, userId),
-      eq(userInferencePreferencesSchema.strategyKey, strategyKey),
-    ),
-  });
-  return toSingleResult(result);
+): Promise<DbResult<InferencePreference>> => {
+  return executeSingle(
+    db.query.userInferencePreferencesSchema.findFirst({
+      where: and(
+        eq(userInferencePreferencesSchema.userId, userId),
+        eq(userInferencePreferencesSchema.strategyKey, strategyKey),
+      ),
+    }),
+  );
 };
 
 export const findInferenceProviders = async (): Promise<
@@ -43,15 +48,15 @@ export const findInferenceProviders = async (): Promise<
 export const findModel = async <K extends InferenceModelColumnKey>(
   field: K,
   value: InferenceModelColumn[K]["_"]["data"],
-): Promise<DbSingleResult<InferenceModel>> => {
-  const result = await db.query.inferenceModelsSchema.findFirst({
-    where: and(
-      eq(inferenceModelsSchema[field], value),
-      eq(inferenceModelsSchema.isActive, true),
-    ),
-  });
-
-  return toSingleResult(result);
+): Promise<DbResult<InferenceModel>> => {
+  return executeSingle(
+    db.query.inferenceModelsSchema.findFirst({
+      where: and(
+        eq(inferenceModelsSchema[field], value),
+        eq(inferenceModelsSchema.isActive, true),
+      ),
+    }),
+  );
 };
 
 export interface StrategyResource {

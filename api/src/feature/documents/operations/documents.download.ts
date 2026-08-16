@@ -12,8 +12,10 @@ import type {
 } from "../documents.types";
 import { eq } from "drizzle-orm";
 import { findDocument, findBookmark } from "./documents.find";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 import { updateDocument } from "./documents.update";
 
 export async function downloadDocument({
@@ -21,18 +23,21 @@ export async function downloadDocument({
   user_id,
 }: DownloadDocumentParams): Promise<DbResult<Document>> {
   return db.transaction(async (tx) => {
-    const [document] = await tx
-      .select({
-        id: documentsTable.id,
-        storageUrl: documentsTable.storageUrl,
-        downloadCount: documentsTable.downloadCount,
-      })
-      .from(documentsTable)
-      .where(eq(documentsTable.id, documentId))
-      .limit(1);
+    const documentResult = await executeSingle(
+      tx
+        .select({
+          id: documentsTable.id,
+          storageUrl: documentsTable.storageUrl,
+          downloadCount: documentsTable.downloadCount,
+        })
+        .from(documentsTable)
+        .where(eq(documentsTable.id, documentId))
+        .limit(1)
+        .then(([document]) => document),
+    );
 
-    if (!document) {
-      return toResult<Document>(null);
+    if (!documentResult.ok) {
+      return documentResult;
     }
 
     await tx.insert(downloadsTable).values({
@@ -41,7 +46,7 @@ export async function downloadDocument({
     });
 
     return await updateDocument("id", documentId, {
-      downloadCount: document.downloadCount + 1,
+      downloadCount: documentResult.data.downloadCount + 1,
     });
   });
 }

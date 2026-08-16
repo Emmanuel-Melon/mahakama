@@ -4,8 +4,12 @@ import {
   userNotificationPreferences,
 } from "../notifications.schema";
 import { eq } from "drizzle-orm";
-import { toManyResult, toSingleResult } from "@/lib/drizzle/drizzle.utils";
-import { DbManyResult, DbSingleResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import {
   Notification,
   NotificationColumn,
@@ -20,11 +24,12 @@ import { paginate } from "@/lib/drizzle/drizzle.paginate";
 export const findNotification = async <K extends NotificationColumnKey>(
   field: K,
   value: NotificationColumn[K]["_"]["data"],
-): Promise<DbSingleResult<Notification>> => {
-  const result = await db.query.notificationsSchema.findFirst({
-    where: eq(notificationsSchema[field], value),
-  });
-  return toSingleResult(result);
+): Promise<DbResult<Notification>> => {
+  return executeSingle(
+    db.query.notificationsSchema.findFirst({
+      where: eq(notificationsSchema[field], value),
+    }),
+  );
 };
 
 export async function findNotifications(
@@ -61,9 +66,10 @@ export const findNotificationPreferences = async <
 >(
   field: K,
   value: UserNotificationPreferencesColumn[K]["_"]["data"],
-): Promise<DbSingleResult<NotificationPreferences>> => {
-  const result = await db.query.userNotificationPreferences.findFirst({
-    where: eq(userNotificationPreferences[field], value),
-  });
-  return toSingleResult(result);
+): Promise<DbResult<NotificationPreferences>> => {
+  return executeSingle(
+    db.query.userNotificationPreferences.findFirst({
+      where: eq(userNotificationPreferences[field], value),
+    }),
+  );
 };

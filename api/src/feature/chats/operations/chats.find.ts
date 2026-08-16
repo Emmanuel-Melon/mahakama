@@ -8,8 +8,12 @@ import type {
   ChatColumnKey,
   ChatColumn,
 } from "../chats.types";
-import { toManyResult, toResult } from "@/lib/drizzle/drizzle.utils";
-import { DbManyResult, DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
 export const findChats = async (
@@ -35,13 +39,14 @@ export const findChat = async <K extends ChatColumnKey>(
   field: K,
   value: ChatColumn[K]["_"]["data"],
 ): Promise<DbResult<ChatSessionWithMessages>> => {
-  const chat = await db.query.chatsSchema.findFirst({
-    where: eq(chatsSchema[field], value),
-    with: {
-      messages: {
-        orderBy: (messages, { asc }) => [asc(messages.timestamp)],
+  return executeSingle(
+    db.query.chatsSchema.findFirst({
+      where: eq(chatsSchema[field], value),
+      with: {
+        messages: {
+          orderBy: (messages, { asc }) => [asc(messages.timestamp)],
+        },
       },
-    },
-  });
-  return toResult(chat);
+    }),
+  );
 };

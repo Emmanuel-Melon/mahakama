@@ -4,8 +4,10 @@ import {
   notificationsSchema,
   userNotificationPreferences,
 } from "../notifications.schema";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 import type {
   Notification,
   NewNotification,
@@ -16,31 +18,43 @@ import type {
 export const createNotification = async (
   notificationData: NewNotification,
 ): Promise<DbResult<Notification>> => {
-  const [notification] = await db
-    .insert(notificationsSchema)
-    .values({
-      ...notificationData,
-    })
-    .returning();
-
-  logger.info(
-    `Created notification: ${notification.id} for user: ${notificationData.userId}`,
+  const result = await executeSingle(
+    db
+      .insert(notificationsSchema)
+      .values({
+        ...notificationData,
+      })
+      .returning()
+      .then(([notification]) => notification),
   );
-  return toResult(notification);
+
+  if (result.ok) {
+    logger.info(
+      `Created notification: ${result.data.id} for user: ${notificationData.userId}`,
+    );
+  }
+
+  return result;
 };
 
 export const createNotificationPreferences = async (
   preferences: NewNotificationPreferences,
 ): Promise<DbResult<NotificationPreferences>> => {
-  const [preference] = await db
-    .insert(userNotificationPreferences)
-    .values({
-      ...preferences,
-    })
-    .returning();
-
-  logger.info(
-    `✅ Saved user notification preferences for user: ${preferences.userId}`,
+  const result = await executeSingle(
+    db
+      .insert(userNotificationPreferences)
+      .values({
+        ...preferences,
+      })
+      .returning()
+      .then(([preference]) => preference),
   );
-  return toResult(preference);
+
+  if (result.ok) {
+    logger.info(
+      `✅ Saved user notification preferences for user: ${preferences.userId}`,
+    );
+  }
+
+  return result;
 };
