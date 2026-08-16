@@ -5,7 +5,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import type { Lawyer } from "~/lib/api/lawyers.api";
+import type { Lawyer } from "@mah/api/lawyers.api";
 
 interface FilterSelectorProps {
   currentFilter: string;

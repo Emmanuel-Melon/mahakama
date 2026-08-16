@@ -1,7 +1,7 @@
 import { Bot, RefreshCw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { ChatMessage } from "~/lib/api/chat.api";
+import type { ChatMessage } from "@mah/api/chat.api";
 import {
   hasFailedReply,
   isStalePendingReply,

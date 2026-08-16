@@ -4,7 +4,7 @@ import type {
   ChatSingleResponse,
   ChatsCollectionResponse,
   CreateChatRequest,
-} from "~/lib/api/chat.api";
+} from "@mah/api/chat.api";
 import { ChatListHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
 import { useDeleteChat, useUpdateChatTitle } from "../hooks/use-chats";

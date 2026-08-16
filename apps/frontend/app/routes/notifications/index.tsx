@@ -4,7 +4,7 @@ import { NotificationsScreen } from "~/feature/notifications/Screens/Notificatio
 import { useNotifications } from "~/feature/notifications/hooks/use-notifications";
 import { useRouteError } from "react-router";
 import { authContext } from "~/middleware/context";
-import { notificationsApi } from "~/lib/api/notifications.api";
+import { notificationsApi } from "@mah/api/notifications.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";

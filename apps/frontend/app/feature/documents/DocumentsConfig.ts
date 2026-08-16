@@ -13,12 +13,6 @@ export const documentsRoutes = defineRoutes({
 
 export const DocumentsPaths = documentsRoutes.to;
 
-export const DOCUMENTS_API_ROUTES = {
-  ROOT: "/v1/documents",
-  DOCUMENT: "/v1/documents/:documentId",
-  INGEST: "/v1/documents/ingest",
-} as const;
-
 export const documentsI18n: I18nConfig<"documents", typeof en> = {
   namespace: "documents",
   resources: {

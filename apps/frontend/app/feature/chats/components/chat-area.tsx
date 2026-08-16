@@ -1,6 +1,6 @@
 import { cn } from "~/lib/utils";
 import { MessageBubble } from "~/components/ui/message-bubble";
-// import { type ChatMessage } from "~/lib/api/chat.api";
+// import { type ChatMessage } from "@mah/api/chat.api";
 
 interface ChatAreaProps {
   messages: Array<any>;

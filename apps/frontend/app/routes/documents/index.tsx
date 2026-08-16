@@ -10,7 +10,7 @@ import {
   createPrefetchLoader,
   prefetch,
 } from "@mah/client/react-query/utils";
-import { documentsApi } from "~/lib/api/documents.api";
+import { documentsApi } from "@mah/api/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 

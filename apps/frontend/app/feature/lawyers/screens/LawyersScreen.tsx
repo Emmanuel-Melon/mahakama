@@ -5,7 +5,7 @@ import { Gavel } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+import type { components as componentsv1 } from "@mah/api/generated/api.types";
 export type Lawyer = componentsv1["schemas"]["Lawyer"];
 
 type LawyersScreenProps = {

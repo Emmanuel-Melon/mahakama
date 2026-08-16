@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { servicesApi } from "~/lib/api/services.api";
+import { servicesApi } from "@mah/api/services.api";
 
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
 export type LegalServiceResource =

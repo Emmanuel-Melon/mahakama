@@ -14,7 +14,7 @@ import { AuthLayout } from "~/layouts/AuthLayout";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
-import { getAuthToken, decodeJWT } from "~/lib/api/api.utils";
+import { getAuthToken, decodeJWT } from "@mah/api/api.utils";
 import {
   getPageTitle,
   isAuthRoute,

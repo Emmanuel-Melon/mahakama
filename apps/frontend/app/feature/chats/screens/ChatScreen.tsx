@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChatMessage, SendMessageRequest, Chat } from "~/lib/api/chat.api";
+import type { ChatMessage, SendMessageRequest, Chat } from "@mah/api/chat.api";
 import { ActiveChatHeader } from "~/feature/chats/components/ChatHeader";
 import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";

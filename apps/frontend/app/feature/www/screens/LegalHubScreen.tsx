@@ -15,7 +15,7 @@ import type { LegalService as ApiLegalService } from "~/feature/www/hooks/use-se
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
 export type LegalServiceResource =

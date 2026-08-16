@@ -4,8 +4,8 @@ import {
   chatApi,
   type ChatMessage,
   type ReplyStatus,
-} from "~/lib/api/chat.api";
-import type { components } from "~/lib/api/generated/api.types";
+} from "@mah/api/chat.api";
+import type { components } from "@mah/api/generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];

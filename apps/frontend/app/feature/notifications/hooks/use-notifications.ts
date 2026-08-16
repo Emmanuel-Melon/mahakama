@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { notificationsApi } from "~/lib/api/notifications.api";
-import type { Notification } from "~/lib/api/notifications.api";
-import type { components } from "~/lib/api/generated/api.types";
+import { notificationsApi } from "@mah/api/notifications.api";
+import type { Notification } from "@mah/api/notifications.api";
+import type { components } from "@mah/api/generated/api.types";
 
 export type JsonApiErrorResponse =
   components["schemas"]["JsonApiErrorResponse"];

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { schemas } from "~/lib/api/generated/api.schemas";
-import type { CreateChatRequest } from "~/lib/api/chat.api";
+import { schemas } from "@mah/api/generated/api.schemas";
+import type { CreateChatRequest } from "@mah/api/chat.api";
 import {
   InputGroup,
   InputGroupAddon,

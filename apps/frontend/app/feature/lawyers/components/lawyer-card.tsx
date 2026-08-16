@@ -2,7 +2,7 @@ import { MapPin, Briefcase, ChevronRight, Languages } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { BookmarkButton } from "~/components/bookmark-button";
 import { ShareButton } from "~/components/share-button";
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 import { MahButton } from "~/components/mah-button";
 import { MahCard } from "~/components/mah-card";
 

@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { NotificationItem } from "./NotificationItem";
-import type { Notification } from "~/lib/api/notifications.api";
+import type { Notification } from "@mah/api/notifications.api";
 
 type NotificationsListProps = {
   notifications: Notification[];

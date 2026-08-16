@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { authApi } from "~/lib/api/auth.api";
-import type { components } from "~/lib/api/generated/api.types";
+import { authApi } from "@mah/api/auth.api";
+import type { components } from "@mah/api/generated/api.types";
 
 export type AuthResponse = components["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse =

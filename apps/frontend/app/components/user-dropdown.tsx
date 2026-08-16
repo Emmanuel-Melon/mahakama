@@ -1,7 +1,7 @@
 import { User, LogOut, Settings, Info } from "lucide-react";
 import { Link } from "react-router";
 import { IconContainer } from "~/components/icon-container";
-import type { User as UserType } from "~/lib/api/users.api";
+import type { User as UserType } from "@mah/api/users.api";
 import {
   DropdownMenu,
   DropdownMenuContent,
