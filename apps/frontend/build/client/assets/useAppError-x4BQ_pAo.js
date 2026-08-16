@@ -1,1 +1,0 @@
-import{C as e,M as t}from"./jsx-runtime-CrzCyv7n.js";var n=()=>{let n=t();return e(n)?{status:n.status,data:n.data}:{status:500}};export{n as t};
