@@ -1,12 +1,12 @@
 import { Bot, RefreshCw } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { ChatMessage } from "@mah/api/chat.api";
+import type { ChatMessage } from "@mah/api/clients/chat.api";
 import {
   hasFailedReply,
   isStalePendingReply,
   isUserMessage,
-} from "../hooks/use-chats";
+} from "@mah/api/hooks/use-chats";
 import { MessageMetadata } from "./MessageMetadata";
 
 interface MessageBubbleProps {

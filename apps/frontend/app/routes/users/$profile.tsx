@@ -1,7 +1,7 @@
 import type { Route } from "./+types/$profile";
-import { usersApi, UsersApiClient } from "@mah/api/users.api";
+import { usersApi, UsersApiClient } from "@mah/api/clients/users.api";
 import { FetchApiClient } from "@mah/api/fetch";
-import { useCurrentUser, useUpdateUser } from "~/feature/users/hooks/use-users";
+import { useCurrentUser, useUpdateUser } from "@mah/api/hooks/use-users";
 import { ProfileScreen } from "~/feature/users/screens/ProfileScreen";
 import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/components/errors/useAppError";

@@ -3,7 +3,7 @@ import { ArrowUp } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { schemas } from "@mah/api/generated/api.schemas";
-import type { CreateChatRequest } from "@mah/api/chat.api";
+import type { CreateChatRequest } from "@mah/api/clients/chat.api";
 import {
   InputGroup,
   InputGroupAddon,
@@ -17,7 +17,7 @@ import { Button } from "~/components/ui/button";
 import {
   useUploadDocument,
   getUploadKey,
-} from "~/feature/documents/hooks/use-documents";
+} from "@mah/api/hooks/use-documents";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 

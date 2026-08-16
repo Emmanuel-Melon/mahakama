@@ -1,6 +1,6 @@
 import { MessageCircle } from "lucide-react";
 import { MessageBubble } from "./MessageBubble";
-import type { ChatMessage } from "@mah/api/chat.api";
+import type { ChatMessage } from "@mah/api/clients/chat.api";
 import { TypingIndicator } from "./TypingIndicator";
 
 interface MessageListProps {

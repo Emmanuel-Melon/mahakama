@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import type { User } from "@mah/api/users.api";
-import { useLogout } from "~/feature/auth/hooks/use-auth";
+import type { User } from "@mah/api/clients/users.api";
+import { useLogout } from "@mah/api/hooks/use-auth";
 
 type UserContextType = {
   user: User | null;

@@ -4,14 +4,14 @@ import {
   chatApi,
   type ChatMessage,
   type ReplyStatus,
-} from "@mah/api/chat.api";
-import type { components } from "@mah/api/generated/api.types";
+} from "../clients/chat.api";
+import type { components } from "../generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
-  components["schemas"]["ChatsCollectionResponse"];
+  components["schemas"]["ChatCollectionResponse"];
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 export type JsonApiErrorResponse =

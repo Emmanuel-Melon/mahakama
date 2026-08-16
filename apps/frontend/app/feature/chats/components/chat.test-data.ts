@@ -1,4 +1,4 @@
-import type { ChatMessage } from "@mah/api/chat.api";
+import type { ChatMessage } from "@mah/api/clients/chat.api";
 
 export const testMessages: ChatMessage[] = [
   {

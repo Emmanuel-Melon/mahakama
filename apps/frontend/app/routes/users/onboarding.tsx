@@ -1,7 +1,7 @@
 import type { Route } from "./+types/onboarding";
 import { OnboardingScreen } from "~/feature/users/screens/OnboardingScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { useUpdateUser } from "~/feature/users/hooks/use-users";
+import { useUpdateUser } from "@mah/api/hooks/use-users";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { AuthForm } from "~/feature/auth/components/auth-form";
 import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
-import { useRegister } from "~/feature/auth/hooks/use-auth";
+import { useRegister } from "@mah/api/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

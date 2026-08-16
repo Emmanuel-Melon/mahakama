@@ -1,6 +1,6 @@
 import type { Route } from "./+types/$chatId";
 import { ChatScreen } from "~/feature/chats/screens/ChatScreen";
-import { useChat, useMessages } from "~/feature/chats/hooks/use-chats";
+import { useChat, useMessages } from "@mah/api/hooks/use-chats";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 

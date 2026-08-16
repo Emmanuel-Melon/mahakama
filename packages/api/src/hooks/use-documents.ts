@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { documentsApi } from "@mah/api/documents.api";
-import type { components } from "@mah/api/generated/api.types";
+import { documentsApi } from "../clients/documents.api";
+import type { components } from "../generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];
 export type DocumentSingleResponse =
   components["schemas"]["DocumentSingleResponse"];
 export type DocumentsCollectionResponse =
-  components["schemas"]["DocumentsCollectionResponse"];
+  components["schemas"]["DocumentCollectionResponse"];
 export type JsonApiErrorResponse =
   components["schemas"]["JsonApiErrorResponse"];
 

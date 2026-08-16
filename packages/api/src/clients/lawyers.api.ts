@@ -1,6 +1,6 @@
-import { FetchApiClient } from "./fetch";
-import type { components } from "./generated/api.types";
-import { LAWYERS_API_ROUTES } from "./api.routes";
+import { FetchApiClient } from "../fetch";
+import type { components } from "../generated/api.types";
+import { LAWYERS_API_ROUTES } from "../api.routes";
 
 export type Lawyer = components["schemas"]["Lawyer"];
 export type LawyerResource = components["schemas"]["LawyerResource"];

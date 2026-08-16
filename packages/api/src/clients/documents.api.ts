@@ -1,7 +1,7 @@
-import { FetchApiClient } from "./fetch";
-import { parseCookies } from "./api.utils";
-import type { components } from "./generated/api.types";
-import { DOCUMENTS_API_ROUTES } from "./api.routes";
+import { FetchApiClient } from "../fetch";
+import { parseCookies } from "../api.utils";
+import type { components } from "../generated/api.types";
+import { DOCUMENTS_API_ROUTES } from "../api.routes";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];

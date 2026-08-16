@@ -4,7 +4,7 @@ import { Library } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
 import { PageLoading } from "~/components/page-loading";
-import { type Document } from "@mah/api/documents.api";
+import { type Document } from "@mah/api/clients/documents.api";
 import { HeroSection } from "~/layouts/HeroSection";
 
 export const DocumentsScreen = ({

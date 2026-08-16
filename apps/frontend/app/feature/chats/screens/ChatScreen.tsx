@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ChatMessage, SendMessageRequest, Chat } from "@mah/api/chat.api";
+import type { ChatMessage, SendMessageRequest, Chat } from "@mah/api/clients/chat.api";
 import { ActiveChatHeader } from "~/feature/chats/components/ChatHeader";
 import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";
@@ -12,7 +12,7 @@ import {
   useDeleteChat,
   useRetryMessage,
   isReplyAwaiting,
-} from "../hooks/use-chats";
+} from "@mah/api/hooks/use-chats";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";

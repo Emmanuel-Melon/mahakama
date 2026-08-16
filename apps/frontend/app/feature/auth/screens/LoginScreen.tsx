@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useLogin } from "~/feature/auth/hooks/use-auth";
+import { useLogin } from "@mah/api/hooks/use-auth";
 import { AuthForm } from "~/feature/auth/components/auth-form";
 import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
 import { schemas } from "@mah/api/generated/api.schemas";

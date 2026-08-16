@@ -3,14 +3,14 @@ import { DocumentsScreen } from "~/feature/documents/screens/DocumentsScreen";
 import {
   documentsKeys,
   useDocuments,
-} from "~/feature/documents/hooks/use-documents";
+} from "@mah/api/hooks/use-documents";
 import { authContext, userContext } from "~/middleware/context";
 import { useState } from "react";
 import {
   createPrefetchLoader,
   prefetch,
 } from "@mah/client/react-query/utils";
-import { documentsApi } from "@mah/api/documents.api";
+import { documentsApi } from "@mah/api/clients/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
