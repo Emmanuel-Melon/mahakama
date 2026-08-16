@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { createUser } from "../users.create";
+import { createUser } from "../users.insert";
 import { createMockUser, createMockNewUser } from "../../users.factory";
 import { mockDrizzleChain, mockDrizzleEmpty } from "@/tests/tests.utils";
 

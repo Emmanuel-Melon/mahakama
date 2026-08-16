@@ -1,8 +1,12 @@
 import { db } from "@/lib/drizzle";
 import { eq } from "drizzle-orm";
 import { servicesSchema, institutionsSchema } from "../services.schema";
-import { toSingleResult, toManyResult } from "@/lib/drizzle/drizzle.utils";
-import { DbSingleResult, DbManyResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import type {
   LegalService,
   Institution,
@@ -17,35 +21,37 @@ import { paginate } from "@/lib/drizzle/drizzle.paginate";
 export const findService = async <K extends ServiceColumnKey>(
   field: K,
   value: ServiceColumn[K]["_"]["data"],
-): Promise<DbSingleResult<LegalService>> => {
-  const result = await db.query.servicesSchema.findFirst({
-    where: eq(servicesSchema[field], value),
-    with: {
-      institutions: {
-        with: {
-          institution: true,
+): Promise<DbResult<LegalService>> => {
+  return executeSingle(
+    db.query.servicesSchema.findFirst({
+      where: eq(servicesSchema[field], value),
+      with: {
+        institutions: {
+          with: {
+            institution: true,
+          },
         },
       },
-    },
-  });
-  return toSingleResult(result);
+    }),
+  );
 };
 
 export const findInstitution = async <K extends InstitutionColumnKey>(
   field: K,
   value: InstitutionColumn[K]["_"]["data"],
-): Promise<DbSingleResult<Institution>> => {
-  const result = await db.query.institutionsSchema.findFirst({
-    where: eq(institutionsSchema[field], value),
-    with: {
-      services: {
-        with: {
-          service: true,
+): Promise<DbResult<Institution>> => {
+  return executeSingle(
+    db.query.institutionsSchema.findFirst({
+      where: eq(institutionsSchema[field], value),
+      with: {
+        services: {
+          with: {
+            service: true,
+          },
         },
       },
-    },
-  });
-  return toSingleResult(result);
+    }),
+  );
 };
 
 export const findServices = async (

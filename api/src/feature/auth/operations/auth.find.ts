@@ -1,8 +1,12 @@
 import { db } from "@/lib/drizzle";
 import { authEventsSchema } from "../auth.schema";
 import { eq } from "drizzle-orm";
-import { toSingleResult, toManyResult } from "@/lib/drizzle/drizzle.utils";
-import { DbSingleResult, DbManyResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import {
   AuthEvent,
   AuthEventColumn,
@@ -18,11 +22,12 @@ import { paginate } from "@/lib/drizzle/drizzle.paginate";
 export const findAuthEvent = async <K extends AuthEventColumnKey>(
   field: K,
   value: AuthEventColumn[K]["_"]["data"],
-): Promise<DbSingleResult<AuthEvent>> => {
-  const result = await db.query.authEventsSchema.findFirst({
-    where: eq(authEventsSchema[field], value),
-  });
-  return toSingleResult(result);
+): Promise<DbResult<AuthEvent>> => {
+  return executeSingle(
+    db.query.authEventsSchema.findFirst({
+      where: eq(authEventsSchema[field], value),
+    }),
+  );
 };
 
 export async function findAuthEvents(
@@ -57,9 +62,10 @@ export async function findAuthEvents(
 export const findAuthUser = async <K extends AuthColumnKey>(
   field: K,
   value: AuthColumn[K]["_"]["data"],
-): Promise<DbSingleResult<AuthUser>> => {
-  const result = await db.query.usersSchema.findFirst({
-    where: eq(usersSchema[field], value),
-  });
-  return toSingleResult(result);
+): Promise<DbResult<AuthUser>> => {
+  return executeSingle(
+    db.query.usersSchema.findFirst({
+      where: eq(usersSchema[field], value),
+    }),
+  );
 };

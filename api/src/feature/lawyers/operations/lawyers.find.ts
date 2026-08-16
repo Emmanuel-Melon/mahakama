@@ -8,21 +8,22 @@ import type {
   LawyerFilters,
 } from "../lawyers.types";
 import {
-  toManyResult,
-  toResult,
-  toSingleResult,
-} from "@/lib/drizzle/drizzle.utils";
-import { DbManyResult, DbResult } from "@/lib/drizzle/drizzle.types";
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
+import { toManyResult } from "@/lib/drizzle/drizzle.utils";
+import { DbManyResult } from "@/lib/drizzle/drizzle.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
 export const findLawyer = async <K extends LawyerColumnKey>(
   field: K,
   value: LawyerColumn[K]["_"]["data"],
 ): Promise<DbResult<Lawyer>> => {
-  const lawyer = await db.query.lawyers.findFirst({
-    where: eq(lawyersTable[field], value),
-  });
-  return toSingleResult(lawyer);
+  return executeSingle(
+    db.query.lawyers.findFirst({
+      where: eq(lawyersTable[field], value),
+    }),
+  );
 };
 
 export async function findLawyers(

@@ -6,19 +6,21 @@ import {
   ChatMessageColumnKey,
 } from "../messages.types";
 import { eq } from "drizzle-orm";
-import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 
 export const findMessage = async <K extends ChatMessageColumnKey>(
   field: K,
   value: ChatMessageColumn[K]["_"]["data"],
 ): Promise<DbResult<ChatMessage>> => {
-  const message = await db
-    .select()
-    .from(chatMessages)
-    .where(eq(chatMessages[field], value))
-    .limit(1)
-    .then(([result]) => result);
-
-  return toSingleResult(message);
+  return executeSingle(
+    db
+      .select()
+      .from(chatMessages)
+      .where(eq(chatMessages[field], value))
+      .limit(1)
+      .then(([result]) => result),
+  );
 };

@@ -4,7 +4,10 @@ import {
   institutionsSchema,
   institutionsToServices,
 } from "../services.schema";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 import type {
   NewLegalService,
   NewInstitution,
@@ -12,24 +15,28 @@ import type {
   InstitutionToService,
   LegalService,
 } from "../services.types";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
-import { withDbErrorHandler } from "@/lib/drizzle/drizzle.utils";
 
 export const createService = async (
   data: NewLegalService,
 ): Promise<DbResult<LegalService>> => {
-  return withDbErrorHandler(
-    () => db.insert(servicesSchema).values(data).returning(),
-    { conflictMessage: `Service with slug '${data.slug}' already exists` },
+  return executeSingle(
+    db
+      .insert(servicesSchema)
+      .values(data)
+      .returning()
+      .then(([result]) => result),
   );
 };
 
 export const createInstitution = async (
   data: NewInstitution,
 ): Promise<DbResult<Institution>> => {
-  return withDbErrorHandler(
-    () => db.insert(institutionsSchema).values(data).returning(),
-    { conflictMessage: `Institution '${data.name}' is already registered` },
+  return executeSingle(
+    db
+      .insert(institutionsSchema)
+      .values(data)
+      .returning()
+      .then(([result]) => result),
   );
 };
 
@@ -37,12 +44,14 @@ export const linkServiceToInstitution = async (
   institutionId: string,
   serviceId: string,
 ): Promise<DbResult<InstitutionToService>> => {
-  const [result] = await db
-    .insert(institutionsToServices)
-    .values({
-      institutionId,
-      serviceId,
-    })
-    .returning();
-  return toResult(result);
+  return executeSingle(
+    db
+      .insert(institutionsToServices)
+      .values({
+        institutionId,
+        serviceId,
+      })
+      .returning()
+      .then(([result]) => result),
+  );
 };

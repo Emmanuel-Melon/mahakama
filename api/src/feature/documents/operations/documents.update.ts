@@ -7,23 +7,25 @@ import type {
   UpdateDocument,
 } from "../documents.types";
 import { eq } from "drizzle-orm";
-import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
-import { DbResult } from "@/lib/drizzle/drizzle.types";
+import {
+  executeSingle,
+  type DbResult,
+} from "@/lib/drizzle/results/results.single";
 
 export const updateDocument = async <K extends DocumentColumnKey>(
   field: K,
   value: DocumentColumn[K]["_"]["data"],
   updateData: UpdateDocument,
 ): Promise<DbResult<Document>> => {
-  const document = await db
-    .update(documentsTable)
-    .set({
-      ...updateData,
-      updatedAt: new Date(),
-    })
-    .where(eq(documentsTable[field], value))
-    .returning()
-    .then(([result]) => result);
-
-  return toSingleResult(document);
+  return executeSingle(
+    db
+      .update(documentsTable)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(documentsTable[field], value))
+      .returning()
+      .then(([result]) => result),
+  );
 };
