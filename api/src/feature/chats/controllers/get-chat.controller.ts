@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getChatById } from "../operations/chats.find";
+import { findChat } from "../operations/chats.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { ChatSerializer } from "../chats.config";
@@ -11,7 +11,7 @@ export const getChatController = asyncHandler(
   async (req: Request, res: Response) => {
     const chatId = req.params.chatId as string;
     const chat = unwrap(
-      await getChatById(chatId),
+      await findChat("id", chatId),
       new HttpError(HttpStatus.NOT_FOUND, "Chat not found"),
     );
     sendSuccessResponse(

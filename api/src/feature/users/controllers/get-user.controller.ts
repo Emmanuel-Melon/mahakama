@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findUserById } from "../operations/users.find";
+import { findUser } from "../operations/users.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedUser } from "../users.config";
@@ -11,7 +11,7 @@ export const getUserController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.params.id as string;
     const user = unwrap(
-      await findUserById(userId),
+      await findUser("id", userId),
       new HttpError(HttpStatus.NOT_FOUND, "User not found"),
     );
     return sendSuccessResponse(

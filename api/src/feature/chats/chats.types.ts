@@ -17,6 +17,12 @@ export const chatSelectSchema = crudMeta(baseSelect, "select", "ChatSession");
 
 export const chatInsertSchema = crudMeta(baseInsert, "insert", "ChatSession");
 
+export const chatUpdateSchema = crudMeta(
+  baseInsert.omit({ id: true, userId: true, createdAt: true }).partial(),
+  "update",
+  "ChatSession",
+);
+
 export const chatsQuerySchema = baseQuerySchema.extend({
   userId: z.string().optional(),
 });
@@ -27,6 +33,7 @@ export const chatsQuerySchema = baseQuerySchema.extend({
 
 export type ChatSession = z.infer<typeof chatSelectSchema>;
 export type NewChatSession = z.infer<typeof chatInsertSchema>;
+export type UpdateChat = z.infer<typeof chatUpdateSchema>;
 export type ChatSessionWithMessages = ChatSession & {
   messages: (typeof chatMessages.$inferSelect)[];
 };
@@ -66,24 +73,15 @@ export interface ChatsJobMap {
  * API PARAMETER TYPES
  */
 
-export interface CreateChatParams {
-  userId: string;
-  title?: string | null;
-  metadata?: Record<string, unknown> | null;
-}
-
 export interface ListChatsParams {
   userId: string;
   limit?: number;
   offset?: number;
 }
 
-export interface UpdateChatParams {
-  id: string;
-  userId: string;
-  title?: string | null;
-  metadata?: Record<string, unknown> | null;
-}
+export type DeleteChatOptions = {
+  userId?: string;
+};
 
 /*
  * RESPONSE TYPES

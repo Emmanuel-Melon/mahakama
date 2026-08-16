@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
-import { findInstitutionById } from "../operations/services.find";
+import { findInstitution } from "../operations/services.find";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
@@ -12,7 +12,7 @@ export const getInstitutionByIdController = asyncHandler(
     const institutionId = req.params.institutionId as string;
 
     const institution = unwrap(
-      await findInstitutionById(institutionId),
+      await findInstitution("id", institutionId),
       new HttpError(HttpStatus.NOT_FOUND, "Institution not found"),
     );
 

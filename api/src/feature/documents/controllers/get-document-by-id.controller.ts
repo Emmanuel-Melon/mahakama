@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findDocumentById } from "../operations/document.find";
+import { findDocument } from "../operations/documents.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { DocumentsSerializer } from "../document.config";
@@ -11,7 +11,7 @@ export const getDocumentByIdControlle = asyncHandler(
   async (req: Request, res: Response) => {
     const documentId = req.params.documentId as string;
     const document = unwrap(
-      await findDocumentById(documentId),
+      await findDocument("id", documentId),
       new HttpError(HttpStatus.NOT_FOUND, "Document not found"),
     );
 

@@ -9,20 +9,13 @@ import { sendSuccessResponse } from "@/lib/express/express.response";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
-import { serverConfig } from "@/config";
-import { getStoragePath } from "@/lib/storage/storage";
-import { statSync } from "fs";
 import { logger } from "@/lib/logger";
+import { formatStorageUrl, getDocumentFileSize } from "@/utils/url";
 
 export const createDocumentHandler = asyncHandler(
   async (req: Request, res: Response) => {
     const documentData: NewDocument = req.body;
-    let storageUrl = documentData.storageUrl;
-    if (!/^https?:\/\//i.test(storageUrl)) {
-      storageUrl = storageUrl.startsWith("/")
-        ? `${serverConfig.baseUrl}${storageUrl}`
-        : `https://${storageUrl}`;
-    }
+    const storageUrl = formatStorageUrl(documentData.storageUrl);
     const document = unwrap(
       await createDocument({
         ...documentData,
@@ -49,23 +42,10 @@ export const createDocumentHandler = asyncHandler(
       },
     );
 
-    // Enqueue processing for both locally-resolvable paths and external
-    // http(s) URLs (the worker fetches remote PDFs via `parsePdfFromUrl`).
-    // For local files, pass the real size on disk instead of 0.
     let enqueued = false;
     try {
-      let size = 0;
-      const isExternalUrl =
-        /^https?:\/\//i.test(storageUrl) &&
-        !storageUrl.startsWith(serverConfig.baseUrl);
-      if (!isExternalUrl) {
-        const localPath = getStoragePath(storageUrl);
-        try {
-          size = statSync(localPath).size;
-        } catch {
-          // File missing on disk — still enqueue; the worker will fail loudly.
-        }
-      }
+      const size = getDocumentFileSize(storageUrl);
+
       await documentsQueue.add(DocumentJobs.DocumentUploaded, {
         documentId: document.id,
         userId: req.user?.id!,

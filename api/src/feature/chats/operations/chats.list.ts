@@ -2,10 +2,10 @@ import { db } from "@/lib/drizzle";
 import { eq, desc, sql, inArray } from "drizzle-orm";
 import { chatMessages } from "@/feature/messages/messages.schema";
 import { chatsSchema } from "../chats.schema";
-import {
+import type {
   ChatListEntry,
   ListChatsParams,
-  type ChatSession,
+  ChatSession,
 } from "../chats.types";
 
 export async function listUserChats({

@@ -5,7 +5,7 @@ import { MessageSerializer } from "../messages.config";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
-import { getMessageById } from "../operations/messages.find";
+import { findMessage } from "../operations/messages.find";
 import {
   REPLY_STATUS,
   updateMessageReplyStatus,
@@ -20,7 +20,7 @@ export const retryMessageController = asyncHandler(
     const user = req.user as { id: string };
 
     const message = unwrap(
-      await getMessageById(messageId),
+      await findMessage("id", messageId),
       new HttpError(HttpStatus.NOT_FOUND, "Message not found"),
     );
 

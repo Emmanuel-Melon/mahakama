@@ -1,25 +1,30 @@
 import { db } from "@/lib/drizzle";
 import { usersSchema } from "../users.schema";
-import type { NewUser, User } from "../users.types";
+import type {
+  NewUser,
+  UpdateUser,
+  User,
+  UserColumn,
+  UserColumnKey,
+} from "../users.types";
 import { eq } from "drizzle-orm";
-import { findUserById } from "./users.find";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
+import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
 import { DbResult } from "@/lib/drizzle/drizzle.types";
 
-export async function updateUser(
-  userId: string,
-  userAttrs: NewUser,
-): Promise<DbResult<User>> {
-  const existingUser = await findUserById(userId);
-
-  const [user] = await db
+export const updateUser = async <K extends UserColumnKey>(
+  field: K,
+  value: UserColumn[K]["_"]["data"],
+  updateData: UpdateUser,
+): Promise<DbResult<User>> => {
+  const user = await db
     .update(usersSchema)
     .set({
-      ...userAttrs,
+      ...updateData,
       updatedAt: new Date(),
     })
-    .where(eq(usersSchema.id, userId))
-    .returning();
+    .where(eq(usersSchema[field], value))
+    .returning()
+    .then(([result]) => result);
 
-  return toResult(user);
-}
+  return toSingleResult(user);
+};

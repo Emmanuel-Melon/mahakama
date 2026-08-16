@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { findLawyerById } from "../operations/lawyers.find";
+import { findLawyer } from "../operations/lawyers.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedLawyer } from "../lawyers.config";
@@ -11,7 +11,7 @@ export const getLawyerByIdController = asyncHandler(
   async (req: Request, res: Response) => {
     const lawyerId = req.params.id as string;
     const lawyer = unwrap(
-      await findLawyerById(lawyerId),
+      await findLawyer("id", lawyerId),
       new HttpError(HttpStatus.NOT_FOUND, "Failed to find lawyer"),
     );
     return sendSuccessResponse(

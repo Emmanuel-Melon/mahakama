@@ -7,14 +7,19 @@ import type {
   LegalService,
   Institution,
   ServiceFilters,
+  InstitutionColumn,
+  InstitutionColumnKey,
+  ServiceColumn,
+  ServiceColumnKey,
 } from "../services.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
-export const findServiceBySlug = async (
-  slug: string,
+export const findService = async <K extends ServiceColumnKey>(
+  field: K,
+  value: ServiceColumn[K]["_"]["data"],
 ): Promise<DbSingleResult<LegalService>> => {
   const result = await db.query.servicesSchema.findFirst({
-    where: eq(servicesSchema.slug, slug),
+    where: eq(servicesSchema[field], value),
     with: {
       institutions: {
         with: {
@@ -26,11 +31,12 @@ export const findServiceBySlug = async (
   return toSingleResult(result);
 };
 
-export const findInstitutionById = async (
-  id: string,
+export const findInstitution = async <K extends InstitutionColumnKey>(
+  field: K,
+  value: InstitutionColumn[K]["_"]["data"],
 ): Promise<DbSingleResult<Institution>> => {
   const result = await db.query.institutionsSchema.findFirst({
-    where: eq(institutionsSchema.id, id),
+    where: eq(institutionsSchema[field], value),
     with: {
       services: {
         with: {

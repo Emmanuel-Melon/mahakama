@@ -8,7 +8,7 @@ import { documentsTable } from "../documents.schema";
 import { createDocument } from "../operations/documents.create";
 import { updateDocument } from "../operations/documents.update";
 import { markEmbeddingJobFailed } from "@/service/embedding-service/embeddings.persistence";
-import { processDocumentPipeline } from "../jobs/documents.jobs";
+import { processDocumentPipeline } from "../operations/documents.ingest";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -46,7 +46,7 @@ async function reingestUploads() {
 
       if (existing) {
         const nextVersion = (existing.version ?? 1) + 1;
-        await updateDocument(existing.id, {
+        await updateDocument("id", existing.id, {
           version: nextVersion,
           lastUpdated: today(),
         });

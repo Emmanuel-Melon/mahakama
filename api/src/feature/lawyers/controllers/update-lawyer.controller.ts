@@ -13,7 +13,7 @@ export const updateLawyerController = asyncHandler(
     const updateData = req.body;
 
     const lawyer = unwrap(
-      await updateLawyer(Number(lawyerId), updateData),
+      await updateLawyer("id", lawyerId, updateData),
       new HttpError(HttpStatus.NOT_FOUND, "Lawyer not found"),
     );
 

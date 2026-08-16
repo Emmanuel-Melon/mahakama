@@ -1,26 +1,29 @@
 import { db } from "@/lib/drizzle";
 import { lawyersTable } from "../lawyers.schema";
 import { eq } from "drizzle-orm";
-import type { Lawyer, LawyerFilters } from "../lawyers.types";
-import { toManyResult, toResult } from "@/lib/drizzle/drizzle.utils";
+import type {
+  Lawyer,
+  LawyerColumn,
+  LawyerColumnKey,
+  LawyerFilters,
+} from "../lawyers.types";
+import {
+  toManyResult,
+  toResult,
+  toSingleResult,
+} from "@/lib/drizzle/drizzle.utils";
 import { DbManyResult, DbResult } from "@/lib/drizzle/drizzle.types";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
-export async function findLawyerById(id: string): Promise<DbResult<Lawyer>> {
+export const findLawyer = async <K extends LawyerColumnKey>(
+  field: K,
+  value: LawyerColumn[K]["_"]["data"],
+): Promise<DbResult<Lawyer>> => {
   const lawyer = await db.query.lawyers.findFirst({
-    where: eq(lawyersTable.id, id),
+    where: eq(lawyersTable[field], value),
   });
-  return toResult(lawyer);
-}
-
-export async function findLawyerByEmail(
-  email: string,
-): Promise<DbResult<Lawyer>> {
-  const lawyer = await db.query.lawyers.findFirst({
-    where: eq(lawyersTable.email, email),
-  });
-  return toResult(lawyer);
-}
+  return toSingleResult(lawyer);
+};
 
 export async function findLawyers(
   query: LawyerFilters,

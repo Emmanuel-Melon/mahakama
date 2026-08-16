@@ -28,3 +28,8 @@ export const sortableFields = [
 export const searchableFields = ["title", "description", "type"] as const;
 export type SearchableField = (typeof searchableFields)[number];
 export type SortableField = (typeof sortableFields)[number];
+
+export const DOCUMENT_CONFIG = {
+  COLLECTION_NAME: "legal_questions",
+  CONTENT_PREVIEW_LENGTH: 200,
+} as const;

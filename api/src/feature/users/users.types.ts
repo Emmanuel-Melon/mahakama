@@ -35,6 +35,7 @@ export const usersUpdateSchema = crudMeta(
   "update",
   "User",
 );
+
 export const userQuerySchema = baseQuerySchema.extend({
   role: z.string().optional(),
 });
@@ -45,6 +46,7 @@ export const userQuerySchema = baseQuerySchema.extend({
 
 export type User = z.infer<typeof usersSelectSchema>;
 export type NewUser = z.infer<typeof usersInsertSchema>;
+export type UpdateUser = z.infer<typeof usersUpdateSchema>;
 export type UserWithChats = User & {
   chats: (typeof chatsSchema.$inferSelect)[];
 };

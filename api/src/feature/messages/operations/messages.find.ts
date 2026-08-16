@@ -1,17 +1,24 @@
 import { db } from "@/lib/drizzle";
 import { chatMessages } from "../messages.schema";
-import { ChatMessage } from "../messages.types";
+import {
+  ChatMessage,
+  ChatMessageColumn,
+  ChatMessageColumnKey,
+} from "../messages.types";
 import { eq } from "drizzle-orm";
-import { toResult } from "@/lib/drizzle/drizzle.utils";
+import { toSingleResult } from "@/lib/drizzle/drizzle.utils";
 import { DbResult } from "@/lib/drizzle/drizzle.types";
 
-export const getMessageById = async (
-  messageId: string,
+export const findMessage = async <K extends ChatMessageColumnKey>(
+  field: K,
+  value: ChatMessageColumn[K]["_"]["data"],
 ): Promise<DbResult<ChatMessage>> => {
-  const [message] = await db
+  const message = await db
     .select()
     .from(chatMessages)
-    .where(eq(chatMessages.id, messageId))
-    .limit(1);
-  return toResult(message);
+    .where(eq(chatMessages[field], value))
+    .limit(1)
+    .then(([result]) => result);
+
+  return toSingleResult(message);
 };

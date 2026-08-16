@@ -1,7 +1,7 @@
 import { logger } from "@/lib/logger";
 import { ChatsJobs } from "../chats.config";
 import { ChatCreatedPayload, MessageSentPayload } from "../chats.types";
-import { getMessageById } from "@/feature/messages/operations/messages.find";
+import { findMessage } from "@/feature/messages/operations/messages.find";
 import {
   updateMessageReplyStatus,
   REPLY_STATUS,
@@ -18,7 +18,7 @@ export class ChatsJobHandler {
     logger.info({ userId, messageId }, "Processing message sent job");
 
     const userMessage = unwrap(
-      await getMessageById(messageId),
+      await findMessage("id", messageId),
       new HttpError(HttpStatus.NOT_FOUND, "User message not found"),
     );
 
