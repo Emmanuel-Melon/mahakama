@@ -6,7 +6,7 @@ import { ContactSection } from "~/feature/users/components/contact-section";
 import { ProfessionalSection } from "~/feature/users/components/professional-section";
 import { BioSection } from "~/feature/users/components/bio-section";
 import { type UserRole } from "~/feature/users/components/RoleSelector";
-import type { User } from "~/feature/users/hooks/use-users";
+import type { User } from "@mah/api/hooks/use-users";
 
 interface UserProfileFormProps {
   user: User;

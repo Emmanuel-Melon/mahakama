@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { NotificationsList } from "../components/NotificationsList";
-import type { Notification } from "@mah/api/notifications.api";
+import type { Notification } from "@mah/api/clients/notifications.api";
 
 type NotificationsScreenProps = {
   notifications?: Notification[];

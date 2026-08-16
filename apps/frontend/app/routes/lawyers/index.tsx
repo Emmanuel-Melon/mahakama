@@ -1,6 +1,6 @@
 import type { Route } from "./+types/index";
 import { LawyersScreen } from "~/feature/lawyers/screens/LawyersScreen";
-import { useLawyers } from "~/feature/lawyers/hooks/use-lawyers";
+import { useLawyers } from "@mah/api/hooks/use-lawyers";
 import { useSearchParams } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
 import { PageLoading } from "~/components/page-loading";

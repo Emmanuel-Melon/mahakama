@@ -1,6 +1,6 @@
 import type { Route } from "./+types/$documentId";
 import { DocumentDetailsScreen } from "~/feature/documents/screens/DocumentDetailsScreen";
-import { useDocument } from "~/feature/documents/hooks/use-documents";
+import { useDocument } from "@mah/api/hooks/use-documents";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
 import { useAppError } from "~/components/errors/useAppError";

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { LawyerInfoSection } from "~/feature/users/components/LawyerInfoSection";
-import type { User } from "~/feature/users/hooks/use-users";
+import type { User } from "@mah/api/hooks/use-users";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";

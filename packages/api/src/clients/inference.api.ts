@@ -1,5 +1,5 @@
-import { FetchApiClient } from "./fetch";
-import type { components, paths } from "./generated/api.types";
+import { FetchApiClient } from "../fetch";
+import type { components, paths } from "../generated/api.types";
 
 export type InferencePreference = components["schemas"]["InferencePreference"];
 export type InferencePreferenceResource =

@@ -1,6 +1,6 @@
-import { AUTH_API_ROUTES } from "./api.routes";
-import { FetchApiClient } from "./fetch";
-import type { components } from "./generated/api.types";
+import { AUTH_API_ROUTES } from "../api.routes";
+import { FetchApiClient } from "../fetch";
+import type { components } from "../generated/api.types";
 
 export type LoginRequest = components["schemas"]["LoginRequest"];
 export type RegisterRequest = components["schemas"]["RegisterRequest"];

@@ -11,7 +11,7 @@ import {
 import { HeroSection } from "~/layouts/HeroSection";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
 import { ServicesList } from "~/feature/www/components/legal-hub/services-list";
-import type { LegalService as ApiLegalService } from "~/feature/www/hooks/use-services";
+import type { LegalService as ApiLegalService } from "@mah/api/hooks/use-services";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { ScrollArea } from "~/components/ui/scroll-area";

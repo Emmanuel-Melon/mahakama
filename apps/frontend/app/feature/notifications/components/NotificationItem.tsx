@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { Notification } from "@mah/api/notifications.api";
+import type { Notification } from "@mah/api/clients/notifications.api";
 
 type NotificationItemProps = {
   notification: Notification;

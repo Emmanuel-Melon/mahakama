@@ -1,10 +1,10 @@
 import PageError from "~/components/page-error";
 import type { Route } from "./+types/index";
 import { NotificationsScreen } from "~/feature/notifications/Screens/NotificationsScreen";
-import { useNotifications } from "~/feature/notifications/hooks/use-notifications";
+import { useNotifications } from "@mah/api/hooks/use-notifications";
 import { useRouteError } from "react-router";
 import { authContext } from "~/middleware/context";
-import { notificationsApi } from "@mah/api/notifications.api";
+import { notificationsApi } from "@mah/api/clients/notifications.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
-import type { User } from "~/feature/users/hooks/use-users";
+import type { User } from "@mah/api/hooks/use-users";
 
 interface BasicInfoStepProps {
   user: User;

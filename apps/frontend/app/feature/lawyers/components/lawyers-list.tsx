@@ -3,7 +3,7 @@ import { ListControls } from "~/components/list-controls";
 import { FilterSection } from "./filter-section";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
-import type { Lawyer } from "@mah/api/lawyers.api";
+import type { Lawyer } from "@mah/api/clients/lawyers.api";
 
 interface LawyersListProps {
   lawyers: Lawyer[];
