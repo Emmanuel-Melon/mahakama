@@ -124,7 +124,7 @@ npm run dev:safe
 
 ### Generated Types
 
-The types are generated in `app/lib/api/types/api.ts` and include:
+The types are generated in `packages/api/src/generated/api.types.ts` and include:
 
 1. **Path Types**: All API endpoints with request/response types
 2. **Component Schemas**: Reusable type definitions for all data models
@@ -133,7 +133,7 @@ The types are generated in `app/lib/api/types/api.ts` and include:
 ### Example Usage
 
 ```typescript
-import type { components } from "./lib/api/types/api";
+import type { components } from "@mah/api/generated/api.types";
 
 // Using generated types
 type User = components["schemas"]["User"];
@@ -183,7 +183,7 @@ async function createChat(
 #### JavaScript/TypeScript SDK
 
 ```typescript
-import { chatApi, authApi } from "./lib/api";
+import { chatApi, authApi } from "@mah/api";
 
 // Example: Send a message to the legal assistant
 async function askLegalQuestion(question: string) {

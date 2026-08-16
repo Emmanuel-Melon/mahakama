@@ -14,8 +14,8 @@ import {
 } from "~/components/contact-information";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
 
-import type { components } from "~/lib/api/generated/api.types";
-import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
+import type { components as componentsv1 } from "@mah/api/generated/api.types";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse =

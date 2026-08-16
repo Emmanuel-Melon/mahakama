@@ -18,7 +18,7 @@ import {
   ContactInformation,
   type ContactItem,
 } from "~/components/contact-information";
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];
 

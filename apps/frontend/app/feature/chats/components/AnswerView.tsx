@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { ChatArea } from "~/feature/chats/components/chat-area";
-import { type ChatType } from "~/lib/api/chat.api";
+import { type ChatType } from "@mah/api/chat.api";
 
 interface ChatViewProps {
   chatData: ChatType;

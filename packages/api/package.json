@@ -1,0 +1,41 @@
+{
+  "name": "@mah/api",
+  "version": "1.0.0",
+  "description": "Frontend API client consumed from the Mahakama backend OpenAPI spec.",
+  "scripts": {
+    "generate:types": "openapi-typescript $VITE_API_BASE_URL/api-docs.json -o src/generated/api.types.ts || echo 'Type generation failed - check if backend is running'",
+    "generate:types:local": "VITE_API_BASE_URL=http://localhost:3000 npm run generate:types",
+    "generate:types:prod": "VITE_API_BASE_URL=https://mahakama-api-production.up.railway.app npm run generate:types",
+    "generate:zod": "openapi-zod-client http://localhost:3000/api-docs.json --output src/generated/api.schemas.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./fetch": "./src/fetch.ts",
+    "./api.utils": "./src/api.utils.ts",
+    "./api.routes": "./src/api.routes.ts",
+    "./auth.api": "./src/auth.api.ts",
+    "./chat.api": "./src/chat.api.ts",
+    "./documents.api": "./src/documents.api.ts",
+    "./inference.api": "./src/inference.api.ts",
+    "./lawyers.api": "./src/lawyers.api.ts",
+    "./notifications.api": "./src/notifications.api.ts",
+    "./services.api": "./src/services.api.ts",
+    "./users.api": "./src/users.api.ts",
+    "./generated/api.types": "./src/generated/api.types.ts",
+    "./generated/api.schemas": "./src/generated/api.schemas.ts"
+  },
+  "peerDependencies": {
+    "@zodios/core": "^10.0.0",
+    "jose": "^6.0.0",
+    "react-router": "^7.0.0",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "openapi-typescript": "^7.10.1",
+    "openapi-zod-client": "^1.18.3"
+  }
+}

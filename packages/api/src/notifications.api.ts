@@ -1,5 +1,5 @@
-import { FetchApiClient } from "~/lib/api/fetch";
-import type { components } from "~/lib/api/generated/api.types";
+import { FetchApiClient } from "./fetch";
+import type { components } from "./generated/api.types";
 
 export type Notification = components["schemas"]["Notification"];
 export type NotificationResource =

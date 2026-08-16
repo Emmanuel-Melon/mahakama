@@ -7,7 +7,7 @@ import { PageLoading } from "~/components/page-loading";
 import { useState, useEffect } from "react";
 import { useDebouncedValue } from "~/hooks/use-debounce";
 import { Users, MapPin, CheckCircle } from "lucide-react";
-import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+import type { components as componentsv1 } from "@mah/api/generated/api.types";
 export type Lawyer = componentsv1["schemas"]["Lawyer"];
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";

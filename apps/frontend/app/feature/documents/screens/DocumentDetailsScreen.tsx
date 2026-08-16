@@ -4,7 +4,7 @@ import {
   DocumentHighlights,
   RelatedDocuments,
 } from "~/feature/documents/components";
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];

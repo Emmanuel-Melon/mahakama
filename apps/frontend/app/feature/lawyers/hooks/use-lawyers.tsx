@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { lawyersApi } from "~/lib/api/lawyers.api";
+import { lawyersApi } from "@mah/api/lawyers.api";
 
-import type { components as componentsv1 } from "~/lib/api/generated/api.types";
+import type { components as componentsv1 } from "@mah/api/generated/api.types";
 
 export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
 export type JsonApiErrorResponse =

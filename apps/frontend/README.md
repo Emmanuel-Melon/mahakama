@@ -146,7 +146,7 @@ async function getDocuments(params: {
 
 ```typescript
 // Example using our API client
-import { chatApi } from "~/lib/api/chat.api";
+import { chatApi } from "@mah/api/chat.api";
 
 // Send a message with type safety
 const sendMessage = async (chatId: string, content: string) => {

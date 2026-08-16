@@ -14,7 +14,7 @@
   "scripts": {
     "format": "prettier --write \"**/*.{ts,tsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,json,md}\"",
-    "lint": "eslint \"{api,frontend}/**/*.{ts,tsx}\"",
+    "lint": "npm run lint --workspaces --if-present",
     "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=frontend\"",
     "build": "npm run build --workspaces --if-present"
   },

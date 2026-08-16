@@ -5,7 +5,7 @@ import { BookmarkButton } from "~/components/bookmark-button";
 import { ShareButton } from "~/components/share-button";
 import { MahButton, type MahAction } from "~/components/mah-button";
 import { MahCard } from "~/components/mah-card";
-import type { components } from "~/lib/api/generated/api.types";
+import type { components } from "@mah/api/generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 

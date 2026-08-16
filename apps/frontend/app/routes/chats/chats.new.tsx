@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chats.new";
-import { chatApi } from "~/lib/api/chat.api";
-import { parseCookies } from "~/lib/api/api.utils";
+import { chatApi } from "@mah/api/chat.api";
+import { parseCookies } from "@mah/api/api.utils";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";

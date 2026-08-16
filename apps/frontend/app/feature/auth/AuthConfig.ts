@@ -14,13 +14,6 @@ export const authRoutes = defineRoutes({
 
 export const AuthPaths = authRoutes.to;
 
-export const AUTH_API_ROUTES = {
-  ROOT: `/v1`,
-  LOGIN: `/v1/login`,
-  REGISTER: `/v1/register`,
-  LOGOUT: `/v1/logout`,
-} as const;
-
 export const authI18n: I18nConfig<"auth", typeof en> = {
   namespace: "auth",
   resources: {
