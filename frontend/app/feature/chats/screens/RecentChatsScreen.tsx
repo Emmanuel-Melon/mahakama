@@ -1,13 +1,13 @@
-import type { components } from "~/lib/api/generated/api.types";
-import { ChatHeader } from "../components/ChatHeader";
+import type {
+  Chat,
+  ChatResource,
+  ChatSingleResponse,
+  ChatsCollectionResponse,
+  CreateChatRequest,
+} from "~/lib/api/chat.api";
+import { ChatListHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
 import { useDeleteChat, useUpdateChatTitle } from "../hooks/use-chats";
-export type Chat = components["schemas"]["Chat"];
-export type ChatResource = components["schemas"]["ChatResource"];
-export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type ChatsCollectionResponse =
-  components["schemas"]["ChatsCollectionResponse"];
-export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 
 export const RecentChatsScreen = ({
   chats,
@@ -29,7 +29,7 @@ export const RecentChatsScreen = ({
 
   return (
     <div className="space-y-2">
-      <ChatHeader variant="list" />
+      <ChatListHeader title="Recent Chats" />
       <ChatList
         chats={chats}
         error={error}

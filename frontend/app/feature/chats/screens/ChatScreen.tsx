@@ -1,15 +1,10 @@
-import type {
-  ChatMessage,
-  SendMessageRequest,
-  Chat,
-  ChatResource,
-  ChatSingleResponse,
-  ChatsCollectionResponse,
-  CreateChatRequest,
-} from "~/lib/api/chat.api";
+import { useState } from "react";
+import type { ChatMessage, SendMessageRequest, Chat } from "~/lib/api/chat.api";
 import { ActiveChatHeader } from "~/feature/chats/components/ChatHeader";
+import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
+import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
 import {
@@ -61,9 +56,21 @@ export const ChatScreen = ({
 
   const messageContent = watch("content");
 
+  // Gather sources from the latest assistant message to show in the right sidebar
+  const lastAssistantMessage = [...(messages || [])]
+    .reverse()
+    .find(
+      (m) =>
+        m.senderType === "assistant" ||
+        !m.senderType ||
+        m.metadata?.sources?.length,
+    );
+  const activeSources = lastAssistantMessage?.metadata?.sources || [];
+
   const handleRenameChat = () => {
     const newTitle = window.prompt("Enter new chat title:", chat?.title || "");
     if (newTitle && newTitle.trim() && newTitle !== chat?.title) {
+      // Handle rename logic if needed
     }
   };
 
@@ -104,9 +111,6 @@ export const ChatScreen = ({
       onSuccess: () => {
         reset();
       },
-      onError: (error) => {
-        // Error is handled by the hook
-      },
     });
   };
 
@@ -114,7 +118,18 @@ export const ChatScreen = ({
   const isReplyPending = lastMessage ? isReplyAwaiting(lastMessage) : false;
   const showTyping = sendMessageMutation.isPending || isReplyPending;
 
-  // Handle loading and error states
+  // Citation focus state for sidebar highlighting
+  const [focusedCitation, setFocusedCitation] = useState<number | null>(null);
+
+  const handleCitationClick = (index: number) => {
+    const el = document.getElementById(`citation-${index + 1}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFocusedCitation(index);
+    setTimeout(() => setFocusedCitation(null), 1500);
+  };
+
+  const citationMessageId = lastAssistantMessage?.id ?? undefined;
+
   if (isLoading)
     return (
       <PageDetailsLoading
@@ -140,46 +155,58 @@ export const ChatScreen = ({
     );
 
   return (
-    <div className="flex flex-col h-full min-h-0">
-      <div className="flex-shrink-0 sticky top-0 z-10">
-        <ActiveChatHeader
-          title={chat.title!}
-          onDeleteChat={handleDeleteChat}
-          onRenameChat={handleRenameChat}
-          onShareChat={handleShareChat}
-        />
-      </div>
-
-      <div className="flex-1 min-h-0">
-        <div className="w-full p-4 pb-8 h-full overflow-y-auto">
-          <MessageList
-            messages={messages || []}
-            isLoading={messagesLoading}
-            showTyping={showTyping}
-            onRetry={(messageId) => retryMessageMutation.mutate(messageId)}
-            isRetrying={retryMessageMutation.isPending}
+    <div className="flex flex-1 min-h-0 w-full overflow-hidden bg-background">
+      {/* Main Chat Area */}
+      <div className="flex flex-col flex-1 min-h-0 border-r">
+        <div className="flex-shrink-0 sticky top-0 z-10">
+          <ActiveChatHeader
+            title={chat.title!}
+            onDeleteChat={handleDeleteChat}
+            onRenameChat={handleRenameChat}
+            onShareChat={handleShareChat}
           />
         </div>
-      </div>
-      <div className="flex-shrink-0 sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
-        <div className="max-w-4xl mx-auto w-full">
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <ChatInput
-              value={messageContent || ""}
-              onChange={(value) => setValue("content", value)}
-              onSubmit={() => handleSubmit(onSubmit)()}
-              placeholder="Continue the conversation..."
-              isLoading={isSubmitting || sendMessageMutation.isPending}
-              disabled={isSubmitting || sendMessageMutation.isPending}
+
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="mx-auto w-full max-w-4xl p-4 pb-8">
+            <MessageList
+              messages={messages || []}
+              isLoading={messagesLoading}
+              showTyping={showTyping}
+              onRetry={(messageId) => retryMessageMutation.mutate(messageId)}
+              isRetrying={retryMessageMutation.isPending}
+              citationMessageId={citationMessageId}
+              onCitationClick={handleCitationClick}
             />
-            {errors.content && (
-              <p className="text-red-500 text-sm mt-2">
-                {errors.content.message}
-              </p>
-            )}
-          </form>
+          </div>
+        </div>
+
+        <div className="flex-shrink-0 sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
+          <div className="max-w-4xl mx-auto w-full">
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <ChatInput
+                value={messageContent || ""}
+                onChange={(value) => setValue("content", value)}
+                onSubmit={() => handleSubmit(onSubmit)()}
+                placeholder="Ask a legal question or paste a clause to analyze..."
+                isLoading={isSubmitting || sendMessageMutation.isPending}
+                disabled={isSubmitting || sendMessageMutation.isPending}
+              />
+              {errors.content && (
+                <p className="text-red-500 text-sm mt-2">
+                  {errors.content.message}
+                </p>
+              )}
+            </form>
+          </div>
         </div>
       </div>
+
+      {/* Right Sidebar for Source Citations */}
+      <CitationsSidebar
+        sources={activeSources}
+        focusedCitation={focusedCitation}
+      />
     </div>
   );
 };

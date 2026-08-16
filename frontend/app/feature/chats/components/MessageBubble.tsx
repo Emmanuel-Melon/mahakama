@@ -13,12 +13,16 @@ interface MessageBubbleProps {
   message: ChatMessage;
   onRetry?: (messageId: string) => void;
   isRetrying?: boolean;
+  showCitationRefs?: boolean;
+  onCitationClick?: (index: number) => void;
 }
 
 export function MessageBubble({
   message,
   onRetry,
   isRetrying = false,
+  showCitationRefs = false,
+  onCitationClick,
 }: MessageBubbleProps) {
   const isUser = isUserMessage(message);
   const isFailed = hasFailedReply(message) || isStalePendingReply(message);
@@ -69,10 +73,7 @@ export function MessageBubble({
                     <p className="mb-3 last:mb-0" {...props} />
                   ),
                   ul: ({ node, ...props }) => (
-                    <ul
-                      className="list-disc pl-5 mb-3 space-y-1"
-                      {...props}
-                    />
+                    <ul className="list-disc pl-5 mb-3 space-y-1" {...props} />
                   ),
                   ol: ({ node, ...props }) => (
                     <ol
@@ -110,7 +111,30 @@ export function MessageBubble({
             </div>
           )}
 
-          {/* Delegated to the isolated MessageMetadata component */}
+          {/* Citation reference chips for latest assistant message */}
+          {!isUser &&
+            showCitationRefs &&
+            message.metadata?.sources?.length &&
+            message.metadata.sources.length > 0 && (
+              <div
+                className="flex items-center gap-1.5 mt-2 flex-wrap"
+                aria-label="Citation references"
+              >
+                {message.metadata.sources.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => onCitationClick?.(i)}
+                    className="inline-flex items-center justify-center text-[10px] font-medium text-blue-600 hover:text-blue-800 hover:underline px-1.5 py-0.5 rounded bg-blue-50 border border-blue-100"
+                    aria-label={`View source ${i + 1}`}
+                  >
+                    [{i + 1}]
+                  </button>
+                ))}
+              </div>
+            )}
+
+          {/* Delegated to the isolated MessageMetadata component (warnings only) */}
           {!isUser && <MessageMetadata metadata={message.metadata} />}
 
           <div className="text-xs opacity-60 mt-2">

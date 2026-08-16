@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 import {
   SidebarMenu,
@@ -17,6 +18,7 @@ interface SidebarNavProps {
 }
 
 export const SidebarNav = ({ links }: SidebarNavProps) => {
+  const { t } = useTranslation("common");
   return (
     <SidebarMenu>
       {links.map((item) => (
@@ -30,7 +32,7 @@ export const SidebarNav = ({ links }: SidebarNavProps) => {
               }}
             >
               <item.icon className="h-4 w-4" />
-              <span>{item.title}</span>
+              <span>{t(item.title)}</span>
             </NavLink>
           </SidebarMenuButton>
         </SidebarMenuItem>

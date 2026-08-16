@@ -58,7 +58,9 @@ export function ActiveChatHeader({
   return (
     <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <div className="py-3 px-4 flex items-center justify-between">
-        <h1 className="text-xl font-normal text-foreground truncate mr-2">{title}</h1>
+        <h1 className="text-xl font-normal text-foreground truncate mr-2">
+          {title}
+        </h1>
         <div className="flex items-center gap-2">
           <Button
             onClick={onShareChat}
@@ -80,11 +82,20 @@ export function ActiveChatHeader({
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-40 border-2 border-gray-900 shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg" align="end">
-              <DropdownMenuItem onClick={onRenameChat} className="cursor-pointer">
+            <DropdownMenuContent
+              className="w-40 border-2 border-gray-900 shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg"
+              align="end"
+            >
+              <DropdownMenuItem
+                onClick={onRenameChat}
+                className="cursor-pointer"
+              >
                 <Edit className="h-4 w-4 mr-2" /> Rename
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowDeleteDialog(true)} className="text-red-600 cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => setShowDeleteDialog(true)}
+                className="text-red-600 cursor-pointer"
+              >
                 <Trash2 className="h-4 w-4 mr-2" /> Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -97,7 +108,8 @@ export function ActiveChatHeader({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Chat</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this chat? This action cannot be undone.
+              Are you sure you want to delete this chat? This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

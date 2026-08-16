@@ -17,9 +17,9 @@ export const AppShell = ({ children, pageTitle }: AppShellProps) => {
   return (
     <CountryProvider>
       <Toaster />
-      <main className="flex-1 pb-16 md:pb-0">
+      <main className="h-svh overflow-hidden">
         <NavigationLoader />
-        <SidebarProvider>
+        <SidebarProvider className="h-full">
           <AppSidebar navLinks={navLinks} />
           <SidebarInset>
             <SiteHeader title={pageTitle} />
