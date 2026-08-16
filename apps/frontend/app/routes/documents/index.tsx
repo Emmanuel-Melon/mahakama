@@ -9,7 +9,7 @@ import { useState } from "react";
 import {
   createPrefetchLoader,
   prefetch,
-} from "~/lib/react-query/react-query.utils";
+} from "@mah/client/react-query/utils";
 import { documentsApi } from "~/lib/api/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";

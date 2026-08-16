@@ -33,7 +33,7 @@
   "devEngines": {
     "packageManager": {
       "name": "npm",
-      "version": "8.5.0"
+      "version": "11.13.0"
     }
   }
 }
