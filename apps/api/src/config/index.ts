@@ -7,6 +7,7 @@ import {
   ServicesConfigSchema,
   LawSourceConfigSchema,
   RagConfigSchema,
+  embeddingConfigSchema,
   IServerConfig,
   IDatabaseConfig,
   ILLMConfig,
@@ -14,6 +15,7 @@ import {
   IServicesConfig,
   ILawSourceConfig,
   IRagConfig,
+  IEmbeddingConfig,
 } from "./config.types";
 
 dotenv.config({
@@ -110,6 +112,15 @@ export const ragConfig = RagConfigSchema.parse({
   stalenessMonths: Number(process.env.RAG_STALENESS_MONTHS) || 24,
 }) satisfies IRagConfig;
 
+// Embedding configuration
+export const embeddingConfig = embeddingConfigSchema.parse({
+  model: process.env.EMBEDDING_MODEL,
+  dimensions: process.env.EMBEDDING_DIMENSIONS,
+  ollamaBaseUrl: process.env.EMBEDDING_OLLAMA_BASE_URL,
+  writeMode: process.env.EMBEDDING_WRITE_MODE,
+  primaryStore: process.env.EMBEDDING_PRIMARY_STORE,
+}) satisfies IEmbeddingConfig;
+
 const config = {
   server: serverConfig,
   db: dbConfig,
@@ -118,6 +129,7 @@ const config = {
   services: servicesConfig,
   lawSources: lawSourcesConfig,
   rag: ragConfig,
+  embedding: embeddingConfig,
 };
 
 // Export everything

@@ -6,7 +6,9 @@
 // Fail-open: chunks without enough information are never flagged.
 
 import { ChunkStalenessInput } from "./rag.types";
-import { RAG_STALENESS_CONFIG } from "./rag.config";
+import { ragConfig } from "@/config";
+
+const DEFAULT_STALENESS_MONTHS = 24;
 
 export const isChunkStale = (input: ChunkStalenessInput): boolean => {
   // Newer document version exists → stale regardless of age.
@@ -28,7 +30,7 @@ export const isChunkStale = (input: ChunkStalenessInput): boolean => {
   const cutoff = new Date(now);
   cutoff.setMonth(
     cutoff.getMonth() -
-      (input.stalenessMonths ?? RAG_STALENESS_CONFIG.DEFAULT_STALENESS_MONTHS),
+      (input.stalenessMonths ?? ragConfig.stalenessMonths ?? DEFAULT_STALENESS_MONTHS),
   );
 
   return parsed < cutoff;

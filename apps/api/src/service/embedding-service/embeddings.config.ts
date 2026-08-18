@@ -25,4 +25,5 @@ export const CHUNK_CONFIG = {
 export const EMBEDDING_CONFIG = {
   BATCH_SIZE: 20,
   ID_PREFIX: "law_",
+  DIMENSIONS: 768,
 } as const;

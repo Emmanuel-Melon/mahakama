@@ -17,7 +17,7 @@ async function retrieveLaws(
       limit,
     });
 
-    if (!embeddings?.ids?.[0]?.length) {
+    if (!embeddings?.ids?.length) {
       logger.info("No matching laws found.");
       return [];
     }
@@ -25,11 +25,11 @@ async function retrieveLaws(
     // Transform embeddings into LegalDocumentChunk format
     const laws: LegalDocumentChunk[] = [];
 
-    for (let i = 0; i < embeddings.ids[0].length; i++) {
-      const id = embeddings.ids[0][i];
-      const metadata = embeddings.metadatas?.[0]?.[i] || {};
-      const document = embeddings.documents?.[0]?.[i] || "";
-      const distance = embeddings.distances?.[0]?.[i] || 0;
+    for (let i = 0; i < embeddings.ids.length; i++) {
+      const id = embeddings.ids[i];
+      const metadata = embeddings.metadatas?.[i] || {};
+      const document = embeddings.documents?.[i] || "";
+      const distance = embeddings.distances?.[i] || 0;
 
       // Calculate similarity score (1 - distance)
       const similarity = 1 - Math.min(Math.max(distance, 0), 1);

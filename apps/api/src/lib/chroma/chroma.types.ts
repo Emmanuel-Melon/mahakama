@@ -1,13 +1,16 @@
+// chroma.types.ts
 export interface AddDocumentsParams {
   collectionName: string;
   documents: string[];
   ids?: string[];
   metadatas?: Record<string, any>[];
+  embeddings?: number[][];
 }
 
 export interface QueryParams {
   collectionName: string;
-  queryTexts: string | string[];
+  queryTexts?: string | string[];
+  queryEmbeddings?: number[][];
   nResults?: number;
 }
 
@@ -25,7 +28,7 @@ export interface QuestionEmbedding {
   category: string;
   timestamp: string;
   model: string;
-  relevantLawIds?: number[]; // Reference to law IDs from laws.dataset.ts
+  relevantLawIds?: number[];
 }
 
 export interface EmbeddingsData {

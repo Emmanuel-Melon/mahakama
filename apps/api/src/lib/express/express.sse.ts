@@ -23,9 +23,12 @@ export const initSSE = (res: Response, options?: SSEOptions) => {
   res.writeHead(200, defaultHeaders);
   res.write(": connected\n\n");
 
-  const sendEvent = (
-    event: { type: string; data?: any; id?: string; retry?: number },
-  ) => {
+  const sendEvent = (event: {
+    type: string;
+    data?: any;
+    id?: string;
+    retry?: number;
+  }) => {
     const { type, data = {}, id, retry } = event;
 
     if (id) {

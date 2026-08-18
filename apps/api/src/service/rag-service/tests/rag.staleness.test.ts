@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { isChunkStale } from "../rag.staleness";
-import { RAG_STALENESS_CONFIG } from "../rag.config";
 
 const now = new Date("2026-08-15T00:00:00Z");
+const DEFAULT_STALENESS_MONTHS = 24;
 
 describe("isChunkStale", () => {
   it("flags chunks whose document has a newer version", () => {
@@ -31,7 +31,7 @@ describe("isChunkStale", () => {
     expect(
       isChunkStale({
         lastUpdated: "2020-01-01",
-        stalenessMonths: RAG_STALENESS_CONFIG.DEFAULT_STALENESS_MONTHS,
+        stalenessMonths: DEFAULT_STALENESS_MONTHS,
         now,
       }),
     ).toBe(true);
@@ -41,7 +41,7 @@ describe("isChunkStale", () => {
     expect(
       isChunkStale({
         lastUpdated: "2026-01-01",
-        stalenessMonths: RAG_STALENESS_CONFIG.DEFAULT_STALENESS_MONTHS,
+        stalenessMonths: DEFAULT_STALENESS_MONTHS,
         now,
       }),
     ).toBe(false);

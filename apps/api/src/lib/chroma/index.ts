@@ -1,7 +1,7 @@
 import { CloudClient } from "chromadb";
 import { llmConfig, dbConfig } from "@/config";
 import { OllamaEmbeddingFunction } from "@chroma-core/ollama";
-import { AddDocumentsParams, QueryParams } from "./chroma.types.";
+import { AddDocumentsParams, QueryParams } from "./chroma.types";
 import { logger } from "@/lib/logger";
 
 export class ChromaClient {
@@ -60,11 +60,17 @@ export class ChromaClient {
   }
 
   public async addDocuments(params: AddDocumentsParams): Promise<string[]> {
-    const { collectionName, documents, ids, metadatas } = params;
+    const { collectionName, documents, ids, metadatas, embeddings } = params;
 
     if (documents.length === 0) {
       logger.warn("No documents provided to add");
       return [];
+    }
+
+    if (embeddings && embeddings.length !== documents.length) {
+      throw new Error(
+        `addDocuments: embeddings length (${embeddings.length}) does not match documents length (${documents.length})`,
+      );
     }
 
     const collection = await this.getOrCreateCollection(collectionName);
@@ -76,10 +82,16 @@ export class ChromaClient {
         (_, i) => `doc_${Date.now()}_${i}`,
       );
 
+    // When embeddings are supplied, Chroma stores them as-is and never
+    // invokes the collection's embeddingFunction — the whole point of the
+    // new embedding-service path. When omitted (old call sites still on
+    // queryTexts-style ingestion), Chroma falls back to embedding via
+    // `_embedder` itself, same as today.
     await collection.upsert({
       ids: documentIds,
       documents,
       metadatas,
+      embeddings,
     });
 
     logger.info(
@@ -89,12 +101,26 @@ export class ChromaClient {
   }
 
   public async query(params: QueryParams) {
-    const { collectionName, queryTexts, nResults = 15 } = params;
+    const {
+      collectionName,
+      queryTexts,
+      queryEmbeddings,
+      nResults = 15,
+    } = params;
+
+    if (!queryTexts && !queryEmbeddings) {
+      throw new Error("query() requires either queryTexts or queryEmbeddings");
+    }
 
     const collection = await this.getOrCreateCollection(collectionName);
 
     return collection.query({
-      queryTexts: Array.isArray(queryTexts) ? queryTexts : [queryTexts],
+      queryTexts: queryEmbeddings
+        ? undefined
+        : Array.isArray(queryTexts)
+          ? queryTexts
+          : [queryTexts!],
+      queryEmbeddings,
       nResults,
     });
   }

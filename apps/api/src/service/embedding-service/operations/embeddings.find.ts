@@ -1,4 +1,4 @@
-import { chromaClient } from "@/lib/chroma";
+import { embeddingProvider, vectorStore } from "../embeddings.factory";
 import { QueryEmbeddingOptions } from "../embeddings.types";
 
 export const findEmbedding = async (
@@ -6,10 +6,11 @@ export const findEmbedding = async (
   options: QueryEmbeddingOptions,
 ) => {
   const { collectionName, limit } = options;
-  const embeddings = await chromaClient.query({
-    collectionName: collectionName,
-    queryTexts: queryString,
-    nResults: limit,
-  });
-  return embeddings;
+  const [queryEmbedding] = await embeddingProvider.embed([queryString]);
+  const results = await vectorStore.query(
+    collectionName,
+    queryEmbedding,
+    limit,
+  );
+  return results;
 };
