@@ -1,3 +1,4 @@
+// rag.service.ts
 import {
   type RAGContext,
   type RetrievalOptions,

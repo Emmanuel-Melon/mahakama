@@ -35,11 +35,11 @@ Both paths target the same Chroma collection, `legal_questions`, embedded with O
 
 ## Docs
 
-| Doc | Direction | Scope |
-| --- | --- | --- |
-| [`ingestion.md`](./ingestion.md) | Write-path | Upload → storage → document record → background job → PDF parse → chunk → embed → Chroma. Current state + backlog (Phases I–VI). |
-| [`rag.md`](./rag.md) | Read-path | Chat message → history + context retrieval → prompt → LLM → response with sources. Current state + backlog (Phases 1–7). |
-| [`citations.md`](./citations.md) | Read-path | Citation metadata model, retrieval returning `full_citation`/`url`, post-generation citation validation, Sources UI. Current state + backlog (Phases 1–5). |
+| Doc                                            | Direction              | Scope                                                                                                                                                          |
+| ---------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`ingestion.md`](./ingestion.md)               | Write-path             | Upload → storage → document record → background job → PDF parse → chunk → embed → Chroma. Current state + backlog (Phases I–VI).                               |
+| [`rag.md`](./rag.md)                           | Read-path              | Chat message → history + context retrieval → prompt → LLM → response with sources. Current state + backlog (Phases 1–7).                                       |
+| [`citations.md`](./citations.md)               | Read-path              | Citation metadata model, retrieval returning `full_citation`/`url`, post-generation citation validation, Sources UI. Current state + backlog (Phases 1–5).     |
 | [`metadata-updates.md`](./metadata-updates.md) | Write-path / lifecycle | Versioned chunks, real `last_updated`, monthly law-source diff checks, outdated-answer flagging, AKN amendment tracking. Current state + backlog (Phases 1–5). |
 
 ---
@@ -57,13 +57,13 @@ High-level roadmap: Data layer → Operations → HTTP → Background jobs → I
 
 ## Shared dependencies
 
-| Dependency | Purpose | Notes |
-| --- | --- | --- |
-| ChromaDB (Cloud) — collection `legal_questions` | Vector store for both paths | Config in `src/lib/chroma/chroma.config.ts`; client in `src/lib/chroma/index.ts` |
-| Ollama — `nomic-embed-text` | Embedding model | `src/lib/chroma/index.ts`; relevance threshold 0.7 |
-| BullMQ + Redis | Background jobs (ingest) | Workers all disabled in `src/lib/bullmq/bullmq.init.ts` |
-| Local filesystem — `uploads/` (served at `/uploads`) | Uploaded file storage | `src/lib/storage/storage.ts` + `samples.ts`; see [`storage.md`](./storage.md) |
-| `src/service/rag-service/dataset/laws.dataset.ts` | Curated Uganda-laws seed (~596 lines) | Imported nowhere yet; needed to pre-populate `legal_questions` |
+| Dependency                                           | Purpose                               | Notes                                                                            |
+| ---------------------------------------------------- | ------------------------------------- | -------------------------------------------------------------------------------- |
+| ChromaDB (Cloud) — collection `legal_questions`      | Vector store for both paths           | Config in `src/lib/chroma/chroma.config.ts`; client in `src/lib/chroma/index.ts` |
+| Ollama — `nomic-embed-text`                          | Embedding model                       | `src/lib/chroma/index.ts`; relevance threshold 0.7                               |
+| BullMQ + Redis                                       | Background jobs (ingest)              | Workers all disabled in `src/lib/bullmq/bullmq.init.ts`                          |
+| Local filesystem — `uploads/` (served at `/uploads`) | Uploaded file storage                 | `src/lib/storage/storage.ts` + `samples.ts`; see [`storage.md`](./storage.md)    |
+| `src/service/rag-service/dataset/laws.dataset.ts`    | Curated Uganda-laws seed (~596 lines) | Imported nowhere yet; needed to pre-populate `legal_questions`                   |
 
 ---
 

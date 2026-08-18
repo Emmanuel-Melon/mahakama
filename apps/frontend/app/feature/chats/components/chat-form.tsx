@@ -14,10 +14,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import { Button } from "~/components/ui/button";
-import {
-  useUploadDocument,
-  getUploadKey,
-} from "@mah/api/hooks/use-documents";
+import { useUploadDocument, getUploadKey } from "@mah/api/hooks/use-documents";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 
