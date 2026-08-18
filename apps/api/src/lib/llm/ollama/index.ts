@@ -1,6 +1,7 @@
 import { Ollama } from "ollama";
 import {
   LLMResponse,
+  LLMStreamResponse,
   ILLMProvider,
   BaseLLMOutputConfig,
   GeminiOutputConfig,
@@ -129,6 +130,41 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
         contentType: "text" as const,
       };
     }
+  }
+
+  public async generateStreamContent(
+    prompt: string,
+    onToken: (token: string) => void,
+    _config: GeminiOutputConfig = {},
+  ): Promise<LLMStreamResponse> {
+    const messages = [
+      ...(this._systemPrompt
+        ? [{ role: "system" as const, content: this._systemPrompt }]
+        : []),
+      { role: "user" as const, content: prompt },
+    ];
+
+    const stream = await this.client.chat({
+      model: this.model,
+      messages,
+      stream: true,
+    });
+
+    let fullContent = "";
+
+    for await (const chunk of stream) {
+      const token = chunk.message?.content;
+      if (token) {
+        fullContent += token;
+        onToken(token);
+      }
+    }
+
+    return {
+      fullContent,
+      provider: this.provider,
+      contentType: "text" as const,
+    };
   }
 }
 

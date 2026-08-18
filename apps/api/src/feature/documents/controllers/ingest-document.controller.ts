@@ -4,16 +4,12 @@ import { HttpStatus } from "@/lib/http/http.status";
 import { saveUploadedFile } from "@/lib/storage/storage";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { documentsQueue } from "../jobs/documents.queue";
-import { initSSE } from "@/lib/express/express.sse";
+import { handleSSEStream } from "@/lib/express/express.sse";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { DocumentJobs } from "../document.config";
 import { logger } from "@/lib/logger";
-import type { SSEEvent } from "@/lib/express/express.types";
 import { subscribeIngestion } from "../documents.progress";
-
-const KEEP_ALIVE_INTERVAL_MS = 15_000;
-const MAX_WAIT_MS = 600_000; // 10 minutes — embeddings of large docs take a while
 
 export const ingestDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -34,7 +30,6 @@ export const ingestDocumentController = asyncHandler(
       mimeType: file.mimetype,
     });
 
-    // Create document record
     const document = unwrap(
       await createDocument({
         title: title || file.originalname,
@@ -53,104 +48,68 @@ export const ingestDocumentController = asyncHandler(
       ),
     );
 
-    const sse = initSSE(res, {
-      metadata: {
-        name: "ingestDocumentController",
-        requestId: req.requestId,
-        route: req.path,
-        resourceId: document.id.toString(),
+    handleSSEStream(
+      res,
+      async (sse, closeStream) => {
+        // Subscribe before enqueue to ensure no early completion events are missed
+        const unsubscribe = subscribeIngestion(document.id, (event) => {
+          if (event.type === "completed" || event.type === "error") {
+            unsubscribe();
+            sse.sendEvent(event);
+            closeStream();
+            return;
+          }
+          sse.sendEvent(event);
+        });
+
+        // Ensure we unsubscribe if the stream ends prematurely
+        res.on("close", () => unsubscribe());
+
+        sse.sendEvent({
+          type: "started",
+          data: {
+            timestamp: new Date().toISOString(),
+            filename: file.originalname,
+            size: file.size,
+          },
+        });
+
+        try {
+          await documentsQueue.add(DocumentJobs.DocumentUploaded, {
+            documentId: document.id,
+            userId: req.user?.id!,
+            filename: file.originalname,
+            size: file.size,
+          });
+        } catch (error) {
+          logger.error(
+            { documentId: document.id, error },
+            "Failed to enqueue document upload job",
+          );
+          unsubscribe();
+          sse.sendError({
+            message: "Failed to enqueue ingestion job",
+            code: "INGESTION_ENQUEUE_FAILED",
+          });
+          closeStream();
+        }
       },
-    });
-
-    let keepAliveTimer: ReturnType<typeof setInterval> | undefined;
-    let timeoutTimer: ReturnType<typeof setTimeout> | undefined;
-    let terminated = false;
-
-    const stopTimers = () => {
-      if (keepAliveTimer) clearInterval(keepAliveTimer);
-      if (timeoutTimer) clearTimeout(timeoutTimer);
-    };
-
-    const endStream = () => {
-      if (!res.writableEnded) res.end();
-    };
-
-    // Subscribe before enqueue so a fast job can't be missed.
-    const unsubscribe = subscribeIngestion(document.id, (event) => {
-      if (terminated || res.writableEnded) return;
-
-      if (event.type === "completed" || event.type === "error") {
-        terminated = true;
-        stopTimers();
-        unsubscribe();
-        sse.sendEvent(event as SSEEvent);
-        endStream();
-        return;
-      }
-
-      sse.sendEvent(event as SSEEvent);
-    });
-
-    res.on("close", () => {
-      terminated = true;
-      stopTimers();
-      unsubscribe();
-    });
-
-    keepAliveTimer = setInterval(() => {
-      if (!res.writableEnded) res.write(": ping\n\n");
-    }, KEEP_ALIVE_INTERVAL_MS);
-    keepAliveTimer.unref?.();
-
-    timeoutTimer = setTimeout(() => {
-      if (terminated || res.writableEnded) return;
-      terminated = true;
-      stopTimers();
-      unsubscribe();
-      sse.sendEvent({
-        type: "error",
-        data: {
-          message: "Ingestion job did not complete in time",
-          code: "INGESTION_TIMEOUT",
+      {
+        maxWaitMs: 600_000, // 10 minutes
+        metadata: {
+          name: "ingestDocumentController",
+          requestId: req.requestId,
+          route: req.path,
+          resourceId: document.id.toString(),
         },
-      });
-      endStream();
-    }, MAX_WAIT_MS);
-    timeoutTimer.unref?.();
-
-    sse.sendEvent({
-      type: "started",
-      data: {
-        timestamp: new Date().toISOString(),
-        filename: file.originalname,
-        size: file.size,
+        onTimeout: (sendError, close) => {
+          sendError({
+            message: "Ingestion job did not complete in time",
+            code: "INGESTION_TIMEOUT",
+          });
+          close();
+        },
       },
-    });
-
-    try {
-      await documentsQueue.add(DocumentJobs.DocumentUploaded, {
-        documentId: document.id,
-        userId: req.user?.id!,
-        filename: file.originalname,
-        size: file.size,
-      });
-    } catch (error) {
-      logger.error(
-        { documentId: document.id, error },
-        "Failed to enqueue document upload job",
-      );
-      if (terminated || res.writableEnded) return;
-      terminated = true;
-      stopTimers();
-      unsubscribe();
-      sse.sendEvent({
-        type: "error",
-        data: {
-          message: "Failed to enqueue ingestion job",
-          code: "INGESTION_ENQUEUE_FAILED",
-        },
-      });
-      endStream();
-    }
+    );
   },
 );

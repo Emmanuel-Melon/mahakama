@@ -1,4 +1,5 @@
 import { FetchApiClient } from "../fetch";
+import { parseCookies } from "../api.utils";
 import type { components } from "../generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];
@@ -59,6 +60,64 @@ export interface ChatMetadata {
   isQuestionChat?: boolean;
   [key: string]: unknown;
 }
+
+export type ChatStreamEvent =
+  | {
+      type: "chat_created";
+      data: { chat: Chat; userMessage: ChatMessage };
+    }
+  | {
+      type: "user_message";
+      data: ChatMessage;
+    }
+  | {
+      type: "started";
+      data: { chatId: string; messageId: string; timestamp: string };
+    }
+  | {
+      type: "rag_context";
+      data: { sourcesCount: number; chunksCount: number };
+    }
+  | { type: "token"; data: { content: string } }
+  | {
+      type: "completed";
+      data: {
+        messageId: string;
+        content: string;
+        citations?: string[];
+        sources?: unknown[];
+        hasStaleSources?: boolean;
+        fabricatedCitations?: string[];
+      };
+    }
+  | { type: "error"; data: { message: string; code?: string } };
+
+const getClientToken = (): string | null => {
+  if (typeof document === "undefined") return null;
+  const cookies = parseCookies(document.cookie);
+  return cookies.token ?? null;
+};
+
+const parseSSEBlock = (
+  block: string,
+): { type: string; data: unknown } | null => {
+  const lines = block.split("\n");
+  let type = "message";
+  const dataLines: string[] = [];
+
+  for (const line of lines) {
+    const trimmed = line.replace(/\r$/, "");
+    if (trimmed.startsWith(":")) continue;
+    if (trimmed.startsWith("event:")) {
+      type = trimmed.slice(6).trim();
+    } else if (trimmed.startsWith("data:")) {
+      dataLines.push(trimmed.slice(5).trim());
+    }
+  }
+
+  if (dataLines.length === 0) return null;
+  return { type, data: JSON.parse(dataLines.join("\n")) };
+};
 export class ChatApiClient {
   private api: FetchApiClient;
 
@@ -185,6 +244,126 @@ export class ChatApiClient {
     } catch (error) {
       console.error("Failed to send message:", error);
       throw error;
+    }
+  }
+
+  public async sendMessageStream(
+    payload: SendMessageRequest,
+    onEvent: (event: ChatStreamEvent) => void,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const baseURL =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+    const token = getClientToken();
+
+    const response = await fetch(`${baseURL}/v1/messages`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(payload),
+      credentials: "include",
+      signal,
+    });
+
+    if (!response.ok) {
+      let message = `Send failed with status ${response.status}`;
+      try {
+        const errorData = await response.json();
+        message =
+          errorData.errors?.[0]?.detail ||
+          errorData.errors?.[0]?.title ||
+          message;
+      } catch {
+        // Non-JSON error body
+      }
+      throw new Error(message);
+    }
+
+    if (!response.body) {
+      throw new Error("No response body received from the server");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let boundary = buffer.indexOf("\n\n");
+      while (boundary !== -1) {
+        const block = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        const parsed = parseSSEBlock(block);
+        if (parsed) {
+          onEvent(parsed as ChatStreamEvent);
+        }
+        boundary = buffer.indexOf("\n\n");
+      }
+    }
+  }
+
+  public async createChatStream(
+    payload: CreateChatRequest,
+    onEvent: (event: ChatStreamEvent) => void,
+    signal?: AbortSignal,
+  ): Promise<void> {
+    const baseURL =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+    const token = getClientToken();
+
+    const response = await fetch(`${baseURL}/v1/chats`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify(payload),
+      credentials: "include",
+      signal,
+    });
+
+    if (!response.ok) {
+      let message = `Create chat failed with status ${response.status}`;
+      try {
+        const errorData = await response.json();
+        message =
+          errorData.errors?.[0]?.detail ||
+          errorData.errors?.[0]?.title ||
+          message;
+      } catch {
+        // Non-JSON error body
+      }
+      throw new Error(message);
+    }
+
+    if (!response.body) {
+      throw new Error("No response body received from the server");
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let boundary = buffer.indexOf("\n\n");
+      while (boundary !== -1) {
+        const block = buffer.slice(0, boundary);
+        buffer = buffer.slice(boundary + 2);
+        const parsed = parseSSEBlock(block);
+        if (parsed) {
+          onEvent(parsed as ChatStreamEvent);
+        }
+        boundary = buffer.indexOf("\n\n");
+      }
     }
   }
 

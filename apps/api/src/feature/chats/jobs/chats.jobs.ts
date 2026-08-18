@@ -7,10 +7,12 @@ import {
   REPLY_STATUS,
 } from "@/feature/messages/operations/messages.update";
 import { getMessagesByChatId } from "@/feature/messages/operations/messages.list";
-import { generateAssistantReply } from "@/service/rag-service/rag.answer";
+import { generateStreamingAssistantReply } from "@/service/rag-service/rag.answer";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { HttpStatus } from "@/lib/http/http.status";
+import { publishChatEvent } from "../chat.progress";
+import { ChatStreamEventTypes } from "../chat.events";
 
 export class ChatsJobHandler {
   static async handleMessageSent(data: MessageSentPayload) {
@@ -22,10 +24,19 @@ export class ChatsJobHandler {
       new HttpError(HttpStatus.NOT_FOUND, "User message not found"),
     );
 
+    publishChatEvent(userMessage.chatId, {
+      type: ChatStreamEventTypes.Started,
+      data: {
+        chatId: userMessage.chatId,
+        messageId,
+        timestamp: new Date().toISOString(),
+      },
+    });
+
     try {
       const { data: history } = await getMessagesByChatId(userMessage.chatId);
 
-      await generateAssistantReply({
+      await generateStreamingAssistantReply({
         userMessage,
         history,
         userId,
@@ -40,12 +51,21 @@ export class ChatsJobHandler {
         { error, messageId, chatId: userMessage.chatId },
         "Failed to generate assistant reply",
       );
+
+      publishChatEvent(userMessage.chatId, {
+        type: ChatStreamEventTypes.Error,
+        data: {
+          message: errorMessage,
+          code: "REPLY_GENERATION_FAILED",
+        },
+      });
+
       await updateMessageReplyStatus(
         messageId,
         REPLY_STATUS.FAILED,
         errorMessage,
       );
-      throw error; // Rethrow so BullMQ retries per defaultBullJobOptions
+      throw error;
     }
   }
 

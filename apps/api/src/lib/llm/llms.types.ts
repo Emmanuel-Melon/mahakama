@@ -30,6 +30,10 @@ export interface GeminiProviderConfig {
   authType?: GeminiAuthType;
 }
 
+export interface LLMStreamResponse extends Omit<LLMResponse, "content"> {
+  fullContent: string;
+}
+
 export interface ILLMProvider<TProvider extends LLMProviderName> {
   provider: TProvider;
   model?: string;
@@ -39,6 +43,12 @@ export interface ILLMProvider<TProvider extends LLMProviderName> {
     prompt: string,
     config?: GeminiOutputConfig,
   ): Promise<LLMResponse<T>>;
+
+  generateStreamContent(
+    prompt: string,
+    onToken: (token: string) => void,
+    config?: GeminiOutputConfig,
+  ): Promise<LLMStreamResponse>;
 
   setSystemPrompt(systemPrompt: string): void;
   getSystemPrompt(): string | undefined;
@@ -52,6 +62,11 @@ export interface IBaseLLMProvider {
     prompt: string,
     config?: GeminiOutputConfig,
   ): Promise<LLMResponse<T>>;
+  generateStreamContent(
+    prompt: string,
+    onToken: (token: string) => void,
+    config?: GeminiOutputConfig,
+  ): Promise<LLMStreamResponse>;
   setSystemPrompt(systemPrompt: string): void;
   getSystemPrompt(): string | undefined;
 }
