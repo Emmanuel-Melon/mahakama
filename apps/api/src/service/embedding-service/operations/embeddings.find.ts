@@ -1,7 +1,7 @@
 import { chromaClient } from "@/lib/chroma";
-import { QueryEmbeddingOptions } from "./embeddings.types";
+import { QueryEmbeddingOptions } from "../embeddings.types";
 
-export const searchEmbedding = async (
+export const findEmbedding = async (
   queryString: string,
   options: QueryEmbeddingOptions,
 ) => {

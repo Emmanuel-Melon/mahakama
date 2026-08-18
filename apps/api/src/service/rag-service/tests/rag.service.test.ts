@@ -1,18 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ragService } from "../rag.service";
 
-vi.mock("@/service/embedding-service/embeddings.search", () => ({
-  searchEmbedding: vi.fn(),
+vi.mock("@/service/embedding-service/operations/embeddings.find", () => ({
+  findEmbedding: vi.fn(),
 }));
 
 vi.mock("../rag.documents", () => ({
   loadDocumentVersions: vi.fn(),
 }));
 
-import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
+import { findEmbedding } from "@/service/embedding-service/operations/embeddings.find";
 import { loadDocumentVersions } from "../rag.documents";
 
-const mockedSearch = vi.mocked(searchEmbedding);
+const mockedSearch = vi.mocked(findEmbedding);
 const mockedLoadDocumentVersions = vi.mocked(loadDocumentVersions);
 
 const chromaHit = (
