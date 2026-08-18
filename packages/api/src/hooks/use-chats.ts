@@ -254,51 +254,53 @@ export function useSendMessageStream() {
       });
 
       chatApi
-        .sendMessageStream(payload, (event) => {
-          switch (event.type) {
-            case "user_message":
-              setStreamState((prev) => ({
-                ...prev,
-                userMessage: event.data,
-              }));
-              break;
-            case "rag_context":
-              setStreamState((prev) => ({
-                ...prev,
-                ragContext: event.data,
-              }));
-              break;
-            case "token":
-              setStreamState((prev) => ({
-                ...prev,
-                assistantContent:
-                  prev.assistantContent + event.data.content,
-              }));
-              break;
-            case "completed":
-              setStreamState((prev) => ({
-                ...prev,
-                status: "completed",
-                assistantMessageId: event.data.messageId,
-                assistantContent: event.data.content,
-              }));
-              queryClient.invalidateQueries({
-                queryKey: chatsKeys.messages(payload.chatId),
-              });
-              queryClient.invalidateQueries({
-                queryKey: chatsKeys.chat(payload.chatId),
-              });
-              break;
-            case "error":
-              setStreamState((prev) => ({
-                ...prev,
-                status: "error",
-                error: event.data.message,
-              }));
-              break;
-          }
-        },
-        controller.signal)
+        .sendMessageStream(
+          payload,
+          (event) => {
+            switch (event.type) {
+              case "user_message":
+                setStreamState((prev) => ({
+                  ...prev,
+                  userMessage: event.data,
+                }));
+                break;
+              case "rag_context":
+                setStreamState((prev) => ({
+                  ...prev,
+                  ragContext: event.data,
+                }));
+                break;
+              case "token":
+                setStreamState((prev) => ({
+                  ...prev,
+                  assistantContent: prev.assistantContent + event.data.content,
+                }));
+                break;
+              case "completed":
+                setStreamState((prev) => ({
+                  ...prev,
+                  status: "completed",
+                  assistantMessageId: event.data.messageId,
+                  assistantContent: event.data.content,
+                }));
+                queryClient.invalidateQueries({
+                  queryKey: chatsKeys.messages(payload.chatId),
+                });
+                queryClient.invalidateQueries({
+                  queryKey: chatsKeys.chat(payload.chatId),
+                });
+                break;
+              case "error":
+                setStreamState((prev) => ({
+                  ...prev,
+                  status: "error",
+                  error: event.data.message,
+                }));
+                break;
+            }
+          },
+          controller.signal,
+        )
         .catch((error) => {
           if (error.name !== "AbortError") {
             setStreamState((prev) => ({
@@ -355,48 +357,50 @@ export function useCreateChatStream() {
       });
 
       chatApi
-        .createChatStream(payload, (event) => {
-          switch (event.type) {
-            case "chat_created":
-              setStreamState((prev) => ({
-                ...prev,
-                userMessage: event.data.userMessage,
-              }));
-              break;
-            case "rag_context":
-              setStreamState((prev) => ({
-                ...prev,
-                ragContext: event.data,
-              }));
-              break;
-            case "token":
-              setStreamState((prev) => ({
-                ...prev,
-                assistantContent:
-                  prev.assistantContent + event.data.content,
-              }));
-              break;
-            case "completed":
-              setStreamState((prev) => ({
-                ...prev,
-                status: "completed",
-                assistantMessageId: event.data.messageId,
-                assistantContent: event.data.content,
-              }));
-              queryClient.invalidateQueries({
-                queryKey: chatsKeys.chats(),
-              });
-              break;
-            case "error":
-              setStreamState((prev) => ({
-                ...prev,
-                status: "error",
-                error: event.data.message,
-              }));
-              break;
-          }
-        },
-        controller.signal)
+        .createChatStream(
+          payload,
+          (event) => {
+            switch (event.type) {
+              case "chat_created":
+                setStreamState((prev) => ({
+                  ...prev,
+                  userMessage: event.data.userMessage,
+                }));
+                break;
+              case "rag_context":
+                setStreamState((prev) => ({
+                  ...prev,
+                  ragContext: event.data,
+                }));
+                break;
+              case "token":
+                setStreamState((prev) => ({
+                  ...prev,
+                  assistantContent: prev.assistantContent + event.data.content,
+                }));
+                break;
+              case "completed":
+                setStreamState((prev) => ({
+                  ...prev,
+                  status: "completed",
+                  assistantMessageId: event.data.messageId,
+                  assistantContent: event.data.content,
+                }));
+                queryClient.invalidateQueries({
+                  queryKey: chatsKeys.chats(),
+                });
+                break;
+              case "error":
+                setStreamState((prev) => ({
+                  ...prev,
+                  status: "error",
+                  error: event.data.message,
+                }));
+                break;
+            }
+          },
+          controller.signal,
+        )
         .catch((error) => {
           if (error.name !== "AbortError") {
             setStreamState((prev) => ({

@@ -1,26 +1,30 @@
 # AGENTS.md
 
 ## Repo
+
 - npm-workspaces monorepo: `apps/api` (workspace `server`, Express 5 + TS), `apps/frontend` (workspace `client`, React Router 7 framework-mode/SSR + Vite + Tailwind v4 + shadcn/ui), and shared source packages in `packages/` (`@mah/client`, `@mah/api`).
 - Node v22.14.0 (`.nvmrc`). No committed lockfiles — CI runs `npm ci` and fails until they exist; use `npm install` locally.
 - Root: `npm run dev` runs both (API `:3000`, frontend `:5173`); `npm run lint` / `format` / `build` cover all workspaces.
 - The repo was recently consolidated into a monorepo; `apps/api/README.md`, `apps/frontend/README.md`, `apps/api/contributing.md`, and `apps/frontend/API.md` are stale on structure and stack. Trust `package.json` scripts and this file over prose docs.
 
 ## Workflow (manual execution)
+
 - The agent writes code only. The agent does NOT execute scripts or commands on the user's behalf — including installs, dev servers, tests, typechecks, lints, builds, migrations, seeds, npm scripts (e.g. `chroma:import-laws`, `generate:types`), or manual API verification (curl/Swagger).
 - All script execution and verification is performed manually by the user.
 - After writing code, the agent hands off: a summary of the change plus the exact commands to run and what success looks like (see the per-workspace sections below).
 
 ## API (`apps/api/`)
+
 - DDD layout: `src/feature/<domain>/` with `operations/` (pure business logic), `controllers/` (+`tests/`), `*.routes.ts`, `*.schema.ts` (Zod + Drizzle), `*.types.ts`, `*.factory.ts`, `*.config.ts`. Shared infra in `src/lib/` (drizzle, chroma, llm, bullmq, redis, supabase, http, express, swagger, pdf-parse, logger); cross-domain services in `src/service/` (auth, inference, rag-service, embedding-service, notifications, search-service).
 - Path alias `@/*` → `src/*`.
-- Env: dotenv loads `api/.env` (or `.env.test` when `NODE_ENV=test`). All `.env*` are gitignored and there is no `.env.example` — see `src/config/index.ts` + `config.types.ts` for the required vars (DATABASE_URL, JWT_SECRET, GEMINI_API_KEY, CHROMA_*, REDIS/UPSTASH_*, SUPABASE_*, RESEND_KEY).
+- Env: dotenv loads `api/.env` (or `.env.test` when `NODE_ENV=test`). All `.env*` are gitignored and there is no `.env.example` — see `src/config/index.ts` + `config.types.ts` for the required vars (DATABASE_URL, JWT_SECRET, GEMINI_API_KEY, CHROMA__, REDIS/UPSTASH__, SUPABASE_*, RESEND_KEY).
 - Tests (vitest): `npm run test`/`test:watch` = all `src/**/*.test.ts`; `npm run test:unit` = only `src/feature/**/operations/**/*.test.ts`; `npm run test:integration` = `controllers/**/*.test.ts` via `vitest.integration.config.ts` and **requires Postgres + Redis** (CI provisions `postgres:16` + `redis:7`; locally use `infra/docker-compose.yml`).
 - DB: PostgreSQL + Drizzle; migrations in `drizzle/` (currently a single `0000_*`). Schema glob is `src/feature/**/*.schema.ts` + `src/service/**/*.schema.ts` (widened during ingestion Phase III so service-owned tables like `document_chunks`/`embedding_jobs` get migrated). Commands: `drizzle:push|generate|migrate|studio|drop|reset`, `db:reset`, `seed`.
 - Build = `tsc` (output `dist/src/server.js`) + 11ty docs (`build:docs`). `start` runs `node dist/src/server.js`. OpenAPI spec/UI at `/api-docs`, docs at `/docs`, health at `/api/health`.
 - LLM: `ILLMClient` in `src/lib/llm/client.ts`, select via `getLLMClient(provider)` — Gemini or local Ollama. ChromaDB vector search in `src/lib/chroma` (embeddings `nomic-embed-text`, relevance threshold 0.7).
 
 ## Frontend (`apps/frontend/`)
+
 - Routes are NOT file-based. Declared centrally in `app/routes.ts`, pulling per-feature route config objects from `app/feature/<feature>/<Feature>Config.ts` (e.g. `ChatsConfig.ts`, `UsersConfig.ts`). To add/change a route, edit the feature config and `app/routes.ts`.
 - Feature-organized code in `app/feature/<domain>/` (`screens/`, `components/`, `hooks/`); page components live in `app/routes/`.
 - Path alias `~/*` → `app/*`.

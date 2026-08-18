@@ -118,7 +118,8 @@ export class GeminiClient implements ILLMProvider<LLMProviderName> {
       contents: prompt,
     };
 
-    const stream = await this.client.models.generateContentStream(requestConfig);
+    const stream =
+      await this.client.models.generateContentStream(requestConfig);
 
     let fullContent = "";
 
