@@ -7,7 +7,7 @@ import { logger } from "@/lib/logger";
 import { documentsTable } from "../documents.schema";
 import { createDocument } from "../operations/documents.create";
 import { updateDocument } from "../operations/documents.update";
-import { markEmbeddingJobFailed } from "@/service/embedding-service/embeddings.persistence";
+import { markEmbeddingJobFailed } from "@/service/embedding-service/operations/embeddings.update";
 import { processDocumentPipeline } from "../operations/documents.ingest";
 
 const today = () => new Date().toISOString().slice(0, 10);

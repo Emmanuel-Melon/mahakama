@@ -1,13 +1,52 @@
-import { chromaClient } from "@/lib/chroma";
+import { db } from "@/lib/drizzle";
+import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
-import type { DocumentChunk, QueryEmbeddingOptions } from "./embeddings.types";
+import type {
+  DocumentChunk,
+  EmbeddingBatchProgress,
+  EmbeddingJobUpdate,
+  QueryEmbeddingOptions,
+} from "../embeddings.types";
+import { documentChunksTable, embeddingJobsTable } from "../embeddings.schema";
+import { EMBEDDING_CONFIG, EmbeddingJobStatus } from "../embeddings.config";
+import { calculateTokenCount } from "@/lib/js-tiktoken";
+import { chromaClient } from "@/lib/chroma";
 
-export type EmbeddingBatchProgress = {
-  batchIndex: number; // 1-based
-  totalBatches: number;
-  processedChunks: number;
-  totalChunks: number;
-};
+export async function saveDocumentChunks(
+  documentId: string,
+  chunks: DocumentChunk[],
+): Promise<number> {
+  if (!chunks.length) {
+    return 0;
+  }
+
+  // Idempotent across job retries — clear any rows from a previous attempt.
+  await db
+    .delete(documentChunksTable)
+    .where(eq(documentChunksTable.documentId, documentId));
+
+  await db.insert(documentChunksTable).values(
+    chunks.map((chunk, index) => ({
+      documentId,
+      content: chunk.content,
+      chunkIndex: index,
+      section: chunk.section ?? null,
+      actName: chunk.actName ?? null,
+      fullCitation: chunk.fullCitation ?? null,
+      url: chunk.url ?? null,
+      jurisdiction: chunk.jurisdiction ?? null,
+      lastUpdated: chunk.lastUpdated ?? null,
+      version: chunk.version ?? null,
+      tokenCount: calculateTokenCount(chunk.content),
+    })),
+  );
+
+  logger.info(
+    { documentId, chunkCount: chunks.length },
+    "Persisted document chunks",
+  );
+  return chunks.length;
+}
 
 export const generateDocumentEmbeddings = async (
   documentChunks: DocumentChunk[],
@@ -58,19 +97,24 @@ export const generateDocumentEmbeddings = async (
     const versionSuffix = documentChunk.version
       ? `-v${documentChunk.version}`
       : "";
-    ids.push(`law_${documentChunk.id}${versionSuffix}`);
+    ids.push(
+      `${EMBEDDING_CONFIG.ID_PREFIX}${documentChunk.id}${versionSuffix}`,
+    );
   }
 
   // Add documents to ChromaDB in batches to avoid timeouts
-  const BATCH_SIZE = 20;
-  const totalBatches = Math.ceil(documents.length / BATCH_SIZE);
+  const totalBatches = Math.ceil(
+    documents.length / EMBEDDING_CONFIG.BATCH_SIZE,
+  );
   let importedCount = 0;
-  for (let i = 0; i < documents.length; i += BATCH_SIZE) {
-    const batchDocs = documents.slice(i, i + BATCH_SIZE);
-    const batchMetadatas = metadatas.slice(i, i + BATCH_SIZE);
-    const batchIds = ids.slice(i, i + BATCH_SIZE);
+  for (let i = 0; i < documents.length; i += EMBEDDING_CONFIG.BATCH_SIZE) {
+    const batchDocs = documents.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
+    const batchMetadatas = metadatas.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
+    const batchIds = ids.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
 
-    logger.info(`Importing batch ${i / BATCH_SIZE + 1} of ${totalBatches}...`);
+    logger.info(
+      `Importing batch ${i / EMBEDDING_CONFIG.BATCH_SIZE + 1} of ${totalBatches}...`,
+    );
 
     await chromaClient.addDocuments({
       collectionName: collectionName,
@@ -89,14 +133,14 @@ export const generateDocumentEmbeddings = async (
     );
     if ((stored?.ids?.length ?? 0) < batchIds.length) {
       throw new Error(
-        `Embedding verification failed: batch ${i / BATCH_SIZE + 1} expected ${batchIds.length} documents in "${collectionName}" but only ${stored?.ids?.length ?? 0} were stored`,
+        `Embedding verification failed: batch ${i / EMBEDDING_CONFIG.BATCH_SIZE + 1} expected ${batchIds.length} documents in "${collectionName}" but only ${stored?.ids?.length ?? 0} were stored`,
       );
     }
 
     importedCount += batchDocs.length;
 
     onBatchProgress?.({
-      batchIndex: i / BATCH_SIZE + 1,
+      batchIndex: i / EMBEDDING_CONFIG.BATCH_SIZE + 1,
       totalBatches,
       processedChunks: importedCount,
       totalChunks: documents.length,

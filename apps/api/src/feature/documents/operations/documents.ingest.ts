@@ -3,13 +3,12 @@ import { chromaClient } from "@/lib/chroma";
 import { logger } from "@/lib/logger";
 import { parsePdfFromUrl, parsePdfFromPath } from "@/lib/pdf-parse/index";
 import { getStoragePath } from "@/lib/storage/storage";
-import { generateDocumentEmbeddings } from "@/service/embedding-service/embeddings.generate";
+import { generateDocumentEmbeddings } from "@/service/embedding-service/operations/embeddings.insert";
+import { saveDocumentChunks } from "@/service/embedding-service/operations/embeddings.insert";
 import {
   markEmbeddingJobFailed,
   upsertEmbeddingJob,
-  EmbeddingJobStatus,
-  saveDocumentChunks,
-} from "@/service/embedding-service/embeddings.persistence";
+} from "@/service/embedding-service/operations/embeddings.update";
 import { chunkDocument } from "@/service/rag-service/rag.chunker";
 import { isExternalStorageUrl } from "@/utils/url";
 import { DOCUMENT_CONFIG } from "../document.config";
@@ -18,6 +17,7 @@ import {
   DocumentPipelineResult,
 } from "../documents.types";
 import { findDocument } from "./documents.find";
+import { EmbeddingJobStatus } from "@/service/embedding-service/embeddings.config";
 
 /**
  * Shared write-path pipeline used by the BullMQ job handler and the

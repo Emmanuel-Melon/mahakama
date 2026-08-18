@@ -3,26 +3,28 @@ import {
   type RetrievalOptions,
   ragQuerySchema,
 } from "./rag.types";
-import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
 import { loadDocumentVersions } from "./rag.documents";
 import { isChunkStale } from "./rag.staleness";
 import { ragConfig } from "@/config";
 import { logger } from "@/lib/logger";
-
-const RELEVANCE_THRESHOLD = 0.7;
+import { findEmbedding } from "@/service/embedding-service/operations/embeddings.find";
+import { RAG_CONTEXT_CONFIG } from "./rag.config";
 
 export class RAGService {
   async retrieveContext(
     question: string,
     options: RetrievalOptions,
   ): Promise<RAGContext> {
-    const { topK = 5, minSimilarity = RELEVANCE_THRESHOLD } = options;
+    const {
+      topK = RAG_CONTEXT_CONFIG.TOP_K,
+      minSimilarity = RAG_CONTEXT_CONFIG.RELEVANCE_THRESHOLD,
+    } = options;
 
     // Validate the question (throws on too-short/too-long input).
     ragQuerySchema.parse({ query: question });
 
     // Single Chroma query — Chroma embeds the question via nomic-embed-text.
-    const results = await searchEmbedding(question, {
+    const results = await findEmbedding(question, {
       collectionName: options.collectionName,
       limit: topK,
     });

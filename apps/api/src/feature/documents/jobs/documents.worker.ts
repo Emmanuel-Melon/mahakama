@@ -4,7 +4,7 @@ import { DocumentJobs } from "../document.config";
 import { DocumentsJobHandler } from "./documents.jobs";
 import { JobHandlerMap } from "@/lib/bullmq/bullmq.types";
 import { DocumentJobMap } from "../documents.types";
-import { markEmbeddingJobFailed } from "@/service/embedding-service/embeddings.persistence";
+import { markEmbeddingJobFailed } from "@/service/embedding-service/operations/embeddings.update";
 import { publishIngestionEvent } from "../documents.progress";
 import { logger } from "@/lib/logger";
 

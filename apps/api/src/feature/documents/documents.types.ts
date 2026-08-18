@@ -8,8 +8,10 @@ import {
 import { DocumentJobs } from "./document.config";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
-import { DocumentChunk } from "@/service/embedding-service/embeddings.types";
-import { EmbeddingBatchProgress } from "@/service/embedding-service/embeddings.generate";
+import {
+  DocumentChunk,
+  EmbeddingBatchProgress,
+} from "@/service/embedding-service/embeddings.types";
 
 /*
  * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)

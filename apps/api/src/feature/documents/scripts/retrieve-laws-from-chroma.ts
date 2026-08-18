@@ -1,6 +1,6 @@
 import { logger } from "@/lib/logger";
 import { LegalDocumentChunk } from "../documents.types";
-import { searchEmbedding } from "@/service/embedding-service/embeddings.search";
+import { findEmbedding } from "@/service/embedding-service/operations/embeddings.find";
 
 const COLLECTION_NAME = "legal_questions";
 
@@ -12,7 +12,7 @@ async function retrieveLaws(
     logger.info(`Searching for laws related to: "${query}"`);
 
     // Query ChromaDB
-    const embeddings = await searchEmbedding(query, {
+    const embeddings = await findEmbedding(query, {
       collectionName: COLLECTION_NAME,
       limit,
     });

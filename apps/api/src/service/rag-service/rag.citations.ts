@@ -2,18 +2,8 @@
 // answer for citation patterns so a missing citation can be flagged rather
 // than silently shipped.
 
-const CITATION_PATTERNS = [
-  /Act,? \d{4}/, // "Land Act, 2012", "Landlord and Tenant Act 2022"
-  /Article \d+[A-Za-z0-9().-]*/, // "Article 10", "Article 237(2)(c)"
-  /Sections? \d+(?:[-–]\d+)?[A-Za-z0-9().-]*/, // "Section 3", "Sections 8-9", "Section 4(2)"
-  /s\.\s?\d+[A-Za-z0-9().-]*/, // "s. 3", "s.3(1)"
-  /Constitution of Uganda/, // whole-instrument reference
-];
-
-export type CitationScan = {
-  citations: string[];
-  hasCitation: boolean;
-};
+import { CITATION_PATTERNS } from "./rag.config";
+import { CitationScan } from "./rag.types";
 
 export const extractCitations = (text: string): CitationScan => {
   // Keyed by lowercase so repeated citations dedupe case-insensitively while

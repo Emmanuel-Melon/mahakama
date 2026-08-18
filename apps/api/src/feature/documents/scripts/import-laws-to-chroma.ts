@@ -4,8 +4,7 @@ import {
   laws as lawsDataset,
   toLawDocument,
 } from "@/service/rag-service/dataset/laws.dataset";
-import { generateDocumentEmbeddings } from "@/service/embedding-service/embeddings.generate";
-
+import { generateDocumentEmbeddings } from "@/service/embedding-service/operations/embeddings.insert";
 const COLLECTION_NAME = "legal_questions";
 
 async function importLawsToChroma() {

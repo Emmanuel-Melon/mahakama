@@ -5,7 +5,10 @@ import { SSEEvent, SSEOptions } from "./express.types";
 export interface SSEStreamOptions extends SSEOptions {
   keepAliveIntervalMs?: number;
   maxWaitMs?: number;
-  onTimeout?: (sendError: (error: { message: string; code?: string }) => void, close: () => void) => void;
+  onTimeout?: (
+    sendError: (error: { message: string; code?: string }) => void,
+    close: () => void,
+  ) => void;
 }
 
 export const initSSE = (res: Response, options?: SSEOptions) => {
@@ -20,11 +23,10 @@ export const initSSE = (res: Response, options?: SSEOptions) => {
   res.writeHead(200, defaultHeaders);
   res.write(": connected\n\n");
 
-  const sendEvent = <T, Type extends string = string>(
-    event:
-      SSEEvent<T, Type> | { type: Type; data: T; id?: string; retry?: number },
+  const sendEvent = (
+    event: { type: string; data?: any; id?: string; retry?: number },
   ) => {
-    const { type, data = {} as T, id, retry } = event;
+    const { type, data = {}, id, retry } = event;
 
     if (id) {
       res.write(`id: ${id}\n`);
@@ -76,8 +78,11 @@ export const initSSE = (res: Response, options?: SSEOptions) => {
 
 export const handleSSEStream = (
   res: Response,
-  handler: (sse: ReturnType<typeof initSSE>, stop: () => void) => Promise<void> | void,
-  options: SSEStreamOptions = {}
+  handler: (
+    sse: ReturnType<typeof initSSE>,
+    stop: () => void,
+  ) => Promise<void> | void,
+  options: SSEStreamOptions = {},
 ) => {
   const {
     keepAliveIntervalMs = 15_000,
@@ -143,7 +148,8 @@ export const handleSSEStream = (
     if (!terminated) {
       cleanup();
       sse.sendError({
-        message: error instanceof Error ? error.message : "Internal stream error",
+        message:
+          error instanceof Error ? error.message : "Internal stream error",
         code: "STREAM_INTERNAL_ERROR",
       });
       closeStream();
