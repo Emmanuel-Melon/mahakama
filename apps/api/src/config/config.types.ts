@@ -59,6 +59,15 @@ export const StorageConfigSchema = z.object({
   maxUploadMb: z.number().int().positive(),
 });
 
+export const embeddingConfigSchema = z.object({
+  model: z.string().default("nomic-embed-text"),
+  dimensions: z.coerce.number().default(768),
+  ollamaBaseUrl: z.string().default("http://localhost:11434"),
+  // "chroma" | "pgvector" | "dual" — dual writes both, reads from primaryStore
+  writeMode: z.enum(["chroma", "pgvector", "dual"]).default("chroma"),
+  primaryStore: z.enum(["chroma", "pgvector"]).default("chroma"),
+});
+
 // Grouped Schemas
 export const LLMConfigSchema = z.object({
   ollama: OllamaConfigSchema,
@@ -101,3 +110,4 @@ export type ILLMConfig = z.infer<typeof LLMConfigSchema>;
 export type IServicesConfig = z.infer<typeof ServicesConfigSchema>;
 export type ILawSourceConfig = z.infer<typeof LawSourceConfigSchema>;
 export type IRagConfig = z.infer<typeof RagConfigSchema>;
+export type IEmbeddingConfig = z.infer<typeof embeddingConfigSchema>;

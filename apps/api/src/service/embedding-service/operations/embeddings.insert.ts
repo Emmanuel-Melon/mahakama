@@ -11,6 +11,9 @@ import { documentChunksTable, embeddingJobsTable } from "../embeddings.schema";
 import { EMBEDDING_CONFIG, EmbeddingJobStatus } from "../embeddings.config";
 import { calculateTokenCount } from "@/lib/js-tiktoken";
 import { chromaClient } from "@/lib/chroma";
+import { embeddingProvider, vectorStore } from "../embeddings.factory";
+import { processInBatches } from "@/lib/batch";
+import { buildChunkId, buildChunkMetadata } from "../embeddings.utils";
 
 export async function saveDocumentChunks(
   documentId: string,
@@ -54,100 +57,47 @@ export const generateDocumentEmbeddings = async (
   onBatchProgress?: (progress: EmbeddingBatchProgress) => void,
 ) => {
   const { collectionName } = options;
-  // Prepare documents and metadata
-  const documents: string[] = [];
-  const metadatas: any[] = [];
-  const ids: string[] = [];
-  for (const documentChunk of documentChunks) {
-    const document = `${documentChunk.title}. ${documentChunk.content}`;
-    // Create metadata object
-    const metadata: Record<string, unknown> = {
-      id: documentChunk.id.toString(),
-      title: documentChunk.title,
-      content_length: documentChunk.content.length,
-      imported_at: new Date().toISOString(),
-    };
 
-    // Legal context metadata (omitted when absent — Chroma rejects undefined)
-    if (documentChunk.section) metadata.section = documentChunk.section;
-    if (documentChunk.category) metadata.category = documentChunk.category;
-    if (documentChunk.source) metadata.source = documentChunk.source;
+  return processInBatches({
+    items: documentChunks,
+    batchSize: EMBEDDING_CONFIG.BATCH_SIZE,
+    onProgress: onBatchProgress,
+    processBatch: async (batchChunks) => {
+      const texts = batchChunks.map((c) => `${c.title}. ${c.content}`);
+      const embeddings = await embeddingProvider.embed(texts);
 
-    // Citation metadata (omitted when absent — Chroma rejects undefined)
-    if (documentChunk.actName) metadata.act_name = documentChunk.actName;
-    if (documentChunk.section) metadata.section_number = documentChunk.section;
-    if (documentChunk.fullCitation)
-      metadata.full_citation = documentChunk.fullCitation;
-    if (documentChunk.url) metadata.url = documentChunk.url;
-    if (documentChunk.jurisdiction)
-      metadata.jurisdiction = documentChunk.jurisdiction;
-    if (documentChunk.lastUpdated)
-      metadata.last_updated = documentChunk.lastUpdated;
+      if (embeddings.length !== batchChunks.length) {
+        throw new Error(
+          `Embedding count mismatch: requested ${batchChunks.length} embeddings, provider "${embeddingProvider.name}" returned ${embeddings.length}`,
+        );
+      }
 
-    // Versioning metadata (see metadata-updates.md U1)
-    if (documentChunk.documentId)
-      metadata.document_id = documentChunk.documentId;
-    if (documentChunk.version !== undefined)
-      metadata.version = documentChunk.version;
+      const records = batchChunks.map((chunk, i) => ({
+        id: buildChunkId(chunk),
+        document: texts[i],
+        embedding: embeddings[i],
+        metadata: buildChunkMetadata(chunk, embeddingProvider),
+      }));
 
-    documents.push(document);
-    metadatas.push(metadata);
-    // Version-scoped ids so re-ingesting a newer version never collides with
-    // chunks of a previous version: `law_<chunkId>[-v<version>]`.
-    const versionSuffix = documentChunk.version
-      ? `-v${documentChunk.version}`
-      : "";
-    ids.push(
-      `${EMBEDDING_CONFIG.ID_PREFIX}${documentChunk.id}${versionSuffix}`,
-    );
-  }
+      await vectorStore.addDocuments(collectionName, records);
 
-  // Add documents to ChromaDB in batches to avoid timeouts
-  const totalBatches = Math.ceil(
-    documents.length / EMBEDDING_CONFIG.BATCH_SIZE,
-  );
-  let importedCount = 0;
-  for (let i = 0; i < documents.length; i += EMBEDDING_CONFIG.BATCH_SIZE) {
-    const batchDocs = documents.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
-    const batchMetadatas = metadatas.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
-    const batchIds = ids.slice(i, i + EMBEDDING_CONFIG.BATCH_SIZE);
-
-    logger.info(
-      `Importing batch ${i / EMBEDDING_CONFIG.BATCH_SIZE + 1} of ${totalBatches}...`,
-    );
-
-    await chromaClient.addDocuments({
-      collectionName: collectionName,
-      documents: batchDocs,
-      metadatas: batchMetadatas,
-      ids: batchIds,
-    });
-
-    // Verify the batch was actually stored. `get` returns the ids regardless
-    // of whether they were written by this attempt or a previous (retried)
-    // one, so this check is retry-safe — unlike a raw count delta, which
-    // would not grow for ids re-upserted after a partial failure.
-    const stored = await chromaClient.getDocumentsByIds(
-      collectionName,
-      batchIds,
-    );
-    if ((stored?.ids?.length ?? 0) < batchIds.length) {
-      throw new Error(
-        `Embedding verification failed: batch ${i / EMBEDDING_CONFIG.BATCH_SIZE + 1} expected ${batchIds.length} documents in "${collectionName}" but only ${stored?.ids?.length ?? 0} were stored`,
+      // Retry-safe verification, same guarantee as the original chromaClient
+      // version — checks stored ids regardless of whether this attempt or an
+      // earlier retry wrote them.
+      const stored = await vectorStore.getDocumentsByIds(
+        collectionName,
+        records.map((r) => r.id),
       );
-    }
+      if ((stored?.ids?.length ?? 0) < records.length) {
+        throw new Error(
+          `Embedding verification failed: expected ${records.length} documents in "${collectionName}" but only ${stored?.ids?.length ?? 0} were stored`,
+        );
+      }
 
-    importedCount += batchDocs.length;
-
-    onBatchProgress?.({
-      batchIndex: i / EMBEDDING_CONFIG.BATCH_SIZE + 1,
-      totalBatches,
-      processedChunks: importedCount,
-      totalChunks: documents.length,
-    });
-
-    logger.info(`Imported ${importedCount}/${documents.length} documents`);
-  }
-
-  return importedCount;
+      logger.info(
+        { collectionName, count: records.length, provider: embeddingProvider.name },
+        "Persisted embedding batch",
+      );
+    },
+  });
 };

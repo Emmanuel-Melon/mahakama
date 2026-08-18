@@ -9,11 +9,6 @@ export const CITATION_PATTERNS = [
 export const RAG_CONTEXT_CONFIG = {
   COLLECTION_NAME: "legal_questions",
   TOP_K: 5,
-  MIN_SIMILARITY: 0.7,
-  HISTORY_LIMIT: 10,
   RELEVANCE_THRESHOLD: 0.7,
-} as const;
-
-export const RAG_STALENESS_CONFIG = {
-  DEFAULT_STALENESS_MONTHS: 24,
+  HISTORY_LIMIT: 10,
 } as const;

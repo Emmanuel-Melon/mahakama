@@ -5,11 +5,13 @@ import {
   LLMConfigSchema,
   StorageConfigSchema,
   ServicesConfigSchema,
+  embeddingConfigSchema,
   IServerConfig,
   IDatabaseConfig,
   ILLMConfig,
   IStorageConfig,
   IServicesConfig,
+  IEmbeddingConfig,
 } from "./config.types";
 dotenv.config();
 
@@ -88,12 +90,22 @@ export const testServicesConfig = ServicesConfigSchema.parse({
     : undefined,
 }) satisfies IServicesConfig;
 
+// Test Embedding Configuration
+export const testEmbeddingConfig = embeddingConfigSchema.parse({
+  model: process.env.TEST_EMBEDDING_MODEL,
+  dimensions: process.env.TEST_EMBEDDING_DIMENSIONS,
+  ollamaBaseUrl: process.env.TEST_EMBEDDING_OLLAMA_BASE_URL,
+  writeMode: process.env.TEST_EMBEDDING_WRITE_MODE,
+  primaryStore: process.env.TEST_EMBEDDING_PRIMARY_STORE,
+}) satisfies IEmbeddingConfig;
+
 const testConfig = {
   server: testServerConfig,
   db: testDbConfig,
   llm: testLlmConfig,
   storage: testStorageConfig,
   services: testServicesConfig,
+  embedding: testEmbeddingConfig,
 };
 
 // Export everything

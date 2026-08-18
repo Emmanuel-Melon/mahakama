@@ -19,7 +19,7 @@ export const buildRagContext = async (
     context = await ragService.retrieveContext(userMessage.content, {
       collectionName: RAG_CONTEXT_CONFIG.COLLECTION_NAME,
       topK: RAG_CONTEXT_CONFIG.TOP_K,
-      minSimilarity: RAG_CONTEXT_CONFIG.MIN_SIMILARITY,
+      minSimilarity: RAG_CONTEXT_CONFIG.RELEVANCE_THRESHOLD,
     });
   } catch (error) {
     logger.error(
