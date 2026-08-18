@@ -2,6 +2,12 @@ import { Response } from "express";
 
 import { SSEEvent, SSEOptions } from "./express.types";
 
+export interface SSEStreamOptions extends SSEOptions {
+  keepAliveIntervalMs?: number;
+  maxWaitMs?: number;
+  onTimeout?: (sendError: (error: { message: string; code?: string }) => void, close: () => void) => void;
+}
+
 export const initSSE = (res: Response, options?: SSEOptions) => {
   const defaultHeaders = {
     "Content-Type": "text/event-stream",
@@ -66,4 +72,81 @@ export const initSSE = (res: Response, options?: SSEOptions) => {
       options?: { id?: string; retry?: number },
     ) => sendEvent({ type, data, ...options }),
   };
+};
+
+export const handleSSEStream = (
+  res: Response,
+  handler: (sse: ReturnType<typeof initSSE>, stop: () => void) => Promise<void> | void,
+  options: SSEStreamOptions = {}
+) => {
+  const {
+    keepAliveIntervalMs = 15_000,
+    maxWaitMs = 600_000,
+    onTimeout,
+    ...sseOptions
+  } = options;
+
+  const sse = initSSE(res, sseOptions);
+
+  let keepAliveTimer: ReturnType<typeof setInterval> | undefined;
+  let timeoutTimer: ReturnType<typeof setTimeout> | undefined;
+  let terminated = false;
+
+  const stopTimers = () => {
+    if (keepAliveTimer) clearInterval(keepAliveTimer);
+    if (timeoutTimer) clearTimeout(timeoutTimer);
+  };
+
+  const cleanup = () => {
+    if (terminated) return;
+    terminated = true;
+    stopTimers();
+  };
+
+  const closeStream = () => {
+    cleanup();
+    if (!res.writableEnded) {
+      res.end();
+    }
+  };
+
+  // Setup keep-alive pings
+  keepAliveTimer = setInterval(() => {
+    if (!res.writableEnded) res.write(": ping\n\n");
+  }, keepAliveIntervalMs);
+  keepAliveTimer.unref?.();
+
+  // Setup maximum duration timeout
+  timeoutTimer = setTimeout(() => {
+    if (terminated || res.writableEnded) return;
+    cleanup();
+
+    if (onTimeout) {
+      onTimeout(sse.sendError, closeStream);
+    } else {
+      sse.sendError({
+        message: "Stream processing timed out",
+        code: "STREAM_TIMEOUT",
+      });
+      closeStream();
+    }
+  }, maxWaitMs);
+  timeoutTimer.unref?.();
+
+  // Handle client abrupt disconnects
+  res.on("close", () => {
+    cleanup();
+  });
+
+  // Execute the main stream logic safely
+  Promise.resolve(handler(sse, closeStream)).catch((error) => {
+    if (!terminated) {
+      cleanup();
+      sse.sendError({
+        message: error instanceof Error ? error.message : "Internal stream error",
+        code: "STREAM_INTERNAL_ERROR",
+      });
+      closeStream();
+    }
+  });
 };

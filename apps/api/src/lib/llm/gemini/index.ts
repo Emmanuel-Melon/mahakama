@@ -1,5 +1,6 @@
 import {
   LLMResponse,
+  LLMStreamResponse,
   ILLMProvider,
   GeminiOutputConfig,
   GeminiProviderConfig,
@@ -105,5 +106,34 @@ export class GeminiClient implements ILLMProvider<LLMProviderName> {
         contentType: "text" as const,
       };
     }
+  }
+
+  public async generateStreamContent(
+    prompt: string,
+    onToken: (token: string) => void,
+    _config: GeminiOutputConfig = {},
+  ): Promise<LLMStreamResponse> {
+    const requestConfig = {
+      model: this.model,
+      contents: prompt,
+    };
+
+    const stream = await this.client.models.generateContentStream(requestConfig);
+
+    let fullContent = "";
+
+    for await (const chunk of stream) {
+      const token = chunk.text;
+      if (token) {
+        fullContent += token;
+        onToken(token);
+      }
+    }
+
+    return {
+      fullContent,
+      provider: this.provider,
+      contentType: "text" as const,
+    };
   }
 }

@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { sendMessage } from "../operations/messages.create";
-import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { MessageSerializer } from "../messages.config";
 import { type User } from "@/feature/users/users.types";
@@ -10,6 +9,9 @@ import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { chatsQueue } from "@/feature/chats/jobs/chats.queue";
 import { ChatsJobs } from "@/feature/chats/chats.config";
 import { logger } from "@/lib/logger";
+import { handleSSEStream } from "@/lib/express/express.sse";
+import { subscribeChat } from "@/feature/chats/chat.progress";
+import { ChatStreamEventTypes } from "@/feature/chats/chat.events";
 
 export const sendMessageController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -28,33 +30,72 @@ export const sendMessageController = asyncHandler(
       new HttpError(HttpStatus.BAD_REQUEST, "Failed to create user message"),
     );
 
-    // Answer the message asynchronously so the user message is returned
-    // immediately. Best-effort — the user message is saved regardless of
-    // whether the job can be enqueued (e.g. Redis down).
-    try {
-      await chatsQueue.add(ChatsJobs.MessageSent, {
-        userId: user.id,
-        messageId: userMessage.id,
-      });
-    } catch (error) {
-      logger.error({ error, chatId }, "Failed to enqueue reply job");
-    }
+    // Immediately return the user message so the client can display it,
+    // then open an SSE stream for the assistant's streaming reply.
+    const userMessageResponse = {
+      ...userMessage,
+      id: userMessage.id.toString(),
+    } as typeof userMessage & { id: string };
 
-    sendSuccessResponse(
-      req,
+    // Send the user message as the first SSE event so the client has it
+    // before the stream starts.
+    handleSSEStream(
       res,
-      {
-        data: {
-          ...userMessage,
-          id: userMessage.id.toString(),
-        } as typeof userMessage & {
-          id: string;
-        },
-        type: "single",
-        serializerConfig: MessageSerializer,
+      async (sse, closeStream) => {
+        sse.sendEvent({
+          type: "user_message",
+          data: userMessageResponse,
+        });
+
+        // Subscribe before enqueueing so we don't miss early events
+        const unsubscribe = subscribeChat(chatId, (event) => {
+          if (event.type === ChatStreamEventTypes.Completed) {
+            unsubscribe();
+            sse.sendEvent(event);
+            closeStream();
+            return;
+          }
+          if (event.type === ChatStreamEventTypes.Error) {
+            unsubscribe();
+            sse.sendEvent(event);
+            closeStream();
+            return;
+          }
+          sse.sendEvent(event);
+        });
+
+        res.on("close", () => unsubscribe());
+
+        try {
+          await chatsQueue.add(ChatsJobs.MessageSent, {
+            userId: user.id,
+            messageId: userMessage.id,
+          });
+        } catch (error) {
+          logger.error({ error, chatId }, "Failed to enqueue reply job");
+          unsubscribe();
+          sse.sendError({
+            message: "Failed to enqueue reply job",
+            code: "REPLY_ENQUEUE_FAILED",
+          });
+          closeStream();
+        }
       },
       {
-        status: HttpStatus.CREATED,
+        maxWaitMs: 300_000, // 5 minutes
+        metadata: {
+          name: "sendMessageController",
+          requestId: req.requestId,
+          route: req.path,
+          resourceId: chatId,
+        },
+        onTimeout: (sendError, close) => {
+          sendError({
+            message: "Reply generation timed out",
+            code: "REPLY_TIMEOUT",
+          });
+          close();
+        },
       },
     );
   },
