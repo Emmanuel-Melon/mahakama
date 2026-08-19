@@ -8,9 +8,10 @@ import type { components } from "@mah/api/generated/api.types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-
-const loginRequestSchema = schemas.postV1login_Body;
-export type LoginRequest = components["schemas"]["LoginRequest"];
+import {
+  type LoginRequest,
+  loginRequestSchema,
+} from "@mah/api/clients/auth.api";
 
 export const LoginScreen = () => {
   const navigate = useNavigate();

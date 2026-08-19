@@ -6,8 +6,7 @@ import { ContactInformation } from "~/feature/users/components/ContactInformatio
 import { AccountManagement } from "~/feature/users/components/AccountManagement";
 import { ProfileTabs } from "~/feature/users/components/ProfileTabs";
 
-import type { components } from "@mah/api/generated/api.types";
-export type User = components["schemas"]["User"];
+import { type User } from "@mah/api/clients/users.api";
 
 interface SettingsScreenProps {
   user: User;

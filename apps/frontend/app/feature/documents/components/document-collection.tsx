@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { DocumentCard, type Document } from "./document-card";
+import { DocumentCard } from "./document-card";
 import { ListControls } from "~/components/list-controls";
+import { type Document } from "@mah/api/clients/documents.api";
 
 interface DocumentCollectionProps {
   documents: Document[];

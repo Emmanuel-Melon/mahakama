@@ -9,14 +9,12 @@ import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
+import { UserDocumentIndicator } from "~/feature/chats/components/UserDocumentIndicator";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
-import {
-  useSendMessage,
-  useDeleteChat,
-  useRetryMessage,
-  isReplyAwaiting,
-} from "@mah/api/hooks/use-chats";
+import { isReplyAwaiting } from "@mah/api/hooks/use-chats";
+import { useChatMutations } from "@mah/api/hooks/use-chats";
+import { useUserDocumentStatus } from "@mah/api/hooks/user-documents/use-user-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -41,9 +39,15 @@ export const ChatScreen = ({
   messagesLoading: boolean;
 }) => {
   const navigate = useNavigate();
-  const sendMessageMutation = useSendMessage();
-  const deleteChatMutation = useDeleteChat();
-  const retryMessageMutation = useRetryMessage(chat?.id ?? "");
+
+  // Using the grouped mutations hook
+  const {
+    sendMessage: sendMessageMutation,
+    deleteChat: deleteChatMutation,
+    retryMessage: retryMessageMutation,
+  } = useChatMutations();
+
+  const { data: userDocumentStatus } = useUserDocumentStatus(chat?.id ?? "");
 
   const {
     handleSubmit,
@@ -177,7 +181,9 @@ export const ChatScreen = ({
               messages={messages || []}
               isLoading={messagesLoading}
               showTyping={showTyping}
-              onRetry={(messageId) => retryMessageMutation.mutate(messageId)}
+              onRetry={(messageId) =>
+                retryMessageMutation.mutate({ messageId, chatId: chat.id })
+              }
               isRetrying={retryMessageMutation.isPending}
               citationMessageId={citationMessageId}
               onCitationClick={handleCitationClick}
@@ -187,11 +193,19 @@ export const ChatScreen = ({
 
         <div className="flex-shrink-0 sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
           <div className="max-w-4xl mx-auto w-full">
+            {userDocumentStatus?.hasDocument && (
+              <UserDocumentIndicator
+                filename={userDocumentStatus.filename}
+                totalChunks={userDocumentStatus.totalChunks}
+                sessionId={chat.id}
+              />
+            )}
             <form onSubmit={handleSubmit(onSubmit)}>
               <ChatInput
                 value={messageContent || ""}
                 onChange={(value) => setValue("content", value)}
                 onSubmit={() => handleSubmit(onSubmit)()}
+                sessionId={chat.id}
                 placeholder="Ask a legal question or paste a clause to analyze..."
                 isLoading={isSubmitting || sendMessageMutation.isPending}
                 disabled={isSubmitting || sendMessageMutation.isPending}

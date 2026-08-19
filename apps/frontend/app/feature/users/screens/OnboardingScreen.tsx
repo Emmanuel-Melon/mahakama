@@ -12,7 +12,7 @@ import { StepHeader } from "~/feature/users/components/StepHeader";
 import { OnboardingNavigation } from "~/feature/users/components/OnboardingNavigation";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { useState, useRef } from "react";
-import type { User } from "@mah/api/hooks/use-users";
+import { type User } from "@mah/api/clients/users.api";
 
 interface OnboardingScreenProps {
   user: User;

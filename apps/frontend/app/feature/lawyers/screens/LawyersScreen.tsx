@@ -5,13 +5,11 @@ import { Gavel } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
 import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import type { components as componentsv1 } from "@mah/api/generated/api.types";
-export type Lawyer = componentsv1["schemas"]["Lawyer"];
+import type { Lawyer } from "@mah/api/clients/lawyers.api";
+import type { AsyncState } from "@mah/api/api.types";
 
-type LawyersScreenProps = {
+interface LawyersScreenProps extends AsyncState {
   lawyers: Lawyer[];
-  error: any;
-  isLoading?: boolean;
   isAuthenticated?: boolean;
   displayMode: "list" | "grid";
   onDisplayModeChange: (mode: "list" | "grid") => void;
@@ -32,7 +30,7 @@ type LawyersScreenProps = {
   currentSortOrder: "asc" | "desc";
   sortOptions: Array<{ value: string; label: string }>;
   onSortChange: (sortBy: string, sortOrder: "asc" | "desc") => void;
-};
+}
 
 export const LawyersScreen: FC<LawyersScreenProps> = ({
   lawyers,

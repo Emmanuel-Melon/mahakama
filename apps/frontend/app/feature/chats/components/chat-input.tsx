@@ -12,13 +12,19 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { AudioLines, Plus, Send } from "lucide-react";
+import { UploadDropdown } from "~/components/ui/upload-dropdown";
+import {
+  useUploadUserDocument,
+  getUserDocumentUploadKey,
+} from "@mah/api/hooks/use-user-documents";
+import { AudioLines, Paperclip, Plus, Send, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 
 interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
+  sessionId?: string;
   placeholder?: string;
   className?: string;
   disabled?: boolean;
@@ -29,12 +35,16 @@ export function ChatInput({
   value,
   onChange,
   onSubmit,
+  sessionId,
   placeholder = "Type your message...",
   className,
   disabled = false,
   isLoading = false,
 }: ChatInputProps) {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [attachedFile, setAttachedFile] = useState<File | null>(null);
+  const { uploads, upload, clearUploads, isUploading, uploadProgress } =
+    useUploadUserDocument();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -48,7 +58,7 @@ export function ChatInput({
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       if (!voiceEnabled) {
-        onSubmit();
+        handleSubmit();
       }
     }
   };
@@ -57,13 +67,88 @@ export function ChatInput({
     setVoiceEnabled(!voiceEnabled);
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setAttachedFile(file);
+    }
+  };
+
+  const removeFile = () => {
+    setAttachedFile(null);
+    clearUploads();
+  };
+
+  const handleSubmit = async () => {
+    if (attachedFile && sessionId) {
+      const success = await upload(sessionId, attachedFile);
+      if (!success) return;
+      setAttachedFile(null);
+      clearUploads();
+    }
+    onSubmit();
+  };
+
+  const fileProgress = attachedFile
+    ? uploads[getUserDocumentUploadKey(attachedFile)]
+    : null;
+
   return (
     <div className={cn("w-full", className)}>
+      {attachedFile && (
+        <div className="mb-2 p-2 bg-gray-50 border border-gray-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 min-w-0">
+              <Paperclip className="h-4 w-4 text-gray-500 shrink-0" />
+              <span className="text-sm text-gray-700 truncate">
+                {attachedFile.name}
+              </span>
+              {fileProgress && fileProgress.status === "uploading" && (
+                <span className="text-xs text-blue-600">{uploadProgress}%</span>
+              )}
+              {fileProgress && fileProgress.status === "completed" && (
+                <span className="text-xs text-green-600">✓</span>
+              )}
+              {fileProgress && fileProgress.status === "error" && (
+                <span className="text-xs text-red-600">
+                  {fileProgress.message ?? "Failed"}
+                </span>
+              )}
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6"
+              onClick={removeFile}
+              disabled={isUploading}
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          </div>
+          {fileProgress && fileProgress.status === "uploading" && (
+            <div className="mt-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-600 transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
       <ButtonGroup className="[--radius:9999rem] w-full">
         <ButtonGroup className="shrink-0">
-          <Button variant="outline" size="icon" className="rounded-full">
-            <Plus className="h-4 w-4" />
-          </Button>
+          {sessionId ? (
+            <UploadDropdown
+              onFileUpload={handleFileUpload}
+              disabled={disabled || isLoading || isUploading}
+            />
+          ) : (
+            <Button variant="outline" size="icon" className="rounded-full">
+              <Plus className="h-4 w-4" />
+            </Button>
+          )}
         </ButtonGroup>
 
         <ButtonGroup className="flex-1">
@@ -105,12 +190,21 @@ export function ChatInput({
         {!voiceEnabled && (
           <ButtonGroup className="shrink-0">
             <Button
-              onClick={onSubmit}
-              disabled={disabled || isLoading || !value.trim()}
+              onClick={handleSubmit}
+              disabled={
+                disabled ||
+                isLoading ||
+                isUploading ||
+                (!value.trim() && !attachedFile)
+              }
               size="icon"
               className="rounded-full"
             >
-              <Send className="h-4 w-4" />
+              {isUploading ? (
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Send className="h-4 w-4" />
+              )}
               <span className="sr-only">Send message</span>
             </Button>
           </ButtonGroup>

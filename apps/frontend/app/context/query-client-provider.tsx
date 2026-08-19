@@ -1,6 +1,6 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { queryClient } from "@mah/client/react-query";
+import { queryClient } from "@mah/api/react-query";
 
 export function QueryClientProviderWrapper({
   children,

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useCreateChat } from "@mah/api/hooks/use-chats";
+import { useChatMutations } from "@mah/api/hooks/use-chats";
 import type { CreateChatRequest } from "@mah/api/clients/chat.api";
 import { ChatForm, SuggestedQuestions } from "../components";
 import { IconContainer } from "~/components/icon-container";
@@ -7,15 +7,17 @@ import { Scale } from "lucide-react";
 
 export const NewChatScreen = () => {
   const navigate = useNavigate();
-  const createChatMutation = useCreateChat();
+
+  // Destructure createChat from the grouped mutations hook
+  const { createChat: createChatMutation } = useChatMutations();
 
   const handleFormSubmit = (data: CreateChatRequest) => {
     createChatMutation.mutate(data, {
       onSuccess: (newChat) => {
         navigate(`/chats/${newChat.id}`);
       },
-      onError: (error) => {
-        // Error is handled by the hook
+      onError: () => {
+        // Error is handled by the hook's default message configuration
       },
     });
   };

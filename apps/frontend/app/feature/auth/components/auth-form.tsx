@@ -20,8 +20,13 @@ import {
   FormLabel,
   FormMessage,
 } from "~/components/ui/form";
-const loginRequestSchema = schemas.postV1login_Body;
-export type LoginRequest = components["schemas"]["LoginRequest"];
+
+import {
+  type LoginRequest,
+  loginRequestSchema,
+  type RegisterRequest,
+  registerRequestSchema,
+} from "@mah/api/clients/auth.api";
 
 type AuthFormValues = { email?: unknown; password?: unknown; name?: unknown };
 

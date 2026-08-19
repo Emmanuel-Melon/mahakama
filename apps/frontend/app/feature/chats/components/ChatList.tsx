@@ -1,12 +1,12 @@
 import { ChatItem } from "./ChatItem";
 import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
-import type { components } from "@mah/api/generated/api.types";
+import type { AsyncState } from "@mah/api/api.types";
 
-export type Chat = components["schemas"]["Chat"];
-export interface ChatListProps {
+import type { Chat } from "@mah/api/clients/chat.api";
+import { ErrorState } from "~/components/async-state/ErrorState";
+
+export interface ChatListProps extends AsyncState {
   chats: Chat[];
-  error?: string;
   onRename: (chatId: string, newTitle: string) => void;
   onDelete: (chatId: string) => void;
   onRetry?: () => void;
@@ -20,7 +20,7 @@ export function ChatList({
   onRetry,
 }: ChatListProps) {
   if (error) {
-    return <ErrorState error={error} onRetry={onRetry} />;
+    return <ErrorState error={null} onRetry={onRetry} />;
   }
 
   if (chats.length === 0) {

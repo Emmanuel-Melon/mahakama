@@ -14,19 +14,12 @@ import {
 } from "~/components/contact-information";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
 
-import type { components } from "@mah/api/generated/api.types";
-import type { components as componentsv1 } from "@mah/api/generated/api.types";
+import type { AsyncState } from "@mah/api/api.types";
+import type { Lawyer } from "@mah/api/clients/lawyers.api";
 
-export type AuthResponse = componentsv1["schemas"]["AuthResponse"];
-export type JsonApiErrorResponse =
-  componentsv1["schemas"]["JsonApiErrorResponse"];
-export type Lawyer = components["schemas"]["Lawyer"];
-
-type LawyerProfileScreenProps = {
-  error: any;
+interface LawyerProfileScreenProps extends AsyncState {
   lawyer?: Lawyer;
-  isLoading?: boolean;
-};
+}
 
 export const LawyerProfileScreen = ({
   error,
