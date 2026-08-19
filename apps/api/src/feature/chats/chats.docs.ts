@@ -10,7 +10,11 @@ import {
 import type { PathDefinition } from "@/lib/openapi/openapi.types";
 
 import { chatsApi } from "./chats.routes";
-import { chatSelectSchema } from "./chats.types";
+import {
+  chatInsertSchema,
+  chatSelectSchema,
+  chatUpdateSchema,
+} from "./chats.types";
 
 export const chatsRegistry = new OpenAPIRegistry();
 
@@ -22,8 +26,8 @@ const createChatRequestSchema = z.object({
 
 const chatApiResource = defineApiResource({
   select: chatSelectSchema,
-  insert: createChatRequestSchema,
-  update: createChatRequestSchema.partial(),
+  insert: chatInsertSchema,
+  update: chatUpdateSchema,
 });
 
 export const ChatApiSchemas = registerJsonApiSchemas({

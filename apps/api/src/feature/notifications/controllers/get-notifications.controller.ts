@@ -8,7 +8,13 @@ import { SerializedNotification } from "../notifications.config";
 export const getNotificationsController = asyncHandler(
   async (req: Request, res: Response) => {
     console.log("got a request user", req.user);
-    const notifications = await findNotifications({ userId: req.user!.id });
+    const notifications = await findNotifications({
+      userId: req.user!.id,
+      page: 0,
+      limit: 0,
+      order: "asc",
+      offset: 0,
+    });
     const total = notifications.count;
 
     return sendSuccessResponse(

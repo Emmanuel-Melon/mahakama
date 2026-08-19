@@ -7,7 +7,7 @@ import {
   REPLY_STATUS,
 } from "@/feature/messages/operations/messages.update";
 import { getMessagesByChatId } from "@/feature/messages/operations/messages.list";
-import { generateStreamingAssistantReply } from "@/service/rag-service/rag.answer";
+import { generateStreamingAssistantReply } from "@/service/rag-service/rag.response";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 import { HttpStatus } from "@/lib/http/http.status";

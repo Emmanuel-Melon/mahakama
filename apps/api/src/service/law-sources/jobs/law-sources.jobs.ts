@@ -1,10 +1,10 @@
 import { Job } from "bullmq";
 import { db } from "@/lib/drizzle";
-import { documentsTable } from "@/feature/documents/documents.schema";
-import { findDocument } from "@/feature/documents/operations/documents.find";
-import { updateDocument } from "@/feature/documents/operations/documents.update";
-import { documentsQueue } from "@/feature/documents/jobs/documents.queue";
-import { DocumentJobs } from "@/feature/documents/document.config";
+import { documentsTable } from "@/feature/corpus/corpus.schema";
+import { findCorpusEntry } from "@/feature/corpus/operations/corpus.find";
+import { updateCorpusEntry } from "@/feature/corpus/operations/corpus.update";
+import { corpusQueue } from "@/feature/corpus/jobs/corpus.queue";
+import { CorpusJobs } from "@/feature/corpus/corpus.config";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
 import { logger } from "@/lib/logger";
 import { getLawSourceClients } from "../law-source.client";
@@ -73,7 +73,7 @@ export class LawSourceJobHandler {
           } else if (check.action === "new-act") {
             logger.info(
               { client: client.name, title: check.title },
-              "Law source lists an act not tracked in documents",
+              "Law source lists an act not tracked in corpus",
             );
             newActs++;
           } else if (check.action === "detection-failed") {
@@ -113,9 +113,9 @@ export class LawSourceJobHandler {
    */
   private static async handleReingest(check: SourceCheck) {
     const result = unwrapJobResult(
-      await findDocument("id", check.documentId!),
+      await findCorpusEntry("id", check.documentId!),
       {
-        message: "Document disappeared before re-ingest",
+        message: "Corpus entry disappeared before re-ingest",
         shouldRetry: false,
       },
     );
@@ -131,12 +131,12 @@ export class LawSourceJobHandler {
       return;
     }
 
-    await updateDocument("id", check.documentId!, {
+    await updateCorpusEntry("id", check.documentId!, {
       version: nextVersion,
       lastUpdated: detectedLastUpdated,
     });
 
-    await documentsQueue.add(DocumentJobs.DocumentUploaded, {
+    await corpusQueue.add(CorpusJobs.CorpusUploaded, {
       documentId: check.documentId!,
       userId: SYSTEM_ACTOR,
       filename: current.title,

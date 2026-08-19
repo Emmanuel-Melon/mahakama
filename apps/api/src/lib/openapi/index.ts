@@ -12,7 +12,7 @@ import { usersRegistry } from "@/feature/users/users.docs";
 import { authRegistry } from "@/feature/auth/auth.docs";
 import { expressRegistry } from "../express/express.schema";
 import { lawyersRegistry } from "@/feature/lawyers/lawyers.docs";
-import { documentsRegistry } from "@/feature/documents/documents.docs";
+import { corpusRegistry } from "@/feature/corpus/corpus.docs";
 import { messagesRegistry } from "@/feature/messages/messages.docs";
 import { chatsRegistry } from "@/feature/chats/chats.docs";
 import { servicesRegistry } from "@/feature/services/services.docs";
@@ -31,7 +31,7 @@ securityRegistry.registerComponent("securitySchemes", "bearerAuth", {
 const registries = [
   authRegistry,
   chatsRegistry,
-  documentsRegistry,
+  corpusRegistry,
   expressRegistry,
   lawyersRegistry,
   messagesRegistry,

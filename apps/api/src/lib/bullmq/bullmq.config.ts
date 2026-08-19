@@ -7,7 +7,7 @@ export enum QueueName {
   Answers = "answers",
   Chat = "chat",
   User = "user",
-  Documents = "documents",
+  Corpus = "corpus",
   Lawyers = "lawyers",
   Notifications = "notifications",
   Email = "email",
@@ -16,6 +16,7 @@ export enum QueueName {
   Inference = "inference",
   Messages = "messages",
   Scheduled = "scheduled",
+  ShadowReplay = "shadow-replay",
 }
 
 export const WorkerEvents = {

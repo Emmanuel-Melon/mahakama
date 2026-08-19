@@ -1,5 +1,5 @@
 import { db } from "@/lib/drizzle";
-import { documentsTable } from "@/feature/documents/documents.schema";
+import { documentsTable } from "@/feature/corpus/corpus.schema";
 import { inArray } from "drizzle-orm";
 
 /**
@@ -8,7 +8,7 @@ import { inArray } from "drizzle-orm";
  * an empty map when there is nothing to look up (e.g. seed chunks that carry
  * no `document_id`).
  */
-export const loadDocumentVersions = async (
+export const loadCorpusVersions = async (
   documentIds: string[],
 ): Promise<Map<string, number>> => {
   if (documentIds.length === 0) return new Map();

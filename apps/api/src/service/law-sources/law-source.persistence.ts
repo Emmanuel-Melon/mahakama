@@ -1,5 +1,5 @@
 import { db } from "@/lib/drizzle";
-import { lawSourceChecksTable } from "@/feature/documents/documents.schema";
+import { lawSourceChecksTable } from "@/feature/corpus/corpus.schema";
 import { SourceCheck } from "./law-source.types";
 
 /** Persist one diff-check row for auditability (metadata-updates.md U3.4). */

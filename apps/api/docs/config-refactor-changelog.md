@@ -58,12 +58,12 @@ Updated `tests/rag.staleness.test.ts` to replace the removed `RAG_STALENESS_CONF
 
 ## Environment Variables Added
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `EMBEDDING_MODEL` | `"nomic-embed-text"` | Ollama embedding model name |
-| `EMBEDDING_DIMENSIONS` | `768` | Vector dimension size |
-| `EMBEDDING_OLLAMA_BASE_URL` | `"http://localhost:11434"` | Ollama server URL |
-| `EMBEDDING_WRITE_MODE` | `"chroma"` | `"chroma"`, `"pgvector"`, or `"dual"` |
-| `EMBEDDING_PRIMARY_STORE` | `"chroma"` | `"chroma"` or `"pgvector"` — the read-primary store |
+| Variable                    | Default                    | Purpose                                             |
+| --------------------------- | -------------------------- | --------------------------------------------------- |
+| `EMBEDDING_MODEL`           | `"nomic-embed-text"`       | Ollama embedding model name                         |
+| `EMBEDDING_DIMENSIONS`      | `768`                      | Vector dimension size                               |
+| `EMBEDDING_OLLAMA_BASE_URL` | `"http://localhost:11434"` | Ollama server URL                                   |
+| `EMBEDDING_WRITE_MODE`      | `"pgvector"`               | `"chroma"`, `"pgvector"`, or `"dual"`               |
+| `EMBEDDING_PRIMARY_STORE`   | `"pgvector"`               | `"chroma"` or `"pgvector"` — the read-primary store |
 
 Test equivalents: `TEST_EMBEDDING_MODEL`, `TEST_EMBEDDING_DIMENSIONS`, `TEST_EMBEDDING_OLLAMA_BASE_URL`, `TEST_EMBEDDING_WRITE_MODE`, `TEST_EMBEDDING_PRIMARY_STORE`.

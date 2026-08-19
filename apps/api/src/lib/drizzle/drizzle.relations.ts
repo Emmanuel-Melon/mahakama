@@ -5,7 +5,7 @@ import {
   documentsTable,
   bookmarksTable,
   downloadsTable,
-} from "@/feature/documents/documents.schema";
+} from "@/feature/corpus/corpus.schema";
 import { chatMessages } from "@/feature/messages/messages.schema";
 import { notificationsSchema } from "@/feature/notifications/notifications.schema";
 import {
@@ -34,8 +34,8 @@ export const chatsRelations = relations(chatsSchema, ({ one, many }) => ({
   messages: many(chatMessages),
 }));
 
-// Documents Relations
-export const documentsRelations = relations(documentsTable, ({ many }) => ({
+// Corpus Relations
+export const corpusRelations = relations(documentsTable, ({ many }) => ({
   bookmarks: many(bookmarksTable),
   downloads: many(downloadsTable),
 }));
@@ -45,7 +45,7 @@ export const bookmarksRelations = relations(bookmarksTable, ({ one }) => ({
     fields: [bookmarksTable.user_id],
     references: [usersSchema.id],
   }),
-  document: one(documentsTable, {
+  corpus: one(documentsTable, {
     fields: [bookmarksTable.documentId],
     references: [documentsTable.id],
   }),
@@ -56,7 +56,7 @@ export const downloadsRelations = relations(downloadsTable, ({ one }) => ({
     fields: [downloadsTable.user_id],
     references: [usersSchema.id],
   }),
-  document: one(documentsTable, {
+  corpus: one(documentsTable, {
     fields: [downloadsTable.document_id],
     references: [documentsTable.id],
   }),
@@ -151,7 +151,7 @@ export const userInferencePreferencesRelations = relations(
 export const allRelations = {
   usersRelations,
   chatsRelations,
-  documentsRelations,
+  corpusRelations,
   bookmarksRelations,
   downloadsRelations,
   chatMessagesRelations,

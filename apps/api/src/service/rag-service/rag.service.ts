@@ -3,7 +3,7 @@ import {
   type RetrievalOptions,
   ragQuerySchema,
 } from "./rag.types";
-import { loadDocumentVersions } from "./rag.documents";
+import { loadCorpusVersions } from "./rag.documents";
 import { isChunkStale } from "./rag.staleness";
 import { ragConfig } from "@/config";
 import { logger } from "@/lib/logger";
@@ -53,7 +53,7 @@ export class RAGService {
       if (documentId) documentIds.add(documentId);
     }
 
-    const documentVersions = await loadDocumentVersions(
+    const documentVersions = await loadCorpusVersions(
       Array.from(documentIds),
     );
 
