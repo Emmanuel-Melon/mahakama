@@ -16,6 +16,12 @@ import {
   ILawSourceConfig,
   IRagConfig,
   IEmbeddingConfig,
+  IAuthConfig,
+  AuthConfigSchema,
+  CookieConfigSchema,
+  ICookieConfig,
+  ClientConfigSchema,
+  IClientConfig,
 } from "./config.types";
 
 dotenv.config({
@@ -47,6 +53,17 @@ export const serverConfig = ServerConfigSchema.parse({
   environment:
     process.env.NODE_ENV === "production" ? "production" : "development",
 }) satisfies IServerConfig;
+
+// Client Configuration
+export const clientConfig = ClientConfigSchema.parse({
+  baseUrl:
+    process.env.CLIENT_URL?.trim() ||
+    (process.env.NODE_ENV === "production"
+      ? "https://app.yourproductiondomain.com"
+      : process.env.NODE_ENV === "staging"
+        ? "https://staging.yourproductiondomain.com"
+        : "http://localhost:5173"),
+}) satisfies IClientConfig;
 
 // Database Configuration
 export const dbConfig = DatabaseConfigSchema.parse({
@@ -119,9 +136,36 @@ export const embeddingConfig = embeddingConfigSchema.parse({
   ollamaBaseUrl: process.env.EMBEDDING_OLLAMA_BASE_URL,
   writeMode: process.env.EMBEDDING_WRITE_MODE,
   primaryStore: process.env.EMBEDDING_PRIMARY_STORE,
+  replayIntervalMs: process.env.EMBEDDING_REPLAY_INTERVAL_MS,
 }) satisfies IEmbeddingConfig;
 
+// Auth configuration
+export const authConfig = AuthConfigSchema.parse({
+  isProduction: process.env.NODE_ENV === "production",
+  cookieDomains: process.env.COOKIE_DOMAINS?.split(",").map((s) =>
+    s.trim(),
+  ) || ["localhost"],
+  secrets: {
+    jwtSecret: process.env.JWT_SECRET || "secret",
+    jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || "secret",
+    joseSecret: new TextEncoder().encode(process.env.JWT_SECRET || "secret"),
+  },
+  issuer: process.env.AUTH_ISSUER,
+  audience: {},
+  tokens: {},
+  timing: {},
+}) as IAuthConfig;
+
+export const cookieConfig = CookieConfigSchema.parse({
+  cookieDomains: process.env.COOKIE_DOMAINS,
+  cookieSecure: process.env.COOKIE_SECURE,
+  cookieSameSite: process.env.COOKIE_SAMESITE,
+}) satisfies ICookieConfig;
+
 const config = {
+  auth: authConfig,
+  clientConfig: clientConfig,
+  cookie: cookieConfig,
   server: serverConfig,
   db: dbConfig,
   llm: llmConfig,
