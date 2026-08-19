@@ -1,4 +1,3 @@
-// rag.chunker.ts
 import type {
   ChunkingOptions,
   DocumentChunk,
@@ -51,6 +50,7 @@ export const chunkDocument = (
         id: `${documentId}-${index}`,
         title,
         content,
+        chunkIndex: index,
       }),
     );
   }
@@ -62,6 +62,7 @@ export const chunkDocument = (
       id: `${documentId}-${index}`,
       title,
       content,
+      chunkIndex: index,
       ...(section ? { section } : {}),
     });
     index++;

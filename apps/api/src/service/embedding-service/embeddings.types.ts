@@ -1,4 +1,4 @@
-import { EmbeddingJobStatus } from "./embeddings.config";
+import { EmbeddingJobStatus, EmbeddingsJobs } from "./embeddings.config";
 
 /*
  * CHUNK & DOCUMENT CONTENT TYPES
@@ -42,6 +42,7 @@ export interface DocumentChunk {
   lastUpdated?: string;
   version?: number;
   documentId?: string;
+  chunkIndex?: number;
 }
 
 export type QueryEmbeddingOptions = {
@@ -69,6 +70,14 @@ export type EmbeddingJobUpdate = {
   startedAt?: Date | null;
   completedAt?: Date | null;
 };
+
+export type ShadowReplayPaylod = {
+  triggeredBy?: string;
+};
+
+export interface EmbeddingsJobMap {
+  [EmbeddingsJobs.Replay]: ShadowReplayPaylod;
+}
 
 /**
  * EMBEDDING PROVIDERS

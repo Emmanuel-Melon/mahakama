@@ -4,13 +4,11 @@ import { logger } from "@/lib/logger";
 import type {
   DocumentChunk,
   EmbeddingBatchProgress,
-  EmbeddingJobUpdate,
   QueryEmbeddingOptions,
 } from "../embeddings.types";
-import { documentChunksTable, embeddingJobsTable } from "../embeddings.schema";
-import { EMBEDDING_CONFIG, EmbeddingJobStatus } from "../embeddings.config";
+import { documentChunksTable } from "../embeddings.schema";
+import { EMBEDDING_CONFIG } from "../embeddings.config";
 import { calculateTokenCount } from "@/lib/js-tiktoken";
-import { chromaClient } from "@/lib/chroma";
 import { embeddingProvider, vectorStore } from "../embeddings.factory";
 import { processInBatches } from "@/lib/batch";
 import { buildChunkId, buildChunkMetadata } from "../embeddings.utils";
@@ -30,6 +28,7 @@ export async function saveDocumentChunks(
 
   await db.insert(documentChunksTable).values(
     chunks.map((chunk, index) => ({
+      vectorId: buildChunkId(chunk),
       documentId,
       content: chunk.content,
       chunkIndex: index,
@@ -95,7 +94,11 @@ export const generateDocumentEmbeddings = async (
       }
 
       logger.info(
-        { collectionName, count: records.length, provider: embeddingProvider.name },
+        {
+          collectionName,
+          count: records.length,
+          provider: embeddingProvider.name,
+        },
         "Persisted embedding batch",
       );
     },

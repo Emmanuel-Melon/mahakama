@@ -8,6 +8,13 @@ export const EmbeddingJobStatus = {
 export type EmbeddingJobStatus =
   (typeof EmbeddingJobStatus)[keyof typeof EmbeddingJobStatus];
 
+export const EmbeddingsJobs = {
+  Replay: "shadow-replay",
+} as const;
+
+export type EmbeddingsJobType =
+  (typeof EmbeddingsJobs)[keyof typeof EmbeddingsJobs];
+
 export const CHUNK_CONFIG = {
   DEFAULT_CHUNK_SIZE: 1000,
   DEFAULT_OVERLAP_SIZE: 200,

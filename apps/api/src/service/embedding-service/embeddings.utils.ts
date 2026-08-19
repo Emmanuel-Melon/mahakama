@@ -1,4 +1,3 @@
-// src/service/embedding-service/embeddings.utils.ts
 import { EMBEDDING_CONFIG } from "./embeddings.config";
 import type { DocumentChunk, EmbeddingProvider } from "./embeddings.types";
 
@@ -31,6 +30,7 @@ export const buildChunkMetadata = (
   if (chunk.jurisdiction) metadata.jurisdiction = chunk.jurisdiction;
   if (chunk.lastUpdated) metadata.last_updated = chunk.lastUpdated;
   if (chunk.documentId) metadata.document_id = chunk.documentId;
+  if (chunk.chunkIndex !== undefined) metadata.chunk_index = chunk.chunkIndex;
   if (chunk.version !== undefined) metadata.version = chunk.version;
 
   return metadata;

@@ -21,8 +21,8 @@ export const pgVectorStore: VectorStore = {
             embeddingProvider: r.metadata.embedding_provider as string,
             embeddingModel: r.metadata.embedding_model as string,
           })
-          .where(eq(documentChunksTable.id, r.id))
-          .returning({ id: documentChunksTable.id }),
+          .where(eq(documentChunksTable.vectorId, r.id))
+          .returning({ id: documentChunksTable.vectorId }),
       ),
     );
 
@@ -37,17 +37,17 @@ export const pgVectorStore: VectorStore = {
 
   async getDocumentsByIds(_collectionName, ids) {
     const rows = await db
-      .select({ id: documentChunksTable.id })
+      .select({ vectorId: documentChunksTable.vectorId })
       .from(documentChunksTable)
-      .where(inArray(documentChunksTable.id, ids));
-    return { ids: rows.map((r) => r.id) };
+      .where(inArray(documentChunksTable.vectorId, ids));
+    return { ids: rows.map((r) => r.vectorId).filter(Boolean) as string[] };
   },
 
   async query(_collectionName, queryEmbedding, nResults = 5) {
     const similarity = sql<number>`1 - (${cosineDistance(documentChunksTable.embedding, queryEmbedding)})`;
     const rows = await db
       .select({
-        id: documentChunksTable.id,
+        vectorId: documentChunksTable.vectorId,
         content: documentChunksTable.content,
         title: documentChunksTable.actName, // best available title-ish field
         section: documentChunksTable.section,
@@ -66,7 +66,7 @@ export const pgVectorStore: VectorStore = {
       .limit(nResults);
 
     return {
-      ids: rows.map((r) => r.id),
+      ids: rows.map((r) => r.vectorId).filter(Boolean) as string[],
       documents: rows.map((r) => r.content),
       metadatas: rows.map((r) => ({
         title: r.title,
@@ -82,4 +82,42 @@ export const pgVectorStore: VectorStore = {
       distances: rows.map((r) => 1 - r.similarity),
     };
   },
+};
+
+export const readRecordsFromPgvector = async (
+  _collectionName: string,
+  ids: string[],
+): Promise<VectorRecord[]> => {
+  const rows = await db
+    .select({
+      vectorId: documentChunksTable.vectorId,
+      content: documentChunksTable.content,
+      embedding: documentChunksTable.embedding,
+      embeddingProvider: documentChunksTable.embeddingProvider,
+      embeddingModel: documentChunksTable.embeddingModel,
+      section: documentChunksTable.section,
+      actName: documentChunksTable.actName,
+      fullCitation: documentChunksTable.fullCitation,
+      url: documentChunksTable.url,
+      jurisdiction: documentChunksTable.jurisdiction,
+    })
+    .from(documentChunksTable)
+    .where(inArray(documentChunksTable.vectorId, ids));
+
+  return rows
+    .filter((r) => r.embedding != null && r.vectorId != null)
+    .map((r) => ({
+      id: r.vectorId!,
+      document: r.content,
+      embedding: r.embedding!,
+      metadata: {
+        section: r.section,
+        act_name: r.actName,
+        full_citation: r.fullCitation,
+        url: r.url,
+        jurisdiction: r.jurisdiction,
+        embedding_provider: r.embeddingProvider,
+        embedding_model: r.embeddingModel,
+      },
+    }));
 };

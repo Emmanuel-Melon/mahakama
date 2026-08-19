@@ -1,5 +1,9 @@
+import { db } from "@/lib/drizzle";
 import { logger } from "@/lib/logger";
+import { shadowWriteFailuresTable } from "../embeddings.schema";
 import type { VectorStore, VectorRecord } from "../embeddings.types";
+import { readRecordsFromPgvector } from "./pgvector.store";
+import { readRecordsFromChroma } from "./chroma.store";
 
 export const createCompositeStore = (opts: {
   primary: VectorStore;
@@ -13,18 +17,21 @@ export const createCompositeStore = (opts: {
     async addDocuments(collectionName, records: VectorRecord[]) {
       await primary.addDocuments(collectionName, records);
       if (shadow) {
-        // Shadow write failures are logged, not thrown — during the
-        // migration window, the primary store succeeding is what matters
-        // for the request. A shadow-write failure means the non-primary
-        // store drifts out of sync, which is acceptable since it's not
-        // serving reads.
         try {
           await shadow.addDocuments(collectionName, records);
         } catch (err) {
+          const ids = records.map((r) => r.id);
           logger.error(
-            { err, store: shadow.name, ids: records.map((r) => r.id) },
-            "Shadow store write failed during migration window",
+            { err, store: shadow.name, ids },
+            "Shadow store write failed — recording for replay",
           );
+          await db.insert(shadowWriteFailuresTable).values({
+            collectionName,
+            recordIds: ids,
+            shadowStore: shadow.name,
+            primaryStore: primary.name,
+            lastError: err instanceof Error ? err.message : String(err),
+          });
         }
       }
     },
@@ -37,4 +44,15 @@ export const createCompositeStore = (opts: {
       return primary.query(collectionName, queryEmbedding, nResults);
     },
   };
+};
+
+export const readRecordsFromPrimary = async (
+  primaryStore: string,
+  collectionName: string,
+  recordIds: string[],
+): Promise<VectorRecord[]> => {
+  if (primaryStore === "pgvector") {
+    return readRecordsFromPgvector(collectionName, recordIds);
+  }
+  return readRecordsFromChroma(collectionName, recordIds);
 };

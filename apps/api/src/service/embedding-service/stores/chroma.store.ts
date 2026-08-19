@@ -1,4 +1,3 @@
-// src/service/embedding-service/stores/chroma.store.ts
 import { chromaClient } from "@/lib/chroma";
 import { logger } from "@/lib/logger";
 import type { VectorStore, VectorRecord } from "../embeddings.types";
@@ -60,4 +59,20 @@ export const chromaStore: VectorStore = {
 
     return { ids, documents, metadatas, distances };
   },
+};
+
+export const readRecordsFromChroma = async (
+  collectionName: string,
+  ids: string[],
+): Promise<VectorRecord[]> => {
+  const result = await chromaClient.getDocumentsByIds(collectionName, ids);
+
+  return ids
+    .filter((_id, i) => result.embeddings?.[i] != null)
+    .map((id, i) => ({
+      id,
+      document: result.documents?.[i] ?? "",
+      embedding: result.embeddings![i],
+      metadata: (result.metadatas?.[i] as Record<string, unknown>) ?? {},
+    }));
 };

@@ -7,18 +7,32 @@ import type {
 } from "./rag.types";
 import type { ChatMessage } from "@/feature/messages/messages.types";
 import { logger } from "@/lib/logger";
+import {
+  retrieveUserDocumentContext,
+  mergeDocumentContexts,
+  sessionHasUserDocument,
+} from "@/feature/user-documents/operations/user-documents.rag";
+import { UserDocumentConfig } from "@/feature/user-documents/user-documents.config";
 
 export const buildRagContext = async (
   userMessage: ChatMessage,
   history: ChatMessage[],
 ): Promise<RagContextResult> => {
+  const sessionId = userMessage.chatId;
+
   // Retrieve legal context — degrade to empty context rather than failing the
   // whole message flow when Chroma is unavailable.
-  let context: RAGContext = { chunks: [], sources: [] };
+  let legalContext: RAGContext = { chunks: [], sources: [] };
   try {
-    context = await ragService.retrieveContext(userMessage.content, {
+    // Use increased top_k when user document is present
+    const hasUserDoc = await sessionHasUserDocument(sessionId);
+    const topK = hasUserDoc
+      ? UserDocumentConfig.QUERY_TOP_K_WITH_USER_DOC
+      : RAG_CONTEXT_CONFIG.TOP_K;
+
+    legalContext = await ragService.retrieveContext(userMessage.content, {
       collectionName: RAG_CONTEXT_CONFIG.COLLECTION_NAME,
-      topK: RAG_CONTEXT_CONFIG.TOP_K,
+      topK,
       minSimilarity: RAG_CONTEXT_CONFIG.RELEVANCE_THRESHOLD,
     });
   } catch (error) {
@@ -27,6 +41,26 @@ export const buildRagContext = async (
       "Failed to retrieve RAG context; continuing without it",
     );
   }
+
+  // Retrieve user document context if present
+  let userDocContext: RAGContext = { chunks: [], sources: [] };
+  try {
+    userDocContext = await retrieveUserDocumentContext(
+      sessionId,
+      userMessage.content,
+    );
+  } catch (error) {
+    logger.error(
+      { error, sessionId },
+      "Failed to retrieve user document context; continuing without it",
+    );
+  }
+
+  // Merge contexts if user document exists
+  const context =
+    userDocContext.chunks.length > 0
+      ? mergeDocumentContexts(userDocContext, legalContext)
+      : legalContext;
 
   const conversationHistory = history
     .filter((m) => m.id !== userMessage.id)

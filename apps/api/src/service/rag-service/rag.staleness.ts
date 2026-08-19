@@ -30,7 +30,9 @@ export const isChunkStale = (input: ChunkStalenessInput): boolean => {
   const cutoff = new Date(now);
   cutoff.setMonth(
     cutoff.getMonth() -
-      (input.stalenessMonths ?? ragConfig.stalenessMonths ?? DEFAULT_STALENESS_MONTHS),
+      (input.stalenessMonths ??
+        ragConfig.stalenessMonths ??
+        DEFAULT_STALENESS_MONTHS),
   );
 
   return parsed < cutoff;
