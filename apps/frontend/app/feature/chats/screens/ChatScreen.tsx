@@ -9,12 +9,12 @@ import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
-import { UserDocumentIndicator } from "~/feature/chats/components/UserDocumentIndicator";
+import { DocumentIndicator } from "~/feature/chats/components/DocumentIndicator";
 import { PageDetailsLoading } from "~/components/page-details-loading";
 import { PageDetailsError } from "~/components/page-details-error";
 import { isReplyAwaiting } from "@mah/api/hooks/use-chats";
 import { useChatMutations } from "@mah/api/hooks/use-chats";
-import { useUserDocumentStatus } from "@mah/api/hooks/user-documents/use-user-documents";
+import { useDocumentStatus } from "@mah/api/hooks/documents/use-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -47,7 +47,7 @@ export const ChatScreen = ({
     retryMessage: retryMessageMutation,
   } = useChatMutations();
 
-  const { data: userDocumentStatus } = useUserDocumentStatus(chat?.id ?? "");
+  const { data: userDocumentStatus } = useDocumentStatus(chat?.id ?? "");
 
   const {
     handleSubmit,
@@ -194,7 +194,7 @@ export const ChatScreen = ({
         <div className="flex-shrink-0 sticky bottom-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
           <div className="max-w-4xl mx-auto w-full">
             {userDocumentStatus?.hasDocument && (
-              <UserDocumentIndicator
+              <DocumentIndicator
                 filename={userDocumentStatus.filename}
                 totalChunks={userDocumentStatus.totalChunks}
                 sessionId={chat.id}

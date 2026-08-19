@@ -5,7 +5,7 @@ import { initReactI18next } from "react-i18next";
 
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { chatsI18n } from "~/feature/chats/ChatsConfig";
-import { documentsI18n } from "~/feature/documents/DocumentsConfig";
+import { corpusI18n } from "~/feature/corpus/CorpusConfig";
 import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
 import { notificationsI18n } from "~/feature/notifications/NotificationsConfig";
 import { usersI18n } from "~/feature/users/UsersConfig";
@@ -17,7 +17,7 @@ import commonEn from "~/locales/en/common.json";
 const i18nConfigs = [
   authI18n,
   chatsI18n,
-  documentsI18n,
+  corpusI18n,
   lawyersI18n,
   notificationsI18n,
   usersI18n,

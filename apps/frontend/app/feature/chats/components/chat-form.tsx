@@ -14,7 +14,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import { Button } from "~/components/ui/button";
-import { useUploadDocument, getUploadKey } from "@mah/api/hooks/use-documents";
+import { useUploadDocument, getDocumentUploadKey } from "@mah/api/hooks/documents/use-documents";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 
@@ -109,7 +109,7 @@ export const ChatForm = ({
         <div className="mt-3 space-y-2">
           <p className="text-sm font-medium text-gray-700">Attached files:</p>
           {attachedFiles.map((file, index) => {
-            const progress = uploads[getUploadKey(file)];
+            const progress = uploads[getDocumentUploadKey(file)];
             return (
               <div
                 key={`${file.name}-${index}`}

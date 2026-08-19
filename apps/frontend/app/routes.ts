@@ -8,7 +8,7 @@ import type { RouteDefinition } from "./lib/nav/nav.types";
 import { websiteRoutes } from "./feature/www/WebsiteConfig";
 import { authRoutes } from "./feature/auth/AuthConfig";
 import { chatsRoutes, messagesRoutes } from "./feature/chats/ChatsConfig";
-import { documentsRoutes } from "./feature/documents/DocumentsConfig";
+import { corpusRoutes } from "./feature/corpus/CorpusConfig";
 import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
 import { notificationsRoutes } from "./feature/notifications/NotificationsConfig";
 import { usersRoutes } from "./feature/users/UsersConfig";
@@ -22,7 +22,7 @@ export default [
   ...toRouteConfig(notificationsRoutes),
   ...toRouteConfig(authRoutes),
   ...toRouteConfig(chatsRoutes),
-  ...toRouteConfig(documentsRoutes),
+  ...toRouteConfig(corpusRoutes),
   ...toRouteConfig(lawyersRoutes),
   ...toRouteConfig(usersRoutes),
   ...toRouteConfig(messagesRoutes),

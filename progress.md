@@ -1,7 +1,7 @@
-# User Document Upload - Implementation Progress
+# Document Upload - Implementation Progress
 
-**Feature:** User Document Upload for Legal Analysis
-**Spec:** `apps/api/specs/user-document-upload.md`
+**Feature:** Document Upload for Legal Analysis
+**Spec:** `apps/api/specs/document-upload.md`
 **Started:** 2026-08-18
 **Completed:** 2026-08-18 (Phases 1-4)
 
@@ -15,7 +15,7 @@
 
 **Files created/modified:**
 
-- `apps/api/src/feature/user-documents/user-documents.types.ts`
+- `apps/api/src/feature/documents/documents.types.ts`
 - `apps/api/src/lib/chroma/chroma.config.ts` (added collection naming utilities)
 
 ---
@@ -30,13 +30,13 @@
 
 **Files created/modified:**
 
-- `apps/api/src/feature/user-documents/operations/user-documents.process.ts`
-- `apps/api/src/feature/user-documents/operations/user-documents.rag.ts`
+- `apps/api/src/feature/documents/operations/documents.process.ts`
+- `apps/api/src/feature/documents/operations/documents.rag.ts`
 - `apps/api/src/service/rag-service/rag.context.ts` (modified for hybrid search)
-- `apps/api/src/feature/user-documents/jobs/user-documents.cleanup.ts`
-- `apps/api/src/feature/user-documents/jobs/user-documents.worker.ts`
-- `apps/api/src/feature/user-documents/jobs/user-documents.queue.ts`
-- `apps/api/src/feature/user-documents/user-documents.config.ts`
+- `apps/api/src/feature/documents/jobs/documents.cleanup.ts`
+- `apps/api/src/feature/documents/jobs/documents.worker.ts`
+- `apps/api/src/feature/documents/jobs/documents.queue.ts`
+- `apps/api/src/feature/documents/documents.config.ts`
 
 ---
 
@@ -50,10 +50,10 @@
 
 **Files created/modified:**
 
-- `apps/api/src/feature/user-documents/controllers/upload-user-document.controller.ts`
-- `apps/api/src/feature/user-documents/controllers/get-user-document-status.controller.ts`
-- `apps/api/src/feature/user-documents/controllers/delete-user-document.controller.ts`
-- `apps/api/src/feature/user-documents/user-documents.routes.ts`
+- `apps/api/src/feature/documents/controllers/upload-document.controller.ts`
+- `apps/api/src/feature/documents/controllers/get-document-status.controller.ts`
+- `apps/api/src/feature/documents/controllers/delete-document.controller.ts`
+- `apps/api/src/feature/documents/documents.routes.ts`
 - `apps/api/src/routes/index.ts` (added user documents routes)
 
 ---
@@ -67,10 +67,10 @@
 
 **Files created/modified:**
 
-- `packages/api/src/clients/user-documents.api.ts` (new API client)
-- `packages/api/src/hooks/use-user-documents.ts` (new hooks)
+- `packages/api/src/clients/documents.api.ts` (new API client)
+- `packages/api/src/hooks/documents/use-documents.ts` (new hooks)
 - `apps/frontend/app/feature/chats/components/chat-input.tsx` (added file upload)
-- `apps/frontend/app/feature/chats/components/UserDocumentIndicator.tsx` (new component)
+- `apps/frontend/app/feature/chats/components/DocumentIndicator.tsx` (new component)
 - `apps/frontend/app/feature/chats/components/CitationsSidebar.tsx` (source attribution)
 - `apps/frontend/app/feature/chats/screens/ChatScreen.tsx` (integrated document status)
 
@@ -111,7 +111,7 @@ _Phase 5 will be completed manually by the development team._
 | Component               | Location                                                               | Description                      |
 | ----------------------- | ---------------------------------------------------------------------- | -------------------------------- |
 | `ChatInput`             | `apps/frontend/app/feature/chats/components/chat-input.tsx`            | Updated with file upload support |
-| `UserDocumentIndicator` | `apps/frontend/app/feature/chats/components/UserDocumentIndicator.tsx` | Shows attached document status   |
+| `DocumentIndicator` | `apps/frontend/app/feature/chats/components/DocumentIndicator.tsx` | Shows attached document status   |
 | `CitationsSidebar`      | `apps/frontend/app/feature/chats/components/CitationsSidebar.tsx`      | Updated with source attribution  |
 
 ---

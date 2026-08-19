@@ -22,18 +22,18 @@ export const CATEGORY_MAP: Record<string, string[]> = {
 export const USER_DOCUMENT_COLLECTION_PREFIX = "user_docs_";
 
 /**
- * Generate a ChromaDB collection name for a user document session
+ * Generate a ChromaDB collection name for a document session
  * @param sessionId - The chat session ID
  * @returns Collection name in format `user_docs_{sessionId}`
  */
-export function getUserDocumentCollectionName(sessionId: string): string {
+export function getDocumentCollectionName(sessionId: string): string {
   return `${USER_DOCUMENT_COLLECTION_PREFIX}${sessionId}`;
 }
 
 /**
- * Extract session ID from a user document collection name
+ * Extract session ID from a document collection name
  * @param collectionName - Collection name in format `user_docs_{sessionId}`
- * @returns Session ID or null if not a user document collection
+ * @returns Session ID or null if not a document collection
  */
 export function extractSessionIdFromCollectionName(
   collectionName: string,
@@ -45,10 +45,10 @@ export function extractSessionIdFromCollectionName(
 }
 
 /**
- * Check if a collection name is a user document collection
+ * Check if a collection name is a document collection
  * @param collectionName - The collection name to check
- * @returns True if this is a user document collection
+ * @returns True if this is a document collection
  */
-export function isUserDocumentCollection(collectionName: string): boolean {
+export function isDocumentCollection(collectionName: string): boolean {
   return collectionName.startsWith(USER_DOCUMENT_COLLECTION_PREFIX);
 }

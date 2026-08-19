@@ -30,16 +30,14 @@
     "./hooks/use-auth": "./src/hooks/use-auth.ts",
     "./hooks/use-chats": "./src/hooks/chats/use-chats.ts",
     "./hooks/use-chats-sse": "./src/hooks/chats/use-chats.sse.ts",
-    "./hooks/use-documents": "./src/hooks/use-documents.ts",
+    "./hooks/documents/use-documents": "./src/hooks/documents/use-documents.ts",
+    "./hooks/documents/use-documents.sse": "./src/hooks/documents/use-documents.sse.ts",
     "./hooks/use-lawyers": "./src/hooks/use-lawyers.tsx",
-    "./hooks/user-documents/use-user-documents": "./src/hooks/user-documents/use-user-documents.ts",
     "./hooks/use-notifications": "./src/hooks/use-notifications.ts",
     "./hooks/use-services": "./src/hooks/use-services.ts",
     "./hooks/use-users": "./src/hooks/use-users.ts",
     "./react-query": "./src/react-query/index.ts",
-    "./hooks/use-upload-manager": "./src/hooks/use-upload-manager.ts",
-    "./hooks/documents/use-documents.sse": "./src/hooks/documents/use-documents.sse.ts",
-    "./hooks/user-documents/use-user-documents.sse": "./src/hooks/user-documents/use-user-documents.sse.ts"
+    "./hooks/use-upload-manager": "./src/hooks/use-upload-manager.ts"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",

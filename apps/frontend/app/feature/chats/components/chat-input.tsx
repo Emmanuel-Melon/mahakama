@@ -14,9 +14,9 @@ import {
 } from "~/components/ui/tooltip";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import {
-  useUploadUserDocument,
-  getUserDocumentUploadKey,
-} from "@mah/api/hooks/use-user-documents";
+  useUploadDocument,
+  getDocumentUploadKey,
+} from "@mah/api/hooks/documents/use-documents";
 import { AudioLines, Paperclip, Plus, Send, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 
@@ -44,7 +44,7 @@ export function ChatInput({
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const { uploads, upload, clearUploads, isUploading, uploadProgress } =
-    useUploadUserDocument();
+    useUploadDocument();
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export function ChatInput({
   };
 
   const fileProgress = attachedFile
-    ? uploads[getUserDocumentUploadKey(attachedFile)]
+    ? uploads[getDocumentUploadKey(attachedFile)]
     : null;
 
   return (
