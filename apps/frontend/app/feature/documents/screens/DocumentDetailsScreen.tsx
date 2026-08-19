@@ -4,31 +4,23 @@ import {
   DocumentHighlights,
   RelatedDocuments,
 } from "~/feature/documents/components";
-import type { components } from "@mah/api/generated/api.types";
+import { type Document } from "@mah/api/clients/documents.api";
+import type { AsyncState } from "@mah/api/api.types";
 
-export type Document = components["schemas"]["Document"];
-export type DocumentResource = components["schemas"]["DocumentResource"];
-export type DocumentSingleResponse =
-  components["schemas"]["DocumentSingleResponse"];
-export type DocumentsCollectionResponse =
-  components["schemas"]["DocumentsCollectionResponse"];
+interface DocumentDetailsScreenProps extends AsyncState {
+  document: Document;
+}
 
 export const DocumentDetailsScreen = ({
   document,
   error,
-}: {
-  document: Document;
-  error: string;
-}) => {
+}: DocumentDetailsScreenProps) => {
   if (!document) {
     return (
       <div className="text-center p-6 max-w-md">
         <h1 className="text-2xl font-bold text-foreground mb-2">
           {error ? "Error Loading Document" : "Document Not Found"}
         </h1>
-        <p className="text-muted-foreground">
-          {error || "We couldn't find the document you're looking for."}
-        </p>
       </div>
     );
   }

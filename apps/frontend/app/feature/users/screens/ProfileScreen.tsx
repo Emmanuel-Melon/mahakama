@@ -8,8 +8,7 @@ import { ActivityCard } from "~/feature/users/components/ActivityCard";
 import { ProfileTabs } from "~/feature/users/components/ProfileTabs";
 import { SavedItems, type SavedItem } from "~/components/saved-items";
 
-import type { components } from "@mah/api/generated/api.types";
-export type User = components["schemas"]["User"];
+import { type User } from "@mah/api/clients/users.api";
 
 interface ProfileScreenProps {
   user: User;

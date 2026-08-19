@@ -6,11 +6,10 @@ import { useRegister } from "@mah/api/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { schemas } from "@mah/api/generated/api.schemas";
-import type { components } from "@mah/api/generated/api.types";
-
-export type RegisterRequest = components["schemas"]["RegisterRequest"];
-const registerRequestSchema = schemas.postV1register_Body;
+import {
+  type RegisterRequest,
+  registerRequestSchema,
+} from "@mah/api/clients/auth.api";
 
 export const SignupScreen = () => {
   const navigate = useNavigate();

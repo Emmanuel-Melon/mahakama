@@ -7,24 +7,26 @@ import type {
 } from "@mah/api/clients/chat.api";
 import { ChatListHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
-import { useDeleteChat, useUpdateChatTitle } from "@mah/api/hooks/use-chats";
+import { useChatMutations } from "@mah/api/hooks/use-chats";
+import type { AsyncState } from "@mah/api/api.types";
 
-export const RecentChatsScreen = ({
-  chats,
-  error,
-}: {
+interface RecentChatsScreenProps extends AsyncState {
   chats: Chat[];
-  error: any;
-}) => {
-  const deleteChat = useDeleteChat();
-  const updateChatTitle = useUpdateChatTitle();
+}
+
+export const RecentChatsScreen = ({ chats, error }: RecentChatsScreenProps) => {
+  // Destructure deleteChat and updateChatTitle from the grouped mutations hook
+  const {
+    deleteChat: deleteChatMutation,
+    updateChatTitle: updateChatTitleMutation,
+  } = useChatMutations();
 
   const handleDeleteChat = (chatId: string) => {
-    deleteChat.mutate(chatId);
+    deleteChatMutation.mutate(chatId);
   };
 
   const handleRenameChat = (chatId: string, newTitle: string) => {
-    updateChatTitle.mutate({ chatId, newTitle });
+    updateChatTitleMutation.mutate({ id: chatId, title: newTitle });
   };
 
   return (

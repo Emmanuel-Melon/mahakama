@@ -1,8 +1,9 @@
 import { FileText, Download, Share2, Bookmark, Calendar } from "lucide-react";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
+import { type Document } from "@mah/api/clients/documents.api";
 
 interface DocumentDetailsHeaderProps {
-  document: any;
+  document: Document;
 }
 
 export function DocumentDetailsHeader({
@@ -23,7 +24,7 @@ export function DocumentDetailsHeader({
         {
           icon: FileText,
           label: "Sections",
-          value: document.sections,
+          value: "0",
         },
       ]}
       actions={[

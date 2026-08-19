@@ -6,6 +6,14 @@ import LoadingState from "~/components/async-state/LoadingState";
 import { PageLoading } from "~/components/page-loading";
 import { type Document } from "@mah/api/clients/documents.api";
 import { HeroSection } from "~/layouts/HeroSection";
+import type { AsyncState } from "@mah/api/api.types";
+
+interface DocumentsScreenProps extends AsyncState {
+  documents: Document[];
+  isAuthenticated?: boolean;
+  displayMode?: "grid" | "list";
+  onDisplayModeChange?: (mode: "grid" | "list") => void;
+}
 
 export const DocumentsScreen = ({
   documents,
@@ -13,13 +21,7 @@ export const DocumentsScreen = ({
   isAuthenticated,
   displayMode,
   onDisplayModeChange,
-}: {
-  documents: Document[];
-  isLoading?: boolean;
-  isAuthenticated?: boolean;
-  displayMode?: "grid" | "list";
-  onDisplayModeChange?: (mode: "grid" | "list") => void;
-}) => {
+}: DocumentsScreenProps) => {
   if (isLoading) {
     return (
       <PageLoading
