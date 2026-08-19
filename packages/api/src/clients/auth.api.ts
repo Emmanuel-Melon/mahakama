@@ -15,6 +15,12 @@ export type UserResource = components["schemas"]["UserResource"];
 export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
 export type UserMetadata = UserSingleResponse["metadata"];
 export type UserResult = ApiResource<User, UserMetadata>;
+export type ResetPasswordRequest = components["schemas"]["ResetPasswordRequest"];
+export type VerifyEmailRequest = components["schemas"]["VerifyEmailRequest"];
+export type ResetPasswordResult = {
+  message: string;
+  deliveryEstimate: number;
+};
 
 /**
  * Validation Schemas (Zod / OpenAPI Runtime Schemas)
@@ -64,6 +70,48 @@ export class AuthApiClient extends BaseApiClient {
     return this.api.request<void>(AUTH_API_ROUTES.LOGOUT, {
       method: "POST",
       headers: this.defaultHeaders,
+    });
+  }
+
+  public async getMe(): Promise<UserResult> {
+    const response = await this.api.request<UserSingleResponse>(
+      AUTH_API_ROUTES.ME,
+      {
+        headers: this.defaultHeaders,
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from server",
+    });
+  }
+
+  public async requestReset(email: string): Promise<ResetPasswordResult> {
+    return this.api.request<ResetPasswordResult>(
+      AUTH_API_ROUTES.REQUEST_RESET,
+      {
+        method: "POST",
+        headers: this.defaultHeaders,
+        data: { email },
+      },
+    );
+  }
+
+  public async resetPassword(
+    token: string,
+    password: string,
+  ): Promise<void> {
+    return this.api.request<void>(AUTH_API_ROUTES.RESET_PASSWORD, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      data: { token, password },
+    });
+  }
+
+  public async verifyEmail(token: string): Promise<void> {
+    return this.api.request<void>(AUTH_API_ROUTES.VERIFY_EMAIL, {
+      method: "POST",
+      headers: this.defaultHeaders,
+      data: { token },
     });
   }
 }
