@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { dbConfig } from "@/config";
 import { combinedChatsSchema } from "@/feature/chats/chats.schema";
-import { combinedDocumentsSchema } from "@/feature/documents/documents.schema";
+import { combinedCorpusSchema } from "@/feature/corpus/corpus.schema";
 import { combinedMessagesSchema } from "@/feature/messages/messages.schema";
 import { lawyersTable } from "@/feature/lawyers/lawyers.schema";
 import { combinedNotificationsSchema } from "@/feature/notifications/notifications.schema";
@@ -21,7 +21,7 @@ export const db = drizzle(pool, {
   schema: {
     ...combinedAuthSchema,
     ...combinedChatsSchema,
-    ...combinedDocumentsSchema,
+    ...combinedCorpusSchema,
     ...combinedMessagesSchema,
     ...lawyersTable,
     ...combinedNotificationsSchema,

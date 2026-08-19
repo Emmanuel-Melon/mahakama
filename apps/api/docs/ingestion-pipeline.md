@@ -72,12 +72,12 @@ The embedding service uses a strategy pattern with two core abstractions defined
 
 **Factory** (`embeddings.factory.ts`) wires the provider and store together based on configuration:
 
-| writeMode | primaryStore | Result |
-|-----------|-------------|--------|
-| `"chroma"` | `"chroma"` | Primary: Chroma, no shadow |
-| `"pgvector"` | `"pgvector"` | Primary: pgvector, no shadow |
-| `"dual"` | `"chroma"` | Primary: Chroma, shadow: pgvector |
-| `"dual"` | `"pgvector"` | Primary: pgvector, shadow: Chroma |
+| writeMode    | primaryStore | Result                            |
+| ------------ | ------------ | --------------------------------- |
+| `"chroma"`   | `"chroma"`   | Primary: Chroma, no shadow        |
+| `"pgvector"` | `"pgvector"` | Primary: pgvector, no shadow      |
+| `"dual"`     | `"chroma"`   | Primary: Chroma, shadow: pgvector |
+| `"dual"`     | `"pgvector"` | Primary: pgvector, shadow: Chroma |
 
 The factory always wraps the result in the composite store for a consistent interface.
 
@@ -100,13 +100,13 @@ The embedding pipeline reads its configuration from two sources:
 
 Centralized in `embeddingConfig` (from `@/config`), all configurable via environment variables:
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `EMBEDDING_MODEL` | `"nomic-embed-text"` | Ollama embedding model name |
-| `EMBEDDING_DIMENSIONS` | `768` | Vector dimension size |
-| `EMBEDDING_OLLAMA_BASE_URL` | `"http://localhost:11434"` | Ollama server URL |
-| `EMBEDDING_WRITE_MODE` | `"chroma"` | `"chroma"`, `"pgvector"`, or `"dual"` |
-| `EMBEDDING_PRIMARY_STORE` | `"chroma"` | `"chroma"` or `"pgvector"` — the read-primary store |
+| Variable                    | Default                    | Purpose                                             |
+| --------------------------- | -------------------------- | --------------------------------------------------- |
+| `EMBEDDING_MODEL`           | `"nomic-embed-text"`       | Ollama embedding model name                         |
+| `EMBEDDING_DIMENSIONS`      | `768`                      | Vector dimension size                               |
+| `EMBEDDING_OLLAMA_BASE_URL` | `"http://localhost:11434"` | Ollama server URL                                   |
+| `EMBEDDING_WRITE_MODE`      | `"pgvector"`               | `"chroma"`, `"pgvector"`, or `"dual"`               |
+| `EMBEDDING_PRIMARY_STORE`   | `"pgvector"`               | `"chroma"` or `"pgvector"` — the read-primary store |
 
 Local constants in `embeddings.config.ts`: `CHUNK_CONFIG` (chunk size 1000, overlap 200, word boundary tolerance 0.2, section header regex), `EMBEDDING_CONFIG` (batch size 20, ID prefix "law_", dimensions 768). The dimensions constant is intentionally duplicated from the runtime config — Drizzle requires a compile-time literal for the vector column definition, and changing it requires a migration, not just an env var flip.
 
@@ -118,18 +118,18 @@ Local constants in `embeddings.config.ts`: `CHUNK_CONFIG` (chunk size 1000, over
 
 ## File Reference
 
-| File | Purpose |
-|------|---------|
-| `embeddings.types.ts` | Core interfaces: `EmbeddingProvider`, `VectorStore`, `VectorRecord`, `DocumentChunk`, job types |
-| `embeddings.config.ts` | Local constants: chunking parameters, batch size, ID prefix, dimensions |
-| `embeddings.factory.ts` | Wires provider + store based on config; exports `embeddingProvider` and `vectorStore` singletons |
-| `embeddings.schema.ts` | Drizzle table definitions: `document_chunks` (with HNSW index), `embedding_jobs` |
-| `embeddings.utils.ts` | Utilities: `buildChunkId` (prefixed IDs), `buildChunkMetadata` (metadata object) |
-| `providers/ollama.provider.ts` | Ollama embedding provider: calls `/api/embeddings` per text, client-side batching |
-| `stores/chroma.store.ts` | Chroma vector store adapter: delegates to `chromaClient`, flattens nested results |
-| `stores/pgvector.store.ts` | pgvector store adapter: updates existing rows, cosine similarity search via Drizzle |
-| `stores/index.ts` | Composite store factory: primary + optional shadow write for migration |
-| `operations/embeddings.insert.ts` | `saveDocumentChunks` (Postgres metadata write), `generateDocumentEmbeddings` (embed + store) |
-| `operations/embeddings.find.ts` | `findEmbedding`: embeds query text, delegates to vector store |
-| `operations/embeddings.remove.ts` | `removeDocumentEmbeddings`: deletes chunks and jobs for a document |
-| `operations/embeddings.update.ts` | `upsertEmbeddingJob`, `markEmbeddingJobFailed`: job status management |
+| File                              | Purpose                                                                                          |
+| --------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `embeddings.types.ts`             | Core interfaces: `EmbeddingProvider`, `VectorStore`, `VectorRecord`, `DocumentChunk`, job types  |
+| `embeddings.config.ts`            | Local constants: chunking parameters, batch size, ID prefix, dimensions                          |
+| `embeddings.factory.ts`           | Wires provider + store based on config; exports `embeddingProvider` and `vectorStore` singletons |
+| `embeddings.schema.ts`            | Drizzle table definitions: `document_chunks` (with HNSW index), `embedding_jobs`                 |
+| `embeddings.utils.ts`             | Utilities: `buildChunkId` (prefixed IDs), `buildChunkMetadata` (metadata object)                 |
+| `providers/ollama.provider.ts`    | Ollama embedding provider: calls `/api/embeddings` per text, client-side batching                |
+| `stores/chroma.store.ts`          | Chroma vector store adapter: delegates to `chromaClient`, flattens nested results                |
+| `stores/pgvector.store.ts`        | pgvector store adapter: updates existing rows, cosine similarity search via Drizzle              |
+| `stores/index.ts`                 | Composite store factory: primary + optional shadow write for migration                           |
+| `operations/embeddings.insert.ts` | `saveDocumentChunks` (Postgres metadata write), `generateDocumentEmbeddings` (embed + store)     |
+| `operations/embeddings.find.ts`   | `findEmbedding`: embeds query text, delegates to vector store                                    |
+| `operations/embeddings.remove.ts` | `removeDocumentEmbeddings`: deletes chunks and jobs for a document                               |
+| `operations/embeddings.update.ts` | `upsertEmbeddingJob`, `markEmbeddingJobFailed`: job status management                            |

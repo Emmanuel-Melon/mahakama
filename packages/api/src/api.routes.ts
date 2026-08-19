@@ -9,10 +9,10 @@ export const AUTH_API_ROUTES = {
   VERIFY_EMAIL: `/v1/verify-email`,
 } as const;
 
-export const DOCUMENTS_API_ROUTES = {
-  ROOT: "/v1/documents",
-  DOCUMENT: "/v1/documents/:documentId",
-  INGEST: "/v1/documents/ingest",
+export const CORPUS_API_ROUTES = {
+  ROOT: "/v1/corpus",
+  CORPUS: "/v1/corpus/:corpusId",
+  INGEST: "/v1/corpus/ingest",
 } as const;
 
 export const LAWYERS_API_ROUTES = {

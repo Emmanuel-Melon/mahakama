@@ -94,15 +94,15 @@ The citation regex patterns are also defined in `rag.config.ts` and are not conf
 
 ## File Reference
 
-| File | Purpose |
-|------|---------|
-| `rag.types.ts` | Zod schemas and TypeScript types for queries, chunks, sources, context, and staleness inputs |
-| `rag.config.ts` | Local constants: collection name, top-K, relevance threshold, history limit, citation patterns |
-| `rag.service.ts` | Core retrieval: embed query, vector search, filter by similarity, staleness check, source deduplication |
-| `rag.context.ts` | Orchestrator: wraps retrieval with error resilience, formats conversation history |
-| `rag.answer.ts` | LLM generation: streaming and non-streaming paths, post-generation citation validation, message persistence |
-| `rag.prompts.ts` | Prompt assembly: system instructions, context formatting, history, staleness warnings |
-| `rag.staleness.ts` | Staleness logic: version-based and age-based checks with fail-open policy |
-| `rag.citations.ts` | Citation extraction (5 regex patterns) and fabrication detection (whitelist cross-check) |
-| `rag.chunker.ts` | Section-aware document chunking with character-based splitting and word boundary tolerance |
-| `rag.documents.ts` | Document version loading from Postgres for staleness comparison |
+| File               | Purpose                                                                                                     |
+| ------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `rag.types.ts`     | Zod schemas and TypeScript types for queries, chunks, sources, context, and staleness inputs                |
+| `rag.config.ts`    | Local constants: collection name, top-K, relevance threshold, history limit, citation patterns              |
+| `rag.service.ts`   | Core retrieval: embed query, vector search, filter by similarity, staleness check, source deduplication     |
+| `rag.context.ts`   | Orchestrator: wraps retrieval with error resilience, formats conversation history                           |
+| `rag.answer.ts`    | LLM generation: streaming and non-streaming paths, post-generation citation validation, message persistence |
+| `rag.prompts.ts`   | Prompt assembly: system instructions, context formatting, history, staleness warnings                       |
+| `rag.staleness.ts` | Staleness logic: version-based and age-based checks with fail-open policy                                   |
+| `rag.citations.ts` | Citation extraction (5 regex patterns) and fabrication detection (whitelist cross-check)                    |
+| `rag.chunker.ts`   | Section-aware document chunking with character-based splitting and word boundary tolerance                  |
+| `rag.documents.ts` | Document version loading from Postgres for staleness comparison                                             |

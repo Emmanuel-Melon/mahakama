@@ -6,14 +6,14 @@ vi.mock("@/service/embedding-service/operations/embeddings.find", () => ({
 }));
 
 vi.mock("../rag.documents", () => ({
-  loadDocumentVersions: vi.fn(),
+  loadCorpusVersions: vi.fn(),
 }));
 
 import { findEmbedding } from "@/service/embedding-service/operations/embeddings.find";
-import { loadDocumentVersions } from "../rag.documents";
+import { loadCorpusVersions } from "../rag.documents";
 
 const mockedSearch = vi.mocked(findEmbedding);
-const mockedLoadDocumentVersions = vi.mocked(loadDocumentVersions);
+const mockedLoadCorpusVersions = vi.mocked(loadCorpusVersions);
 
 const chromaHit = (
   id: string,
@@ -47,7 +47,7 @@ describe("ragService.retrieveContext", () => {
 
   beforeEach(() => {
     vi.resetAllMocks();
-    mockedLoadDocumentVersions.mockResolvedValue(new Map());
+    mockedLoadCorpusVersions.mockResolvedValue(new Map());
   });
 
   it("returns empty context when there are no hits", async () => {
@@ -165,7 +165,7 @@ describe("ragService.retrieveContext", () => {
         chromaHit("law_3", "Seed Act", 0.1),
       ]) as never,
     );
-    mockedLoadDocumentVersions.mockResolvedValue(
+    mockedLoadCorpusVersions.mockResolvedValue(
       new Map([
         ["doc-1", 2], // newer version exists → stale
         ["doc-2", 1], // at current version, but text is old → stale by window
@@ -176,7 +176,7 @@ describe("ragService.retrieveContext", () => {
       collectionName,
     });
 
-    expect(mockedLoadDocumentVersions).toHaveBeenCalledWith(["doc-1", "doc-2"]);
+    expect(mockedLoadCorpusVersions).toHaveBeenCalledWith(["doc-1", "doc-2"]);
     expect(result.chunks[0].stale).toBe(true);
     expect(result.chunks[1].stale).toBe(true);
     expect(result.chunks[2].stale).toBe(false);

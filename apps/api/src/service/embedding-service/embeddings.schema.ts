@@ -10,7 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { z } from "zod";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { documentsTable } from "@/feature/documents/documents.schema";
+import { documentsTable } from "@/feature/corpus/corpus.schema";
 import { EMBEDDING_CONFIG } from "./embeddings.config";
 
 extendZodWithOpenApi(z);
