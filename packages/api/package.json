@@ -14,8 +14,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./fetch": "./src/fetch.ts",
-    "./api.utils": "./src/api.utils.ts",
+    "./api.utils": "./src/api/api.utils.ts",
+    "./api.types": "./src/api/api.types.ts",
     "./api.routes": "./src/api.routes.ts",
     "./generated/api.types": "./src/generated/api.types.ts",
     "./generated/api.schemas": "./src/generated/api.schemas.ts",
@@ -28,12 +28,18 @@
     "./clients/services.api": "./src/clients/services.api.ts",
     "./clients/users.api": "./src/clients/users.api.ts",
     "./hooks/use-auth": "./src/hooks/use-auth.ts",
-    "./hooks/use-chats": "./src/hooks/use-chats.ts",
+    "./hooks/use-chats": "./src/hooks/chats/use-chats.ts",
+    "./hooks/use-chats-sse": "./src/hooks/chats/use-chats.sse.ts",
     "./hooks/use-documents": "./src/hooks/use-documents.ts",
     "./hooks/use-lawyers": "./src/hooks/use-lawyers.tsx",
+    "./hooks/user-documents/use-user-documents": "./src/hooks/user-documents/use-user-documents.ts",
     "./hooks/use-notifications": "./src/hooks/use-notifications.ts",
     "./hooks/use-services": "./src/hooks/use-services.ts",
-    "./hooks/use-users": "./src/hooks/use-users.ts"
+    "./hooks/use-users": "./src/hooks/use-users.ts",
+    "./react-query": "./src/react-query/index.ts",
+    "./hooks/use-upload-manager": "./src/hooks/use-upload-manager.ts",
+    "./hooks/documents/use-documents.sse": "./src/hooks/documents/use-documents.sse.ts",
+    "./hooks/user-documents/use-user-documents.sse": "./src/hooks/user-documents/use-user-documents.sse.ts"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
@@ -41,10 +47,16 @@
     "jose": "^6.0.0",
     "react-router": "^7.0.0",
     "sonner": "^2.0.0",
-    "zod": "^3.0.0"
+    "zod": "^3.0.0",
+    "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "openapi-typescript": "^7.10.1",
-    "openapi-zod-client": "^1.18.3"
+    "openapi-zod-client": "^1.18.3",
+    "react": "^19.0.0",
+    "@types/react": "^19.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.19.0"
   }
 }

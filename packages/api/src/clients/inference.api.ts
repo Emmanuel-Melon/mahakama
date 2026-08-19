@@ -1,5 +1,7 @@
-import { FetchApiClient } from "../fetch";
-import type { components, paths } from "../generated/api.types";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
+import type { components } from "../generated/api.types";
 
 export type InferencePreference = components["schemas"]["InferencePreference"];
 export type InferencePreferenceResource =
@@ -18,91 +20,124 @@ export type StrategyResource = components["schemas"]["StrategyResource"];
 export type StrategyCollectionResponse =
   components["schemas"]["StrategyCollectionResponse"];
 
-export class InferenceApiClient {
-  private api: FetchApiClient;
+export type InferencePreferenceMetadata =
+  InferencePreferenceSingleResponse["metadata"];
+export type InferencePreferenceResult = ApiResource<
+  InferencePreference,
+  InferencePreferenceMetadata
+>;
 
-  constructor(apiClient?: FetchApiClient) {
-    this.api = apiClient || new FetchApiClient();
+export class InferenceApiClient extends BaseApiClient {
+  protected readonly path = "/inference";
+
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
   // Preferences routes
-  async getPreferences(userId: string): Promise<InferencePreference[]> {
+  public async getPreferences(
+    userId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<InferencePreference[]> {
     const response =
       await this.api.request<InferencePreferenceCollectionResponse>(
-        `/inference/preferences/${userId}`,
+        `${this.path}/preferences/${userId}`,
+        {
+          headers: { ...this.defaultHeaders, ...options.headers },
+        },
       );
-    if (!response.data) {
-      throw new Error("Invalid preferences data received from the server");
-    }
-    return response.data.map((item) => item.attributes);
+    return this.unpackCollection(response, {
+      errMsg: "Invalid preferences data received from the server",
+    });
   }
 
-  async getPreference(
+  public async getPreference(
     userId: string,
     strategyKey: string,
-  ): Promise<InferencePreference> {
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<InferencePreferenceResult> {
     const response = await this.api.request<InferencePreferenceSingleResponse>(
-      `/inference/preferences/${userId}/${strategyKey}`,
+      `${this.path}/preferences/${userId}/${strategyKey}`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
     );
-    if (!response.data.attributes) {
-      throw new Error("Invalid preference data received from the server");
-    }
-    return response.data.attributes;
+    return this.unpackSingle(response, {
+      errMsg: "Invalid preference data received from the server",
+    });
   }
 
-  async upsertPreference(
+  public async upsertPreference(
     userId: string,
     strategyKey: string,
     data: Partial<InferencePreference>,
-  ): Promise<InferencePreference> {
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<InferencePreferenceResult> {
     const response = await this.api.request<InferencePreferenceSingleResponse>(
-      `/inference/preferences/${userId}/${strategyKey}`,
+      `${this.path}/preferences/${userId}/${strategyKey}`,
       {
         method: "PUT",
-        body: JSON.stringify(data),
+        headers: { ...this.defaultHeaders, ...options.headers },
+        data,
       },
     );
-    if (!response.data.attributes) {
-      throw new Error("Invalid preference data received from the server");
-    }
-    return response.data.attributes;
+    return this.unpackSingle(response, {
+      errMsg: "Invalid preference data received from the server",
+    });
   }
 
-  async disablePreference(
+  public async disablePreference(
     userId: string,
     strategyKey: string,
-  ): Promise<InferencePreference> {
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<InferencePreferenceResult> {
     const response = await this.api.request<InferencePreferenceSingleResponse>(
-      `/inference/preferences/${userId}/${strategyKey}`,
+      `${this.path}/preferences/${userId}/${strategyKey}`,
       {
         method: "PUT",
-        body: JSON.stringify({ disabled: true }),
+        headers: { ...this.defaultHeaders, ...options.headers },
+        data: { disabled: true },
       },
     );
-    if (!response.data.attributes) {
-      throw new Error("Invalid preference data received from the server");
-    }
-    return response.data.attributes;
+    return this.unpackSingle(response, {
+      errMsg: "Invalid preference data received from the server",
+    });
   }
 
   // Discovery routes
-  async getProviders(): Promise<Provider[]> {
+  public async getProviders(
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<Provider[]> {
     const response = await this.api.request<ProviderCollectionResponse>(
-      "/inference/providers",
+      `${this.path}/providers`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
     );
-    if (!response.data) {
-      throw new Error("Invalid providers data received from the server");
-    }
-    return response.data.map((item) => item.attributes);
+    return this.unpackCollection(response, {
+      errMsg: "Invalid providers data received from the server",
+    });
   }
 
-  async getStrategies(): Promise<Strategy[]> {
+  public async getStrategies(
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<Strategy[]> {
     const response = await this.api.request<StrategyCollectionResponse>(
-      "/inference/strategies",
+      `${this.path}/strategies`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
     );
-    if (!response.data) {
-      throw new Error("Invalid strategies data received from the server");
-    }
-    return response.data.map((item) => item.attributes);
+    return this.unpackCollection(response, {
+      errMsg: "Invalid strategies data received from the server",
+    });
   }
 }
+
+let _inferenceApi: InferenceApiClient | null = null;
+export const inferenceApi = new Proxy({} as InferenceApiClient, {
+  get(_, prop) {
+    if (!_inferenceApi) _inferenceApi = new InferenceApiClient();
+    return _inferenceApi[prop as keyof InferenceApiClient];
+  },
+});

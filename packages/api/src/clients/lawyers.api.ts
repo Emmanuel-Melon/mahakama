@@ -1,145 +1,118 @@
-import { FetchApiClient } from "../fetch";
-import type { components } from "../generated/api.types";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
 import { LAWYERS_API_ROUTES } from "../api.routes";
+import type { components } from "../generated/api.types";
 
 export type Lawyer = components["schemas"]["Lawyer"];
 export type LawyerResource = components["schemas"]["LawyerResource"];
 export type LawyerSingleResponse =
   components["schemas"]["LawyerSingleResponse"];
-export type LawyersCollectionResponse =
-  components["schemas"]["LawyersCollectionResponse"];
+export type LawyerCollectionResponse =
+  components["schemas"]["LawyerCollectionResponse"];
 export type CreateLawyerRequest = components["schemas"]["CreateLawyer"];
 
-export class LawyersApiClient {
-  private api: FetchApiClient;
-  constructor() {
-    this.api = new FetchApiClient();
+export type LawyerMetadata = LawyerSingleResponse["metadata"];
+export type LawyerResult = ApiResource<Lawyer, LawyerMetadata>;
+
+export class LawyersApiClient extends BaseApiClient {
+  protected readonly path = LAWYERS_API_ROUTES.ROOT;
+
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
   // Get all lawyers with optional filtering
-  public async getLawyers(filters?: {
-    specialization?: string;
-    location?: string;
-    available?: boolean;
-    q?: string;
-  }): Promise<Lawyer[]> {
-    try {
-      let url = LAWYERS_API_ROUTES.ROOT;
-      const searchParams = new URLSearchParams();
+  public async getLawyers(
+    filters?: {
+      specialization?: string;
+      location?: string;
+      available?: boolean;
+      q?: string;
+    },
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<Lawyer[]> {
+    const searchParams = new URLSearchParams();
 
-      if (filters) {
-        if (filters.specialization) {
-          searchParams.append("specialization", filters.specialization);
-        }
-        if (filters.location) {
-          searchParams.append("location", filters.location);
-        }
-        if (filters.available !== undefined) {
-          searchParams.append("available", filters.available.toString());
-        }
-
-        if (filters.q) {
-          searchParams.append("q", filters.q);
-        }
+    if (filters) {
+      if (filters.specialization) {
+        searchParams.append("specialization", filters.specialization);
       }
-
-      const queryString = searchParams.toString();
-      if (queryString) {
-        url += `?${queryString}`;
+      if (filters.location) {
+        searchParams.append("location", filters.location);
       }
-
-      const response = await this.api.request<LawyersCollectionResponse>(url);
-      if (!response.data) {
-        console.error("Invalid lawyers data:", response);
-        throw new Error("Invalid lawyers data received from the server");
+      if (filters.available !== undefined) {
+        searchParams.append("available", filters.available.toString());
       }
-      const lawyers = response.data.map((resource) => resource.attributes);
-      return lawyers;
-    } catch (error) {
-      console.error("Failed to fetch lawyers:", error);
-      throw error;
+      if (filters.q) {
+        searchParams.append("q", filters.q);
+      }
     }
+
+    const queryString = searchParams.toString();
+    const url = queryString ? `${this.path}?${queryString}` : this.path;
+
+    const response = await this.api.request<LawyerCollectionResponse>(url, {
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
+
+    return this.unpackCollection(response, {
+      errMsg: "Invalid lawyers data received from the server",
+    });
   }
 
-  public async getLawyerById(lawyerId: string): Promise<Lawyer> {
-    try {
-      const response = await this.api.request<LawyerSingleResponse>(
-        LAWYERS_API_ROUTES.ROOT + `/${lawyerId}`,
-      );
+  public async getLawyerById(
+    lawyerId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<LawyerResult> {
+    const response = await this.api.request<LawyerSingleResponse>(
+      `${this.path}/${lawyerId}`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-      if (!response.data.attributes) {
-        console.error("Invalid lawyer data:", response);
-        throw new Error("Invalid lawyer data received from the server");
-      }
-
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to fetch lawyer:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid lawyer data received from the server",
+    });
   }
 
-  public async createLawyer(lawyerData: CreateLawyerRequest): Promise<Lawyer> {
-    try {
-      const response = await this.api.request<LawyerSingleResponse>(
-        LAWYERS_API_ROUTES.ROOT,
-        {
-          method: "POST",
-          body: JSON.stringify(lawyerData),
-        },
-      );
+  public async createLawyer(
+    lawyerData: CreateLawyerRequest,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<LawyerResult> {
+    const response = await this.api.request<LawyerSingleResponse>(this.path, {
+      method: "POST",
+      headers: { ...this.defaultHeaders, ...options.headers },
+      data: lawyerData,
+    });
 
-      if (!response.data.attributes) {
-        console.error("Invalid lawyer data:", response);
-        throw new Error("Invalid lawyer data received from the server");
-      }
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to create lawyer:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid lawyer data received from the server",
+    });
   }
 
-  // public async updateLawyer(
-  //   lawyerId: string,
-  //   updateData: UpdateLawyerRequest,
-  //   options: { headers: HeadersInit } = { headers: {} },
-  // ): Promise<Lawyer> {
-  //   try {
-  //     const response = await this.api.request<LawyerSingleResponse>(`/v1/lawyers/${lawyerId}`, {
-  //       method: 'PUT',
-  //       headers: options.headers,
-  //       body: JSON.stringify(updateData),
-  //     });
+  public async getLawyerByEmail(
+    email: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<LawyerResult> {
+    const response = await this.api.request<LawyerSingleResponse>(
+      `${this.path}/email?email=${encodeURIComponent(email)}`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-  //     if (!response.data.attributes) {
-  //       console.error("Invalid lawyer data:", response);
-  //       throw new Error("Invalid lawyer data received from the server");
-  //     }
-  //     return response.data.attributes;
-  //   } catch (error) {
-  //     console.error("Failed to update lawyer:", error);
-  //     throw error;
-  //   }
-  // }
-
-  public async getLawyerByEmail(email: string): Promise<Lawyer> {
-    try {
-      const response = await this.api.request<LawyerSingleResponse>(
-        LAWYERS_API_ROUTES.ROOT + `/email?email=${encodeURIComponent(email)}`,
-      );
-
-      if (!response.data.attributes) {
-        console.error("Invalid lawyer data:", response);
-        throw new Error("Invalid lawyer data received from the server");
-      }
-
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to fetch lawyer:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid lawyer data received from the server",
+    });
   }
 }
 
-export const lawyersApi = new LawyersApiClient();
+let _lawyersApi: LawyersApiClient | null = null;
+export const lawyersApi = new Proxy({} as LawyersApiClient, {
+  get(_, prop) {
+    if (!_lawyersApi) _lawyersApi = new LawyersApiClient();
+    return _lawyersApi[prop as keyof LawyersApiClient];
+  },
+});
