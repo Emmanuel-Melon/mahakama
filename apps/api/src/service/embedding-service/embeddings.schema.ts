@@ -1,4 +1,3 @@
-// embeddings.schema.ts
 import {
   pgTable,
   text,
@@ -20,6 +19,10 @@ export const documentChunksTable = pgTable(
   "document_chunks",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    // Stable vector-store identifier (e.g. "law_<documentId>-<index>-v<version>").
+    // Nullable for rows inserted before this column was added; backfilled via
+    // migration.
+    vectorId: text("vector_id"),
     documentId: uuid("document_id")
       .notNull()
       .references(() => documentsTable.id, { onDelete: "cascade" }),
@@ -52,6 +55,7 @@ export const documentChunksTable = pgTable(
   },
   (table) => ({
     documentIdx: index("document_idx").on(table.documentId),
+    vectorIdIdx: index("vector_id_idx").on(table.vectorId),
     embeddingIdx: index("embedding_idx").using(
       "hnsw",
       table.embedding.op("vector_cosine_ops"),
@@ -73,7 +77,20 @@ export const embeddingJobsTable = pgTable("embedding_jobs", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const shadowWriteFailuresTable = pgTable("shadow_write_failures", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  collectionName: text("collection_name").notNull(),
+  recordIds: text("record_ids").array().notNull(),
+  shadowStore: text("shadow_store").notNull(),
+  primaryStore: text("primary_store").notNull(),
+  retryCount: integer("retry_count").default(0).notNull(),
+  lastError: text("last_error"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  resolvedAt: timestamp("resolved_at"),
+});
+
 export const combinedembeddingsSchema = {
   documentChunksTable,
   embeddingJobsTable,
+  shadowWriteFailuresTable,
 };

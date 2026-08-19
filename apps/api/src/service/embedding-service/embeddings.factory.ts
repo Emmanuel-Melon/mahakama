@@ -1,4 +1,3 @@
-// embeddings.factory.ts
 import { config } from "@/config";
 import { createOllamaProvider } from "./providers/ollama.provider";
 import { chromaStore } from "./stores/chroma.store";

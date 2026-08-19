@@ -1,5 +1,5 @@
 import { embeddingProvider, vectorStore } from "../embeddings.factory";
-import { QueryEmbeddingOptions } from "../embeddings.types";
+import { QueryEmbeddingOptions, VectorRecord } from "../embeddings.types";
 
 export const findEmbedding = async (
   queryString: string,
