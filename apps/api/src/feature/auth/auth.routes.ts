@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { z } from "zod";
 import type { ApiManifest } from "@/routes/api.types";
 
-import { loginUserController } from "./controllers/login.controller";
+import { loginController } from "./controllers/login.controller";
 import { logoutController } from "./controllers/logout.controller";
-import { registerUserController } from "./controllers/register.controller";
+import { signupController } from "./controllers/singup.controller";
+import { getMeController } from "./controllers/get-me.controller";
+import { refreshController } from "./controllers/refresh.controller";
+import { requestResetController } from "./controllers/request-reset.controller";
+import { resetPasswordController } from "./controllers/reset-password.controller";
+import { verifyEmailController } from "./controllers/verify-email.controller";
 import { registerRequestSchema, loginRequestSchema } from "./auth.types";
 import {
   HttpLocation,
@@ -16,14 +20,19 @@ export const authRouter = Router();
 authRouter.post(
   "/register",
   validateHttpRequest(registerRequestSchema, HttpLocation.Body),
-  registerUserController,
+  signupController,
 );
 authRouter.post(
   "/login",
   validateHttpRequest(loginRequestSchema, HttpLocation.Body),
-  loginUserController,
+  loginController,
 );
 authRouter.post("/logout", logoutController);
+authRouter.get("/me", getMeController);
+authRouter.post("/refresh", refreshController);
+authRouter.post("/request-reset", requestResetController);
+authRouter.post("/reset-password", resetPasswordController);
+authRouter.post("/verify-email", verifyEmailController);
 
 export const authApi: ApiManifest = {
   path: "/v1",

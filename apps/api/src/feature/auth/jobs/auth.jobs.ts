@@ -1,17 +1,25 @@
 import { logger } from "@/lib/logger";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
-import { createAuthEvent } from "../operations/auth.create";
+import { insertAuthEvent } from "../operations/auth.insert";
 import { AuthJobs } from "../auth.config";
-import { LoginPayload, RegistrationPayload } from "../auth.types";
+import {
+  EmailVerifiedPayload,
+  GenerateVerificationLinkPayload,
+  LoggedInPayload,
+  LoggedOutPayload,
+  RefreshTokenPayload,
+  RegistrationCompletedPayload,
+  ResetPasswordRequestPayload,
+} from "../auth.types";
 import { notificationsQueue } from "@/feature/notifications/jobs/notifications.queue";
 import { NotificationJobs } from "@/feature/notifications/notifications.config";
 import { createNotificationPayload } from "@/feature/notifications/notifications.utils";
 import { AuthNotificationTemplateMap } from "../auth.notifications";
 
 export class AuthJobHandler {
-  static async handleLogin(data: LoginPayload) {
+  static async handleLogin(data: LoggedInPayload) {
     const authEvent = unwrapJobResult(
-      await createAuthEvent({
+      await insertAuthEvent({
         userId: data.userId,
         eventType: "login",
         createdAt: new Date(),
@@ -42,7 +50,39 @@ export class AuthJobHandler {
     return { success: true };
   }
 
-  static async handleRegistration(data: RegistrationPayload) {
+  static async handleRegistration(data: RegistrationCompletedPayload) {
+    logger.info({ userId: data.userId }, "Processing welcome notification");
+    // ... logic
+    return { welcomeSent: true };
+  }
+
+  static async handleTokenRefresh(data: RefreshTokenPayload) {
+    logger.info({ userId: data.userId }, "Processing welcome notification");
+    // ... logic
+    return { welcomeSent: true };
+  }
+
+  static async handleLogout(data: LoggedOutPayload) {
+    logger.info({ userId: data.userId }, "Processing welcome notification");
+    // ... logic
+    return { welcomeSent: true };
+  }
+
+  static async handleResetPasswordRequest(data: ResetPasswordRequestPayload) {
+    logger.info({ userId: data.userId }, "Processing welcome notification");
+    // ... logic
+    return { welcomeSent: true };
+  }
+
+  static async handleEmailVerified(data: EmailVerifiedPayload) {
+    logger.info({ userId: data.userId }, "Processing welcome notification");
+    // ... logic
+    return { welcomeSent: true };
+  }
+
+  static async generateVerificationLinkEvent(
+    data: GenerateVerificationLinkPayload,
+  ) {
     logger.info({ userId: data.userId }, "Processing welcome notification");
     // ... logic
     return { welcomeSent: true };

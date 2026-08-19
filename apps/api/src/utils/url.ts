@@ -1,4 +1,4 @@
-import { serverConfig } from "@/config";
+import { clientConfig, serverConfig } from "@/config";
 import { getStoragePath } from "@/lib/storage/storage";
 import { statSync } from "fs";
 
@@ -31,3 +31,9 @@ export function getDocumentFileSize(storageUrl: string): number {
     return 0;
   }
 }
+
+export const getFrontendUrl = (path: string): string => {
+  const baseUrl = clientConfig.baseUrl;
+  const sanitizedPath = path.startsWith("/") ? path.slice(1) : path;
+  return `${baseUrl}/${sanitizedPath}`;
+};

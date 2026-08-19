@@ -56,6 +56,7 @@ export const usersSchema = pgTable("users", {
     .$type<UserRole>()
     .notNull()
     .default("user"),
+  emailVerifiedAt: timestamp("email_verified_at"),
   fingerprint: varchar("fingerprint", { length: 255 }).unique(),
   userAgent: text("user_agent"),
   lastIp: varchar("last_ip", { length: 45 }),
@@ -68,6 +69,9 @@ export const usersSchema = pgTable("users", {
   occupation: varchar("occupation", { length: 100 }),
   bio: text("bio"),
   profilePicture: text("profile_picture"),
+
+  // onboarding
+  isFirstLogin: boolean("is_first_login").default(true).notNull(),
   isOnboarded: boolean("is_onboarded").default(false).notNull(),
   // Timestamps
   createdAt: timestamp("created_at").defaultNow().notNull(),

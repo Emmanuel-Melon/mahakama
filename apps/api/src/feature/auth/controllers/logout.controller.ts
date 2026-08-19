@@ -1,41 +1,47 @@
-import { Request, Response } from "express";
-import { logoutUser } from "../operations/auth.logout";
-import { sendErrorResponse } from "@/lib/express/express.response";
-import { HttpStatus } from "@/lib/http/http.status";
-import { clearAuthCookie } from "../auth.utils";
+import type { Request, Response } from "express";
+
 import { asyncHandler } from "@/lib/express/express.async-handler";
+import { sendSuccessResponse } from "@/lib/express/express.response";
+import { HttpError } from "@/lib/http/http.error";
+import { HttpStatus } from "@/lib/http/http.status";
+
+import { AUTH_COOKIES, AuthJobs } from "../auth.config";
+import { getCookieOptions } from "../auth.cookies";
 import { authQueue } from "../jobs/auth.queue";
-import { AuthJobs } from "../auth.config";
+import { findActiveSession } from "../operations/auth.find";
+import { revokeSession } from "../operations/auth.update";
 
 export const logoutController = asyncHandler(
   async (req: Request, res: Response) => {
     const userId = req.user?.id;
-    const token =
-      req.cookies?.token || req.headers.authorization?.split(" ")[1];
 
-    if (!userId || !token) {
-      return sendErrorResponse(req, res, {
-        status: HttpStatus.UNAUTHORIZED,
-        description: "Unauthorized",
-      });
+    if (!userId) {
+      throw new HttpError(HttpStatus.UNAUTHORIZED, "No active user");
     }
 
-    await logoutUser({
-      userId,
-      token,
-      userAgent: req.headers["user-agent"],
-      ip: req.ip,
+    const sessionResult = await findActiveSession("userId", userId);
+    if (!sessionResult.data) {
+      throw new HttpError(HttpStatus.UNAUTHORIZED, "No active session");
+    }
+
+    await revokeSession(sessionResult.data.id);
+
+    Object.values(AUTH_COOKIES).forEach((cookieName) => {
+      res.clearCookie(cookieName, getCookieOptions(req));
     });
 
-    clearAuthCookie(res);
-    res.status(HttpStatus.SUCCESS.statusCode).json({
-      success: true,
-      message: "Successfully logged out",
-    });
+    res.clearCookie(
+      "refreshToken",
+      getCookieOptions(req, { path: "/api/v1/auth/refresh" }),
+    );
 
-    await authQueue.add(AuthJobs.Logout, {
-      userId: userId,
-      email: req.user?.email!,
-    });
+    sendSuccessResponse(req, res, undefined, { status: HttpStatus.NO_CONTENT });
+
+    if (req.user) {
+      authQueue.add(AuthJobs.LoggedOut, {
+        userId: req.user.id,
+        email: req.user.email!,
+      });
+    }
   },
 );

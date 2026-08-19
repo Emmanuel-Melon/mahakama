@@ -22,6 +22,10 @@ export const ServerConfigSchema = z.object({
   environment: z.string(),
 });
 
+export const ClientConfigSchema = z.object({
+  baseUrl: z.string().url("Client Base URL must be a valid URL"),
+});
+
 export const PostgresConfigSchema = z.object({
   url: z.string().url("PostgreSQL URL must be a valid URL"),
 });
@@ -64,8 +68,10 @@ export const embeddingConfigSchema = z.object({
   dimensions: z.coerce.number().default(768),
   ollamaBaseUrl: z.string().default("http://localhost:11434"),
   // "chroma" | "pgvector" | "dual" — dual writes both, reads from primaryStore
-  writeMode: z.enum(["chroma", "pgvector", "dual"]).default("chroma"),
-  primaryStore: z.enum(["chroma", "pgvector"]).default("chroma"),
+  writeMode: z.enum(["chroma", "pgvector", "dual"]).default("pgvector"),
+  primaryStore: z.enum(["chroma", "pgvector"]).default("pgvector"),
+  // How often (ms) the shadow-write replay job runs when writeMode is "dual"
+  replayIntervalMs: z.coerce.number().int().positive().default(300_000),
 });
 
 // Grouped Schemas
@@ -96,6 +102,51 @@ export const RagConfigSchema = z.object({
   stalenessMonths: z.number().int().positive().default(24),
 });
 
+export const AuthConfigSchema = z.object({
+  isProduction: z.boolean().default(process.env.NODE_ENV === "production"),
+  cookieDomains: z
+    .array(z.string())
+    .default(
+      process.env.COOKIE_DOMAINS?.split(",").map((s) => s.trim()) || [
+        "localhost",
+      ],
+    ),
+  issuer: z.string().default(process.env.AUTH_ISSUER || "mah-auth-service"),
+  secrets: z.object({
+    jwtSecret: z.string(),
+    jwtRefreshSecret: z.string(),
+    joseSecret: z.instanceof(Uint8Array),
+  }),
+  audience: z.object({
+    USER: z.string().default(process.env.AUDIENCE_USER || "ivyi-app-user"),
+    PARTNER: z
+      .string()
+      .default(process.env.AUDIENCE_PARTNER || "ivyi-app-partner"),
+    ADMIN: z.string().default(process.env.AUDIENCE_ADMIN || "ivyi-app-admin"),
+  }),
+  tokens: z.object({
+    access: z.literal("access").default("access"),
+    refresh: z.literal("refresh").default("refresh"),
+  }),
+  timing: z.object({
+    accessExpiration: z.number().default(60 * 60 * 1000), // 1 hour in MS
+    refreshExpiration: z.number().default(30 * 24 * 60 * 60 * 1000), // 30 days in MS
+  }),
+});
+
+export const CookieConfigSchema = z.object({
+  cookieDomains: z.preprocess(
+    (val) =>
+      typeof val === "string" ? val.split(",").map((s) => s.trim()) : val,
+    z.array(z.string()).default(["localhost"]),
+  ),
+  cookieSecure: z.preprocess(
+    (val) => (val === "true" ? true : val === "false" ? false : undefined),
+    z.boolean().optional(),
+  ),
+  cookieSameSite: z.enum(["lax", "strict", "none"]).optional(),
+});
+
 // Type definitions
 export type IServerEndpoints = z.infer<typeof ServerEndpointsSchema>;
 export type IServerConfig = z.infer<typeof ServerConfigSchema>;
@@ -111,3 +162,6 @@ export type IServicesConfig = z.infer<typeof ServicesConfigSchema>;
 export type ILawSourceConfig = z.infer<typeof LawSourceConfigSchema>;
 export type IRagConfig = z.infer<typeof RagConfigSchema>;
 export type IEmbeddingConfig = z.infer<typeof embeddingConfigSchema>;
+export type IAuthConfig = z.infer<typeof AuthConfigSchema>;
+export type ICookieConfig = z.infer<typeof CookieConfigSchema>;
+export type IClientConfig = z.infer<typeof ClientConfigSchema>;

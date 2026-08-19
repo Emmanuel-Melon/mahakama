@@ -1,71 +1,49 @@
+import { and, eq } from "drizzle-orm";
+
+import { usersSchema } from "@/feature/users/users.schema";
+import type { AuthUser } from "../auth.types";
 import { db } from "@/lib/drizzle";
-import { authEventsSchema } from "../auth.schema";
-import { eq } from "drizzle-orm";
-import {
-  executeSingle,
-  type DbResult,
-} from "@/lib/drizzle/results/results.single";
-import { toManyResult } from "@/lib/drizzle/drizzle.utils";
-import { DbManyResult } from "@/lib/drizzle/drizzle.types";
-import {
-  AuthEvent,
-  AuthEventColumn,
-  AuthEventColumnKey,
-  AuthEventFilters,
+import type { DbResult } from "@/lib/drizzle/drizzle.types";
+import { executeSingle } from "@/lib/drizzle/results/results.single";
+
+import { sessionsSchema } from "../auth.schema";
+import type {
   AuthColumn,
   AuthColumnKey,
-  AuthUser,
+  Session,
+  SessionColumn,
+  SessionColumnKey,
 } from "../auth.types";
-import { usersSchema } from "@/feature/users/users.schema";
-import { paginate } from "@/lib/drizzle/drizzle.paginate";
 
-export const findAuthEvent = async <K extends AuthEventColumnKey>(
+export const findAuthSession = <K extends SessionColumnKey>(
   field: K,
-  value: AuthEventColumn[K]["_"]["data"],
-): Promise<DbResult<AuthEvent>> => {
-  return executeSingle(
-    db.query.authEventsSchema.findFirst({
-      where: eq(authEventsSchema[field], value),
+  value: SessionColumn[K]["_"]["data"],
+): Promise<DbResult<Session>> =>
+  executeSingle(
+    db.query.sessionsSchema.findFirst({
+      where: eq(sessionsSchema[field], value),
     }),
   );
-};
 
-export async function findAuthEvents(
-  query: AuthEventFilters,
-): Promise<DbManyResult<AuthEvent>> {
-  const filters = [];
-
-  if (query.eventType) {
-    filters.push(eq(authEventsSchema.eventType, query.eventType));
-  }
-
-  if (query.userId) {
-    filters.push(eq(authEventsSchema.userId, query.userId));
-  }
-
-  const result = await paginate<"authEventsSchema", AuthEvent>(
-    "authEventsSchema",
-    authEventsSchema,
-    {
-      ...query,
-      filters,
-      search: {
-        q: query.q,
-        columns: [authEventsSchema.eventType],
-      },
-    },
+export const findActiveSession = <K extends SessionColumnKey>(
+  field: K,
+  value: SessionColumn[K]["_"]["data"],
+): Promise<DbResult<Session>> =>
+  executeSingle(
+    db.query.sessionsSchema.findFirst({
+      where: and(
+        eq(sessionsSchema[field], value),
+        eq(sessionsSchema.isRevoked, false),
+      ),
+    }),
   );
 
-  return toManyResult(result);
-}
-
-export const findAuthUser = async <K extends AuthColumnKey>(
+export const findAuthUser = <K extends AuthColumnKey>(
   field: K,
   value: AuthColumn[K]["_"]["data"],
-): Promise<DbResult<AuthUser>> => {
-  return executeSingle(
+): Promise<DbResult<AuthUser>> =>
+  executeSingle(
     db.query.usersSchema.findFirst({
       where: eq(usersSchema[field], value),
     }),
   );
-};
