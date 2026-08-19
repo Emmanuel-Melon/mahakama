@@ -8,11 +8,11 @@ import type {
 import type { ChatMessage } from "@/feature/messages/messages.types";
 import { logger } from "@/lib/logger";
 import {
-  retrieveUserDocumentContext,
+  retrieveDocumentContext,
   mergeDocumentContexts,
-  sessionHasUserDocument,
-} from "@/feature/user-documents/operations/user-documents.rag";
-import { UserDocumentConfig } from "@/feature/user-documents/user-documents.config";
+  sessionHasDocument,
+} from "@/feature/documents/operations/documents.rag";
+import { DocumentConfig } from "@/feature/documents/documents.config";
 
 export const buildRagContext = async (
   userMessage: ChatMessage,
@@ -25,9 +25,9 @@ export const buildRagContext = async (
   let legalContext: RAGContext = { chunks: [], sources: [] };
   try {
     // Use increased top_k when user document is present
-    const hasUserDoc = await sessionHasUserDocument(sessionId);
+    const hasUserDoc = await sessionHasDocument(sessionId);
     const topK = hasUserDoc
-      ? UserDocumentConfig.QUERY_TOP_K_WITH_USER_DOC
+      ? DocumentConfig.QUERY_TOP_K_WITH_USER_DOC
       : RAG_CONTEXT_CONFIG.TOP_K;
 
     legalContext = await ragService.retrieveContext(userMessage.content, {
@@ -45,7 +45,7 @@ export const buildRagContext = async (
   // Retrieve user document context if present
   let userDocContext: RAGContext = { chunks: [], sources: [] };
   try {
-    userDocContext = await retrieveUserDocumentContext(
+    userDocContext = await retrieveDocumentContext(
       sessionId,
       userMessage.content,
     );

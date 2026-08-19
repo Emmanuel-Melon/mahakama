@@ -8,7 +8,7 @@ import { messagesApi } from "@/feature/messages/messages.routes";
 import { notificationsApi } from "@/feature/notifications/notifications.routes";
 import { servicesApi } from "@/feature/services/services.routes";
 import { usersApi } from "@/feature/users/users.routes";
-import { userDocumentsApi } from "@/feature/user-documents/user-documents.routes";
+import { documentsApi } from "@/feature/documents/documents.routes";
 
 export const AUTH_PATH = "/v1";
 const BASE_PATH = "/api/v1";
@@ -27,9 +27,9 @@ mahakamaRouter.use(
 );
 mahakamaRouter.use(servicesApi.path, authenticateToken, servicesApi.router);
 mahakamaRouter.use(
-  userDocumentsApi.path,
+  documentsApi.path,
   authenticateToken,
-  userDocumentsApi.router,
+  documentsApi.router,
 );
 
 // PUBLIC ROUTES
