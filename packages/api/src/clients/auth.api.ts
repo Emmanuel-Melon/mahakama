@@ -1,57 +1,77 @@
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
 import { AUTH_API_ROUTES } from "../api.routes";
-import { FetchApiClient } from "../fetch";
 import type { components } from "../generated/api.types";
+import { schemas } from "@mah/api/generated/api.schemas";
 
+/**
+ * Generated Types
+ */
 export type LoginRequest = components["schemas"]["LoginRequest"];
 export type RegisterRequest = components["schemas"]["RegisterRequest"];
 export type User = components["schemas"]["User"];
-export type AuthResponse = components["schemas"]["AuthResponse"];
 export type UserResource = components["schemas"]["UserResource"];
 export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
+export type UserMetadata = UserSingleResponse["metadata"];
+export type UserResult = ApiResource<User, UserMetadata>;
 
-export class AuthApiClient {
-  private api: FetchApiClient;
-  constructor(apiClient?: FetchApiClient) {
-    if (apiClient) {
-      this.api = apiClient;
-    } else {
-      const authBaseURL = import.meta.env.VITE_AUTH_BASE_URL;
-      this.api = new FetchApiClient({}, authBaseURL);
-    }
+/**
+ * Validation Schemas (Zod / OpenAPI Runtime Schemas)
+ */
+export const loginRequestSchema = schemas.postV1login_Body;
+export const registerRequestSchema = schemas.postV1register_Body;
+
+/**
+ * Auth API Client
+ */
+export class AuthApiClient extends BaseApiClient {
+  protected readonly path = "";
+
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
-  private async makeRequest<T>(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<T> {
-    return await this.api.request<T>(endpoint, {
-      ...options,
-      credentials: "include",
+  public async login(credentials: LoginRequest): Promise<UserResult> {
+    const response = await this.api.request<UserSingleResponse>(
+      AUTH_API_ROUTES.LOGIN,
+      {
+        method: "POST",
+        headers: this.defaultHeaders,
+        data: credentials,
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from server",
     });
   }
 
-  public async login(credentials: LoginRequest): Promise<AuthResponse> {
-    return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.LOGIN, {
-      method: "POST",
-      body: JSON.stringify(credentials),
-      credentials: "include",
-    });
-  }
-
-  public async register(userAttrs: RegisterRequest): Promise<AuthResponse> {
-    return await this.makeRequest<AuthResponse>(AUTH_API_ROUTES.REGISTER, {
-      method: "POST",
-      body: JSON.stringify(userAttrs),
-      credentials: "include",
+  public async register(userAttrs: RegisterRequest): Promise<UserResult> {
+    const response = await this.api.request<UserSingleResponse>(
+      AUTH_API_ROUTES.REGISTER,
+      {
+        method: "POST",
+        headers: this.defaultHeaders,
+        data: userAttrs,
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from server",
     });
   }
 
   public async logout(): Promise<void> {
-    await this.makeRequest<void>(AUTH_API_ROUTES.LOGOUT, {
+    return this.api.request<void>(AUTH_API_ROUTES.LOGOUT, {
       method: "POST",
-      credentials: "include",
+      headers: this.defaultHeaders,
     });
   }
 }
 
-export const authApi = new AuthApiClient();
+let _authApi: AuthApiClient | null = null;
+export const authApi = new Proxy({} as AuthApiClient, {
+  get(_, prop) {
+    if (!_authApi) _authApi = new AuthApiClient();
+    return _authApi[prop as keyof AuthApiClient];
+  },
+});

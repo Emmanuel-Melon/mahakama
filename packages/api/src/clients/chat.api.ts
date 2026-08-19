@@ -1,8 +1,16 @@
-import { FetchApiClient } from "../fetch";
-import { parseCookies } from "../api.utils";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
+import {
+  getClientToken,
+  consumeSSEStream,
+  handleSSEFetchError,
+} from "../api/api.sse";
 import type { components } from "../generated/api.types";
 
 export type Chat = components["schemas"]["Chat"];
+export type NewChat = components["schemas"]["NewChat"];
+export type UpdateChat = components["schemas"]["UpdateChat"];
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
@@ -10,10 +18,11 @@ export type ChatsCollectionResponse =
 export type CreateChatRequest = components["schemas"]["CreateChatRequest"];
 export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 
+export type ChatMetadata = ChatSingleResponse["metadata"];
+export type ChatResult = ApiResource<Chat, ChatMetadata>;
+
 export type SenderType = "user" | "assistant" | "system";
-
 export type ReplyStatus = "pending" | "completed" | "failed";
-
 export type CitationStatus = "ok" | "missing";
 
 export interface RAGSource {
@@ -49,35 +58,14 @@ export interface ChatMessage {
   };
 }
 
-export interface MessageSender {
-  id: string;
-  type: string;
-  displayName?: string;
-}
-
-export interface ChatMetadata {
-  questionId?: number;
-  isQuestionChat?: boolean;
-  [key: string]: unknown;
-}
-
 export type ChatStreamEvent =
-  | {
-      type: "chat_created";
-      data: { chat: Chat; userMessage: ChatMessage };
-    }
-  | {
-      type: "user_message";
-      data: ChatMessage;
-    }
+  | { type: "chat_created"; data: { chat: Chat; userMessage: ChatMessage } }
+  | { type: "user_message"; data: ChatMessage }
   | {
       type: "started";
       data: { chatId: string; messageId: string; timestamp: string };
     }
-  | {
-      type: "rag_context";
-      data: { sourcesCount: number; chunksCount: number };
-    }
+  | { type: "rag_context"; data: { sourcesCount: number; chunksCount: number } }
   | { type: "token"; data: { content: string } }
   | {
       type: "completed";
@@ -92,159 +80,93 @@ export type ChatStreamEvent =
     }
   | { type: "error"; data: { message: string; code?: string } };
 
-const getClientToken = (): string | null => {
-  if (typeof document === "undefined") return null;
-  const cookies = parseCookies(document.cookie);
-  return cookies.token ?? null;
-};
+export class ChatApiClient extends BaseApiClient {
+  protected readonly path = "/v1/chats";
 
-const parseSSEBlock = (
-  block: string,
-): { type: string; data: unknown } | null => {
-  const lines = block.split("\n");
-  let type = "message";
-  const dataLines: string[] = [];
-
-  for (const line of lines) {
-    const trimmed = line.replace(/\r$/, "");
-    if (trimmed.startsWith(":")) continue;
-    if (trimmed.startsWith("event:")) {
-      type = trimmed.slice(6).trim();
-    } else if (trimmed.startsWith("data:")) {
-      dataLines.push(trimmed.slice(5).trim());
-    }
-  }
-
-  if (dataLines.length === 0) return null;
-  return { type, data: JSON.parse(dataLines.join("\n")) };
-};
-export class ChatApiClient {
-  private api: FetchApiClient;
-
-  constructor() {
-    this.api = new FetchApiClient();
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
   public async createChat(
     payload: CreateChatRequest,
-    options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<Chat> {
-    try {
-      const response = await this.api.request<ChatSingleResponse>("/v1/chats", {
-        method: "POST",
-        headers: options.headers,
-        body: JSON.stringify(payload),
-      });
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<ChatResult> {
+    const response = await this.api.request<ChatSingleResponse>(this.path, {
+      method: "POST",
+      headers: { ...this.defaultHeaders, ...options.headers },
+      data: payload,
+    });
 
-      if (!response.data.attributes) {
-        console.error("Invalid chat data:", response);
-        throw new Error("Invalid chat data received from the server");
-      }
-
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to create chat:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid chat data received from the server",
+    });
   }
 
   public async getChats(
-    options: { headers: HeadersInit } = { headers: {} },
+    options: { headers?: Record<string, string> } = {},
   ): Promise<Chat[]> {
-    try {
-      const response = await this.api.request<ChatsCollectionResponse>(
-        "/v1/chats/",
-        {
-          headers: options.headers,
-        },
-      );
+    const response = await this.api.request<ChatsCollectionResponse>(
+      `${this.path}/`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-      if (!response.data) {
-        console.error("Invalid chats data:", response);
-        throw new Error("Invalid chats data received from the server");
-      }
-
-      const chats = response.data.map(
-        (resource: ChatResource) => resource.attributes,
-      );
-      return chats;
-    } catch (error) {
-      console.error("Failed to fetch chats:", error);
-      throw error;
-    }
+    return this.unpackCollection(response, {
+      errMsg: "Invalid chats data received from the server",
+    });
   }
 
   public async getChatById(
     chatId: string,
-    options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<Chat> {
-    try {
-      const response = await this.api.request<ChatSingleResponse>(
-        `/v1/chats/${chatId}`,
-        {
-          headers: options.headers,
-        },
-      );
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<ChatResult> {
+    const response = await this.api.request<ChatSingleResponse>(
+      `${this.path}/${chatId}`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-      if (!response.data.attributes) {
-        console.error("Invalid chat data:", response);
-        throw new Error("Invalid chat data received from the server");
-      }
-
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to fetch chat:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid chat data received from the server",
+    });
   }
 
   public async getChatMessages(
     chatId: string,
-    options: { headers: HeadersInit; limit?: number; offset?: number } = {
-      headers: {},
-    },
+    options: {
+      headers?: Record<string, string>;
+      limit?: number;
+      offset?: number;
+    } = {},
   ): Promise<ChatMessage[]> {
-    try {
-      const queryParams = new URLSearchParams();
-      if (options.limit) queryParams.append("limit", options.limit.toString());
-      if (options.offset)
-        queryParams.append("offset", options.offset.toString());
+    const queryParams = new URLSearchParams();
+    if (options.limit) queryParams.append("limit", options.limit.toString());
+    if (options.offset) queryParams.append("offset", options.offset.toString());
 
-      const url = `/v1/messages/${chatId}/all${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
+    const url = `/v1/messages/${chatId}/all${queryParams.toString() ? `?${queryParams.toString()}` : ""}`;
 
-      const response = await this.api.request<{ data: ChatResource[] }>(url, {
-        headers: options.headers,
-      });
+    const response = await this.api.request<
+      components["schemas"]["MessageCollectionResponse"]
+    >(url, {
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
 
-      if (!response.data) {
-        console.error("Invalid messages data:", response);
-        throw new Error("Invalid messages data received from the server");
-      }
-
-      const messages = response.data.map(
-        (resource: ChatResource) => resource.attributes,
-      );
-      return messages;
-    } catch (error) {
-      console.error("Failed to fetch chat messages:", error);
-      throw error;
-    }
+    return this.unpackCollection(response, {
+      errMsg: "Invalid messages data received from the server",
+    });
   }
 
   public async sendMessage(
     payload: SendMessageRequest,
-    options: { headers: HeadersInit } = { headers: {} },
+    options: { headers?: Record<string, string> } = {},
   ): Promise<void> {
-    try {
-      await this.api.request<void>("/v1/messages", {
-        method: "POST",
-        headers: options.headers,
-        body: JSON.stringify(payload),
-      });
-    } catch (error) {
-      console.error("Failed to send message:", error);
-      throw error;
-    }
+    await this.api.request<void>("/v1/messages", {
+      method: "POST",
+      headers: { ...this.defaultHeaders, ...options.headers },
+      data: payload,
+    });
   }
 
   public async sendMessageStream(
@@ -268,43 +190,13 @@ export class ChatApiClient {
     });
 
     if (!response.ok) {
-      let message = `Send failed with status ${response.status}`;
-      try {
-        const errorData = await response.json();
-        message =
-          errorData.errors?.[0]?.detail ||
-          errorData.errors?.[0]?.title ||
-          message;
-      } catch {
-        // Non-JSON error body
-      }
-      throw new Error(message);
+      return handleSSEFetchError(
+        response,
+        `Send failed with status ${response.status}`,
+      );
     }
 
-    if (!response.body) {
-      throw new Error("No response body received from the server");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-
-      let boundary = buffer.indexOf("\n\n");
-      while (boundary !== -1) {
-        const block = buffer.slice(0, boundary);
-        buffer = buffer.slice(boundary + 2);
-        const parsed = parseSSEBlock(block);
-        if (parsed) {
-          onEvent(parsed as ChatStreamEvent);
-        }
-        boundary = buffer.indexOf("\n\n");
-      }
-    }
+    await consumeSSEStream<ChatStreamEvent>(response, onEvent, signal);
   }
 
   public async createChatStream(
@@ -316,7 +208,7 @@ export class ChatApiClient {
       import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
     const token = getClientToken();
 
-    const response = await fetch(`${baseURL}/v1/chats`, {
+    const response = await fetch(`${baseURL}${this.path}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -328,115 +220,66 @@ export class ChatApiClient {
     });
 
     if (!response.ok) {
-      let message = `Create chat failed with status ${response.status}`;
-      try {
-        const errorData = await response.json();
-        message =
-          errorData.errors?.[0]?.detail ||
-          errorData.errors?.[0]?.title ||
-          message;
-      } catch {
-        // Non-JSON error body
-      }
-      throw new Error(message);
+      return handleSSEFetchError(
+        response,
+        `Create chat failed with status ${response.status}`,
+      );
     }
 
-    if (!response.body) {
-      throw new Error("No response body received from the server");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-
-      let boundary = buffer.indexOf("\n\n");
-      while (boundary !== -1) {
-        const block = buffer.slice(0, boundary);
-        buffer = buffer.slice(boundary + 2);
-        const parsed = parseSSEBlock(block);
-        if (parsed) {
-          onEvent(parsed as ChatStreamEvent);
-        }
-        boundary = buffer.indexOf("\n\n");
-      }
-    }
+    await consumeSSEStream<ChatStreamEvent>(response, onEvent, signal);
   }
 
   public async retryMessage(
     messageId: string,
-    options: { headers: HeadersInit } = { headers: {} },
+    options: { headers?: Record<string, string> } = {},
   ): Promise<ChatMessage> {
-    try {
-      const response = await this.api.request<{
-        data: { attributes: ChatMessage };
-      }>(`/v1/messages/${messageId}/retry`, {
-        method: "POST",
-        headers: options.headers,
-      });
+    const response = await this.api.request<
+      components["schemas"]["MessageSingleResponse"]
+    >(`/v1/messages/${messageId}/retry`, {
+      method: "POST",
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
 
-      if (!response.data.attributes) {
-        console.error("Invalid message data:", response);
-        throw new Error("Invalid message data received from the server");
-      }
+    const unpacked = this.unpackSingle(response, {
+      errMsg: "Invalid message data received from the server",
+    });
 
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to retry message:", error);
-      throw error;
-    }
+    return unpacked.data;
   }
 
-  public async updateChatTitle(
-    {
-      chatId,
-      newTitle,
-    }: {
-      chatId: string;
-      newTitle: string;
-    },
-    options: { headers: HeadersInit } = { headers: {} },
-  ): Promise<Chat> {
-    try {
-      const response = await this.api.request<ChatSingleResponse>(
-        `/v1/chats/${chatId}`,
-        {
-          method: "PATCH",
-          headers: options.headers,
-          body: JSON.stringify({ title: newTitle }),
-        },
-      );
+  public async updateChat(
+    { id, title }: UpdateChat,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<ChatResult> {
+    const response = await this.api.request<ChatSingleResponse>(
+      `${this.path}/${id}`,
+      {
+        method: "PATCH",
+        headers: { ...this.defaultHeaders, ...options.headers },
+        data: { title: title },
+      },
+    );
 
-      if (!response.data.attributes) {
-        console.error("Invalid chat data:", response);
-        throw new Error("Invalid chat data received from the server");
-      }
-
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to update chat title:", error);
-      throw error;
-    }
+    return this.unpackSingle(response, {
+      errMsg: "Invalid chat data received from the server",
+    });
   }
 
   public async deleteChat(
     chatId: string,
-    options: { headers: HeadersInit } = { headers: {} },
+    options: { headers?: Record<string, string> } = {},
   ): Promise<void> {
-    try {
-      await this.api.request<void>(`/v1/chats/${chatId}`, {
-        method: "DELETE",
-        headers: options.headers,
-      });
-    } catch (error) {
-      console.error("Failed to delete chat:", error);
-      throw error;
-    }
+    await this.api.request<void>(`${this.path}/${chatId}`, {
+      method: "DELETE",
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
   }
 }
 
-export const chatApi = new ChatApiClient();
+let _chatApi: ChatApiClient | null = null;
+export const chatApi = new Proxy({} as ChatApiClient, {
+  get(_, prop) {
+    if (!_chatApi) _chatApi = new ChatApiClient();
+    return _chatApi[prop as keyof ChatApiClient];
+  },
+});

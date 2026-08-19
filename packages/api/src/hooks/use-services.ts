@@ -1,18 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { servicesApi } from "../clients/services.api";
-
-import type { components } from "../generated/api.types";
-
-export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource =
-  components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse =
-  components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse =
-  components["schemas"]["LegalServiceCollectionResponse"];
-export type JsonApiErrorResponse =
-  components["schemas"]["JsonApiErrorResponse"];
+import { useQuery } from "@tanstack/react-query";
+import {
+  servicesApi,
+  type LegalService,
+  type LegalServiceResult,
+} from "../clients/services.api";
+import type { ApiClientError } from "../api/api.errors";
 
 export const servicesKeys = {
   all: ["services"] as const,
@@ -20,35 +12,40 @@ export const servicesKeys = {
   service: (id: string) => [...servicesKeys.all, "service", id] as const,
   servicesByCategory: (category: string) =>
     [...servicesKeys.all, "services", "category", category] as const,
+} as const;
+
+/*
+ * ========================================
+ * QUERIES
+ * ========================================
+ */
+export const servicesQueries = {
+  services: (
+    category?:
+      "government" | "legal-aid" | "dispute-resolution" | "specialized",
+  ) => ({
+    queryKey: category
+      ? servicesKeys.servicesByCategory(category)
+      : servicesKeys.services(),
+    queryFn: () => servicesApi.getServices(category),
+  }),
+  service: (id: string) => ({
+    queryKey: servicesKeys.service(id),
+    queryFn: () => servicesApi.getServiceById(id),
+    enabled: !!id,
+  }),
 };
 
 export function useServices(
   category?: "government" | "legal-aid" | "dispute-resolution" | "specialized",
 ) {
-  return useQuery<LegalService[], JsonApiErrorResponse>({
-    queryKey: category
-      ? servicesKeys.servicesByCategory(category)
-      : servicesKeys.services(),
-    queryFn: async () => {
-      return await servicesApi.getServices(category);
-    },
-    meta: {
-      errorToast: true,
-      errorMessage: "Failed to load services",
-    },
-  });
+  return useQuery<LegalService[], ApiClientError>(
+    servicesQueries.services(category),
+  );
 }
 
 export function useService(id: string) {
-  return useQuery<LegalService, JsonApiErrorResponse>({
-    queryKey: servicesKeys.service(id),
-    queryFn: async () => {
-      return await servicesApi.getServiceById(id);
-    },
-    enabled: !!id,
-    meta: {
-      errorToast: true,
-      errorMessage: "Failed to load service",
-    },
-  });
+  return useQuery<LegalServiceResult, ApiClientError>(
+    servicesQueries.service(id),
+  );
 }

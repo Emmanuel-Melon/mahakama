@@ -1,51 +1,77 @@
-import { FetchApiClient } from "../fetch";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
 import type { components } from "../generated/api.types";
 
 export type User = components["schemas"]["User"];
 export type UserResource = components["schemas"]["UserResource"];
 export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
 export type UsersCollectionResponse =
-  components["schemas"]["UsersCollectionResponse"];
-export type CreateUserRequest = components["schemas"]["CreateUser"];
+  components["schemas"]["UserCollectionResponse"];
+export type NewUser = components["schemas"]["NewUser"];
 
-export class UsersApiClient {
-  private api: FetchApiClient;
+export type UserMetadata = UserSingleResponse["metadata"];
+export type UserResult = ApiResource<User, UserMetadata>;
 
-  constructor(apiClient?: FetchApiClient) {
-    this.api = apiClient || new FetchApiClient();
+export class UsersApiClient extends BaseApiClient {
+  protected readonly path = "/v1/users";
+
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
-  public async getCurrentUser(): Promise<User> {
-    const response = await this.api.request<UserSingleResponse>(`/v1/users/me`);
-    if (!response.data.attributes) {
-      throw new Error("Invalid user data received from the server");
-    }
-    return response.data.attributes;
-  }
-
-  public async getUserById(userId: string): Promise<User> {
+  public async getCurrentUser(
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<UserResult> {
     const response = await this.api.request<UserSingleResponse>(
-      `/v1/users/${userId}`,
-    );
-    if (!response.data.attributes) {
-      throw new Error("Invalid user data received from the server");
-    }
-    return response.data.attributes;
-  }
-
-  public async updateUser(userId: string, data: Partial<User>): Promise<User> {
-    const response = await this.api.request<UserSingleResponse>(
-      `/v1/users/${userId}`,
+      `${this.path}/me`,
       {
-        method: "PATCH",
-        body: JSON.stringify(data),
+        headers: { ...this.defaultHeaders, ...options.headers },
       },
     );
-    if (!response.data.attributes) {
-      throw new Error("Invalid user data received from the server");
-    }
-    return response.data.attributes;
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from the server",
+    });
+  }
+
+  public async getUserById(
+    userId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<UserResult> {
+    const response = await this.api.request<UserSingleResponse>(
+      `${this.path}/${userId}`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from the server",
+    });
+  }
+
+  public async updateUser(
+    userId: string,
+    data: Partial<User>,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<UserResult> {
+    const response = await this.api.request<UserSingleResponse>(
+      `${this.path}/${userId}`,
+      {
+        method: "PATCH",
+        headers: { ...this.defaultHeaders, ...options.headers },
+        data,
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid user data received from the server",
+    });
   }
 }
 
-export const usersApi = new UsersApiClient();
+let _usersApi: UsersApiClient | null = null;
+export const usersApi = new Proxy({} as UsersApiClient, {
+  get(_, prop) {
+    if (!_usersApi) _usersApi = new UsersApiClient();
+    return _usersApi[prop as keyof UsersApiClient];
+  },
+});

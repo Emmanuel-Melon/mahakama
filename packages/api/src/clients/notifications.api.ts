@@ -1,45 +1,49 @@
-import { FetchApiClient } from "../fetch";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
 import type { components } from "../generated/api.types";
 
 export type Notification = components["schemas"]["Notification"];
 export type NotificationResource =
   components["schemas"]["NotificationResource"];
-export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
-export type NotificationssCollectionResponse =
-  components["schemas"]["NotificationsCollectionResponse"];
+export type NotificationSingleResponse =
+  components["schemas"]["NotificationSingleResponse"];
+export type NotificationsCollectionResponse =
+  components["schemas"]["NotificationCollectionResponse"];
 
-export class NotificationsApiClient {
-  private api: FetchApiClient;
+export type NotificationMetadata = NotificationSingleResponse["metadata"];
+export type NotificationResult = ApiResource<
+  Notification,
+  NotificationMetadata
+>;
 
-  constructor() {
-    this.api = new FetchApiClient();
+export class NotificationsApiClient extends BaseApiClient {
+  protected readonly path = "/v1/notifications";
+
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
   public async getNotifications(
-    options: { headers: HeadersInit } = { headers: {} },
+    options: { headers?: Record<string, string> } = {},
   ): Promise<Notification[]> {
-    try {
-      const response = await this.api.request<NotificationssCollectionResponse>(
-        "/v1/notifications/",
-        {
-          headers: options.headers,
-        },
-      );
+    const response = await this.api.request<NotificationsCollectionResponse>(
+      `${this.path}/`,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-      if (!response.data) {
-        console.error("Invalid notifications data:", response);
-        throw new Error("Invalid notifications data received from the server");
-      }
-
-      const notifications = response.data.map(
-        (notification: NotificationResource) => notification.attributes,
-      );
-      return notifications;
-    } catch (error) {
-      console.error("Failed to fetch notifications:", error);
-      throw error;
-    }
+    return this.unpackCollection(response, {
+      errMsg: "Invalid notifications data received from the server",
+    });
   }
 }
 
-export const notificationsApi = new NotificationsApiClient();
+let _notificationsApi: NotificationsApiClient | null = null;
+export const notificationsApi = new Proxy({} as NotificationsApiClient, {
+  get(_, prop) {
+    if (!_notificationsApi) _notificationsApi = new NotificationsApiClient();
+    return _notificationsApi[prop as keyof NotificationsApiClient];
+  },
+});

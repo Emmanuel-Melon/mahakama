@@ -1,11 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { usersApi } from "../clients/users.api";
-
-import type { components as componentsv1 } from "../generated/api.types";
-export type JsonApiErrorResponse =
-  componentsv1["schemas"]["JsonApiErrorResponse"];
-export type User = componentsv1["schemas"]["User"];
+import { useQuery } from "@tanstack/react-query";
+import { usersApi, type User, type UserResult } from "../clients/users.api";
+import type { ApiClientError } from "../api/api.errors";
+import { useAppMutation } from "../react-query/react-query.utils";
 
 export const userKeys = {
   all: ["users"] as const,
@@ -14,56 +10,80 @@ export const userKeys = {
   details: () => [...userKeys.all, "detail"] as const,
   detail: (id: string) => [...userKeys.details(), id] as const,
   current: () => [...userKeys.all, "current"] as const,
+} as const;
+
+/*
+ * ========================================
+ * INVALIDATIONS
+ * ========================================
+ */
+export const invalidations = {
+  detail: (id: string) => [userKeys.current(), userKeys.detail(id)],
 };
 
-export function useCurrentUser() {
-  return useQuery<User | null, JsonApiErrorResponse>({
+/*
+ * ========================================
+ * QUERIES
+ * ========================================
+ */
+export const userQueries = {
+  current: () => ({
     queryKey: userKeys.current(),
-    queryFn: async () => {
-      return await usersApi.getCurrentUser();
-    },
+    queryFn: () => usersApi.getCurrentUser(),
     staleTime: 1000 * 60 * 10,
-    meta: {
-      errorToast: false,
-    },
+  }),
+  detail: (userId: string) => ({
+    queryKey: userKeys.detail(userId),
+    queryFn: () => usersApi.getUserById(userId),
+    enabled: !!userId,
+  }),
+};
+
+/*
+ * ========================================
+ * REACT HOOKS
+ * ========================================
+ */
+export function useCurrentUser() {
+  return useQuery<UserResult, ApiClientError>({
+    ...userQueries.current(),
   });
 }
 
 export function useUser(userId: string) {
-  return useQuery<User, JsonApiErrorResponse>({
-    queryKey: userKeys.detail(userId),
-    queryFn: async () => {
-      return await usersApi.getUserById(userId);
-    },
-    enabled: !!userId,
-    meta: {
-      errorToast: true,
-      errorMessage: "Failed to load user",
-    },
+  return useQuery<UserResult, ApiClientError>({
+    ...userQueries.detail(userId),
   });
 }
 
-export function useUpdateUser() {
-  const queryClient = useQueryClient();
-
-  return useMutation<
-    User,
-    JsonApiErrorResponse,
+/*
+ * ========================================
+ * MUTATIONS
+ * ========================================
+ */
+export const useUserMutations = () => {
+  const updateUser = useAppMutation<
+    UserResult,
+    ApiClientError,
     { userId: string; data: Partial<User> }
   >({
-    mutationFn: async ({ userId, data }) => {
-      return await usersApi.updateUser(userId, data);
+    mutationFn: ({ userId, data }) => usersApi.updateUser(userId, data),
+    messages: {
+      success: "Profile updated successfully!",
+      error: (err) =>
+        err.errors?.[0]?.detail ??
+        "Failed to update profile. Please try again.",
     },
-    onSuccess: (data, variables) => {
-      toast.success("Profile updated successfully!");
-      queryClient.invalidateQueries({ queryKey: userKeys.current() });
-      if (data.isOnboarded) {
+    invalidates: (variables) => invalidations.detail(variables.userId),
+    onSuccess: (data) => {
+      const user = data.data;
+      if (user.isOnboarded) {
         window.location.href = "/app";
       }
     },
-    onError: (error) => {
-      toast.error("Failed to update profile. Please try again.");
-      console.error("Update error:", error);
-    },
   });
-}
+
+  return {
+    updateUser,
+  };
+};

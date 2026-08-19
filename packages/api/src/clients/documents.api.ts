@@ -1,14 +1,23 @@
-import { FetchApiClient } from "../fetch";
-import { parseCookies } from "../api.utils";
-import type { components } from "../generated/api.types";
+import { createApiClient, AxiosApiClient } from "../axios";
+import type { ApiResource } from "../api/api.types";
+import { BaseApiClient } from "../api";
 import { DOCUMENTS_API_ROUTES } from "../api.routes";
+import {
+  getClientToken,
+  consumeSSEStream,
+  handleSSEFetchError,
+} from "../api/api.sse";
+import type { components } from "../generated/api.types";
 
 export type Document = components["schemas"]["Document"];
 export type DocumentResource = components["schemas"]["DocumentResource"];
 export type DocumentSingleResponse =
   components["schemas"]["DocumentSingleResponse"];
 export type DocumentsCollectionResponse =
-  components["schemas"]["DocumentsCollectionResponse"];
+  components["schemas"]["DocumentCollectionResponse"];
+
+export type DocumentMetadata = DocumentSingleResponse["metadata"];
+export type DocumentResult = ApiResource<Document, DocumentMetadata>;
 
 export type DocumentIngestionEvent =
   | {
@@ -43,72 +52,43 @@ export interface UploadDocumentOptions {
   type?: string;
 }
 
-const getClientToken = (): string | null => {
-  if (typeof document === "undefined") return null;
-  const cookies = parseCookies(document.cookie);
-  return cookies.token ?? null;
-};
+export class DocumentsApiClient extends BaseApiClient {
+  protected readonly path = DOCUMENTS_API_ROUTES.ROOT;
 
-const parseSSEBlock = (
-  block: string,
-): { type: string; data: DocumentIngestionEvent["data"] } | null => {
-  const lines = block.split("\n");
-  let type = "message";
-  const dataLines: string[] = [];
-
-  for (const line of lines) {
-    const trimmed = line.replace(/\r$/, "");
-    if (trimmed.startsWith(":")) continue; // comment / keep-alive
-    if (trimmed.startsWith("event:")) {
-      type = trimmed.slice(6).trim();
-    } else if (trimmed.startsWith("data:")) {
-      dataLines.push(trimmed.slice(5).trim());
-    }
+  constructor(api: AxiosApiClient = createApiClient()) {
+    super(api);
   }
 
-  if (dataLines.length === 0) return null;
-  return { type, data: JSON.parse(dataLines.join("\n")) };
-};
+  public async getDocuments(
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<Document[]> {
+    const response = await this.api.request<DocumentsCollectionResponse>(
+      this.path,
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
 
-export class DocumentsApiClient {
-  private api: FetchApiClient;
-  constructor() {
-    this.api = new FetchApiClient();
-  }
-  public async getDocuments(): Promise<Document[]> {
-    try {
-      const response = await this.api.request<DocumentsCollectionResponse>(
-        DOCUMENTS_API_ROUTES.ROOT,
-      );
-      if (!response.data) {
-        console.error("Invalid documents data:", response);
-        throw new Error("Invalid documents data received from the server");
-      }
-      const documents = response.data.map((resource) => resource.attributes);
-      return documents;
-    } catch (error) {
-      console.error("Failed to fetch documents:", error);
-      throw error;
-    }
+    return this.unpackCollection(response, {
+      errMsg: "Invalid documents data received from the server",
+    });
   }
 
-  public async getDocumentById(documentId: string | number): Promise<Document> {
-    try {
-      const response = await this.api.request<DocumentSingleResponse>(
-        DOCUMENTS_API_ROUTES.DOCUMENT.replace(
-          ":documentId",
-          String(documentId),
-        ),
-      );
-      if (!response.data.attributes) {
-        console.error("Invalid document data:", response);
-        throw new Error("Invalid document data received from the server");
-      }
-      return response.data.attributes;
-    } catch (error) {
-      console.error("Failed to fetch document:", error);
-      throw error;
-    }
+  public async getDocumentById(
+    documentId: string | number,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<DocumentResult> {
+    const route = DOCUMENTS_API_ROUTES.DOCUMENT.replace(
+      ":documentId",
+      String(documentId),
+    );
+    const response = await this.api.request<DocumentSingleResponse>(route, {
+      headers: { ...this.defaultHeaders, ...options.headers },
+    });
+
+    return this.unpackSingle(response, {
+      errMsg: "Invalid document data received from the server",
+    });
   }
 
   public async uploadDocument(
@@ -137,44 +117,20 @@ export class DocumentsApiClient {
     });
 
     if (!response.ok) {
-      let message = `Upload failed with status ${response.status}`;
-      try {
-        const errorData = await response.json();
-        message =
-          errorData.errors?.[0]?.detail ||
-          errorData.errors?.[0]?.title ||
-          message;
-      } catch {
-        // Non-JSON error body — keep the status fallback message.
-      }
-      throw new Error(message);
+      return handleSSEFetchError(
+        response,
+        `Upload failed with status ${response.status}`,
+      );
     }
 
-    if (!response.body) {
-      throw new Error("No response body received from the server");
-    }
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      buffer += decoder.decode(value, { stream: true });
-
-      let boundary = buffer.indexOf("\n\n");
-      while (boundary !== -1) {
-        const block = buffer.slice(0, boundary);
-        buffer = buffer.slice(boundary + 2);
-        const parsed = parseSSEBlock(block);
-        if (parsed) {
-          onEvent(parsed as DocumentIngestionEvent);
-        }
-        boundary = buffer.indexOf("\n\n");
-      }
-    }
+    await consumeSSEStream<DocumentIngestionEvent>(response, onEvent, signal);
   }
 }
 
-export const documentsApi = new DocumentsApiClient();
+let _documentsApi: DocumentsApiClient | null = null;
+export const documentsApi = new Proxy({} as DocumentsApiClient, {
+  get(_, prop) {
+    if (!_documentsApi) _documentsApi = new DocumentsApiClient();
+    return _documentsApi[prop as keyof DocumentsApiClient];
+  },
+});
