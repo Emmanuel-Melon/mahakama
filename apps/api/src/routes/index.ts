@@ -26,11 +26,7 @@ mahakamaRouter.use(
   notificationsApi.router,
 );
 mahakamaRouter.use(servicesApi.path, authenticateToken, servicesApi.router);
-mahakamaRouter.use(
-  documentsApi.path,
-  authenticateToken,
-  documentsApi.router,
-);
+mahakamaRouter.use(documentsApi.path, authenticateToken, documentsApi.router);
 
 // PUBLIC ROUTES
 mahakamaRouter.use(AUTH_PATH, methodBasedAuth, authRouter);

@@ -147,6 +147,23 @@ export const CookieConfigSchema = z.object({
   cookieSameSite: z.enum(["lax", "strict", "none"]).optional(),
 });
 
+export const R2ConfigSchema = z.object({
+  accountId: z.string().optional(),
+  accessKeyId: z.string().optional(),
+  secretAccessKey: z.string().optional(),
+  bucket: z.string().optional(),
+  publicBaseUrl: z.string().url().optional(),
+});
+
+export const AlertsConfigSchema = z.object({
+  senderEmail: z.string().email().default("alerts@yourdomain.com"),
+  senderName: z.string().default("System Monitor"),
+  engineeringEmail: z
+    .string()
+    .email()
+    .default("engineering-alerts@yourdomain.com"),
+});
+
 // Type definitions
 export type IServerEndpoints = z.infer<typeof ServerEndpointsSchema>;
 export type IServerConfig = z.infer<typeof ServerConfigSchema>;
@@ -165,3 +182,4 @@ export type IEmbeddingConfig = z.infer<typeof embeddingConfigSchema>;
 export type IAuthConfig = z.infer<typeof AuthConfigSchema>;
 export type ICookieConfig = z.infer<typeof CookieConfigSchema>;
 export type IClientConfig = z.infer<typeof ClientConfigSchema>;
+export type IAlertsConfig = z.infer<typeof AlertsConfigSchema>;

@@ -53,9 +53,7 @@ export class RAGService {
       if (documentId) documentIds.add(documentId);
     }
 
-    const documentVersions = await loadCorpusVersions(
-      Array.from(documentIds),
-    );
+    const documentVersions = await loadCorpusVersions(Array.from(documentIds));
 
     for (let i = 0; i < results.ids.length; i++) {
       const metadata = (results.metadatas?.[i] ?? {}) as Record<
