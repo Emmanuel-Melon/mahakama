@@ -94,7 +94,12 @@ describe("findLawyer", () => {
 
     const result = await findLawyer("id", "non-existent-id");
 
-    expect(result).toEqual({ ok: false, data: null });
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Resource not found",
+      type: "NOT_FOUND",
+    });
     expect(db.query.lawyers.findFirst).toHaveBeenCalledWith({
       where: eq(lawyersTable.id, "non-existent-id"),
     });

@@ -17,14 +17,19 @@ describe("updateUser", () => {
 
     // Setup mock chain to return "updated" version
     mockDrizzleChain([{ ...existingUser, ...updateData }]);
-    const result = await updateUser(userId, updateData);
+    const result = await updateUser("id", userId, updateData);
     expect(result.ok).toBe(true);
     expect(result.data?.name).toBe("Updated Name");
   });
 
   it("should return ok:false if no user was updated", async () => {
     mockDrizzleEmpty();
-    const result = await updateUser(userId, updateData);
-    expect(result).toEqual({ ok: false, data: null });
+    const result = await updateUser("id", userId, updateData);
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Resource not found",
+      type: "NOT_FOUND",
+    });
   });
 });
