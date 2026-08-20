@@ -22,6 +22,8 @@ import {
   ICookieConfig,
   ClientConfigSchema,
   IClientConfig,
+  IAlertsConfig,
+  AlertsConfigSchema,
 } from "./config.types";
 
 dotenv.config({
@@ -162,7 +164,15 @@ export const cookieConfig = CookieConfigSchema.parse({
   cookieSameSite: process.env.COOKIE_SAMESITE,
 }) satisfies ICookieConfig;
 
+export const alertsConfig = AlertsConfigSchema.parse({
+  senderEmail: process.env.ALERTS_SENDER_EMAIL ?? "alerts@yourdomain.com",
+  senderName: process.env.ALERTS_SENDER_NAME ?? "System Monitor",
+  engineeringEmail:
+    process.env.ENGINEERING_ALERTS_EMAIL ?? "engineering-alerts@yourdomain.com",
+}) satisfies IAlertsConfig;
+
 const config = {
+  alerts: alertsConfig,
   auth: authConfig,
   clientConfig: clientConfig,
   cookie: cookieConfig,

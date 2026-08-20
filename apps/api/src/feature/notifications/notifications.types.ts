@@ -89,12 +89,16 @@ export type NotificationFilters = z.infer<typeof notificationQuerySchema>;
 /*
  * NOTIFICATION CONTENT TYPES
  */
-export type NotificationAction = {
-  label: string;
-  url: string;
-  type: "primary" | "secondary" | "danger";
-  method?: "GET" | "POST";
-};
+export const notificationActionSchema = z.object({
+  label: z.string(),
+  url: z.string(),
+  type: z.enum(["primary", "secondary", "danger"]).default("primary"),
+  method: z.enum(["GET", "POST"]).optional(),
+  secondary: z.boolean().optional(),
+});
+
+export type NotificationAction = z.infer<typeof notificationActionSchema>;
+z;
 
 export type BaseNotificationContent = {
   title: string;
