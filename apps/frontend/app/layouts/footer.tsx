@@ -8,7 +8,7 @@ import {
   Shield,
 } from "lucide-react";
 import { CardWithLabel } from "~/components/ui/card-with-label";
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 import { Link } from "react-router";
 
 export function Footer() {

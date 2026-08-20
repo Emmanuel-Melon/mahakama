@@ -7,9 +7,9 @@ import {
   SidebarHeader,
   SidebarGroupLabel,
 } from "~/components/ui/sidebar";
-import { NavUser } from "~/components/nav-user";
-import { OnboardingProgress } from "~/components/onboarding-progress";
-import { SidebarNav } from "~/components/SidebarNav";
+import { NavUser } from "~/components/organisms/nav-user";
+import { OnboardingProgress } from "~/components/molecules/onboarding-progress";
+import { SidebarNav } from "~/components/molecules/SidebarNav";
 import type { NavLinkItem } from "~/lib/nav/nav.types";
 import { useTranslation } from "react-i18next";
 

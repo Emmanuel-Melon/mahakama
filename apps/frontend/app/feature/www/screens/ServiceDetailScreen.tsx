@@ -17,7 +17,7 @@ import { PageDetailHeader } from "~/layouts/page-detail-header";
 import {
   ContactInformation,
   type ContactItem,
-} from "~/components/contact-information";
+} from "~/components/molecules/contact-information";
 import type { components } from "@mah/api/generated/api.types";
 
 export type LegalService = components["schemas"]["LegalService"];

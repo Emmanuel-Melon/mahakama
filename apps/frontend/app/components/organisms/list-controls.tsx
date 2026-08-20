@@ -2,10 +2,10 @@ import { Filter, ArrowDownUp } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import { useState, useEffect } from "react";
-import { SearchBar } from "./search-bar";
-import { SortSelect } from "./sort-select";
-import { ViewModeToggle } from "./view-mode-toggle";
-import { FilterSelect } from "./filter-select";
+import { SearchBar } from "../molecules/search-bar";
+import { SortSelect } from "../molecules/sort-select";
+import { ViewModeToggle } from "../molecules/view-mode-toggle";
+import { FilterSelect } from "../molecules/filter-select";
 
 type ViewMode = "list" | "grid";
 type SortOrder = "asc" | "desc";

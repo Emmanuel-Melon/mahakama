@@ -1,10 +1,10 @@
 import { Link } from "react-router";
 import { Download, Eye, FileText } from "lucide-react";
-import { IconContainer } from "~/components/icon-container";
-import { BookmarkButton } from "~/components/bookmark-button";
-import { ShareButton } from "~/components/share-button";
-import { MahButton, type MahAction } from "~/components/mah-button";
-import { MahCard } from "~/components/mah-card";
+import { IconContainer } from "~/components/atoms/icon-container";
+import { BookmarkButton } from "~/components/molecules/bookmark-button";
+import { ShareButton } from "~/components/molecules/share-button";
+import { MahButton, type MahAction } from "~/components/molecules/mah-button";
+import { MahCard } from "~/components/atoms/mah-card";
 import { type Document } from "@mah/api/clients/documents.api";
 
 interface CorpusCardProps {

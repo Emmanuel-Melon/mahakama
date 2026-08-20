@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ServiceCard } from "./service-card";
-import { ListControls } from "~/components/list-controls";
+import { ListControls } from "~/components/organisms/list-controls";
 import type { components } from "@mah/api/generated/api.types";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";

@@ -1,4 +1,4 @@
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 import { Search, FileText, MessageCircle } from "lucide-react";
 
 type StepCardProps = {

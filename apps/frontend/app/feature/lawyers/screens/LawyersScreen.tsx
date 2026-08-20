@@ -4,7 +4,7 @@ import { HeroSection } from "~/layouts/HeroSection";
 import { Gavel } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import type { Lawyer } from "@mah/api/clients/lawyers.api";
 import type { AsyncState } from "@mah/api/api.types";
 

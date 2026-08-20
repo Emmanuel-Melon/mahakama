@@ -1,9 +1,9 @@
 import { SidebarProvider, SidebarInset } from "~/components/ui/sidebar";
-import { AppSidebar } from "~/components/app-sidebar";
-import { SiteHeader } from "~/components/site-header";
+import { AppSidebar } from "~/components/organisms/app-sidebar";
+import { SiteHeader } from "~/components/organisms/site-header";
 import { Toaster } from "sonner";
 import { CountryProvider } from "~/context/country-context";
-import { NavigationLoader } from "~/components/navigation-loader";
+import { NavigationLoader } from "~/components/atoms/navigation-loader";
 import { useNavLinks } from "~/hooks/use-nav-links";
 
 interface AppShellProps {

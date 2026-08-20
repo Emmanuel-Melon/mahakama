@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { useChatMutations } from "@mah/api/hooks/use-chats";
 import type { CreateChatRequest } from "@mah/api/clients/chat.api";
 import { ChatForm, SuggestedQuestions } from "../components";
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 import { Scale } from "lucide-react";
 
 export const NewChatScreen = () => {

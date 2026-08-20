@@ -1,10 +1,10 @@
 import { MapPin, Briefcase, ChevronRight, Languages } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
-import { BookmarkButton } from "~/components/bookmark-button";
-import { ShareButton } from "~/components/share-button";
+import { BookmarkButton } from "~/components/molecules/bookmark-button";
+import { ShareButton } from "~/components/molecules/share-button";
 import type { components } from "@mah/api/generated/api.types";
-import { MahButton } from "~/components/mah-button";
-import { MahCard } from "~/components/mah-card";
+import { MahButton } from "~/components/molecules/mah-button";
+import { MahCard } from "~/components/atoms/mah-card";
 
 export type Lawyer = components["schemas"]["Lawyer"];
 
