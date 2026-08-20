@@ -1,54 +1,82 @@
-import { BaseNotificationContent, RegistryEntry } from "./notifications.types";
 import { logger } from "@/lib/logger";
-import { NOTIFICATION_DOMAINS } from "./notifications.config";
 
-const registry = NOTIFICATION_DOMAINS.reduce<Record<string, RegistryEntry>>(
-  (acc, { map, generators }) => {
+import type {
+  BaseNotificationContent,
+  NotificationDomainEntry,
+  RegistryEntry,
+} from "./notifications.types";
+
+const registry = new Map<string, RegistryEntry>();
+
+export class NotificationsDomainRegistry {
+  /**
+   * Automatically flattens domain template blocks into core routing engines
+   */
+  static register({ map, generators }: NotificationDomainEntry): void {
     for (const [enumKey, spec] of Object.entries(map)) {
       const generator = generators[enumKey];
+
       if (!generator) {
         throw new Error(
-          `No generator found for template key "${spec.key}" (enum key: "${enumKey}")`,
+          `[NotificationsDomainRegistry] Missing content generator mapping context for template descriptor identifier: "${spec.key}" (Enum lookup index key: "${enumKey}").`,
         );
       }
-      acc[spec.key] = { schema: spec.schema, generator };
-    }
-    return acc;
-  },
-  {},
-);
 
-export class NotificationsRegistry {
+      if (registry.has(spec.key)) {
+        logger.warn(
+          { templateKey: spec.key, enumKey },
+          "[NotificationsDomainRegistry] Context key collisions encountered across loaded module domains. Overwriting trace pointer.",
+        );
+      }
+
+      registry.set(spec.key, { schema: spec.schema, generator });
+      logger.debug(
+        { templateKey: spec.key },
+        "Notification system layout mapping compiled successfully",
+      );
+    }
+  }
+
   /**
-   * Generate base notification content for a given template key and data.
-   * The data is validated against the schema registered for that template key.
+   * Evaluates inbound schema structures cleanly prior to handing down pipeline formatting layers
    */
   static async generateBaseNotificationContent(
     templateKey: string,
     data: unknown,
   ): Promise<BaseNotificationContent> {
-    const entry = registry[templateKey];
+    const entry = registry.get(templateKey);
+
     if (!entry) {
-      logger.error({ templateKey }, "No notification generator found");
+      logger.error(
+        { templateKey },
+        "Requested layout route string context doesn't point to any registered compiler keys",
+      );
       if (process.env.NODE_ENV !== "production") {
         throw new Error(
-          `No notification generator registered for key: "${templateKey}"`,
+          `[NotificationsDomainRegistry] Lookup path failed for key: "${templateKey}". Verify feature domain index configuration loads.`,
         );
       }
-      return { title: "Update", message: "You have a new notification." };
+      return {
+        title: "System Update",
+        message: "You have received a notification update.",
+      };
     }
 
     try {
       const validatedData = entry.schema.parse(data);
-      return entry.generator(validatedData);
+      return await entry.generator(validatedData);
     } catch (error) {
       logger.error(
         { templateKey, error, data },
-        "Notification data validation failed",
+        "Payload structural validation failed against template constraints",
       );
       throw new Error(
-        `Invalid notification data for template "${templateKey}"`,
+        `[NotificationsDomainRegistry] Data formatting validation failure parsing context across string payload router matching: "${templateKey}"`,
       );
     }
+  }
+
+  static registeredKeys(): string[] {
+    return Array.from(registry.keys());
   }
 }

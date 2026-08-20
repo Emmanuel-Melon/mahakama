@@ -4,7 +4,7 @@ import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedNotificationPreferences } from "../notifications.config";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
-import { createNotificationPreferences } from "../operations/notifications.create";
+import { createNotificationPreferences } from "../operations/notifications.insert";
 import { HttpError } from "@/lib/http/http.error";
 
 export const setNotificationPreferencesController = asyncHandler(

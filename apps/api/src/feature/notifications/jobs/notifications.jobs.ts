@@ -1,31 +1,22 @@
 import { logger } from "@/lib/logger";
-import { NotificationJobs } from "../notifications.config";
+import { NotificationChannel } from "../notifications.config";
 import {
-  SetPreferencesPayload,
   TriggerNotificationPayload,
   ChannelNotificationPayload,
 } from "../notifications.types";
-import { NotificationsRegistry } from "../notifications.registry";
 import { findNotificationPreferences } from "../operations/notifications.find";
 import {
   getTargetChannels,
   routeToNotificationChannel,
   logChannelFailures,
 } from "../notifications.utils";
+import { NotificationsDomainRegistry } from "../notifications.registry";
+import { NotificationChannelRegistry } from "../notifications.channels";
 
 export class NotificationsJobHandler {
-  static async handleSetPreferences(data: SetPreferencesPayload) {
-    // TODO: Implement set preferences logic
-    logger.info({ data }, "Set preferences job received");
-    return { success: true, data };
-  }
-
   static async handleTriggerNotification(data: TriggerNotificationPayload) {
     const { recipientId, templateKey, correlationId } = data;
-    const userPreferences = await findNotificationPreferences(
-      "userId",
-      recipientId,
-    );
+    const userPreferences = await findNotificationPreferences(recipientId || "");
     if (!userPreferences.ok) {
       logger.error(
         { recipientId, templateKey, correlationId },
@@ -51,10 +42,11 @@ export class NotificationsJobHandler {
       return;
     }
 
-    const content = await NotificationsRegistry.generateBaseNotificationContent(
-      data.templateKey,
-      data.templateData,
-    );
+    const content =
+      await NotificationsDomainRegistry.generateBaseNotificationContent(
+        data.templateKey,
+        data.templateData,
+      );
 
     // Route to channel-specific queues in parallel
     const results = await Promise.allSettled(
@@ -63,13 +55,14 @@ export class NotificationsJobHandler {
           recipientId: data.recipientId,
           correlationId: correlationId,
           content,
+          templateKey: data.templateKey,
         }),
       ),
     );
 
     // Log any channel failures
     logChannelFailures(results, targetChannels.channels, {
-      recipientId: data.recipientId,
+      recipientId: data?.recipientId,
       templateKey: data.templateKey,
     });
     return {
@@ -85,12 +78,13 @@ export class NotificationsJobHandler {
 
     logger.info({ recipientId }, "Processing send email notification job");
 
-    // TODO: Add email notification logic here
-    // - Generate email content
-    // - Send via email service
-    // - Track delivery status
-    // - Handle bounces and retries
+    const handler = NotificationChannelRegistry[NotificationChannel.Email];
+    if (!handler) {
+      logger.error("Email channel handler not registered");
+      return { success: false, recipientId };
+    }
 
+    await handler.send(data);
     return { success: true, recipientId };
   }
 
@@ -99,12 +93,13 @@ export class NotificationsJobHandler {
 
     logger.info({ recipientId }, "Processing send in-app notification job");
 
-    // TODO: Add in-app notification logic here
-    // - Store notification in user's feed
-    // - Update unread counts
-    // - Trigger real-time updates
-    // - Archive old notifications
+    const handler = NotificationChannelRegistry[NotificationChannel.InApp];
+    if (!handler) {
+      logger.error("In-app channel handler not registered");
+      return { success: false, recipientId };
+    }
 
+    await handler.send(data);
     return { success: true, recipientId };
   }
 
@@ -113,12 +108,13 @@ export class NotificationsJobHandler {
 
     logger.info({ recipientId }, "Processing send push notification job");
 
-    // TODO: Add push notification logic here
-    // - Get user device tokens
-    // - Format push payload
-    // - Send via push service
-    // - Handle device token updates
+    const handler = NotificationChannelRegistry[NotificationChannel.Push];
+    if (!handler) {
+      logger.error("Push channel handler not registered");
+      return { success: false, recipientId };
+    }
 
+    await handler.send(data);
     return { success: true, recipientId };
   }
 }

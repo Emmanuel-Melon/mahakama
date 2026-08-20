@@ -1,17 +1,12 @@
+import { z } from "zod";
+
 import { JsonApiResourceConfig } from "@/lib/express/express.types";
+
 import type {
   Notification,
-  NotificationDomainEntry,
   NotificationPreferences,
+  PushSubscription,
 } from "./notifications.types";
-import {
-  AuthNotificationTemplateMap,
-  authNotificationGenerators,
-} from "@/feature/auth/auth.notifications";
-import {
-  UserNotificationTemplateMap,
-  usersNotificationGenerators,
-} from "@/feature/users/users.notifications";
 
 export const SerializedNotification: JsonApiResourceConfig<Notification> = {
   type: "notification",
@@ -25,8 +20,13 @@ export const SerializedNotificationPreferences: JsonApiResourceConfig<Notificati
       notificationPreferences,
   };
 
+export const SerializedPushSubscription: JsonApiResourceConfig<PushSubscription> =
+  {
+    type: "push-subscription",
+    attributes: (pushSubscription: PushSubscription) => pushSubscription,
+  };
+
 export const NotificationJobs = {
-  SetPreferences: "set-preferences",
   TriggerNotification: "trigger-notification",
   SendEmailNotification: "send-email-notification",
   SendInAppNotification: "send-in-app-notification",
@@ -42,11 +42,19 @@ export enum NotificationChannel {
   InApp = "in_app",
 }
 
-// ─── Domain registration
-export const NOTIFICATION_DOMAINS: NotificationDomainEntry[] = [
-  { map: AuthNotificationTemplateMap, generators: authNotificationGenerators },
-  {
-    map: UserNotificationTemplateMap,
-    generators: usersNotificationGenerators,
-  },
-];
+export const NotificationDomain = {
+  Admin: "admin",
+  Auth: "auth",
+  Payments: "payments",
+  Plans: "plans",
+  Relationships: "relationships",
+  System: "system",
+  Users: "users",
+} as const;
+
+export const notificationDomainSchema = z.enum(
+  Object.values(NotificationDomain) as [string, ...string[]],
+);
+
+export type NotificationDomain =
+  (typeof NotificationDomain)[keyof typeof NotificationDomain];

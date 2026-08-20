@@ -1,7 +1,6 @@
 import { logger } from "@/lib/logger";
 import { unwrapJobResult } from "@/lib/bullmq/bullmq.utils";
 import { insertAuthEvent } from "../operations/auth.insert";
-import { AuthJobs } from "../auth.config";
 import {
   EmailVerifiedPayload,
   GenerateVerificationLinkPayload,
@@ -11,10 +10,18 @@ import {
   RegistrationCompletedPayload,
   ResetPasswordRequestPayload,
 } from "../auth.types";
-import { notificationsQueue } from "@/feature/notifications/jobs/notifications.queue";
-import { NotificationJobs } from "@/feature/notifications/notifications.config";
-import { createNotificationPayload } from "@/feature/notifications/notifications.utils";
-import { AuthNotificationTemplateMap } from "../auth.notifications";
+import {
+  dispatchAuthNotification,
+  AuthNotificationEvent,
+} from "../notifications/auth.notifications";
+import { generateSecureToken } from "@/service/token-service/operations/tokens.insert";
+import { convertDuration } from "@/utils/dates";
+import { clientConfig } from "@/config";
+import { findAuthUser } from "../operations/auth.find";
+
+const TOKEN_EXPIRY_DAYS = 1;
+const verifyEmailUrl = `${clientConfig.baseUrl}/verify-email`;
+const resetPasswordUrl = `${clientConfig.baseUrl}/reset-password`;
 
 export class AuthJobHandler {
   static async handleLogin(data: LoggedInPayload) {
@@ -32,59 +39,110 @@ export class AuthJobHandler {
       "Processing login alert",
     );
 
-    const template = createNotificationPayload(
-      AuthNotificationTemplateMap.LOGIN_ALERT,
+    await dispatchAuthNotification(
+      AuthNotificationEvent.LoginAlert,
+      { loginTime: new Date().toISOString() },
       {
-        loginTime: new Date().toISOString(),
+        recipientId: data.userId,
+        correlationId: authEvent.data?.id!,
       },
     );
-
-    await notificationsQueue.add(NotificationJobs.TriggerNotification, {
-      recipientId: data.userId,
-      ...template,
-      correlationId: authEvent.data?.id!,
-      actorId: data.userId,
-      domain: "auth",
-    });
 
     return { success: true };
   }
 
   static async handleRegistration(data: RegistrationCompletedPayload) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info({ userId: data.userId }, "Processing registration");
+
+    const link = await generateSecureToken({
+      userId: data.userId,
+      tokenType: "LINK",
+      entityType: "user",
+      entityId: data.userId,
+      expiresInMinutes: convertDuration(TOKEN_EXPIRY_DAYS, "days", "minutes"),
+      baseUrl: verifyEmailUrl,
+    });
+
+    await dispatchAuthNotification(
+      AuthNotificationEvent.EmailVerification,
+      { email: data.email, link },
+      { recipientId: data.userId, correlationId: data.userId },
+    );
+
+    return { success: true };
   }
 
   static async handleTokenRefresh(data: RefreshTokenPayload) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info({ userId: data.userId }, "Processing token refresh");
+    return { success: true };
   }
 
   static async handleLogout(data: LoggedOutPayload) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info({ userId: data.userId }, "Processing logout");
+    return { success: true };
   }
 
   static async handleResetPasswordRequest(data: ResetPasswordRequestPayload) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info(
+      { userId: data.userId, email: data.email },
+      "Processing password reset request",
+    );
+
+    const link = await generateSecureToken({
+      userId: data.userId,
+      tokenType: "LINK",
+      entityType: "user",
+      entityId: data.userId,
+      expiresInMinutes: convertDuration(TOKEN_EXPIRY_DAYS, "days", "minutes"),
+      baseUrl: resetPasswordUrl,
+    });
+
+    await dispatchAuthNotification(
+      AuthNotificationEvent.PasswordReset,
+      { email: data.email, link },
+      {
+        recipientId: data.userId,
+        correlationId: data.correlationId,
+      },
+    );
+
+    return { success: true };
   }
 
   static async handleEmailVerified(data: EmailVerifiedPayload) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info({ userId: data.userId }, "Processing email verified");
+    return { success: true };
   }
 
   static async generateVerificationLinkEvent(
     data: GenerateVerificationLinkPayload,
   ) {
-    logger.info({ userId: data.userId }, "Processing welcome notification");
-    // ... logic
-    return { welcomeSent: true };
+    logger.info({ userId: data.userId }, "Processing email verification link");
+
+    const user = await findAuthUser("id", data.userId);
+    if (!user.ok || !user.data?.email) {
+      logger.error(
+        { userId: data.userId },
+        "User not found for verification link",
+      );
+      return { success: false };
+    }
+
+    const link = await generateSecureToken({
+      userId: data.userId,
+      tokenType: "LINK",
+      entityType: "user",
+      entityId: data.userId,
+      expiresInMinutes: convertDuration(TOKEN_EXPIRY_DAYS, "days", "minutes"),
+      baseUrl: verifyEmailUrl,
+    });
+
+    await dispatchAuthNotification(
+      AuthNotificationEvent.EmailVerification,
+      { email: user.data.email, link },
+      { recipientId: data.userId, correlationId: data.userId },
+    );
+
+    return { success: true };
   }
 }

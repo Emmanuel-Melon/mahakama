@@ -253,7 +253,9 @@ export type RegistrationPayload = z.infer<typeof RegistrationPayloadSchema>;
 type BaseAuthPayload = {
   userId: string;
 };
-export type RegistrationCompletedPayload = BaseAuthPayload;
+export type RegistrationCompletedPayload = BaseAuthPayload & {
+  email: string;
+};
 export type LoggedInPayload = BaseAuthPayload;
 export type RefreshTokenPayload = BaseAuthPayload;
 export type LoggedOutPayload = BaseAuthPayload;
@@ -262,7 +264,9 @@ export type ResetPasswordRequestPayload = {
   correlationId: string;
   userId: string;
 };
-export type EmailVerifiedPayload = BaseAuthPayload;
+export type EmailVerifiedPayload = BaseAuthPayload & {
+  email: string;
+};
 export type GenerateVerificationLinkPayload = BaseAuthPayload;
 
 export interface AuthJobMap {
@@ -279,8 +283,31 @@ export interface AuthJobMap {
  * NOTIFICATION-RELATED TYPES (for notification system integration)
  */
 
+/*
+ * NOTIFICATION-RELATED TYPES
+ */
 export const LoginAlertNotificationSchema = NotificationTrackingSchema.extend({
   loginTime: z.string(),
   location: z.string().optional(),
   device: z.string().optional(),
 });
+
+export const PasswordResetNotificationSchema =
+  NotificationTrackingSchema.extend({
+    email: z.string().email(),
+    link: z.string(),
+  });
+
+export const EmailVerificationNotificationSchema =
+  NotificationTrackingSchema.extend({
+    email: z.string(),
+    link: z.string(),
+  });
+
+export type LoginNotification = z.infer<typeof LoginAlertNotificationSchema>;
+export type PasswordResetNotification = z.infer<
+  typeof PasswordResetNotificationSchema
+>;
+export type EmailVerificationNotification = z.infer<
+  typeof EmailVerificationNotificationSchema
+>;

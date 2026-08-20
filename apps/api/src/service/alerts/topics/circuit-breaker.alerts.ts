@@ -1,4 +1,4 @@
-import { compileEmailBlocks } from "@/feature/notifications/notifications.email";
+import { compileEmailBlocks } from "@/feature/notifications/notifications.emails";
 
 import { createAlertGenerators } from "../alerts.core";
 import { circuitBreakerPayloadSchema } from "../alerts.types";

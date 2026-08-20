@@ -23,8 +23,6 @@ const inAppHandlers: JobHandlerMap<
 
 // Main notifications handlers
 const notificationsHandlers: JobHandlerMap<NotificationJobMap> = {
-  [NotificationJobs.SetPreferences]: (data) =>
-    NotificationsJobHandler.handleSetPreferences(data),
   [NotificationJobs.SendEmailNotification]: (data) =>
     NotificationsJobHandler.handleSendEmailNotification(data),
   [NotificationJobs.SendInAppNotification]: (data) =>
