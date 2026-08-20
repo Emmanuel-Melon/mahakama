@@ -93,9 +93,18 @@ export const LawSourceConfigSchema = z.object({
   checkCron: z.string().default("0 0 1 * *"),
 });
 
+export const R2ConfigSchema = z.object({
+  accountId: z.string().optional(),
+  accessKeyId: z.string().optional(),
+  secretAccessKey: z.string().optional(),
+  bucket: z.string().optional(),
+  publicBaseUrl: z.string().url().optional(),
+});
+
 export const ServicesConfigSchema = z.object({
   upstash: UpstashConfigSchema.optional(),
   lawSources: LawSourceConfigSchema.optional(),
+  r2: R2ConfigSchema.optional(),
 });
 
 export const RagConfigSchema = z.object({
@@ -145,14 +154,6 @@ export const CookieConfigSchema = z.object({
     z.boolean().optional(),
   ),
   cookieSameSite: z.enum(["lax", "strict", "none"]).optional(),
-});
-
-export const R2ConfigSchema = z.object({
-  accountId: z.string().optional(),
-  accessKeyId: z.string().optional(),
-  secretAccessKey: z.string().optional(),
-  bucket: z.string().optional(),
-  publicBaseUrl: z.string().url().optional(),
 });
 
 export const AlertsConfigSchema = z.object({

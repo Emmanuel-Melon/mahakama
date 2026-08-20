@@ -16,7 +16,9 @@ import { NotificationChannelRegistry } from "../notifications.channels";
 export class NotificationsJobHandler {
   static async handleTriggerNotification(data: TriggerNotificationPayload) {
     const { recipientId, templateKey, correlationId } = data;
-    const userPreferences = await findNotificationPreferences(recipientId || "");
+    const userPreferences = await findNotificationPreferences(
+      recipientId || "",
+    );
     if (!userPreferences.ok) {
       logger.error(
         { recipientId, templateKey, correlationId },
