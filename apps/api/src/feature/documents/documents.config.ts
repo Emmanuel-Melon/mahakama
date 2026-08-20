@@ -24,8 +24,7 @@ export const DocumentJobs = {
   CleanupExpiredDocuments: "cleanup-expired-documents",
 } as const;
 
-export type DocumentJobType =
-  (typeof DocumentJobs)[keyof typeof DocumentJobs];
+export type DocumentJobType = (typeof DocumentJobs)[keyof typeof DocumentJobs];
 
 export const DocumentConfig = {
   /** Session TTL in milliseconds (24 hours) */

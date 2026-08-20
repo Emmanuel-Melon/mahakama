@@ -1,5 +1,8 @@
 import { Bug, type LucideIcon } from "lucide-react";
-import { IconContainer, type ColorVariant } from "~/components/atoms/icon-container";
+import {
+  IconContainer,
+  type ColorVariant,
+} from "~/components/atoms/icon-container";
 import { MahButton } from "~/components/molecules/mah-button";
 import type { ReactNode } from "react";
 

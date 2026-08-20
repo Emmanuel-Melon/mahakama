@@ -87,7 +87,8 @@ export const useAuthMutations = () => {
   >({
     mutationFn: ({ email }) => authApi.requestReset(email),
     messages: {
-      success: "If an account matches, a recovery link will be dispatched shortly.",
+      success:
+        "If an account matches, a recovery link will be dispatched shortly.",
       error: (err) =>
         err.errors?.[0]?.detail ??
         "Failed to request password reset. Please try again.",

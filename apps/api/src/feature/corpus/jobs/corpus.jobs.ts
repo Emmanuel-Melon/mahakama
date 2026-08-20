@@ -6,10 +6,7 @@ import { CORPUS_CONFIG } from "../corpus.config";
 import { processCorpusPipeline } from "../operations/corpus.ingest";
 
 export class CorpusJobHandler {
-  static async handleCorpusUploaded(
-    data: CorpusUploadedPayload,
-    job?: Job,
-  ) {
+  static async handleCorpusUploaded(data: CorpusUploadedPayload, job?: Job) {
     const { documentId, userId, filename, size } = data;
 
     const result = await processCorpusPipeline(documentId, {

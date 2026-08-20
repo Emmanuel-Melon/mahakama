@@ -137,9 +137,7 @@ export const CorpusUploadedPayloadSchema = z.object({
   size: z.number().optional(),
 });
 
-export type CorpusUploadedPayload = z.infer<
-  typeof CorpusUploadedPayloadSchema
->;
+export type CorpusUploadedPayload = z.infer<typeof CorpusUploadedPayloadSchema>;
 
 export interface CorpusJobMap {
   [CorpusJobs.CorpusUploaded]: CorpusUploadedPayload;

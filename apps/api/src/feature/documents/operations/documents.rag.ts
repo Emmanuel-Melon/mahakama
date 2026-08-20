@@ -113,10 +113,7 @@ export async function retrieveDocumentContext(
 
     return { chunks, sources: Array.from(seenSources.values()) };
   } catch (error) {
-    logger.error(
-      { sessionId, error },
-      "Failed to retrieve document context",
-    );
+    logger.error({ sessionId, error }, "Failed to retrieve document context");
     return { chunks: [], sources: [] };
   }
 }
@@ -161,9 +158,7 @@ export function mergeDocumentContexts(
  * @param sessionId - The chat session ID
  * @returns True if the session has a document
  */
-export async function sessionHasDocument(
-  sessionId: string,
-): Promise<boolean> {
+export async function sessionHasDocument(sessionId: string): Promise<boolean> {
   const collectionName = getDocumentCollectionName(sessionId);
 
   try {

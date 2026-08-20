@@ -12,10 +12,7 @@ import {
 import { chunkDocument } from "@/service/rag-service/rag.chunker";
 import { isExternalStorageUrl } from "@/utils/url";
 import { CORPUS_CONFIG } from "../corpus.config";
-import {
-  CorpusPipelineOptions,
-  CorpusPipelineResult,
-} from "../corpus.types";
+import { CorpusPipelineOptions, CorpusPipelineResult } from "../corpus.types";
 import { findCorpusEntry } from "./corpus.find";
 import { EmbeddingJobStatus } from "@/service/embedding-service/embeddings.config";
 

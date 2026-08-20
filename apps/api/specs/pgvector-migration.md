@@ -24,12 +24,12 @@ The system originally used ChromaDB as the sole vector store for legal document 
 
 Controlled by `EMBEDDING_WRITE_MODE` and `EMBEDDING_PRIMARY_STORE` env vars:
 
-| `writeMode` | `primaryStore` | Writes go to | Reads from | Shadow |
-|-------------|---------------|-------------|-----------|--------|
-| `pgvector` | `pgvector` | pgvector only | pgvector | — |
-| `chroma` | `chroma` | Chroma only | Chroma | — |
-| `dual` | `pgvector` | pgvector + Chroma | pgvector | Chroma |
-| `dual` | `chroma` | Chroma + pgvector | Chroma | pgvector |
+| `writeMode` | `primaryStore` | Writes go to      | Reads from | Shadow   |
+| ----------- | -------------- | ----------------- | ---------- | -------- |
+| `pgvector`  | `pgvector`     | pgvector only     | pgvector   | —        |
+| `chroma`    | `chroma`       | Chroma only       | Chroma     | —        |
+| `dual`      | `pgvector`     | pgvector + Chroma | pgvector   | Chroma   |
+| `dual`      | `chroma`       | Chroma + pgvector | Chroma     | pgvector |
 
 Default: `writeMode: "pgvector"`, `primaryStore: "pgvector"`.
 
@@ -71,6 +71,7 @@ The critical property: `saveDocumentChunks` deletes ALL rows for a `documentId` 
 Added a `vector_id` text column to `document_chunks` that stores the stable vector-store identifier. New code sets `vectorId: buildChunkId(chunk)` on insert. The pgvector store matches on `vectorId` instead of `id`.
 
 **Schema change:**
+
 ```sql
 ALTER TABLE document_chunks ADD COLUMN vector_id text;
 CREATE INDEX vector_id_idx ON document_chunks (vector_id);
@@ -81,6 +82,7 @@ WHERE vector_id IS NULL;
 ```
 
 **Files changed:**
+
 - `embeddings.schema.ts` — new column + index
 - `embeddings.types.ts` — `chunkIndex` added to `DocumentChunk`
 - `rag.chunker.ts` — `chunkIndex: index` set on each chunk
@@ -95,21 +97,22 @@ WHERE vector_id IS NULL;
 
 ### Table: `shadow_write_failures`
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | UUID PK | Auto-generated |
-| `collection_name` | text | ChromaDB collection name |
-| `record_ids` | text[] | VectorRecord IDs that failed to write |
-| `shadow_store` | text | Name of the shadow store (`"chroma"` or `"pgvector"`) |
-| `primary_store` | text | Name of the primary store |
-| `retry_count` | integer | Number of replay attempts (default 0) |
-| `last_error` | text | Most recent error message |
-| `created_at` | timestamp | When the failure was recorded |
-| `resolved_at` | timestamp | NULL = unresolved; set when replay succeeds or is superseded |
+| Column            | Type      | Description                                                  |
+| ----------------- | --------- | ------------------------------------------------------------ |
+| `id`              | UUID PK   | Auto-generated                                               |
+| `collection_name` | text      | ChromaDB collection name                                     |
+| `record_ids`      | text[]    | VectorRecord IDs that failed to write                        |
+| `shadow_store`    | text      | Name of the shadow store (`"chroma"` or `"pgvector"`)        |
+| `primary_store`   | text      | Name of the primary store                                    |
+| `retry_count`     | integer   | Number of replay attempts (default 0)                        |
+| `last_error`      | text      | Most recent error message                                    |
+| `created_at`      | timestamp | When the failure was recorded                                |
+| `resolved_at`     | timestamp | NULL = unresolved; set when replay succeeds or is superseded |
 
 ### Failure Recording (composite store)
 
 When `shadow.addDocuments()` throws:
+
 1. Log the error with record IDs and store name
 2. Insert a row into `shadow_write_failures`
 3. The API request succeeds (primary write already completed)
@@ -123,6 +126,7 @@ When `shadow.addDocuments()` throws:
 A scheduled BullMQ job runs every `EMBEDDING_REPLAY_INTERVAL_MS` (default 5 minutes, 300000ms). Only active when `writeMode: "dual"`.
 
 **Per run:**
+
 1. Fetch up to 100 unresolved failures (`resolvedAt IS NULL AND retryCount < 5`)
 2. For each failure:
    a. Look up the shadow store by name
@@ -135,25 +139,25 @@ A scheduled BullMQ job runs every `EMBEDDING_REPLAY_INTERVAL_MS` (default 5 minu
 
 ### Reading from the primary store
 
-| Primary store | How records are read |
-|--------------|---------------------|
-| pgvector | `SELECT ... FROM document_chunks WHERE vector_id IN (...)` — returns embeddings + metadata |
-| ChromaDB | `chromaClient.getDocumentsByIds(collection, ids)` — returns embeddings + metadata |
+| Primary store | How records are read                                                                       |
+| ------------- | ------------------------------------------------------------------------------------------ |
+| pgvector      | `SELECT ... FROM document_chunks WHERE vector_id IN (...)` — returns embeddings + metadata |
+| ChromaDB      | `chromaClient.getDocumentsByIds(collection, ids)` — returns embeddings + metadata          |
 
 ### Retry limits
 
-| Retries | Action |
-|---------|--------|
-| 0–4 | Automatic replay on next scheduler run |
-| 5 | Left unresolved — logged as warning, available for manual inspection |
+| Retries | Action                                                               |
+| ------- | -------------------------------------------------------------------- |
+| 0–4     | Automatic replay on next scheduler run                               |
+| 5       | Left unresolved — logged as warning, available for manual inspection |
 
 ### Configuration
 
-| Env var | Default | Description |
-|---------|---------|-------------|
-| `EMBEDDING_WRITE_MODE` | `pgvector` | `chroma`, `pgvector`, or `dual` |
-| `EMBEDDING_PRIMARY_STORE` | `pgvector` | Which store serves reads |
-| `EMBEDDING_REPLAY_INTERVAL_MS` | `300000` (5 min) | How often the replay job runs |
+| Env var                        | Default          | Description                     |
+| ------------------------------ | ---------------- | ------------------------------- |
+| `EMBEDDING_WRITE_MODE`         | `pgvector`       | `chroma`, `pgvector`, or `dual` |
+| `EMBEDDING_PRIMARY_STORE`      | `pgvector`       | Which store serves reads        |
+| `EMBEDDING_REPLAY_INTERVAL_MS` | `300000` (5 min) | How often the replay job runs   |
 
 ---
 
@@ -175,23 +179,25 @@ await db
 ```
 
 When v2 is ingested:
+
 1. v1 rows are **deleted** from `document_chunks`
 2. v2 rows are inserted
 3. v2 embeddings are generated and written to the vector store
 4. Version cleanup deletes v1 from Chroma (if `chunkVersion > 1`)
 
 By the time the replay job picks up the v1 failure:
+
 - **pgvector-primary:** v1 rows don't exist in `document_chunks` → `readRecordsFromPgvector` returns empty → resolved
 - **Chroma-primary:** v1 was deleted by version cleanup → `readRecordsFromChroma` returns empty → resolved
 
 ### Edge cases examined
 
-| Scenario | Stale data possible? | Why |
-|----------|---------------------|-----|
-| Normal re-ingestion | No | Old rows deleted by `saveDocumentChunks` before replay runs |
-| Pipeline crash after shadow fail, before version cleanup | No | `saveDocumentChunks` already deleted old rows from Postgres |
-| `saveDocumentChunks` delete fails | No | Throws on failure → job retries → eventually succeeds |
-| Version cleanup fails (Chroma down) | No | Stale data stays in Chroma, but replay reads from primary (Postgres) where old rows are gone |
+| Scenario                                                 | Stale data possible? | Why                                                                                          |
+| -------------------------------------------------------- | -------------------- | -------------------------------------------------------------------------------------------- |
+| Normal re-ingestion                                      | No                   | Old rows deleted by `saveDocumentChunks` before replay runs                                  |
+| Pipeline crash after shadow fail, before version cleanup | No                   | `saveDocumentChunks` already deleted old rows from Postgres                                  |
+| `saveDocumentChunks` delete fails                        | No                   | Throws on failure → job retries → eventually succeeds                                        |
+| Version cleanup fails (Chroma down)                      | No                   | Stale data stays in Chroma, but replay reads from primary (Postgres) where old rows are gone |
 
 ### Conclusion
 
@@ -202,49 +208,56 @@ A supersession check (comparing `document.version` against the failure's version
 ## 7. Files Changed
 
 ### Schema
-| File | Change |
-|------|--------|
+
+| File                   | Change                                                                                    |
+| ---------------------- | ----------------------------------------------------------------------------------------- |
 | `embeddings.schema.ts` | Added `vectorId` column + index on `document_chunks`; added `shadow_write_failures` table |
 
 ### Config
-| File | Change |
-|------|--------|
-| `config.types.ts` | Added `replayIntervalMs` to `embeddingConfigSchema` |
-| `config/index.ts` | Loads `EMBEDDING_REPLAY_INTERVAL_MS` env var |
-| `bullmq.config.ts` | Added `ShadowReplay` to `QueueName` enum |
+
+| File               | Change                                              |
+| ------------------ | --------------------------------------------------- |
+| `config.types.ts`  | Added `replayIntervalMs` to `embeddingConfigSchema` |
+| `config/index.ts`  | Loads `EMBEDDING_REPLAY_INTERVAL_MS` env var        |
+| `bullmq.config.ts` | Added `ShadowReplay` to `QueueName` enum            |
 
 ### Vector Store
-| File | Change |
-|------|--------|
-| `stores/index.ts` | Shadow write catch block persists failures to WAL |
-| `stores/pgvector.store.ts` | All lookups match on `vectorId` instead of `id` |
+
+| File                       | Change                                            |
+| -------------------------- | ------------------------------------------------- |
+| `stores/index.ts`          | Shadow write catch block persists failures to WAL |
+| `stores/pgvector.store.ts` | All lookups match on `vectorId` instead of `id`   |
 
 ### Ingestion Pipeline
-| File | Change |
-|------|--------|
-| `embeddings.types.ts` | Added `chunkIndex` to `DocumentChunk` |
-| `rag.chunker.ts` | Sets `chunkIndex` on each chunk |
-| `embeddings.utils.ts` | Includes `chunk_index` in metadata |
+
+| File                   | Change                                                            |
+| ---------------------- | ----------------------------------------------------------------- |
+| `embeddings.types.ts`  | Added `chunkIndex` to `DocumentChunk`                             |
+| `rag.chunker.ts`       | Sets `chunkIndex` on each chunk                                   |
+| `embeddings.utils.ts`  | Includes `chunk_index` in metadata                                |
 | `embeddings.insert.ts` | Sets `vectorId` on insert; `generateDocumentEmbeddings` unchanged |
 
 ### Replay Job (new)
-| File | Purpose |
-|------|---------|
-| `jobs/shadow-replay.config.ts` | Job name constant |
-| `jobs/shadow-replay.types.ts` | Payload type |
-| `jobs/shadow-replay.queue.ts` | Typed BullMQ queue |
-| `jobs/shadow-replay.worker.ts` | Worker with handler dispatch |
-| `jobs/shadow-replay.job.ts` | Core replay logic + housekeeping |
+
+| File                              | Purpose                                              |
+| --------------------------------- | ---------------------------------------------------- |
+| `jobs/shadow-replay.config.ts`    | Job name constant                                    |
+| `jobs/shadow-replay.types.ts`     | Payload type                                         |
+| `jobs/shadow-replay.queue.ts`     | Typed BullMQ queue                                   |
+| `jobs/shadow-replay.worker.ts`    | Worker with handler dispatch                         |
+| `jobs/shadow-replay.job.ts`       | Core replay logic + housekeeping                     |
 | `jobs/shadow-replay.scheduler.ts` | Interval scheduler (active when `writeMode: "dual"`) |
 
 ### Registration
-| File | Change |
-|------|--------|
+
+| File             | Change                                                                   |
+| ---------------- | ------------------------------------------------------------------------ |
 | `bullmq.init.ts` | Registers `initShadowReplayWorker()` + `registerShadowReplayScheduler()` |
 
 ### Backfill
-| File | Change |
-|------|--------|
+
+| File                              | Change                                         |
+| --------------------------------- | ---------------------------------------------- |
 | `embeddings.backfill-pgvector.ts` | Sets `vectorId` when backfilling from ChromaDB |
 
 ---

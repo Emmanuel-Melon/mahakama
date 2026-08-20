@@ -1,10 +1,6 @@
 import { db } from "@/lib/drizzle";
 import { documentsTable } from "../corpus.schema";
-import type {
-  Corpus,
-  CorpusColumn,
-  CorpusColumnKey,
-} from "../corpus.types";
+import type { Corpus, CorpusColumn, CorpusColumnKey } from "../corpus.types";
 import { eq } from "drizzle-orm";
 import {
   executeSingle,

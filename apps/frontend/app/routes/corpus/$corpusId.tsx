@@ -20,7 +20,7 @@ export function meta({}: Route.MetaArgs) {
 export default function DocumentDetails({ params }: Route.ComponentProps) {
   const { documentId } = params;
   const { data: document, isLoading, error } = useDocument(documentId);
-  return     <CorpusDetailsScreen document={document} error="" />;
+  return <CorpusDetailsScreen document={document} error="" />;
 }
 
 export function ErrorBoundary() {

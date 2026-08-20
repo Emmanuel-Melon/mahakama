@@ -15,7 +15,8 @@ export type UserResource = components["schemas"]["UserResource"];
 export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
 export type UserMetadata = UserSingleResponse["metadata"];
 export type UserResult = ApiResource<User, UserMetadata>;
-export type ResetPasswordRequest = components["schemas"]["ResetPasswordRequest"];
+export type ResetPasswordRequest =
+  components["schemas"]["ResetPasswordRequest"];
 export type VerifyEmailRequest = components["schemas"]["VerifyEmailRequest"];
 export type ResetPasswordResult = {
   message: string;
@@ -96,10 +97,7 @@ export class AuthApiClient extends BaseApiClient {
     );
   }
 
-  public async resetPassword(
-    token: string,
-    password: string,
-  ): Promise<void> {
+  public async resetPassword(token: string, password: string): Promise<void> {
     return this.api.request<void>(AUTH_API_ROUTES.RESET_PASSWORD, {
       method: "POST",
       headers: this.defaultHeaders,

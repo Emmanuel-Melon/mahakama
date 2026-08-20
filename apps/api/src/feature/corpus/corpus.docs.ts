@@ -106,8 +106,7 @@ const corpusPaths: PathDefinition[] = [
     successStatus: HttpStatus.SUCCESS,
     successSchema: z.string().openapi({
       format: "binary",
-      description:
-        "Corpus ingestion started - SSE stream for progress updates",
+      description: "Corpus ingestion started - SSE stream for progress updates",
     }),
     errorCodes: [400, 401],
   },

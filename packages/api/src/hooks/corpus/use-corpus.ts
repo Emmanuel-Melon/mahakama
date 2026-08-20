@@ -5,8 +5,7 @@ import type { ApiClientError } from "../../api/api.errors";
 export const corpusKeys = {
   all: ["corpus"] as const,
   entries: () => [...corpusKeys.all, "entries"] as const,
-  entry: (id: string | number) =>
-    [...corpusKeys.all, "entry", id] as const,
+  entry: (id: string | number) => [...corpusKeys.all, "entry", id] as const,
 } as const;
 
 /*

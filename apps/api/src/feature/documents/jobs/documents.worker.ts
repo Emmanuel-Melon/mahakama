@@ -9,8 +9,7 @@ import { logger } from "@/lib/logger";
  * Document job handler map
  */
 const documentHandlers: JobHandlerMap<Record<string, any>> = {
-  [DocumentJobs.CleanupExpiredDocuments]: () =>
-    cleanupExpiredDocuments(),
+  [DocumentJobs.CleanupExpiredDocuments]: () => cleanupExpiredDocuments(),
 };
 
 /**

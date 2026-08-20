@@ -58,8 +58,7 @@ export function useDeleteDocument() {
     mutationFn: (sessionId) => documentsApi.deleteDocument(sessionId),
     messages: {
       success: "Document deleted successfully!",
-      error: (err) =>
-        err.errors?.[0]?.detail ?? "Failed to delete document.",
+      error: (err) => err.errors?.[0]?.detail ?? "Failed to delete document.",
     },
     invalidates: (sessionId) => [documentsKeys.status(sessionId)],
   });

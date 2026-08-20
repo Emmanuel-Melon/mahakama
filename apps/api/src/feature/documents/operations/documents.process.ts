@@ -247,9 +247,7 @@ export async function deleteDocument(sessionId: string): Promise<boolean> {
  * @param sessionId - The chat session ID
  * @returns True if the collection exists and has documents
  */
-export async function sessionHasDocument(
-  sessionId: string,
-): Promise<boolean> {
+export async function sessionHasDocument(sessionId: string): Promise<boolean> {
   const collectionName = getDocumentCollectionName(sessionId);
 
   try {

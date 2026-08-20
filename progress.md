@@ -108,11 +108,11 @@ _Phase 5 will be completed manually by the development team._
 
 ## Frontend Components
 
-| Component               | Location                                                               | Description                      |
-| ----------------------- | ---------------------------------------------------------------------- | -------------------------------- |
-| `ChatInput`             | `apps/frontend/app/feature/chats/components/chat-input.tsx`            | Updated with file upload support |
+| Component           | Location                                                           | Description                      |
+| ------------------- | ------------------------------------------------------------------ | -------------------------------- |
+| `ChatInput`         | `apps/frontend/app/feature/chats/components/chat-input.tsx`        | Updated with file upload support |
 | `DocumentIndicator` | `apps/frontend/app/feature/chats/components/DocumentIndicator.tsx` | Shows attached document status   |
-| `CitationsSidebar`      | `apps/frontend/app/feature/chats/components/CitationsSidebar.tsx`      | Updated with source attribution  |
+| `CitationsSidebar`  | `apps/frontend/app/feature/chats/components/CitationsSidebar.tsx`  | Updated with source attribution  |
 
 ---
 

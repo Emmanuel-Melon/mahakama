@@ -6,9 +6,7 @@ interface CorpusDetailsHeaderProps {
   document: Document;
 }
 
-export function CorpusDetailsHeader({
-  document,
-}: CorpusDetailsHeaderProps) {
+export function CorpusDetailsHeader({ document }: CorpusDetailsHeaderProps) {
   return (
     <PageDetailHeader
       type={document.type}
