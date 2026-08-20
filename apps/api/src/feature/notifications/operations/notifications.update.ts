@@ -1,40 +1,35 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/lib/drizzle";
+import type { DbCollection, DbResult } from "@/lib/drizzle/drizzle.types";
+import { toCollection } from "@/lib/drizzle/results/results.collection";
+import { executeSingle } from "@/lib/drizzle/results/results.single";
+
 import {
   notificationsSchema,
   userNotificationPreferences,
 } from "../notifications.schema";
-import {
+import type {
   Notification,
-  NewNotification,
-  NotificationPreferences,
   NotificationColumn,
   NotificationColumnKey,
-  UserNotificationPreferencesColumn,
-  UserNotificationPreferencesColumnKey,
+  NotificationPreferences,
+  PreferencesColumn,
+  PreferencesColumnKey,
+  UpdateNotification,
+  UpdateNotificationPreferences,
 } from "../notifications.types";
-import { eq } from "drizzle-orm";
-import {
-  executeSingle,
-  type DbResult,
-} from "@/lib/drizzle/results/results.single";
 
 export async function updateNotification<K extends NotificationColumnKey>(
   field: K,
   value: NotificationColumn[K]["_"]["data"],
-  data: Partial<NewNotification>,
+  data: UpdateNotification,
 ): Promise<DbResult<Notification>> {
   return executeSingle(
     db
       .update(notificationsSchema)
       .set({
-        type: data.type,
-        channel: data.channel,
-        title: data.title,
-        message: data.message,
-        scheduledAt: data.scheduledAt,
-        sentAt: data.sentAt,
-        status: data.status,
-        metadata: data.metadata,
+        ...data,
         updatedAt: new Date(),
       })
       .where(eq(notificationsSchema[field], value))
@@ -44,22 +39,63 @@ export async function updateNotification<K extends NotificationColumnKey>(
 }
 
 export async function updateNotificationPreferences<
-  K extends UserNotificationPreferencesColumnKey,
+  K extends PreferencesColumnKey,
 >(
   field: K,
-  value: UserNotificationPreferencesColumn[K]["_"]["data"],
-  data: Partial<NotificationPreferences>,
+  value: PreferencesColumn[K]["_"]["data"],
+  data: UpdateNotificationPreferences,
 ): Promise<DbResult<NotificationPreferences>> {
   return executeSingle(
     db
       .update(userNotificationPreferences)
       .set({
-        emailEnabled: data.emailEnabled,
-        pushEnabled: data.pushEnabled,
-        inAppEnabled: data.inAppEnabled,
+        ...data,
+        updatedAt: new Date(),
       })
       .where(eq(userNotificationPreferences[field], value))
       .returning()
       .then(([updatedPreferences]) => updatedPreferences),
   );
+}
+
+export async function markAsRead(
+  id: string,
+  userId: string,
+): Promise<DbResult<Notification>> {
+  return updateNotification("id", id, {
+    isRead: true,
+    readAt: new Date(),
+  });
+}
+
+export async function toggleReadStatus(
+  id: string,
+  isRead: boolean,
+): Promise<DbResult<Notification>> {
+  return updateNotification("id", id, {
+    isRead,
+    readAt: isRead ? new Date() : null,
+  });
+}
+
+export async function markAllAsRead(
+  userId: string,
+): Promise<DbCollection<Notification>> {
+  const results = await db
+    .update(notificationsSchema)
+    .set({
+      isRead: true,
+      readAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(
+      and(
+        eq(notificationsSchema.userId, userId),
+        eq(notificationsSchema.isRead, false),
+        eq(notificationsSchema.channel, "in_app"),
+      ),
+    )
+    .returning();
+
+  return toCollection(results);
 }
