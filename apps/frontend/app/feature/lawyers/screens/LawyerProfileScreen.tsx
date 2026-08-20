@@ -2,16 +2,16 @@ import { PageHeader } from "~/layouts/PageHeader";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
 import EmptyState from "~/components/async-state/EmptyState";
 import LoadingState from "~/components/async-state/LoadingState";
-import { PageDetailsLoading } from "~/components/page-details-loading";
-import { PageDetailsError } from "~/components/page-details-error";
+import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
+import { PageDetailsError } from "~/components/molecules/page-details-error";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { BorderedBox } from "~/components/ui/bordered-box";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
 import {
   ContactInformation,
   type ContactItem,
-} from "~/components/contact-information";
+} from "~/components/molecules/contact-information";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
 
 import type { AsyncState } from "@mah/api/api.types";

@@ -1,5 +1,5 @@
 import { StepCard } from "./StepCard";
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 
 type Step = {
   number: number;

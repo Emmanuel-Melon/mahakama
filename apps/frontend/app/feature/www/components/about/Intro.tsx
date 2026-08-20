@@ -1,4 +1,4 @@
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 import { Info } from "lucide-react";
 
 export const AboutIntro = () => {

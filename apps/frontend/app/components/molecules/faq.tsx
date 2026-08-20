@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, HelpCircle } from "lucide-react";
 import { cn } from "~/lib/utils";
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 
 interface FAQItem {
   question: string;

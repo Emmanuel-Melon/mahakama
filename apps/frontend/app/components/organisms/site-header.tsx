@@ -2,8 +2,8 @@ import { Separator } from "~/components/ui/separator";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { HelpCircle, PhoneCall } from "lucide-react";
 import { NavLink } from "react-router";
-import { NotificationsDropdown } from "./notifications-dropdown";
-import { LanguageSwitcher } from "./language-switcher";
+import { NotificationsDropdown } from "../molecules/notifications-dropdown";
+import { LanguageSwitcher } from "../molecules/language-switcher";
 
 interface SiteHeaderProps {
   title?: string;

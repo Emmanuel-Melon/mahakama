@@ -1,7 +1,7 @@
 import {
   ContactInformation as UniversalContactInformation,
   type ContactItem,
-} from "~/components/contact-information";
+} from "~/components/molecules/contact-information";
 import { formatDate } from "~/utils/time";
 
 import type { User } from "~/feature/users/screens/ProfileScreen";

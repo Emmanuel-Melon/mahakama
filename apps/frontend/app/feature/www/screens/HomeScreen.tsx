@@ -1,7 +1,7 @@
 import { HeroSection } from "~/layouts/HeroSection";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
-import { SupportedCountries } from "~/components/countries";
-import { CallToAction } from "~/components/call-to-action";
+import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
+import { SupportedCountries } from "~/components/molecules/countries";
+import { CallToAction } from "~/components/molecules/call-to-action";
 import { MahakamaFeatures } from "~/feature/www/components/features";
 import { Scale } from "lucide-react";
 

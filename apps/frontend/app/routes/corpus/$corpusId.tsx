@@ -1,8 +1,8 @@
 import type { Route } from "./+types/$documentId";
 import { CorpusDetailsScreen } from "~/feature/corpus/screens/CorpusDetailsScreen";
 import { useDocument } from "@mah/api/hooks/use-documents";
-import { PageDetailsLoading } from "~/components/page-details-loading";
-import { PageDetailsError } from "~/components/page-details-error";
+import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
+import { PageDetailsError } from "~/components/molecules/page-details-error";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";

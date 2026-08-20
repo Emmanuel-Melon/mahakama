@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "~/lib/utils";
 import { HeroSectionAction } from "~/components/ui/hero-section-action";
-import { IconContainer } from "~/components/icon-container";
+import { IconContainer } from "~/components/atoms/icon-container";
 import { SpecializationButton } from "~/components/ui/specialization-button";
 import {
   ArrowRight,

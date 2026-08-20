@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 import { HeroSection } from "~/layouts/HeroSection";
-import { DiagonalSeparator } from "~/components/diagnoal-separator";
+import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { ServicesList } from "~/feature/www/components/legal-hub/services-list";
 import type { LegalService as ApiLegalService } from "@mah/api/hooks/use-services";
 import { Input } from "~/components/ui/input";

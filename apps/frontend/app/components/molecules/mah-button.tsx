@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import { NavLink } from "react-router";
 import { cn } from "~/lib/utils";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 interface MahButtonProps {
   variant?: "primary" | "secondary" | "card";

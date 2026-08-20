@@ -1,4 +1,4 @@
-import PageError from "~/components/page-error";
+import PageError from "~/components/molecules/page-error";
 import type { Route } from "./+types/index";
 import { NotificationsScreen } from "~/feature/notifications/Screens/NotificationsScreen";
 import { useNotifications } from "@mah/api/hooks/use-notifications";

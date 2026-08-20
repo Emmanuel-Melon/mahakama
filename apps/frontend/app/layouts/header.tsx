@@ -11,8 +11,8 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
-import { IconContainer } from "~/components/icon-container";
-import { LanguageSwitcher } from "~/components/language-switcher";
+import { IconContainer } from "~/components/atoms/icon-container";
+import { LanguageSwitcher } from "~/components/molecules/language-switcher";
 const links = [
   {
     id: 1,
