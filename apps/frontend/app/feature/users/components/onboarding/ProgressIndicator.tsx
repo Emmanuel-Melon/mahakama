@@ -9,7 +9,7 @@ export function ProgressIndicator({
   currentStep,
   selectedRole,
 }: ProgressIndicatorProps) {
-  const totalSteps = selectedRole === "legal_professional" ? 4 : 3;
+  const totalSteps = selectedRole === "professional" ? 4 : 3;
   const currentStepNumber =
     currentStep === "role"
       ? 1

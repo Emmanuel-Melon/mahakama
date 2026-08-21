@@ -1,33 +1,17 @@
-import { useState, useMemo } from "react";
-import {
-  Building2,
-  Scale,
-  HeartHandshake,
-  Shield,
-  Search,
-  MapPin,
-  X,
-} from "lucide-react";
+import { useState } from "react";
+import { Building2, Scale, HeartHandshake, Shield, Search } from "lucide-react";
 import { HeroSection } from "~/layouts/HeroSection";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { ServicesList } from "~/feature/www/components/legal-hub/services-list";
-import type { LegalService as ApiLegalService } from "@mah/api/hooks/use-services";
-import { Input } from "~/components/ui/input";
+import type {
+  LegalService as ApiLegalService,
+  ServiceCategory,
+} from "@mah/api/src/clients/services.api";
 import { Button } from "~/components/ui/button";
-import { ScrollArea } from "~/components/ui/scroll-area";
-import type { components } from "@mah/api/generated/api.types";
+import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
-export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource =
-  components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse =
-  components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse =
-  components["schemas"]["LegalServicesCollectionResponse"];
-export type CategoryLabels = components["schemas"]["CategoryLabels"];
-export type ServiceCategory = components["schemas"]["ServiceCategory"];
-
-interface LegalHubScreenProps {
+interface LegalHubScreenProps extends AsyncState {
   services: ApiLegalService[];
   isAuthenticated?: boolean;
   displayMode?: "grid" | "list";
@@ -50,24 +34,17 @@ const categoryLabels = {
 
 export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({
   services,
+  isLoading,
+  error,
   isAuthenticated,
   displayMode = "grid",
   onDisplayModeChange,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
-  const [selectedCategory, setSelectedCategory] =
-    useState<ServiceCategory>("all");
   const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
-  const hasActiveFilters =
-    searchTerm !== "" || selectedCategory !== "all" || locationFilter !== "";
-
-  const resetFilters = () => {
-    setSearchTerm("");
-    setSelectedCategory("all");
-    setLocationFilter("");
-  };
+  const hasActiveFilters = searchTerm !== "" || locationFilter !== "";
 
   return (
     <>
@@ -84,28 +61,52 @@ export const LegalHubScreen: React.FC<LegalHubScreenProps> = ({
           <DiagonalSeparator />
         </div>
       )}
-      <div>
-        {/* Mobile Filter Toggle */}
-        <div className="md:hidden">
-          <Button
-            variant="outline"
-            className="w-full flex items-center justify-between"
-            onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
-          >
-            <span>
-              Filters {hasActiveFilters && `(${services?.length} results)`}
-            </span>
-            <Search className="h-4 w-4" />
-          </Button>
-        </div>
-        <ServicesList
-          services={services}
-          variant="default"
-          showControls={true}
-          isLoading={false}
-          displayMode={displayMode}
-          onDisplayModeChange={onDisplayModeChange}
-        />
+      <div className="p-6 max-w-7xl mx-auto">
+        <AsyncContainer
+          data={services}
+          isLoading={isLoading}
+          error={error}
+          loadingComponent={
+            <div className="text-center py-12 text-muted-foreground">
+              Loading legal services...
+            </div>
+          }
+          emptyState={{
+            icon: Building2,
+            badge: "Directory",
+            title: "No Services Found",
+            description:
+              "We couldn't find any legal services matching your criteria right now.",
+          }}
+        >
+          {services && (
+            <div>
+              {/* Mobile Filter Toggle */}
+              <div className="md:hidden mb-6">
+                <Button
+                  variant="outline"
+                  className="w-full flex items-center justify-between"
+                  onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+                >
+                  <span>
+                    Filters{" "}
+                    {hasActiveFilters && `(${services?.length} results)`}
+                  </span>
+                  <Search className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <ServicesList
+                services={services}
+                variant="default"
+                showControls={true}
+                isLoading={false}
+                displayMode={displayMode}
+                onDisplayModeChange={onDisplayModeChange}
+              />
+            </div>
+          )}
+        </AsyncContainer>
       </div>
     </>
   );

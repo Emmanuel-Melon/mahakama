@@ -1,17 +1,16 @@
 import type { Route } from "./+types/index";
 import { LawyersScreen } from "~/feature/lawyers/screens/LawyersScreen";
-import { useLawyers } from "@mah/api/hooks/use-lawyers";
+import { useLawyers } from "@mah/api/src/hooks/use-lawyers";
 import { useSearchParams } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
 import { PageLoading } from "~/components/molecules/page-loading";
 import { useState, useEffect } from "react";
 import { useDebouncedValue } from "~/hooks/use-debounce";
 import { Users, MapPin, CheckCircle } from "lucide-react";
-import type { components as componentsv1 } from "@mah/api/generated/api.types";
-export type Lawyer = componentsv1["schemas"]["Lawyer"];
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
+import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 export function meta({}: Route.MetaArgs) {
   return [

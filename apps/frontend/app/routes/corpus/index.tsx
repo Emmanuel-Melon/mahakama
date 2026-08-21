@@ -1,9 +1,9 @@
 import type { Route } from "./+types/index";
 import { CorpusScreen } from "~/feature/corpus/screens/CorpusScreen";
-import { useCorpusEntries } from "@mah/api/hooks/corpus/use-corpus";
+import { useCorpusEntries } from "@mah/api/src/hooks/corpus/use-corpus";
 import { authContext, userContext } from "~/middleware/context";
 import { useState } from "react";
-import { documentsApi } from "@mah/api/clients/documents.api";
+import { documentsApi } from "@mah/api/src/clients/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 

@@ -5,7 +5,7 @@ import { BookmarkButton } from "~/components/molecules/bookmark-button";
 import { ShareButton } from "~/components/molecules/share-button";
 import { MahButton, type MahAction } from "~/components/molecules/mah-button";
 import { MahCard } from "~/components/atoms/mah-card";
-import { type Document } from "@mah/api/clients/documents.api";
+import { type Document } from "@mah/api/src/clients/documents.api";
 
 interface CorpusCardProps {
   document: Document;

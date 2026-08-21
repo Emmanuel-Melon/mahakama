@@ -1,7 +1,6 @@
 import { formatDate } from "~/utils/time";
 import { BorderedBox } from "~/components/ui/bordered-box";
-
-import type { User } from "~/feature/users/screens/ProfileScreen";
+import type { User } from "@mah/api/src/clients/users.api";
 
 interface ActivityCardProps {
   user: User;

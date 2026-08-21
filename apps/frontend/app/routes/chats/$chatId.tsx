@@ -1,6 +1,6 @@
 import type { Route } from "./+types/$chatId";
 import { ChatScreen } from "~/feature/chats/screens/ChatScreen";
-import { useChat, useMessages } from "@mah/api/hooks/use-chats";
+import { useChat, useMessages } from "@mah/api/src/hooks/chats/use-chats";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
@@ -19,7 +19,7 @@ export default function ChatDetailsPage({ params }: Route.ComponentProps) {
   );
   return (
     <ChatScreen
-      chat={chat || null}
+      chat={chat}
       isLoading={isLoading}
       error={error}
       messages={messages || []}

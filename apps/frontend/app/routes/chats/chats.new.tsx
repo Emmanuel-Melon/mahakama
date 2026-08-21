@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chats.new";
-import { chatApi } from "@mah/api/clients/chat.api";
-import { parseCookies } from "@mah/api/api.utils";
+import { chatApi } from "@mah/api/src/clients/chat.api";
+import { parseCookies } from "@mah/api/src/api/api.utils";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
@@ -43,7 +43,7 @@ export async function action({ request }: Route.ActionArgs) {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: `/chat/${chat.id}`,
+        Location: `/chat/${chat.data.id}`,
       },
     });
   } catch (error) {

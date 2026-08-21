@@ -1,11 +1,8 @@
 import type { Route } from "./+types/$lawyerId";
 import { LawyerProfileScreen } from "~/feature/lawyers/screens/LawyerProfileScreen";
-import { useLawyer } from "@mah/api/hooks/use-lawyers";
-import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
-import { PageDetailsError } from "~/components/molecules/page-details-error";
+import { useLawyer } from "@mah/api/src/hooks/use-lawyers";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({ params }: Route.MetaArgs) {
   const { lawyerId } = params;
@@ -22,11 +19,14 @@ export function meta({ params }: Route.MetaArgs) {
   ];
 }
 
-export default function LawyerProfile({ params }: Route.ComponentProps) {
+export default function LawyerProfileRoute({ params }: Route.ComponentProps) {
   const { lawyerId } = params;
   const { data: lawyer, error, isLoading } = useLawyer(lawyerId || "");
 
-  return <LawyerProfileScreen lawyer={lawyer} error={null} isLoading={false} />;
+  // Pass the actual hook states down to the screen component
+  return (
+    <LawyerProfileScreen lawyer={lawyer} error={error} isLoading={isLoading} />
+  );
 }
 
 export function ErrorBoundary() {

@@ -1,6 +1,6 @@
 import { ServiceDetailScreen } from "~/feature/www/screens/ServiceDetailScreen";
 import { authContext } from "~/middleware/context";
-import { useService } from "@mah/api/hooks/use-services";
+import { useService } from "@mah/api/src/hooks/use-services";
 import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
 import { PageDetailsError } from "~/components/molecules/page-details-error";
 import { useAppError } from "~/components/errors/useAppError";

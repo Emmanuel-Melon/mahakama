@@ -2,14 +2,14 @@ import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { AuthForm } from "~/feature/auth/components/auth-form";
 import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
-import { useRegister } from "@mah/api/hooks/use-auth";
+import { useRegister } from "@mah/api/src/hooks/use-auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import {
   type RegisterRequest,
   registerRequestSchema,
-} from "@mah/api/clients/auth.api";
+} from "@mah/api/src/clients/auth.api";
 
 export const SignupScreen = () => {
   const navigate = useNavigate();

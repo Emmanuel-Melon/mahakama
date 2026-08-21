@@ -1,14 +1,8 @@
-import type {
-  Chat,
-  ChatResource,
-  ChatSingleResponse,
-  ChatsCollectionResponse,
-  CreateChatRequest,
-} from "@mah/api/clients/chat.api";
+import type { Chat } from "@mah/api/src/clients/chat.api";
 import { ChatListHeader } from "../components/ChatHeader";
 import { ChatList } from "../components/ChatList";
-import { useChatMutations } from "@mah/api/hooks/use-chats";
-import type { AsyncState } from "@mah/api/api.types";
+import { useChatMutations } from "@mah/api/src/hooks/chats/use-chats";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface RecentChatsScreenProps extends AsyncState {
   chats: Chat[];
@@ -37,6 +31,7 @@ export const RecentChatsScreen = ({ chats, error }: RecentChatsScreenProps) => {
         error={error}
         onRename={handleRenameChat}
         onDelete={handleDeleteChat}
+        isLoading={false}
       />
     </div>
   );

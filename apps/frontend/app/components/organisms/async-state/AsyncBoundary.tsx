@@ -1,7 +1,5 @@
 import type { ReactNode } from "react";
 import { type LucideIcon, AlertCircle, ArrowRight } from "lucide-react";
-
-// Import your new composed variants
 import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
 import { Button } from "~/components/ui/button";
@@ -28,7 +26,7 @@ interface AsyncBoundaryProps extends AsyncProps {
   children: ReactNode;
 }
 
-export function NewAsyncBoundary({
+export function AsyncBoundary({
   isLoading,
   error,
   errorComponent,
@@ -80,17 +78,17 @@ export function NewAsyncBoundary({
   return <>{children}</>;
 }
 
-interface NewAsyncEmptyProps<T> {
+interface AsyncEmptyProps<T> {
   data: T | T[] | null | undefined;
   emptyComponent: ReactNode;
   children: ReactNode;
 }
 
-export function NewAsyncEmpty<T>({
+export function AsyncEmpty<T>({
   data,
   emptyComponent,
   children,
-}: NewAsyncEmptyProps<T>) {
+}: AsyncEmptyProps<T>) {
   const isEmpty =
     data === null ||
     data === undefined ||
@@ -103,7 +101,7 @@ export function NewAsyncEmpty<T>({
   return <>{children}</>;
 }
 
-interface NewAsyncContainerProps<T> extends AsyncProps {
+interface AsyncContainerProps<T> extends AsyncProps {
   data: T | T[] | null | undefined;
   emptyState?: {
     icon?: LucideIcon;
@@ -119,7 +117,7 @@ interface NewAsyncContainerProps<T> extends AsyncProps {
   children: ReactNode;
 }
 
-export function NewAsyncContainer<T>({
+export function AsyncContainer<T>({
   data,
   isLoading,
   error,
@@ -127,15 +125,15 @@ export function NewAsyncContainer<T>({
   loadingComponent,
   children,
   variant = "default",
-}: NewAsyncContainerProps<T>) {
+}: AsyncContainerProps<T>) {
   return (
-    <NewAsyncBoundary
+    <AsyncBoundary
       isLoading={isLoading}
       error={error}
       loadingComponent={loadingComponent}
       variant={variant}
     >
-      <NewAsyncEmpty
+      <AsyncEmpty
         data={data}
         emptyComponent={
           emptyState ? (
@@ -180,7 +178,7 @@ export function NewAsyncContainer<T>({
         }
       >
         {children}
-      </NewAsyncEmpty>
-    </NewAsyncBoundary>
+      </AsyncEmpty>
+    </AsyncBoundary>
   );
 }

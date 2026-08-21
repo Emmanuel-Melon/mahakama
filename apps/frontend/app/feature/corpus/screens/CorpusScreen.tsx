@@ -3,9 +3,9 @@ import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { Library } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import { PageLoading } from "~/components/molecules/page-loading";
-import { type Corpus } from "@mah/api/clients/corpus.api";
+import { type Corpus } from "@mah/api/src/clients/corpus.api";
 import { HeroSection } from "~/layouts/HeroSection";
-import type { AsyncState } from "@mah/api/api.types";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface CorpusScreenProps extends AsyncState {
   documents: Corpus[];

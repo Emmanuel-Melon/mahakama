@@ -3,7 +3,7 @@ import type {
   ChatMessage,
   SendMessageRequest,
   Chat,
-} from "@mah/api/clients/chat.api";
+} from "@mah/api/src/clients/chat.api";
 import { ActiveChatHeader } from "~/feature/chats/components/ChatHeader";
 import { AnswerDisclaimer } from "~/feature/chats/components/AnswerDisclaimer";
 import { ChatInput } from "~/feature/chats/components/chat-input";
@@ -12,18 +12,27 @@ import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
 import { DocumentIndicator } from "~/feature/chats/components/DocumentIndicator";
 import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
 import { PageDetailsError } from "~/components/molecules/page-details-error";
-import { isReplyAwaiting } from "@mah/api/hooks/use-chats";
-import { useChatMutations } from "@mah/api/hooks/use-chats";
-import { useDocumentStatus } from "@mah/api/hooks/documents/use-documents";
+import {
+  isReplyAwaiting,
+  useChatMutations,
+} from "@mah/api/src/hooks/chats/use-chats";
+import { useDocumentStatus } from "@mah/api/src/hooks/documents/use-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
 const sendMessageSchema = z.object({
   content: z.string().min(1, "Message cannot be empty"),
 });
 export type SendMessageForm = z.infer<typeof sendMessageSchema>;
+
+interface ChatScreenProps extends AsyncState {
+  chat: Chat;
+  messages: ChatMessage[];
+  messagesLoading: boolean;
+}
 
 export const ChatScreen = ({
   chat,
@@ -31,13 +40,7 @@ export const ChatScreen = ({
   error,
   messages,
   messagesLoading,
-}: {
-  chat: Chat | null;
-  isLoading: boolean;
-  error: any;
-  messages: ChatMessage[];
-  messagesLoading: boolean;
-}) => {
+}: ChatScreenProps) => {
   const navigate = useNavigate();
 
   // Using the grouped mutations hook

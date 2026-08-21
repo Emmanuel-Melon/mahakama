@@ -1,12 +1,11 @@
-import type { FC } from "react";
+import { type FC } from "react";
 import { LawyersList } from "~/feature/lawyers/components/lawyers-list";
 import { HeroSection } from "~/layouts/HeroSection";
-import { Gavel } from "lucide-react";
-import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
+import { Gavel, Users } from "lucide-react";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
-import type { Lawyer } from "@mah/api/clients/lawyers.api";
-import type { AsyncState } from "@mah/api/api.types";
+import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface LawyersScreenProps extends AsyncState {
   lawyers: Lawyer[];
@@ -70,37 +69,49 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
           <DiagonalSeparator />
         </div>
       )}
-      <div>
-        <div>
-          {error ? (
-            <ErrorState error={error} />
-          ) : (
-            <LawyersList
-              lawyers={lawyers}
-              displayMode={displayMode}
-              onDisplayModeChange={onDisplayModeChange}
-              variant="default"
-              showControls={true}
-              // Filter props
-              currentFilter={currentFilter}
-              currentSpecialization={currentSpecialization}
-              currentLocation={currentLocation}
-              currentAvailable={currentAvailable}
-              currentSearch={currentSearch}
-              filterOptions={filterOptions}
-              onFilterChange={onFilterChange}
-              onSpecializationChange={onSpecializationChange}
-              onLocationChange={onLocationChange}
-              onAvailableChange={onAvailableChange}
-              onSearch={onSearch}
-              // Sort props
-              currentSortField={currentSortField}
-              currentSortOrder={currentSortOrder}
-              sortOptions={sortOptions}
-              onSortChange={onSortChange}
-            />
-          )}
-        </div>
+      <div className="p-4 md:p-8">
+        <AsyncContainer
+          data={lawyers}
+          isLoading={isLoading}
+          error={error}
+          loadingComponent={
+            <div className="text-center py-12 text-muted-foreground">
+              Loading lawyers...
+            </div>
+          }
+          emptyState={{
+            icon: Users,
+            badge: "Directory",
+            title: "No lawyers found",
+            description:
+              "Try adjusting your search or filter criteria to find legal professionals.",
+          }}
+        >
+          <LawyersList
+            lawyers={lawyers || []}
+            displayMode={displayMode}
+            onDisplayModeChange={onDisplayModeChange}
+            variant="default"
+            showControls={true}
+            // Filter props
+            currentFilter={currentFilter}
+            currentSpecialization={currentSpecialization}
+            currentLocation={currentLocation}
+            currentAvailable={currentAvailable}
+            currentSearch={currentSearch}
+            filterOptions={filterOptions}
+            onFilterChange={onFilterChange}
+            onSpecializationChange={onSpecializationChange}
+            onLocationChange={onLocationChange}
+            onAvailableChange={onAvailableChange}
+            onSearch={onSearch}
+            // Sort props
+            currentSortField={currentSortField}
+            currentSortOrder={currentSortOrder}
+            sortOptions={sortOptions}
+            onSortChange={onSortChange}
+          />
+        </AsyncContainer>
       </div>
     </div>
   );

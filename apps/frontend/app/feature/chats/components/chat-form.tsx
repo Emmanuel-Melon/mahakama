@@ -2,8 +2,8 @@ import { useState } from "react";
 import { ArrowUp } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { schemas } from "@mah/api/generated/api.schemas";
-import type { CreateChatRequest } from "@mah/api/clients/chat.api";
+import { schemas } from "@mah/api/src/generated/api.schemas";
+import type { CreateChatRequest } from "@mah/api/src/clients/chat.api";
 import {
   InputGroup,
   InputGroupAddon,
@@ -14,7 +14,8 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
 import { Button } from "~/components/ui/button";
-import { getUploadKey } from "@mah/api/hooks/use-upload-manager";
+import { getUploadKey } from "@mah/api/src/hooks/use-upload-manager";
+import { useUploadDocument } from "@mah/api/src/hooks/documents/use-documents.sse";
 
 const createChatRequestSchema = schemas.postV1chats_Body;
 

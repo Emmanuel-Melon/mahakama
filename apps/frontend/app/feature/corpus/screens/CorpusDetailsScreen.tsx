@@ -4,11 +4,11 @@ import {
   CorpusHighlights,
   RelatedCorpus,
 } from "~/feature/corpus/components";
-import { type Document } from "@mah/api/clients/documents.api";
-import type { AsyncState } from "@mah/api/api.types";
+import { type Corpus } from "@mah/api/src/clients/corpus.api";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface CorpusDetailsScreenProps extends AsyncState {
-  document: Document;
+  document: Corpus;
 }
 
 export const CorpusDetailsScreen = ({
@@ -19,7 +19,7 @@ export const CorpusDetailsScreen = ({
     return (
       <div className="text-center p-6 max-w-md">
         <h1 className="text-2xl font-bold text-foreground mb-2">
-          {error ? "Error Loading Document" : "Document Not Found"}
+          {error ? "Error Loading Corpus" : "Corpus Not Found"}
         </h1>
       </div>
     );

@@ -1,5 +1,5 @@
 import { FileText, Trash2 } from "lucide-react";
-import { useDeleteDocument } from "@mah/api/hooks/documents/use-documents";
+import { useDeleteDocument } from "@mah/api/src/hooks/documents/use-documents";
 import { Button } from "~/components/ui/button";
 
 interface DocumentIndicatorProps {

@@ -6,8 +6,8 @@ import { Label } from "~/components/ui/label";
 import { AuthSocialButtons } from "./social-auth-buttons";
 import { User, Lock, Mail, Loader2 } from "lucide-react";
 import type { UseFormRegister, FieldErrors } from "react-hook-form";
-import { schemas } from "@mah/api/generated/api.schemas";
-import type { components } from "@mah/api/generated/api.types";
+import { schemas } from "@mah/api/src/generated/api.schemas";
+import type { components } from "@mah/api/src/generated/api.types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type z from "zod";
@@ -26,7 +26,7 @@ import {
   loginRequestSchema,
   type RegisterRequest,
   registerRequestSchema,
-} from "@mah/api/clients/auth.api";
+} from "@mah/api/src/clients/auth.api";
 
 type AuthFormValues = { email?: unknown; password?: unknown; name?: unknown };
 

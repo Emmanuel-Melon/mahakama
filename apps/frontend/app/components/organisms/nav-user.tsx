@@ -17,7 +17,7 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar";
 import { useUser } from "~/context/user-provider";
-import { useLogout } from "@mah/api/hooks/use-auth";
+import { useLogout } from "@mah/api/src/hooks/use-auth";
 import { NavLink } from "react-router";
 
 export function NavUser() {
