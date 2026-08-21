@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CorpusCard } from "./corpus-card";
 import { ListControls } from "~/components/organisms/list-controls";
-import { type Document } from "@mah/api/clients/documents.api";
+import { type Document } from "@mah/api/src/clients/documents.api";
 
 interface CorpusCollectionProps {
   documents: Document[];

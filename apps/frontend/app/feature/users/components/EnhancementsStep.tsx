@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
 import { Camera, Upload } from "lucide-react";
-import { ProfessionalSection } from "~/feature/users/components/professional-section";
+import { ProfessionalSection } from "~/feature/users/components/onboarding/professional-section";
 import { BioSection } from "~/feature/users/components/bio-section";
-import { type UserRole } from "~/feature/users/components/RoleSelector";
-import type { User } from "@mah/api/hooks/use-users";
+import { type UserRole } from "~/feature/users/components/onboarding/RoleSelector";
+import type { User } from "@mah/api/src/clients/users.api";
 
 interface EnhancementsStepProps {
   user: User;
@@ -70,7 +70,7 @@ export function EnhancementsStep({
         <div className="flex items-center gap-6">
           <Avatar className="h-20 w-20 border-4 border-gray-900">
             {getPhotoDisplay() ? (
-              <AvatarImage src={getPhotoDisplay()} alt="Profile" />
+              <AvatarImage src={getPhotoDisplay() || ""} alt="Profile" />
             ) : (
               <AvatarFallback className="text-2xl font-bold bg-gray-100">
                 {basicInfo.name?.charAt(0).toUpperCase() || "U"}

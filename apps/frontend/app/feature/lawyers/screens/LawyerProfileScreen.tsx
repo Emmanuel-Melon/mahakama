@@ -1,24 +1,19 @@
 import { PageHeader } from "~/layouts/PageHeader";
 import { PageDetailHeader } from "~/layouts/page-detail-header";
-import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
-import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
-import { PageDetailsError } from "~/components/molecules/page-details-error";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
-import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
-import { BorderedBox } from "~/components/ui/bordered-box";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
 import {
   ContactInformation,
   type ContactItem,
 } from "~/components/molecules/contact-information";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
+import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
 
-import type { AsyncState } from "@mah/api/api.types";
-import type { Lawyer } from "@mah/api/clients/lawyers.api";
+import type { AsyncState } from "@mah/api/src/api/api.types";
+import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 interface LawyerProfileScreenProps extends AsyncState {
-  lawyer?: Lawyer;
+  lawyer: Lawyer;
 }
 
 export const LawyerProfileScreen = ({
@@ -26,58 +21,17 @@ export const LawyerProfileScreen = ({
   lawyer,
   isLoading,
 }: LawyerProfileScreenProps) => {
-  if (isLoading) {
-    return (
-      <PageDetailsLoading
-        title="Loading Lawyer Profile"
-        description="Please wait while we load the lawyer's information..."
-        skeletonCount={2}
-      />
-    );
-  }
-
-  if (error) {
-    return (
-      <PageDetailsError
-        error={error}
-        title="Error Loading Lawyer Profile"
-        description="We couldn't load the lawyer profile. Please check your connection and try again."
-        onRetry={() => window.location.reload()}
-      />
-    );
-  }
-
-  if (!lawyer) {
-    return (
-      <EmptyState
-        title="Profile Not Found"
-        description="We couldn't find the lawyer profile you're looking for."
-        className="mx-auto"
-        actions={[
-          {
-            label: "Back to Lawyers",
-            href: "/lawyers",
-            icon: <MapPin className="w-4 h-4 mr-2" />,
-            variant: "default",
-          },
-        ]}
-      />
-    );
-  }
-
-  const handleContact = () => {
-    // TODO: Implement contact functionality
-  };
-
   const getExperienceText = (years?: number) => {
     if (!years) return "No experience info";
     if (years === 1) return "1 year";
     return `${years} years`;
   };
 
-  const metadata = [];
+  const metadata: { icon: any; label: string; value: string }[] = lawyer
+    ? []
+    : [];
 
-  if (lawyer.specialization) {
+  if (lawyer?.specialization) {
     metadata.push({
       icon: Scale,
       label: "Specialization",
@@ -85,7 +39,7 @@ export const LawyerProfileScreen = ({
     });
   }
 
-  if (lawyer.experienceYears) {
+  if (lawyer?.experienceYears) {
     metadata.push({
       icon: Briefcase,
       label: "Experience",
@@ -93,7 +47,7 @@ export const LawyerProfileScreen = ({
     });
   }
 
-  if (lawyer.location) {
+  if (lawyer?.location) {
     metadata.push({
       icon: MapPin,
       label: "Location",
@@ -101,7 +55,15 @@ export const LawyerProfileScreen = ({
     });
   }
 
-  const actions = [];
+  const actions: {
+    label: string;
+    icon: any;
+    onClick: () => void;
+    variant: "primary" | "secondary";
+  }[] = [];
+  const handleContact = () => {
+    // TODO: Implement contact functionality
+  };
 
   if (handleContact) {
     actions.push({
@@ -115,12 +77,15 @@ export const LawyerProfileScreen = ({
   const breadcrumbs = [
     { label: "Home", to: "/", icon: Home },
     { label: "Lawyers", to: "/lawyers", icon: Users },
-    { label: lawyer.name || "Lawyer Profile", to: `/lawyers/${lawyer.id}` },
+    {
+      label: lawyer?.name || "Lawyer Profile",
+      to: lawyer ? `/lawyers/${lawyer.id}` : "#",
+    },
   ];
 
   const contactItems: ContactItem[] = [];
 
-  if (lawyer.email) {
+  if (lawyer?.email) {
     contactItems.push({
       type: "email",
       label: "Email Address",
@@ -129,36 +94,55 @@ export const LawyerProfileScreen = ({
   }
 
   return (
-    <>
-      <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
-      <PageDetailHeader
-        type="Lawyer Profile"
-        title={lawyer.name || "Lawyer Profile"}
-        description={lawyer.specialization || "Legal Professional"}
-        image="https://picsum.photos/seed/lawyer-avatar/200/200.jpg"
-        alt={`${lawyer.name} profile picture`}
-        metadata={metadata}
-        actions={actions}
-      />
+    <AsyncContainer
+      data={lawyer}
+      isLoading={isLoading}
+      error={error}
+      loadingComponent={
+        <div className="text-center py-12 text-muted-foreground">
+          Loading lawyer profile...
+        </div>
+      }
+      emptyState={{
+        icon: Users,
+        badge: "Directory",
+        title: "Profile Not Found",
+        description: "We couldn't find the lawyer profile you're looking for.",
+      }}
+    >
+      {lawyer && (
+        <>
+          <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
+          <PageDetailHeader
+            type="Lawyer Profile"
+            title={lawyer.name || "Lawyer Profile"}
+            description={lawyer.specialization || "Legal Professional"}
+            image="https://picsum.photos/seed/lawyer-avatar/200/200.jpg"
+            alt={`${lawyer.name} profile picture`}
+            metadata={metadata}
+            actions={actions}
+          />
 
-      <div className="mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="space-y-6">
-              <LawyerBio
-                bio="No bio available for this lawyer."
-                className="h-full"
+          <div className="mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2">
+                <div className="space-y-6">
+                  <LawyerBio
+                    bio="No bio available for this lawyer."
+                    className="h-full"
+                  />
+                  <EducationSection />
+                </div>
+              </div>
+              <ContactInformation
+                title=""
+                description=""
+                contactItems={contactItems}
               />
-              <EducationSection />
             </div>
           </div>
-          <ContactInformation
-            title=""
-            description=""
-            contactItems={contactItems}
-          />
-        </div>
-      </div>
-    </>
+        </>
+      )}
+    </AsyncContainer>
   );
 };

@@ -1,17 +1,15 @@
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useLogin } from "@mah/api/hooks/use-auth";
+import { useLogin } from "@mah/api/src/hooks/use-auth";
 import { AuthForm } from "~/feature/auth/components/auth-form";
 import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
-import { schemas } from "@mah/api/generated/api.schemas";
-import type { components } from "@mah/api/generated/api.types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import {
   type LoginRequest,
   loginRequestSchema,
-} from "@mah/api/clients/auth.api";
+} from "@mah/api/src/clients/auth.api";
 
 export const LoginScreen = () => {
   const navigate = useNavigate();

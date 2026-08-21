@@ -1,13 +1,11 @@
-import PageError from "~/components/molecules/page-error";
 import type { Route } from "./+types/index";
 import { NotificationsScreen } from "~/feature/notifications/Screens/NotificationsScreen";
-import { useNotifications } from "@mah/api/hooks/use-notifications";
-import { useRouteError } from "react-router";
+import { useNotifications } from "@mah/api/src/hooks/use-notifications";
+import { useLoaderData } from "react-router";
 import { authContext } from "~/middleware/context";
-import { notificationsApi } from "@mah/api/clients/notifications.api";
+import { notificationsApi } from "@mah/api/src/clients/notifications.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Notifications" }];
@@ -15,7 +13,6 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({ context }: Route.LoaderArgs) {
   const token = context.get(authContext)?.token;
-  // Fetch data on server
   const notifications = await notificationsApi.getNotifications({
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -23,8 +20,17 @@ export async function loader({ context }: Route.LoaderArgs) {
 }
 
 export default function NotificationsRoute() {
+  const { notifications: initialNotifications } =
+    useLoaderData<typeof loader>();
   const { data: notifications, isLoading, error } = useNotifications();
-  return <NotificationsScreen notifications={notifications} />;
+
+  return (
+    <NotificationsScreen
+      notifications={notifications || initialNotifications}
+      isLoading={isLoading}
+      error={error}
+    />
+  );
 }
 
 export function ErrorBoundary() {

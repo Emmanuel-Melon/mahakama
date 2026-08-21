@@ -1,10 +1,11 @@
 import { type FC } from "react";
 import { NotificationItem } from "./NotificationItem";
-import type { Notification } from "@mah/api/clients/notifications.api";
+import type { Notification } from "@mah/api/src/clients/notifications.api";
+import type { AsyncState } from "@mah/api/src/api/api.types";
 
-type NotificationsListProps = {
+interface NotificationsListProps {
   notifications: Notification[];
-};
+}
 
 export const NotificationsList: FC<NotificationsListProps> = ({
   notifications,

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { MoreVertical, MessageSquare } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { NavLink } from "react-router";
-import type { components } from "@mah/api/generated/api.types";
+import type { components } from "@mah/api/src/generated/api.types";
 import {
   AlertDialog,
   AlertDialogAction,

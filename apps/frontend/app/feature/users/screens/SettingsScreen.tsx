@@ -1,28 +1,26 @@
 import { Button } from "~/components/ui/button";
-import { useState } from "react";
-import { UserProfileForm } from "~/feature/users/components/UserProfileForm";
-import { ProfileHeader } from "~/feature/users/components/ProfileHeader";
-import { ContactInformation } from "~/feature/users/components/ContactInformation";
-import { AccountManagement } from "~/feature/users/components/AccountManagement";
+import { useState, type FC } from "react";
+import { UserProfileForm } from "~/feature/users/components/settings/UserProfileForm";
+import { ProfileHeader } from "~/feature/users/components/profile/ProfileHeader";
+import { ContactInformation } from "~/feature/users/components/profile/ContactInformation";
+import { AccountManagement } from "~/feature/users/components/settings/AccountManagement";
 import { ProfileTabs } from "~/feature/users/components/ProfileTabs";
-
-import { type User } from "@mah/api/clients/users.api";
+import type { User } from "@mah/api/src/clients/users.api";
+import { useUpdateUser } from "@mah/api/src/hooks/use-users";
 
 interface SettingsScreenProps {
   user: User;
   token: string;
-  updateMutation: any;
 }
 
-export const SettingsScreen = ({
-  user,
-  token,
-  updateMutation,
-}: SettingsScreenProps) => {
+export const SettingsScreen: FC<SettingsScreenProps> = ({ user }) => {
   const [activeTab, setActiveTab] = useState<"personal" | "account">(
     "personal",
   );
   const [isEditing, setIsEditing] = useState(false);
+
+  // Instantiate the update mutation hook directly inside the screen
+  const updateMutation = useUpdateUser();
 
   const handleEditProfile = () => {
     setIsEditing(true);

@@ -1,7 +1,6 @@
 import type { Route } from "./+types/onboarding";
 import { OnboardingScreen } from "~/feature/users/screens/OnboardingScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { useUpdateUser } from "@mah/api/hooks/use-users";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
@@ -30,16 +29,10 @@ export async function loader({ context }: Route.LoaderArgs) {
   }
 }
 
-export default function OnboardingPage({ loaderData }: Route.ComponentProps) {
-  const { user, token, error } = loaderData;
-  const updateMutation = useUpdateUser();
-  return (
-    <OnboardingScreen
-      user={user}
-      token={token}
-      updateMutation={updateMutation}
-    />
-  );
+export default function OnboardingRoute({ loaderData }: Route.ComponentProps) {
+  const { user, token } = loaderData;
+
+  return <OnboardingScreen user={user} token={token} />;
 }
 
 export function ErrorBoundary() {

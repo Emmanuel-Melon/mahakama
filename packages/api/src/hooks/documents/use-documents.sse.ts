@@ -14,7 +14,6 @@ export type DocumentUploadProgress = BaseUploadProgress & {
   totalChunks?: number;
 };
 export type DocumentUploadState = Record<string, DocumentUploadProgress>;
-export { getUploadKey as getDocumentUploadKey };
 
 export function useUploadDocument() {
   const {

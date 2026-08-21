@@ -1,7 +1,6 @@
 import type { Route } from "./+types/settings";
 import { SettingsScreen } from "~/feature/users/screens/SettingsScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { useUpdateUser } from "@mah/api/hooks/use-users";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";
@@ -30,12 +29,9 @@ export async function loader({ context }: Route.LoaderArgs) {
   }
 }
 
-export default function SettingsPage({ loaderData }: Route.ComponentProps) {
+export default function SettingsRoute({ loaderData }: Route.ComponentProps) {
   const { user, token } = loaderData;
-  const updateMutation = useUpdateUser();
-  return (
-    <SettingsScreen user={user} token={token} updateMutation={updateMutation} />
-  );
+  return <SettingsScreen user={user} token={token} />;
 }
 
 export function ErrorBoundary() {

@@ -1,4 +1,4 @@
-import type { Route } from "./+types/about";
+import type { Route } from "./+types/help";
 import { CardWithLabel } from "~/components/ui/card-with-label";
 import {
   Search,

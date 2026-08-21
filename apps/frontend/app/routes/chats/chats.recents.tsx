@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chats.recents";
-import { chatApi } from "@mah/api/clients/chat.api";
-import { parseCookies } from "@mah/api/api.utils";
+import { chatApi } from "@mah/api/src/clients/chat.api";
+import { parseCookies } from "@mah/api/src/api/api.utils";
 import { RecentChatsScreen } from "~/feature/chats/screens/RecentChatsScreen";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
@@ -35,7 +35,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function RecentChats({ loaderData }: Route.ComponentProps) {
   const { chats, error } = loaderData;
-  return <RecentChatsScreen chats={chats} error={error} />;
+  return <RecentChatsScreen chats={chats} error={error} isLoading={false} />;
 }
 
 export function ErrorBoundary() {

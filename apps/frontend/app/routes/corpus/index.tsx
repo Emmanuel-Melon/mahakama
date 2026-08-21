@@ -1,10 +1,9 @@
 import type { Route } from "./+types/index";
 import { CorpusScreen } from "~/feature/corpus/screens/CorpusScreen";
-import { documentsKeys, useDocuments } from "@mah/api/hooks/use-documents";
+import { useCorpusEntries } from "@mah/api/src/hooks/corpus/use-corpus";
 import { authContext, userContext } from "~/middleware/context";
 import { useState } from "react";
-import { createPrefetchLoader, prefetch } from "@mah/client/react-query/utils";
-import { documentsApi } from "@mah/api/clients/documents.api";
+import { documentsApi } from "@mah/api/src/clients/documents.api";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 
@@ -41,26 +40,16 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const prefetchDocuments = createPrefetchLoader([
-  prefetch({
-    queryKey: documentsKeys.documents(),
-    queryFn: () => documentsApi.getDocuments(),
-    staleTime: 1000 * 60 * 5,
-  }),
-]);
-
 export async function loader({ context }: Route.LoaderArgs) {
   const user = context.get(userContext);
   const token = context.get(authContext)?.token || null;
-  // Uses allSettled internally, so a failed prefetch never throws the loader.
-  await prefetchDocuments();
 
   return { user, token };
 }
 
 export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
-  const { data: documents = [], isLoading } = useDocuments();
+  const { data: documents = [], isLoading } = useCorpusEntries();
   const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
 
   return (
@@ -70,6 +59,7 @@ export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
       isAuthenticated={!!user}
       displayMode={displayMode}
       onDisplayModeChange={setDisplayMode}
+      error={null}
     />
   );
 }

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import { useChatMutations } from "@mah/api/hooks/use-chats";
-import type { CreateChatRequest } from "@mah/api/clients/chat.api";
+import { useChatMutations } from "@mah/api/src/hooks/chats/use-chats";
+import type { CreateChatRequest } from "@mah/api/src/clients/chat.api";
 import { ChatForm, SuggestedQuestions } from "../components";
 import { IconContainer } from "~/components/atoms/icon-container";
 import { Scale } from "lucide-react";

@@ -13,10 +13,8 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { UploadDropdown } from "~/components/ui/upload-dropdown";
-import {
-  useUploadDocument,
-  getDocumentUploadKey,
-} from "@mah/api/hooks/documents/use-documents";
+import { getUploadKey } from "@mah/api/src/hooks/use-upload-manager";
+import { useUploadDocument } from "@mah/api/src/hooks/documents/use-documents.sse";
 import { AudioLines, Paperclip, Plus, Send, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 
@@ -90,7 +88,7 @@ export function ChatInput({
   };
 
   const fileProgress = attachedFile
-    ? uploads[getDocumentUploadKey(attachedFile)]
+    ? uploads[getUploadKey(attachedFile)]
     : null;
 
   return (

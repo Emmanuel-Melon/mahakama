@@ -1,5 +1,5 @@
 import { FileText, ExternalLink, User } from "lucide-react";
-import type { RAGSource } from "@mah/api/clients/chat.api";
+import type { RAGSource } from "@mah/api/src/clients/chat.api";
 
 interface CitationsSidebarProps {
   sources: RAGSource[];

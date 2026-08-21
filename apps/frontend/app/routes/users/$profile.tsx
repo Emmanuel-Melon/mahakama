@@ -1,44 +1,81 @@
 import type { Route } from "./+types/$profile";
-import { usersApi, UsersApiClient } from "@mah/api/clients/users.api";
-import { FetchApiClient } from "@mah/api/fetch";
-import { useCurrentUser, useUpdateUser } from "@mah/api/hooks/use-users";
+import { useCurrentUser } from "@mah/api/src/hooks/use-users";
 import { ProfileScreen } from "~/feature/users/screens/ProfileScreen";
-import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import type { SavedItem } from "~/feature/users/components/profile/SavedItems";
 
-export function meta({ loaderData }: Route.MetaArgs) {
-  const { user } = loaderData;
+export function meta({}: Route.MetaArgs) {
   return [
-    { title: `${user?.name || "Profile"} - Mahakama` },
+    { title: "Profile - Mahakama" },
     {
       name: "description",
-      content: user?.bio || "View your Mahakama profile and account details",
+      content: "View your Mahakama profile and account details",
     },
   ];
 }
 
-export async function loader({ context, request }: Route.LoaderArgs) {
-  const token = context.get(authContext)?.token || null;
-  try {
-    const cookieHeader = request.headers.get("cookie");
-    const apiClient = cookieHeader
-      ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader }))
-      : usersApi;
-    const response = await apiClient.getCurrentUser();
-    return { token, user: response };
-  } catch (error) {
-    handleRouteError(error, "Failed to load user profile");
-  }
-}
+export default function UserProfileRoute() {
+  const { data, isLoading, error } = useCurrentUser();
+  const user = data?.data;
 
-export default function ProfilePage({ loaderData }: Route.ComponentProps) {
-  const { token } = loaderData;
-  const { data: user, isLoading, error } = useCurrentUser();
-  const updateMutation = useUpdateUser();
+  // Dummy data for saved items passed from route/data layer
+  const savedItems: SavedItem[] = [
+    {
+      type: "lawyer",
+      title: "John Smith",
+      description: "Criminal Defense Lawyer",
+      savedDate: "2 days ago",
+      href: "/lawyers/1",
+      onShare: () => alert("Sharing John Smith profile"),
+      onDelete: () => alert("Deleting John Smith profile"),
+    },
+    {
+      type: "lawyer",
+      title: "Sarah Johnson",
+      description: "Family Law Specialist",
+      savedDate: "1 week ago",
+      href: "/lawyers/2",
+      onShare: () => alert("Sharing Sarah Johnson profile"),
+      onDelete: () => alert("Deleting Sarah Johnson profile"),
+    },
+    {
+      type: "document",
+      title: "Contract Agreement Template",
+      description: "Legal Document",
+      savedDate: "3 days ago",
+      href: "/documents/contract-template",
+      onShare: () => alert("Sharing Contract Agreement Template"),
+      onDelete: () => alert("Deleting Contract Agreement Template"),
+    },
+    {
+      type: "document",
+      title: "Tenant Rights Guide",
+      description: "Legal Guide",
+      savedDate: "2 weeks ago",
+      href: "/documents/tenant-rights",
+      onShare: () => alert("Sharing Tenant Rights Guide"),
+      onDelete: () => alert("Deleting Tenant Rights Guide"),
+    },
+    {
+      type: "lawyer",
+      title: "Michael Davis",
+      description: "Corporate Attorney",
+      savedDate: "1 month ago",
+      href: "/lawyers/3",
+      onShare: () => alert("Sharing Michael Davis profile"),
+      onDelete: () => alert("Deleting Michael Davis profile"),
+    },
+  ];
 
-  return <ProfileScreen user={user} updateMutation={updateMutation} />;
+  return (
+    <ProfileScreen
+      user={user}
+      isLoading={isLoading}
+      error={error}
+      savedItems={savedItems}
+    />
+  );
 }
 
 export function ErrorBoundary() {

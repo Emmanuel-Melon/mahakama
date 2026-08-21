@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
 interface ProfileTabsProps {
   activeTab: "personal" | "account";
   onTabChange: (tab: "personal" | "account") => void;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 export const ProfileTabs = ({

@@ -1,9 +1,7 @@
-import type { Route } from "../+types/legal-hub";
+import type { Route } from "./+types/legal-hub";
 import { LegalHubScreen } from "~/feature/www/screens/LegalHubScreen";
 import { authContext, userContext } from "~/middleware/context";
-import { useServices } from "@mah/api/hooks/use-services";
-import { LoadingState } from "~/components/async-state/LoadingState";
-import { ErrorState } from "~/components/async-state/ErrorState";
+import { useServices } from "@mah/api/src/hooks/use-services";
 import { useState } from "react";
 
 export function meta({}: Route.MetaArgs) {
@@ -46,38 +44,26 @@ export async function loader({ context }: Route.LoaderArgs) {
   try {
     const user = context.get(userContext);
     const token = context.get(authContext)?.token || null;
-    return { user, token, error: null };
+    return { user, token };
   } catch (error) {
     return {
       user: null,
       token: null,
-      error: error instanceof Error ? error.message : "Failed to load services",
     };
   }
 }
 
-export default function LegalHubPage({ loaderData }: Route.ComponentProps) {
-  const { user, error } = loaderData;
-  if (error) return <ErrorState error={error} />;
-
-  const {
-    data: services,
-    isLoading,
-    error: servicesError,
-  } = useServices(undefined);
+export default function LegalHubRoute({ loaderData }: Route.ComponentProps) {
+  const { user } = loaderData;
   const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
 
-  if (isLoading) return <LoadingState />;
-  const errorMessage = servicesError
-    ? servicesError instanceof Error
-      ? servicesError.message
-      : "Failed to load services"
-    : error || "Failed to load services";
-  if (servicesError || error) return <ErrorState error={errorMessage} />;
+  const { data: services, isLoading, error } = useServices(undefined);
 
   return (
     <LegalHubScreen
       services={services ?? []}
+      isLoading={isLoading}
+      error={error}
       isAuthenticated={!!user}
       displayMode={displayMode}
       onDisplayModeChange={setDisplayMode}
