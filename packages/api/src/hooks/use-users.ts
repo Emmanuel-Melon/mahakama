@@ -61,7 +61,11 @@ export function useUser(userId: string) {
  * MUTATIONS
  * ========================================
  */
-export const useUserMutations = () => {
+export interface UseUserMutationsOptions {
+  onUpdateSuccess?: (data: UserResult) => void;
+}
+
+export const useUserMutations = (options?: UseUserMutationsOptions) => {
   const updateUser = useAppMutation<
     UserResult,
     ApiClientError,
@@ -75,15 +79,14 @@ export const useUserMutations = () => {
         "Failed to update profile. Please try again.",
     },
     invalidates: (variables) => invalidations.detail(variables.userId),
-    onSuccess: (data) => {
-      const user = data.data;
-      if (user.isOnboarded) {
-        window.location.href = "/app";
-      }
-    },
+    onSuccess: options?.onUpdateSuccess,
   });
 
   return {
     updateUser,
   };
 };
+
+export function useUpdateUser(options?: UseUserMutationsOptions) {
+  return useUserMutations(options).updateUser;
+}

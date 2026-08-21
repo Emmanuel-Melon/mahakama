@@ -3,7 +3,7 @@ import type { ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import { AUTH_API_ROUTES } from "../api.routes";
 import type { components } from "../generated/api.types";
-import { schemas } from "@mah/api/generated/api.schemas";
+import { schemas } from "../generated/api.schemas";
 
 /**
  * Generated Types

@@ -158,6 +158,360 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/v1/logout": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Logout user
+     * @description Revokes the current session and clears auth cookies
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": Record<string, never>;
+        };
+      };
+      responses: {
+        /** @description The server successfully processed the request, but is not returning any content. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/me": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get current user
+     * @description Returns the authenticated user's profile
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/refresh": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Refresh access token
+     * @description Issues a new access and refresh token pair using the current refresh token cookie
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has been fulfilled and resulted in a new resource being created. */
+        201: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/request-reset": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Request password reset
+     * @description Sends a password recovery email if an account matches the given address
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+          };
+        };
+      };
+      responses: {
+        /** @description The request has been accepted for processing, but the processing has not been completed. */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              /** Format: email */
+              email: string;
+            };
+          };
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description An unexpected condition was encountered and no more specific message is suitable. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/reset-password": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Reset password
+     * @description Resets the user's password using a valid recovery token
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            password: string;
+            token: string;
+          };
+        };
+      };
+      responses: {
+        /** @description The server successfully processed the request, but is not returning any content. */
+        204: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content?: never;
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource is no longer available and will not be available again. */
+        410: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description An unexpected condition was encountered and no more specific message is suitable. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/verify-email": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Verify email address
+     * @description Verifies a user's email address using a verification token
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            token: string;
+          };
+        };
+      };
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              token: string;
+            };
+          };
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The user has sent too many requests in a given amount of time. */
+        429: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/v1/chats": {
     parameters: {
       query?: never;
@@ -499,7 +853,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/documents": {
+  "/v1/corpus": {
     parameters: {
       query?: never;
       header?: never;
@@ -507,8 +861,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get all documents
-     * @description Returns a list of all documents with optional filtering and pagination
+     * Get all corpus entries
+     * @description Returns a list of all corpus entries with optional filtering and pagination
      */
     get: {
       parameters: {
@@ -528,12 +882,12 @@ export interface paths {
             "application/json": {
               data: {
                 /** @enum {string} */
-                type: "document";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Document
-                 * @description Document response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
                   /** Format: uuid */
@@ -610,8 +964,8 @@ export interface paths {
     };
     put?: never;
     /**
-     * Create a new document
-     * @description Register a new document in the system
+     * Create a new corpus entry
+     * @description Register a new corpus entry in the system
      */
     post: {
       parameters: {
@@ -653,12 +1007,12 @@ export interface paths {
             "application/json": {
               data: {
                 /** @enum {string} */
-                type: "document";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Document
-                 * @description Document response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
                   /** Format: uuid */
@@ -736,7 +1090,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/documents/{id}": {
+  "/v1/corpus/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -744,8 +1098,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get document by ID
-     * @description Retrieve document details by document ID
+     * Get corpus entry by ID
+     * @description Retrieve corpus entry details by ID
      */
     get: {
       parameters: {
@@ -767,12 +1121,12 @@ export interface paths {
             "application/json": {
               data: {
                 /** @enum {string} */
-                type: "document";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Document
-                 * @description Document response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
                   /** Format: uuid */
@@ -852,7 +1206,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/documents/{id}/bookmark": {
+  "/v1/corpus/{id}/bookmark": {
     parameters: {
       query?: never;
       header?: never;
@@ -862,8 +1216,8 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Bookmark a document
-     * @description Add or remove a bookmark for a document
+     * Bookmark a corpus entry
+     * @description Add or remove a bookmark for a corpus entry
      */
     post: {
       parameters: {
@@ -885,12 +1239,12 @@ export interface paths {
             "application/json": {
               data: {
                 /** @enum {string} */
-                type: "document";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Document
-                 * @description Document response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
                   /** Format: uuid */
@@ -977,7 +1331,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/documents/{id}/download": {
+  "/v1/corpus/{id}/download": {
     parameters: {
       query?: never;
       header?: never;
@@ -985,8 +1339,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Download a document
-     * @description Increment download count and return document details
+     * Download a corpus entry
+     * @description Increment download count and return corpus entry details
      */
     get: {
       parameters: {
@@ -1008,12 +1362,12 @@ export interface paths {
             "application/json": {
               data: {
                 /** @enum {string} */
-                type: "document";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Document
-                 * @description Document response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
                   /** Format: uuid */
@@ -1093,7 +1447,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/v1/documents/ingest": {
+  "/v1/corpus/ingest": {
     parameters: {
       query?: never;
       header?: never;
@@ -1103,8 +1457,8 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Ingest a document with progress updates
-     * @description Upload and process a document with real-time progress updates via Server-Sent Events
+     * Ingest a corpus entry with progress updates
+     * @description Upload and process a corpus entry with real-time progress updates via Server-Sent Events
      */
     post: {
       parameters: {
@@ -1118,7 +1472,7 @@ export interface paths {
           "application/json": {
             /**
              * Format: binary
-             * @description The document file to upload and process
+             * @description The corpus file to upload and process
              */
             file: string;
           };
@@ -2188,6 +2542,8 @@ export interface paths {
                   email: string | null;
                   /** @enum {string} */
                   role: "user" | "admin" | "lawyer";
+                  /** Format: date-time */
+                  emailVerifiedAt: string | null;
                   userAgent: string | null;
                   lastIp: string | null;
                   isAnonymous: boolean;
@@ -2206,6 +2562,7 @@ export interface paths {
                   occupation: string | null;
                   bio: string | null;
                   profilePicture: string | null;
+                  isFirstLogin: boolean;
                   isOnboarded: boolean;
                   /** Format: date-time */
                   createdAt: string;
@@ -2305,6 +2662,8 @@ export interface paths {
                   email: string | null;
                   /** @enum {string} */
                   role: "user" | "admin" | "lawyer";
+                  /** Format: date-time */
+                  emailVerifiedAt: string | null;
                   userAgent: string | null;
                   lastIp: string | null;
                   isAnonymous: boolean;
@@ -2323,6 +2682,7 @@ export interface paths {
                   occupation: string | null;
                   bio: string | null;
                   profilePicture: string | null;
+                  isFirstLogin: boolean;
                   isOnboarded: boolean;
                   /** Format: date-time */
                   createdAt: string;
@@ -2401,6 +2761,8 @@ export interface paths {
             name?: string | null;
             email?: string | null;
             password?: string | null;
+            /** Format: date-time */
+            emailVerifiedAt?: string | null;
             fingerprint?: string | null;
             userAgent?: string | null;
             lastIp?: string | null;
@@ -2420,6 +2782,7 @@ export interface paths {
             occupation?: string | null;
             bio?: string | null;
             profilePicture?: string | null;
+            isFirstLogin?: boolean;
             isOnboarded?: boolean;
             /** Format: date-time */
             updatedAt?: string;
@@ -2450,6 +2813,8 @@ export interface paths {
                   email: string | null;
                   /** @enum {string} */
                   role: "user" | "admin" | "lawyer";
+                  /** Format: date-time */
+                  emailVerifiedAt: string | null;
                   userAgent: string | null;
                   lastIp: string | null;
                   isAnonymous: boolean;
@@ -2468,6 +2833,7 @@ export interface paths {
                   occupation: string | null;
                   bio: string | null;
                   profilePicture: string | null;
+                  isFirstLogin: boolean;
                   isOnboarded: boolean;
                   /** Format: date-time */
                   createdAt: string;
@@ -2576,6 +2942,8 @@ export interface paths {
                   email: string | null;
                   /** @enum {string} */
                   role: "user" | "admin" | "lawyer";
+                  /** Format: date-time */
+                  emailVerifiedAt: string | null;
                   userAgent: string | null;
                   lastIp: string | null;
                   isAnonymous: boolean;
@@ -2594,6 +2962,7 @@ export interface paths {
                   occupation: string | null;
                   bio: string | null;
                   profilePicture: string | null;
+                  isFirstLogin: boolean;
                   isOnboarded: boolean;
                   /** Format: date-time */
                   createdAt: string;
@@ -2680,6 +3049,71 @@ export interface components {
       email: string | null;
       password: string | null;
     };
+    PasswordResetRequest: {
+      /** Format: email */
+      email: string;
+    };
+    NewPasswordRequest: {
+      password: string;
+      token: string;
+    };
+    VerifyEmailRequest: {
+      token: string;
+    };
+    /**
+     * AuthUser
+     * @description AuthUser response schema
+     */
+    AuthUser: {
+      /** Format: uuid */
+      id: string;
+      name: string | null;
+      email: string | null;
+      password: string | null;
+      /** @enum {string} */
+      role: "user" | "admin" | "lawyer";
+      /** Format: date-time */
+      emailVerifiedAt: string | null;
+      fingerprint: string | null;
+      userAgent: string | null;
+      lastIp: string | null;
+      isAnonymous: boolean;
+      age: number | null;
+      /** @enum {string|null} */
+      gender:
+        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+      country: string | null;
+      city: string | null;
+      phoneNumber: string | null;
+      occupation: string | null;
+      bio: string | null;
+      profilePicture: string | null;
+      isFirstLogin: boolean;
+      isOnboarded: boolean;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    /**
+     * AuthHeaders
+     * @description Request headers for authentication
+     */
+    AuthHeaders: {
+      authorization: string;
+    };
+    ResetPasswordResponse: {
+      message: string;
+      deliveryEstimate: number;
+    };
+    EmailVerificationStatus: {
+      /** @description A human-readable status message. */
+      message: string;
+    };
+    RefreshTokenSelect: {
+      /** @description The new access token (JWT) */
+      token: string;
+    };
     /**
      * ChatSession
      * @description ChatSession response schema
@@ -2704,17 +3138,47 @@ export interface components {
       /** Format: date-time */
       updatedAt: string;
     };
+    /**
+     * NewChatSession
+     * @description Request schema for creating a new chatsession
+     */
     NewChat: {
-      message: string;
-      metadata?: {
-        [key: string]: unknown;
-      };
+      /** Format: uuid */
+      id?: string;
+      /** Format: uuid */
+      userId: string;
+      title?: string | null;
+      metadata?:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      createdAt?: string;
+      /** Format: date-time */
+      updatedAt?: string;
     };
+    /**
+     * UpdateChatSessionRequest
+     * @description Request schema for updating a chatsession
+     */
     UpdateChat: {
-      message?: string;
-      metadata?: {
-        [key: string]: unknown;
-      };
+      title?: string | null;
+      metadata?:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      updatedAt?: string;
     };
     ChatResource: {
       /** @enum {string} */
@@ -2874,10 +3338,10 @@ export interface components {
       };
     };
     /**
-     * Document
-     * @description Document response schema
+     * Corpus
+     * @description Corpus response schema
      */
-    Document: {
+    Corpus: {
       /** Format: uuid */
       id: string;
       title: string;
@@ -2897,10 +3361,10 @@ export interface components {
       updatedAt: string;
     };
     /**
-     * NewDocument
-     * @description Request schema for creating a new document
+     * NewCorpus
+     * @description Request schema for creating a new corpus
      */
-    NewDocument: {
+    NewCorpus: {
       /** Format: uuid */
       id?: string;
       title: string;
@@ -2920,10 +3384,10 @@ export interface components {
       updatedAt?: string;
     };
     /**
-     * UpdateDocumentRequest
-     * @description Request schema for updating a document
+     * UpdateCorpusRequest
+     * @description Request schema for updating a corpus
      */
-    UpdateDocument: {
+    UpdateCorpus: {
       /** Format: uuid */
       id?: string;
       title?: string;
@@ -2942,14 +3406,14 @@ export interface components {
       /** Format: date-time */
       updatedAt?: string;
     };
-    DocumentResource: {
+    CorpusResource: {
       /** @enum {string} */
-      type: "document";
+      type: "corpus";
       /** Format: uuid */
       id: string;
       /**
-       * Document
-       * @description Document response schema
+       * Corpus
+       * @description Corpus response schema
        */
       attributes: {
         /** Format: uuid */
@@ -2980,15 +3444,15 @@ export interface components {
         [key: string]: string;
       };
     };
-    DocumentSingleResponse: {
+    CorpusSingleResponse: {
       data: {
         /** @enum {string} */
-        type: "document";
+        type: "corpus";
         /** Format: uuid */
         id: string;
         /**
-         * Document
-         * @description Document response schema
+         * Corpus
+         * @description Corpus response schema
          */
         attributes: {
           /** Format: uuid */
@@ -3029,15 +3493,15 @@ export interface components {
         [key: string]: unknown;
       };
     };
-    DocumentCollectionResponse: {
+    CorpusCollectionResponse: {
       data: {
         /** @enum {string} */
-        type: "document";
+        type: "corpus";
         /** Format: uuid */
         id: string;
         /**
-         * Document
-         * @description Document response schema
+         * Corpus
+         * @description Corpus response schema
          */
         attributes: {
           /** Format: uuid */
@@ -3091,10 +3555,10 @@ export interface components {
       };
     };
     /**
-     * NewDocument
-     * @description Request schema for creating a new document
+     * NewCorpus
+     * @description Request schema for creating a new corpus
      */
-    CreateDocument: {
+    CreateCorpus: {
       /** Format: uuid */
       id?: string;
       title: string;
@@ -3955,6 +4419,8 @@ export interface components {
       email: string | null;
       /** @enum {string} */
       role: "user" | "admin" | "lawyer";
+      /** Format: date-time */
+      emailVerifiedAt: string | null;
       userAgent: string | null;
       lastIp: string | null;
       isAnonymous: boolean;
@@ -3968,6 +4434,7 @@ export interface components {
       occupation: string | null;
       bio: string | null;
       profilePicture: string | null;
+      isFirstLogin: boolean;
       isOnboarded: boolean;
       /** Format: date-time */
       createdAt: string;
@@ -3982,6 +4449,8 @@ export interface components {
       name?: string | null;
       email?: string | null;
       password?: string | null;
+      /** Format: date-time */
+      emailVerifiedAt?: string | null;
       fingerprint?: string | null;
       userAgent?: string | null;
       lastIp?: string | null;
@@ -3996,6 +4465,7 @@ export interface components {
       occupation?: string | null;
       bio?: string | null;
       profilePicture?: string | null;
+      isFirstLogin?: boolean;
       isOnboarded?: boolean;
       /** Format: date-time */
       updatedAt?: string;
@@ -4004,6 +4474,8 @@ export interface components {
       name?: string | null;
       email?: string | null;
       password?: string | null;
+      /** Format: date-time */
+      emailVerifiedAt?: string | null;
       fingerprint?: string | null;
       userAgent?: string | null;
       lastIp?: string | null;
@@ -4018,6 +4490,7 @@ export interface components {
       occupation?: string | null;
       bio?: string | null;
       profilePicture?: string | null;
+      isFirstLogin?: boolean;
       isOnboarded?: boolean;
       /** Format: date-time */
       updatedAt?: string;
@@ -4038,6 +4511,8 @@ export interface components {
         email: string | null;
         /** @enum {string} */
         role: "user" | "admin" | "lawyer";
+        /** Format: date-time */
+        emailVerifiedAt: string | null;
         userAgent: string | null;
         lastIp: string | null;
         isAnonymous: boolean;
@@ -4056,6 +4531,7 @@ export interface components {
         occupation: string | null;
         bio: string | null;
         profilePicture: string | null;
+        isFirstLogin: boolean;
         isOnboarded: boolean;
         /** Format: date-time */
         createdAt: string;
@@ -4089,6 +4565,8 @@ export interface components {
           email: string | null;
           /** @enum {string} */
           role: "user" | "admin" | "lawyer";
+          /** Format: date-time */
+          emailVerifiedAt: string | null;
           userAgent: string | null;
           lastIp: string | null;
           isAnonymous: boolean;
@@ -4107,6 +4585,7 @@ export interface components {
           occupation: string | null;
           bio: string | null;
           profilePicture: string | null;
+          isFirstLogin: boolean;
           isOnboarded: boolean;
           /** Format: date-time */
           createdAt: string;
@@ -4150,6 +4629,8 @@ export interface components {
           email: string | null;
           /** @enum {string} */
           role: "user" | "admin" | "lawyer";
+          /** Format: date-time */
+          emailVerifiedAt: string | null;
           userAgent: string | null;
           lastIp: string | null;
           isAnonymous: boolean;
@@ -4168,6 +4649,7 @@ export interface components {
           occupation: string | null;
           bio: string | null;
           profilePicture: string | null;
+          isFirstLogin: boolean;
           isOnboarded: boolean;
           /** Format: date-time */
           createdAt: string;
