@@ -1,0 +1,86 @@
+name: Deploy to Hetzner
+
+on:
+  push:
+    branches:
+      - main      # production
+      - develop   # staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      # Determine target environment and map secrets based on branch
+      - name: Set deployment target
+        id: target
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo "ENV=production" >> $GITHUB_OUTPUT
+            echo "HOST=${{ secrets.PRODUCTION_HOST }}" >> $GITHUB_OUTPUT
+            echo "USER=${{ secrets.PRODUCTION_USER }}" >> $GITHUB_OUTPUT
+            echo "DATABASE_URL=${{ secrets.PRODUCTION_DATABASE_URL }}" >> $GITHUB_OUTPUT
+          else
+            echo "ENV=staging" >> $GITHUB_OUTPUT
+            echo "HOST=${{ secrets.STAGING_HOST }}" >> $GITHUB_OUTPUT
+            echo "USER=${{ secrets.STAGING_USER }}" >> $GITHUB_OUTPUT
+            echo "DATABASE_URL=${{ secrets.STAGING_DATABASE_URL }}" >> $GITHUB_OUTPUT
+          fi
+
+      # Set up SSH with your deploy key
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      # Copy the entire monorepo to the server using rsync
+      - name: Deploy code to server
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ steps.target.outputs.HOST }} >> ~/.ssh/known_hosts
+          
+          rsync -avz --delete \
+            --exclude 'node_modules' \
+            --exclude '.git' \
+            --exclude '*.log' \
+            --exclude '.env*' \
+            ./ ${{ steps.target.outputs.USER }}@${{ steps.target.outputs.HOST }}:/var/www/mahakama/
+
+      # SSH into server to install dependencies, build, write .env, and restart PM2
+      - name: Remote setup and restart
+        env:
+          DB_URL: ${{ steps.target.outputs.DATABASE_URL }}
+          DEPLOY_ENV: ${{ steps.target.outputs.ENV }}
+          TARGET_USER: ${{ steps.target.outputs.USER }}
+          TARGET_HOST: ${{ steps.target.outputs.HOST }}
+        run: |
+          ssh $TARGET_USER@$TARGET_HOST << EOF
+            set -e
+            cd /var/www/mahakama
+
+            # Install dependencies
+            npm ci
+
+            # Build the API and its workspace dependencies
+            npx turbo run build --filter=api...
+
+            # Write environment variables dynamically
+            echo "DATABASE_URL=$DB_URL" > .env
+            echo "NODE_ENV=$DEPLOY_ENV" >> .env
+            echo "PORT=3000" >> .env
+
+            # Restart the PM2 process dynamically based on environment
+            pm2 restart mahakama-$DEPLOY_ENV-api || \
+              pm2 start apps/api/dist/src/server.js --name "mahakama-$DEPLOY_ENV-api"
+
+            # Save PM2 state
+            pm2 save
+          EOF

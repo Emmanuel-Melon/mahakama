@@ -1,0 +1,39 @@
+name: API CI Pipeline
+
+permissions:
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches: [ main, master, develop ]
+    paths:
+      - 'apps/api/**'
+      - 'packages/**' 
+      - 'package-lock.json'
+  pull_request:
+    branches: [ main, master, develop ]
+    paths:
+      - 'apps/api/**'
+
+jobs:
+  api-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+        
+      - name: Build API and Dependencies
+        run: npx turbo run build --filter=api...
+
+      - name: Run Unit Tests
+        run: npx turbo run test --filter=api

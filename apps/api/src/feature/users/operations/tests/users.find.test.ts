@@ -22,7 +22,12 @@ describe("findUser", () => {
   it("should return ok:false with null when user not found", async () => {
     mockDrizzleQuery("usersSchema", "findFirst", undefined);
     const result = await findUser("id", "non-existent");
-    expect(result).toEqual({ ok: false, data: null });
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Resource not found",
+      type: "NOT_FOUND",
+    });
   });
 });
 

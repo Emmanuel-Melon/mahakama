@@ -20,6 +20,11 @@ describe("createUser", () => {
   it("should return ok:false if insert returns empty", async () => {
     mockDrizzleEmpty();
     const result = await createUser(createMockNewUser());
-    expect(result).toEqual({ ok: false, data: null });
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Resource not found",
+      type: "NOT_FOUND",
+    });
   });
 });

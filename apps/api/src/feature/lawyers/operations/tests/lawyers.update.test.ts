@@ -21,7 +21,7 @@ describe("updateLawyer", () => {
 
     // Setup mock to return "updated" version
     mockDrizzleChain([{ ...existingLawyer, ...updateData }]);
-    const result = await updateLawyer(lawyerId, updateData as any);
+    const result = await updateLawyer("id", lawyerId, updateData as any);
     expect(result.ok).toBe(true);
     expect(result.data?.name).toBe("Updated Name");
     expect(db.update).toHaveBeenCalled();
@@ -30,8 +30,13 @@ describe("updateLawyer", () => {
   it("should return ok:false if no lawyer was updated", async () => {
     // Zero plumbing, pure intent
     mockDrizzleEmpty();
-    const result = await updateLawyer(lawyerId, updateData);
-    expect(result).toEqual({ ok: false, data: null });
+    const result = await updateLawyer("id", lawyerId, updateData);
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Resource not found",
+      type: "NOT_FOUND",
+    });
   });
 
   it("should throw if the database itself fails", async () => {
@@ -42,9 +47,13 @@ describe("updateLawyer", () => {
     const updateData = { name: "New Name" };
 
     // Assert
-    await expect(updateLawyer(lawyerId, updateData as any)).rejects.toThrow(
-      "Connection Timeout",
-    );
+    const result = await updateLawyer("id", lawyerId, updateData as any);
+    expect(result).toEqual({
+      ok: false,
+      data: null,
+      reason: "Connection Timeout",
+      type: "DATABASE_ERROR",
+    });
   });
 
   it("should handle partial updates correctly", async () => {
@@ -57,7 +66,7 @@ describe("updateLawyer", () => {
 
     // Setup mock to return partially updated lawyer
     mockDrizzleChain([{ ...existingLawyer, ...partialUpdate }]);
-    const result = await updateLawyer(lawyerId, partialUpdate as any);
+    const result = await updateLawyer("id", lawyerId, partialUpdate as any);
 
     expect(result.ok).toBe(true);
     expect(result.data?.name).toBe("Original Name"); // unchanged
