@@ -1,42 +1,42 @@
 import type { Route } from "./+types/$profile";
-import { usersApi, UsersApiClient } from "@mah/api/clients/users.api";
-import { FetchApiClient } from "@mah/api/fetch";
 import { useCurrentUser, useUpdateUser } from "@mah/api/hooks/use-users";
 import { ProfileScreen } from "~/feature/users/screens/ProfileScreen";
-import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
+import { PageDetailsError } from "~/components/molecules/page-details-error";
 
-export function meta({ loaderData }: Route.MetaArgs) {
-  const { user } = loaderData;
+export function meta({}: Route.MetaArgs) {
   return [
-    { title: `${user?.name || "Profile"} - Mahakama` },
+    { title: "Profile - Mahakama" },
     {
       name: "description",
-      content: user?.bio || "View your Mahakama profile and account details",
+      content: "View your Mahakama profile and account details",
     },
   ];
 }
 
-export async function loader({ context, request }: Route.LoaderArgs) {
-  const token = context.get(authContext)?.token || null;
-  try {
-    const cookieHeader = request.headers.get("cookie");
-    const apiClient = cookieHeader
-      ? new UsersApiClient(new FetchApiClient({ Cookie: cookieHeader }))
-      : usersApi;
-    const response = await apiClient.getCurrentUser();
-    return { token, user: response };
-  } catch (error) {
-    handleRouteError(error, "Failed to load user profile");
-  }
-}
-
-export default function ProfilePage({ loaderData }: Route.ComponentProps) {
-  const { token } = loaderData;
-  const { data: user, isLoading, error } = useCurrentUser();
+export default function ProfilePage() {
   const updateMutation = useUpdateUser();
+  const { data, isLoading, error } = useCurrentUser();
+  const user = data?.data;
+
+  if (isLoading)
+    return (
+      <PageDetailsLoading
+        title="Loading Profile"
+        description="Please wait while we load your profile..."
+      />
+    );
+
+  if (error || !user)
+    return (
+      <PageDetailsError
+        error={error?.message ?? "Profile not found"}
+        title="Error Loading Profile"
+        description="We couldn't load your profile. Please try again."
+      />
+    );
 
   return <ProfileScreen user={user} updateMutation={updateMutation} />;
 }

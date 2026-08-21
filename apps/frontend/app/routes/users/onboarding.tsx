@@ -32,7 +32,13 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function OnboardingPage({ loaderData }: Route.ComponentProps) {
   const { user, token, error } = loaderData;
-  const updateMutation = useUpdateUser();
+  const updateMutation = useUpdateUser({
+    onUpdateSuccess: (data) => {
+      if (data.data.isOnboarded) {
+        window.location.href = "/app";
+      }
+    },
+  });
   return (
     <OnboardingScreen
       user={user}

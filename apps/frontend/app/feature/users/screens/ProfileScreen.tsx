@@ -6,9 +6,8 @@ import { ContactInformation } from "~/feature/users/components/ContactInformatio
 import { AccountStatusCard } from "~/feature/users/components/AccountStatusCard";
 import { ActivityCard } from "~/feature/users/components/ActivityCard";
 import { ProfileTabs } from "~/feature/users/components/ProfileTabs";
-import { SavedItems, type SavedItem } from "~/components/saved-items";
-
 import { type User } from "@mah/api/clients/users.api";
+import { type SavedItem, SavedItems } from "../components/SavedItems";
 
 interface ProfileScreenProps {
   user: User;

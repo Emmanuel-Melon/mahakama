@@ -2,14 +2,13 @@ import { CorpusCollection } from "~/feature/corpus/components/corpus-collection"
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { Library } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
 import { PageLoading } from "~/components/molecules/page-loading";
-import { type Document } from "@mah/api/clients/documents.api";
+import { type Corpus } from "@mah/api/clients/corpus.api";
 import { HeroSection } from "~/layouts/HeroSection";
 import type { AsyncState } from "@mah/api/api.types";
 
 interface CorpusScreenProps extends AsyncState {
-  documents: Document[];
+  documents: Corpus[];
   isAuthenticated?: boolean;
   displayMode?: "grid" | "list";
   onDisplayModeChange?: (mode: "grid" | "list") => void;
