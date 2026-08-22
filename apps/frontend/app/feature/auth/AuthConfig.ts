@@ -10,6 +10,18 @@ export const authRoutes = defineRoutes({
     path: "forgot-password",
     file: "routes/auth/forgot-password.tsx",
   },
+  resetPassword: {
+    path: "reset-password",
+    file: "routes/auth/reset-password.tsx",
+  },
+  verifyAccount: {
+    path: "verify-account",
+    file: "routes/auth/verify-account.tsx",
+  },
+  verifyEmailPending: {
+    path: "verify-email-pending",
+    file: "routes/auth/verify-email-pending.tsx",
+  },
 });
 
 export const AuthPaths = authRoutes.to;

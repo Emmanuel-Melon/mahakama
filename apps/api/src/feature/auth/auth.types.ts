@@ -7,6 +7,11 @@ import { usersSchema } from "@/feature/users/users.schema";
 import { NotificationTrackingSchema } from "@/feature/notifications/notifications.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
 import { baseQuerySchema } from "@/lib/express/express.types";
+import {
+  createJsonApiResourceSchema,
+  createJsonApiSingleResponseSchema,
+} from "@/lib/express/express.serializer";
+import { usersSelectSchema } from "../users/users.types";
 
 /*
  * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
@@ -311,3 +316,20 @@ export type PasswordResetNotification = z.infer<
 export type EmailVerificationNotification = z.infer<
   typeof EmailVerificationNotificationSchema
 >;
+
+/*
+ * DOCS-RELATED TYPES
+ */
+export const authResponseSchema = createJsonApiSingleResponseSchema(
+  createJsonApiResourceSchema("user", usersSelectSchema),
+);
+
+export const authTokenMetaSchema = z.object({
+  accessToken: z.string().openapi({
+    description: "JWT access signature token for authorized bearer headers.",
+  }),
+  expiresAt: z.string().datetime().openapi({
+    description: "ISO timestamp indicating session authorization expiration.",
+  }),
+  tokenType: z.literal("Bearer"),
+});

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import type { User } from "@mah/api/src/clients/users.api";
-import { useLogout } from "@mah/api/src/hooks/use-auth";
+import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
 
 type UserContextType = {
   user: User | null;
@@ -16,7 +16,7 @@ export function UserProvider({
   children: React.ReactNode;
   user: User | null;
 }) {
-  const logoutMutation = useLogout();
+  const { logout: logoutMutation } = useAuthMutations();
 
   const logout = () => {
     logoutMutation.mutate();

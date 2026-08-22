@@ -17,13 +17,15 @@ import {
   useSidebar,
 } from "~/components/ui/sidebar";
 import { useUser } from "~/context/user-provider";
-import { useLogout } from "@mah/api/src/hooks/use-auth";
+import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
 import { NavLink } from "react-router";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { user } = useUser();
-  const logoutMutation = useLogout();
+
+  // Use the grouped auth mutations object and destructure the logout mutation
+  const { logout: logoutMutation } = useAuthMutations();
 
   const userItems = [
     {

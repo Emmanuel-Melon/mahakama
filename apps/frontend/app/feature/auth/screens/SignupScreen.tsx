@@ -1,53 +1,40 @@
 import { useNavigate } from "react-router";
-import { useTranslation } from "react-i18next";
-import { AuthForm } from "~/feature/auth/components/auth-form";
-import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
-import { useRegister } from "@mah/api/src/hooks/use-auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { AuthForm } from "~/feature/auth/components/AuthForm";
+import { AuthAlternative } from "~/feature/auth/components/AuthAlternative";
+import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
 import { toast } from "sonner";
-import {
-  type RegisterRequest,
-  registerRequestSchema,
-} from "@mah/api/src/clients/auth.api";
+
+import { type RegisterRequest } from "@mah/api/src/clients/auth.api";
 
 export const SignupScreen = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation("auth");
-  const registerMutation = useRegister();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<RegisterRequest>({
-    resolver: zodResolver(registerRequestSchema),
-  });
+  const { register: registerMutation } = useAuthMutations();
 
   const onSubmit = (data: RegisterRequest) => {
     registerMutation.mutate(data, {
       onSuccess: () => {
-        navigate("/");
+        navigate("/verify-email-pending", {
+          state: { email: data.email },
+          replace: true,
+        });
       },
       onError: () => {
-        toast.error(t("signup.error"));
+        toast.error("Registration failed. Please try again.");
       },
     });
   };
+
   return (
     <>
       <AuthForm
         mode="signup"
-        handleSubmit={handleSubmit(onSubmit)}
-        isLoading={isSubmitting || registerMutation.isPending}
-        error={registerMutation.error ? t("signup.invalidCredentials") : null}
-        register={register}
-        errors={errors}
+        onSubmit={onSubmit}
+        isLoading={registerMutation.isPending}
       />
       <AuthAlternative
         to="/login"
-        text={t("signup.loginLink")}
-        message={t("signup.loginMessage")}
+        text="Sign in instead"
+        message="Already have an account?"
       />
     </>
   );

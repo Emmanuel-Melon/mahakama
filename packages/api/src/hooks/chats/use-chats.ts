@@ -6,7 +6,7 @@ import {
   type CreateChatRequest,
   type SendMessageRequest,
   type ReplyStatus,
-  type UpdateChat,
+  type UpdateChatArgs,
 } from "../../clients/chat.api";
 import type { ApiClientError } from "../../api/api.errors";
 import { useAppMutation } from "../../react-query/react-query.utils";
@@ -64,7 +64,10 @@ export const chatsQueries = {
   }),
   chat: (id: string) => ({
     queryKey: chatsKeys.chat(id),
-    queryFn: () => chatApi.getChatById(id),
+    queryFn: async () => {
+      const result = await chatApi.getChatById(id);
+      return result.data;
+    },
     enabled: !!id,
   }),
   messages: (chatId: string) => ({
@@ -92,7 +95,10 @@ export const useMessages = (chatId: string) =>
 
 export const useChatMutations = () => {
   const createChat = useAppMutation<Chat, ApiClientError, CreateChatRequest>({
-    mutationFn: (payload) => chatApi.createChat(payload),
+    mutationFn: async (payload) => {
+      const result = await chatApi.createChat(payload);
+      return result.data;
+    },
     messages: {
       success: "Chat created successfully!",
       error: (err) =>
@@ -101,7 +107,7 @@ export const useChatMutations = () => {
     invalidates: [chatsKeys.chats()],
   });
 
-  const updateChatTitle = useAppMutation<Chat, ApiClientError, UpdateChat>({
+  const updateChatTitle = useAppMutation<Chat, ApiClientError, UpdateChatArgs>({
     mutationFn: ({ id, title }) => chatApi.updateChat({ id, title }),
     messages: {
       success: "Chat title updated successfully!",
@@ -112,7 +118,7 @@ export const useChatMutations = () => {
     // useAppMutation's invalidates only takes variables
     invalidates: (variables) => [
       chatsKeys.chats(),
-      chatsKeys.chat(variables.chatId),
+      chatsKeys.chat(variables.id),
     ],
   });
 

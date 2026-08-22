@@ -2,7 +2,11 @@ import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import { z } from "zod";
 
 import { HttpStatus } from "@/lib/http/http.status";
-import { registerRoutes } from "@/lib/openapi/openapi.core";
+import {
+  defineApiResource,
+  registerJsonApiSchemas,
+  registerRoutes,
+} from "@/lib/openapi/openapi.core";
 import type { PathDefinition } from "@/lib/openapi/openapi.types";
 
 import { authApi } from "./auth.routes";
@@ -17,9 +21,69 @@ import {
   resetPasswordSchema,
   emailVerificationStatusSchema,
   refreshTokenSelectSchema,
+  signupUserSchema,
+  loginUserSchema,
+  authResponseSchema,
+  UserRoleSchema,
+  BaseTokenPayloadSchema,
+  AccessPayloadSchema,
+  RefreshPayloadSchema,
+  AuthPayloadSchema,
+  TokenGenerationArgsSchema,
+  authEventQuerySchema,
 } from "./auth.types";
 
+// 1. Define a schema for the resend verification request body if you haven't yet
+const resendVerificationSchema = z.object({
+  email: z.string().email({ message: "Invalid email address" }),
+});
+
 export const authRegistry = new OpenAPIRegistry();
+
+export const authSchemas = {
+  kind: "action" as const,
+  requests: {
+    signup: signupUserSchema,
+    login: loginUserSchema,
+    logout: z.object({}),
+    refresh: z.object({}),
+    me: z.object({}),
+    resetPasswordRequest: passwordResetRequestSchema,
+  },
+  response: authResponseSchema,
+};
+
+const refreshTokenApiResource = defineApiResource({
+  select: refreshTokenSelectSchema,
+  // no insert/update needed
+});
+
+// Register schemas
+export const RefreshTokenApiSchemas = registerJsonApiSchemas({
+  registry: authRegistry,
+  resourceType: "refreshToken",
+  pascalName: "RefreshToken",
+  schemas: refreshTokenApiResource,
+});
+
+const emailVerificationStatusApiResource = defineApiResource({
+  select: emailVerificationStatusSchema,
+  // no insert/update needed
+});
+
+export const EmailVerificationStatusApiSchemas = registerJsonApiSchemas({
+  registry: authRegistry,
+  resourceType: "emailVerificationStatus",
+  pascalName: "EmailVerificationStatus",
+  schemas: emailVerificationStatusApiResource,
+});
+
+export const AuthApiSchemas = registerJsonApiSchemas({
+  registry: authRegistry,
+  resourceType: "auth",
+  pascalName: "Auth",
+  schemas: authSchemas,
+});
 
 const authPaths: PathDefinition[] = [
   {
@@ -112,6 +176,19 @@ const authPaths: PathDefinition[] = [
     successSchema: verifyEmailBodySchema,
     errorCodes: [400, 429],
   },
+  {
+    handlerName: "resendVerification",
+    method: "post",
+    path: `${authApi.path}/resend-verification`,
+    summary: "Resend verification email",
+    description:
+      "Queues a new verification email for the specified user account",
+    security: [],
+    requestBodySchema: resendVerificationSchema,
+    successStatus: HttpStatus.ACCEPTED,
+    successSchema: z.object({ message: z.string() }),
+    errorCodes: [400, 404, 500],
+  },
 ];
 
 registerRoutes({
@@ -125,8 +202,30 @@ authRegistry.register("LoginRequest", loginRequestSchema);
 authRegistry.register("PasswordResetRequest", passwordResetRequestSchema);
 authRegistry.register("NewPasswordRequest", newPasswordSchema);
 authRegistry.register("VerifyEmailRequest", verifyEmailBodySchema);
+authRegistry.register("ResendVerificationRequest", resendVerificationSchema);
 authRegistry.register("AuthUser", authUserSelectSchema);
 authRegistry.register("AuthHeaders", authHeadersSchema);
 authRegistry.register("ResetPasswordResponse", resetPasswordSchema);
 authRegistry.register("EmailVerificationStatus", emailVerificationStatusSchema);
 authRegistry.register("RefreshTokenSelect", refreshTokenSelectSchema);
+authRegistry.registerComponent("securitySchemes", "cookieAuth", {
+  type: "apiKey",
+  in: "cookie",
+  name: "token",
+  description:
+    "Authentication via secure, short-lived HTTP-Only access cookies.",
+});
+authRegistry.registerComponent("securitySchemes", "refreshCookieAuth", {
+  type: "apiKey",
+  in: "cookie",
+  name: "refreshToken",
+  description:
+    "Session renewal via long-lived HTTP-Only refresh cookie scoped to the refresh endpoint.",
+});
+authRegistry.register("UserRole", UserRoleSchema);
+authRegistry.register("BaseTokenPayload", BaseTokenPayloadSchema);
+authRegistry.register("AccessPayload", AccessPayloadSchema);
+authRegistry.register("RefreshPayload", RefreshPayloadSchema);
+authRegistry.register("AuthPayload", AuthPayloadSchema);
+authRegistry.register("TokenGenerationArgs", TokenGenerationArgsSchema);
+authRegistry.register("AuthEventQuery", authEventQuerySchema);

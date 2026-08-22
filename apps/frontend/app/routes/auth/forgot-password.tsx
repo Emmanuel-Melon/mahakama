@@ -15,7 +15,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default ForgotPasswordScreen;
+export default function ForgotPasswordRoute() {
+  return <ForgotPasswordScreen />;
+}
 
 export function ErrorBoundary() {
   const error = useAppError();

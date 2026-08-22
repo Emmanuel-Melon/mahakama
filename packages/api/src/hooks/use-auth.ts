@@ -5,6 +5,7 @@ import {
   type LoginRequest,
   type RegisterRequest,
   type ResetPasswordResult,
+  type EmailVerificationStatusResult,
 } from "../clients/auth.api";
 import type { ApiClientError } from "../api/api.errors";
 import { useAppMutation } from "../react-query/react-query.utils";
@@ -15,7 +16,8 @@ export const authKeys = {
   login: () => [...authKeys.all, "login"] as const,
   register: () => [...authKeys.all, "register"] as const,
   logout: () => [...authKeys.all, "logout"] as const,
-  requestReset: () => [...authKeys.all, "requestReset"] as const,
+  resetPasswordRequest: () =>
+    [...authKeys.all, "resetPasswordRequest"] as const,
   resetPassword: () => [...authKeys.all, "resetPassword"] as const,
   verifyEmail: () => [...authKeys.all, "verifyEmail"] as const,
 } as const;
@@ -80,12 +82,12 @@ export const useAuthMutations = () => {
     },
   });
 
-  const requestReset = useAppMutation<
+  const resetPasswordRequest = useAppMutation<
     ResetPasswordResult,
     ApiClientError,
     { email: string }
   >({
-    mutationFn: ({ email }) => authApi.requestReset(email),
+    mutationFn: ({ email }) => authApi.resetPasswordRequest(email),
     messages: {
       success:
         "If an account matches, a recovery link will be dispatched shortly.",
@@ -119,42 +121,26 @@ export const useAuthMutations = () => {
     },
   });
 
+  const resendVerification = useAppMutation<
+    EmailVerificationStatusResult,
+    ApiClientError,
+    { email: string }
+  >({
+    mutationFn: ({ email }) => authApi.resendVerification(email),
+    messages: {
+      success: (data) => data.data.message,
+      error: (err) =>
+        err.errors?.[0]?.detail ?? "Failed to resend verification email",
+    },
+  });
+
   return {
     login,
     register,
     logout,
-    requestReset,
+    resetPasswordRequest,
     resetPassword,
     verifyEmail,
+    resendVerification,
   };
 };
-
-export function useLogin() {
-  const { login } = useAuthMutations();
-  return login;
-}
-
-export function useRegister() {
-  const { register } = useAuthMutations();
-  return register;
-}
-
-export function useLogout() {
-  const { logout } = useAuthMutations();
-  return logout;
-}
-
-export function useRequestReset() {
-  const { requestReset } = useAuthMutations();
-  return requestReset;
-}
-
-export function useResetPassword() {
-  const { resetPassword } = useAuthMutations();
-  return resetPassword;
-}
-
-export function useVerifyEmail() {
-  const { verifyEmail } = useAuthMutations();
-  return verifyEmail;
-}

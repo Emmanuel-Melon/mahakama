@@ -14,6 +14,7 @@ import {
   HttpLocation,
   validateHttpRequest,
 } from "@/middleware/request-validators";
+import { resendVerification } from "./controllers/resend-verification.controller";
 
 export const authRouter = Router();
 
@@ -33,6 +34,7 @@ authRouter.post("/refresh", refreshController);
 authRouter.post("/request-reset", requestResetController);
 authRouter.post("/reset-password", resetPasswordController);
 authRouter.post("/verify-email", verifyEmailController);
+authRouter.post("/resend-verification", resendVerification);
 
 export const authApi: ApiManifest = {
   path: "/v1",

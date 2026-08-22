@@ -43,7 +43,7 @@ export async function action({ request }: Route.ActionArgs) {
     return new Response(null, {
       status: 302,
       headers: {
-        Location: `/chat/${chat.data.id}`,
+        Location: `/chats/${chat.data.id}`,
       },
     });
   } catch (error) {

@@ -27,7 +27,7 @@ export const RecentChatsScreen = ({ chats, error }: RecentChatsScreenProps) => {
     <div className="space-y-2">
       <ChatListHeader title="Recent Chats" />
       <ChatList
-        chats={chats}
+        chats={chats ?? []}
         error={error}
         onRename={handleRenameChat}
         onDelete={handleDeleteChat}

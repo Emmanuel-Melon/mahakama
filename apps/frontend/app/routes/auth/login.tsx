@@ -15,7 +15,9 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export default LoginScreen;
+export default function LoginRoute() {
+  return <LoginScreen />;
+}
 
 export function ErrorBoundary() {
   const error = useAppError();
