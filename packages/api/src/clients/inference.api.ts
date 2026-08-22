@@ -1,5 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
-import type { ApiResource } from "../api/api.types";
+import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import type { components } from "../generated/api.types";
 
@@ -26,6 +26,18 @@ export type InferencePreferenceResult = ApiResource<
   InferencePreference,
   InferencePreferenceMetadata
 >;
+export type InferencePreferenceCollection = ApiCollection<
+  InferencePreference,
+  InferencePreferenceCollectionResponse["metadata"]
+>;
+export type ProviderCollection = ApiCollection<
+  Provider,
+  ProviderCollectionResponse["metadata"]
+>;
+export type StrategyCollection = ApiCollection<
+  Strategy,
+  StrategyCollectionResponse["metadata"]
+>;
 
 export class InferenceApiClient extends BaseApiClient {
   protected readonly path = "/inference";
@@ -38,7 +50,7 @@ export class InferenceApiClient extends BaseApiClient {
   public async getPreferences(
     userId: string,
     options: { headers?: Record<string, string> } = {},
-  ): Promise<InferencePreference[]> {
+  ): Promise<InferencePreferenceCollection> {
     const response =
       await this.api.request<InferencePreferenceCollectionResponse>(
         `${this.path}/preferences/${userId}`,
@@ -107,7 +119,7 @@ export class InferenceApiClient extends BaseApiClient {
   // Discovery routes
   public async getProviders(
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Provider[]> {
+  ): Promise<ProviderCollection> {
     const response = await this.api.request<ProviderCollectionResponse>(
       `${this.path}/providers`,
       {
@@ -121,7 +133,7 @@ export class InferenceApiClient extends BaseApiClient {
 
   public async getStrategies(
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Strategy[]> {
+  ): Promise<StrategyCollection> {
     const response = await this.api.request<StrategyCollectionResponse>(
       `${this.path}/strategies`,
       {

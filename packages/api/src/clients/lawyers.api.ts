@@ -1,5 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
-import type { ApiResource } from "../api/api.types";
+import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import { LAWYERS_API_ROUTES } from "../api.routes";
 import type { components } from "../generated/api.types";
@@ -14,6 +14,10 @@ export type CreateLawyerRequest = components["schemas"]["CreateLawyer"];
 
 export type LawyerMetadata = LawyerSingleResponse["metadata"];
 export type LawyerResult = ApiResource<Lawyer, LawyerMetadata>;
+export type LawyerCollection = ApiCollection<
+  Lawyer,
+  LawyerCollectionResponse["metadata"]
+>;
 
 export class LawyersApiClient extends BaseApiClient {
   protected readonly path = LAWYERS_API_ROUTES.ROOT;
@@ -31,7 +35,7 @@ export class LawyersApiClient extends BaseApiClient {
       q?: string;
     },
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Lawyer[]> {
+  ): Promise<LawyerCollection> {
     const searchParams = new URLSearchParams();
 
     if (filters) {

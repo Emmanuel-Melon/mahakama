@@ -1,5 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
-import type { ApiResource } from "../api/api.types";
+import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import type { components } from "../generated/api.types";
 
@@ -16,6 +16,10 @@ export type NotificationResult = ApiResource<
   Notification,
   NotificationMetadata
 >;
+export type NotificationCollection = ApiCollection<
+  Notification,
+  NotificationsCollectionResponse["metadata"]
+>;
 
 export class NotificationsApiClient extends BaseApiClient {
   protected readonly path = "/v1/notifications";
@@ -26,7 +30,7 @@ export class NotificationsApiClient extends BaseApiClient {
 
   public async getNotifications(
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Notification[]> {
+  ): Promise<NotificationCollection> {
     const response = await this.api.request<NotificationsCollectionResponse>(
       `${this.path}/`,
       {

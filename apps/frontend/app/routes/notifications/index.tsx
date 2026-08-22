@@ -13,7 +13,7 @@ export function meta({}: Route.MetaArgs) {
 
 export async function loader({ context }: Route.LoaderArgs) {
   const token = context.get(authContext)?.token;
-  const notifications = await notificationsApi.getNotifications({
+  const { data: notifications } = await notificationsApi.getNotifications({
     headers: { Authorization: `Bearer ${token}` },
   });
   return { notifications };
@@ -22,11 +22,11 @@ export async function loader({ context }: Route.LoaderArgs) {
 export default function NotificationsRoute() {
   const { notifications: initialNotifications } =
     useLoaderData<typeof loader>();
-  const { data: notifications, isLoading, error } = useNotifications();
+  const { data: notificationsPage, isLoading, error } = useNotifications();
 
   return (
     <NotificationsScreen
-      notifications={notifications || initialNotifications}
+      notifications={notificationsPage?.data || initialNotifications}
       isLoading={isLoading}
       error={error}
     />

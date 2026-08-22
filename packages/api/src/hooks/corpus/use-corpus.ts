@@ -1,5 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { corpusApi, type Corpus } from "../../clients/corpus.api";
+import {
+  corpusApi,
+  type Corpus,
+  type CorpusCollection,
+} from "../../clients/corpus.api";
 import type { ApiClientError } from "../../api/api.errors";
 
 export const corpusKeys = {
@@ -29,7 +33,7 @@ export const corpusQueries = {
 };
 
 export function useCorpusEntries() {
-  return useQuery<Corpus[], ApiClientError>(corpusQueries.entries());
+  return useQuery<CorpusCollection, ApiClientError>(corpusQueries.entries());
 }
 
 export function useCorpusEntry(id: string | number) {

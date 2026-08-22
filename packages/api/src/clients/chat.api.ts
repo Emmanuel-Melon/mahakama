@@ -1,5 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
-import type { ApiResource } from "../api/api.types";
+import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import {
   getClientToken,
@@ -24,6 +24,14 @@ export type SendMessageRequest = components["schemas"]["SendMessageRequest"];
 
 export type ChatMetadata = ChatSingleResponse["metadata"];
 export type ChatResult = ApiResource<Chat, ChatMetadata>;
+export type ChatCollection = ApiCollection<
+  Chat,
+  ChatsCollectionResponse["metadata"]
+>;
+export type ChatMessagesCollection = ApiCollection<
+  ChatMessage,
+  components["schemas"]["MessageCollectionResponse"]["metadata"]
+>;
 
 export type SenderType = "user" | "assistant" | "system";
 export type ReplyStatus = "pending" | "completed" | "failed";
@@ -108,7 +116,7 @@ export class ChatApiClient extends BaseApiClient {
 
   public async getChats(
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Chat[]> {
+  ): Promise<ChatCollection> {
     const response = await this.api.request<ChatsCollectionResponse>(
       `${this.path}/`,
       {
@@ -116,11 +124,9 @@ export class ChatApiClient extends BaseApiClient {
       },
     );
 
-    const unpacked = this.unpackCollection(response, {
+    return this.unpackCollection(response, {
       errMsg: "Invalid chats data received from the server",
     });
-
-    return unpacked.data;
   }
 
   public async getChatById(
@@ -146,7 +152,7 @@ export class ChatApiClient extends BaseApiClient {
       limit?: number;
       offset?: number;
     } = {},
-  ): Promise<ChatMessage[]> {
+  ): Promise<ChatMessagesCollection> {
     const queryParams = new URLSearchParams();
     if (options.limit) queryParams.append("limit", options.limit.toString());
     if (options.offset) queryParams.append("offset", options.offset.toString());
@@ -159,11 +165,9 @@ export class ChatApiClient extends BaseApiClient {
       headers: { ...this.defaultHeaders, ...options.headers },
     });
 
-    const unpacked = this.unpackCollection(response, {
+    return this.unpackCollection(response, {
       errMsg: "Invalid messages data received from the server",
     });
-
-    return unpacked.data;
   }
 
   public async sendMessage(

@@ -57,11 +57,11 @@ export default function LegalHubRoute({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
   const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
 
-  const { data: services, isLoading, error } = useServices(undefined);
+  const { data: servicesPage, isLoading, error } = useServices(undefined);
 
   return (
     <LegalHubScreen
-      services={services ?? []}
+      services={servicesPage?.data ?? []}
       isLoading={isLoading}
       error={error}
       isAuthenticated={!!user}

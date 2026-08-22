@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   lawyersApi,
-  type Lawyer,
+  type LawyerCollection,
   type CreateLawyerRequest,
   type LawyerResult,
 } from "../clients/lawyers.api";
@@ -44,7 +44,9 @@ export function useLawyers(filters?: {
   available?: boolean;
   q?: string;
 }) {
-  return useQuery<Lawyer[], ApiClientError>(lawyersQueries.lawyers(filters));
+  return useQuery<LawyerCollection, ApiClientError>(
+    lawyersQueries.lawyers(filters),
+  );
 }
 
 export function useLawyer(id: string) {

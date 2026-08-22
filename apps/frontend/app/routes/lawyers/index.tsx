@@ -97,7 +97,7 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
     q,
   };
 
-  const { data: lawyers, error: lawyersError, isLoading } = useLawyers(filters);
+  const { data: lawyersPage, error: lawyersError, isLoading } = useLawyers(filters);
 
   const sortLawyers = (lawyersToSort: Lawyer[], sortValue: string) => {
     const sortOrder = sortValue.startsWith("-") ? "desc" : "asc";
@@ -127,7 +127,9 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
     });
   };
 
-  const sortedLawyers = lawyers ? sortLawyers(lawyers, currentSort) : [];
+  const sortedLawyers = lawyersPage
+    ? sortLawyers(lawyersPage.data, currentSort)
+    : [];
 
   // Event handlers
   const handleFilterChange = (filterValue: string) => {
