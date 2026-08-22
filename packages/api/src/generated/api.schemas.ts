@@ -1388,6 +1388,38 @@ const endpoints = makeApi([
   },
   {
     method: "post",
+    path: "/v1/resend-verification",
+    alias: "postV1resendVerification",
+    description: `Queues a new verification email for the specified user account`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: z.object({ email: z.string().email() }).passthrough(),
+      },
+    ],
+    response: z.object({ message: z.string() }).passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
     path: "/v1/reset-password",
     alias: "postV1resetPassword",
     description: `Resets the user&#x27;s password using a valid recovery token`,

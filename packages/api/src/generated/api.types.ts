@@ -512,6 +512,81 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/v1/resend-verification": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Resend verification email
+     * @description Queues a new verification email for the specified user account
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            /** Format: email */
+            email: string;
+          };
+        };
+      };
+      responses: {
+        /** @description The request has been accepted for processing, but the processing has not been completed. */
+        202: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              message: string;
+            };
+          };
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description An unexpected condition was encountered and no more specific message is suitable. */
+        500: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/v1/chats": {
     parameters: {
       query?: never;
@@ -3032,6 +3107,490 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    RefreshToken: {
+      /** @description The new access token (JWT) */
+      token: string;
+    };
+    RefreshTokenResource: {
+      /** @enum {string} */
+      type: "refreshToken";
+      /** Format: uuid */
+      id: string;
+      attributes: {
+        /** @description The new access token (JWT) */
+        token: string;
+      };
+      relationships?: {
+        [key: string]: unknown;
+      };
+      meta?: {
+        [key: string]: unknown;
+      };
+      links?: {
+        [key: string]: string;
+      };
+    };
+    RefreshTokenSingleResponse: {
+      data: {
+        /** @enum {string} */
+        type: "refreshToken";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          /** @description The new access token (JWT) */
+          token: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      };
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+      } & {
+        [key: string]: unknown;
+      };
+    };
+    RefreshTokenCollectionResponse: {
+      data: {
+        /** @enum {string} */
+        type: "refreshToken";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          /** @description The new access token (JWT) */
+          token: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      }[];
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        /** @default {} */
+        availableFilters: {
+          [key: string]: unknown;
+        };
+        sortOptions: {
+          fields: string[];
+          default: string;
+          /** @enum {string} */
+          direction: "asc" | "desc";
+        };
+      };
+    };
+    EmailVerificationStatus: {
+      /** @description A human-readable status message. */
+      message: string;
+    };
+    EmailVerificationStatusResource: {
+      /** @enum {string} */
+      type: "emailVerificationStatus";
+      /** Format: uuid */
+      id: string;
+      attributes: {
+        /** @description A human-readable status message. */
+        message: string;
+      };
+      relationships?: {
+        [key: string]: unknown;
+      };
+      meta?: {
+        [key: string]: unknown;
+      };
+      links?: {
+        [key: string]: string;
+      };
+    };
+    EmailVerificationStatusSingleResponse: {
+      data: {
+        /** @enum {string} */
+        type: "emailVerificationStatus";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          /** @description A human-readable status message. */
+          message: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      };
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+      } & {
+        [key: string]: unknown;
+      };
+    };
+    EmailVerificationStatusCollectionResponse: {
+      data: {
+        /** @enum {string} */
+        type: "emailVerificationStatus";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          /** @description A human-readable status message. */
+          message: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      }[];
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        /** @default {} */
+        availableFilters: {
+          [key: string]: unknown;
+        };
+        sortOptions: {
+          fields: string[];
+          default: string;
+          /** @enum {string} */
+          direction: "asc" | "desc";
+        };
+      };
+    };
+    /** RegisterUser */
+    AuthSignup: {
+      name?: string | null;
+      email?: string | null;
+      password: string;
+      /** @enum {string} */
+      role?: "user" | "partner" | "admin";
+    };
+    /** LoginUser */
+    AuthLogin: {
+      /** Format: email */
+      email: string;
+      password: string;
+      /** @enum {string} */
+      role?: "user" | "partner" | "admin";
+    };
+    AuthLogout: Record<string, never>;
+    AuthRefresh: Record<string, never>;
+    AuthMe: Record<string, never>;
+    AuthResetPasswordRequest: {
+      /** Format: email */
+      email: string;
+    };
+    AuthResource: {
+      /** @enum {string} */
+      type: "auth";
+      /** Format: uuid */
+      id: string;
+      attributes: {
+        data: {
+          /** @enum {string} */
+          type: "user";
+          /** Format: uuid */
+          id: string;
+          /**
+           * User
+           * @description User response schema
+           */
+          attributes: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            email: string | null;
+            /** @enum {string} */
+            role: "user" | "admin" | "lawyer";
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
+            userAgent: string | null;
+            lastIp: string | null;
+            isAnonymous: boolean;
+            age: number | null;
+            /** @enum {string|null} */
+            gender:
+              | "male"
+              | "female"
+              | "non_binary"
+              | "prefer_not_to_say"
+              | "other"
+              | null;
+            country: string | null;
+            city: string | null;
+            phoneNumber: string | null;
+            occupation: string | null;
+            bio: string | null;
+            profilePicture: string | null;
+            isFirstLogin: boolean;
+            isOnboarded: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+          };
+          relationships?: {
+            [key: string]: unknown;
+          };
+          meta?: {
+            [key: string]: unknown;
+          };
+          links?: {
+            [key: string]: string;
+          };
+        };
+        links: {
+          self: string;
+        };
+        metadata: {
+          requestId: string;
+          timestamp: string;
+        } & {
+          [key: string]: unknown;
+        };
+      };
+      relationships?: {
+        [key: string]: unknown;
+      };
+      meta?: {
+        [key: string]: unknown;
+      };
+      links?: {
+        [key: string]: string;
+      };
+    };
+    AuthSingleResponse: {
+      data: {
+        /** @enum {string} */
+        type: "auth";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          data: {
+            /** @enum {string} */
+            type: "user";
+            /** Format: uuid */
+            id: string;
+            /**
+             * User
+             * @description User response schema
+             */
+            attributes: {
+              /** Format: uuid */
+              id: string;
+              name: string | null;
+              email: string | null;
+              /** @enum {string} */
+              role: "user" | "admin" | "lawyer";
+              /** Format: date-time */
+              emailVerifiedAt: string | null;
+              userAgent: string | null;
+              lastIp: string | null;
+              isAnonymous: boolean;
+              age: number | null;
+              /** @enum {string|null} */
+              gender:
+                | "male"
+                | "female"
+                | "non_binary"
+                | "prefer_not_to_say"
+                | "other"
+                | null;
+              country: string | null;
+              city: string | null;
+              phoneNumber: string | null;
+              occupation: string | null;
+              bio: string | null;
+              profilePicture: string | null;
+              isFirstLogin: boolean;
+              isOnboarded: boolean;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+            relationships?: {
+              [key: string]: unknown;
+            };
+            meta?: {
+              [key: string]: unknown;
+            };
+            links?: {
+              [key: string]: string;
+            };
+          };
+          links: {
+            self: string;
+          };
+          metadata: {
+            requestId: string;
+            timestamp: string;
+          } & {
+            [key: string]: unknown;
+          };
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      };
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+      } & {
+        [key: string]: unknown;
+      };
+    };
+    AuthCollectionResponse: {
+      data: {
+        /** @enum {string} */
+        type: "auth";
+        /** Format: uuid */
+        id: string;
+        attributes: {
+          data: {
+            /** @enum {string} */
+            type: "user";
+            /** Format: uuid */
+            id: string;
+            /**
+             * User
+             * @description User response schema
+             */
+            attributes: {
+              /** Format: uuid */
+              id: string;
+              name: string | null;
+              email: string | null;
+              /** @enum {string} */
+              role: "user" | "admin" | "lawyer";
+              /** Format: date-time */
+              emailVerifiedAt: string | null;
+              userAgent: string | null;
+              lastIp: string | null;
+              isAnonymous: boolean;
+              age: number | null;
+              /** @enum {string|null} */
+              gender:
+                | "male"
+                | "female"
+                | "non_binary"
+                | "prefer_not_to_say"
+                | "other"
+                | null;
+              country: string | null;
+              city: string | null;
+              phoneNumber: string | null;
+              occupation: string | null;
+              bio: string | null;
+              profilePicture: string | null;
+              isFirstLogin: boolean;
+              isOnboarded: boolean;
+              /** Format: date-time */
+              createdAt: string;
+              /** Format: date-time */
+              updatedAt: string;
+            };
+            relationships?: {
+              [key: string]: unknown;
+            };
+            meta?: {
+              [key: string]: unknown;
+            };
+            links?: {
+              [key: string]: string;
+            };
+          };
+          links: {
+            self: string;
+          };
+          metadata: {
+            requestId: string;
+            timestamp: string;
+          } & {
+            [key: string]: unknown;
+          };
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      }[];
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        /** @default {} */
+        availableFilters: {
+          [key: string]: unknown;
+        };
+        sortOptions: {
+          fields: string[];
+          default: string;
+          /** @enum {string} */
+          direction: "asc" | "desc";
+        };
+      };
+    };
     /**
      * RegisterRequest
      * @description Request schema for user registration
@@ -3059,6 +3618,10 @@ export interface components {
     };
     VerifyEmailRequest: {
       token: string;
+    };
+    ResendVerificationRequest: {
+      /** Format: email */
+      email: string;
     };
     /**
      * AuthUser
@@ -3106,13 +3669,77 @@ export interface components {
       message: string;
       deliveryEstimate: number;
     };
-    EmailVerificationStatus: {
-      /** @description A human-readable status message. */
-      message: string;
-    };
     RefreshTokenSelect: {
       /** @description The new access token (JWT) */
       token: string;
+    };
+    /** @enum {string} */
+    UserRole: "admin" | "user" | "partner";
+    BaseTokenPayload: {
+      sub: string;
+      sid: string;
+      aud: string;
+      iss: string;
+    };
+    AccessPayload: {
+      sub: string;
+      sid: string;
+      aud: string;
+      iss: string;
+      /** @enum {string} */
+      type: "access";
+      /** @enum {string} */
+      role: "admin" | "user" | "partner";
+    };
+    RefreshPayload: {
+      sub: string;
+      sid: string;
+      aud: string;
+      iss: string;
+      /** @enum {string} */
+      type: "refresh";
+    };
+    AuthPayload:
+      | {
+          sub: string;
+          sid: string;
+          aud: string;
+          iss: string;
+          /** @enum {string} */
+          type: "access";
+          /** @enum {string} */
+          role: "admin" | "user" | "partner";
+        }
+      | {
+          sub: string;
+          sid: string;
+          aud: string;
+          iss: string;
+          /** @enum {string} */
+          type: "refresh";
+        };
+    TokenGenerationArgs: {
+      userId: string;
+      sessionId: string;
+      /** @enum {string} */
+      role: "admin" | "user" | "partner";
+    };
+    AuthEventQuery: {
+      /** @default 1 */
+      page: number;
+      /** @default 10 */
+      limit: number;
+      sort?: string;
+      /**
+       * @default desc
+       * @enum {string}
+       */
+      order: "asc" | "desc";
+      q?: string;
+      /** @default 0 */
+      offset: number | null;
+      eventType?: string;
+      userId?: string;
     };
     /**
      * ChatSession

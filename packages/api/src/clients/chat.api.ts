@@ -11,6 +11,10 @@ import type { components } from "../generated/api.types";
 export type Chat = components["schemas"]["Chat"];
 export type NewChat = components["schemas"]["NewChat"];
 export type UpdateChat = components["schemas"]["UpdateChat"];
+
+export interface UpdateChatArgs extends UpdateChat {
+  id: string;
+}
 export type ChatResource = components["schemas"]["ChatResource"];
 export type ChatSingleResponse = components["schemas"]["ChatSingleResponse"];
 export type ChatsCollectionResponse =
@@ -112,9 +116,11 @@ export class ChatApiClient extends BaseApiClient {
       },
     );
 
-    return this.unpackCollection(response, {
+    const unpacked = this.unpackCollection(response, {
       errMsg: "Invalid chats data received from the server",
     });
+
+    return unpacked.data;
   }
 
   public async getChatById(
@@ -153,9 +159,11 @@ export class ChatApiClient extends BaseApiClient {
       headers: { ...this.defaultHeaders, ...options.headers },
     });
 
-    return this.unpackCollection(response, {
+    const unpacked = this.unpackCollection(response, {
       errMsg: "Invalid messages data received from the server",
     });
+
+    return unpacked.data;
   }
 
   public async sendMessage(
@@ -248,7 +256,7 @@ export class ChatApiClient extends BaseApiClient {
   }
 
   public async updateChat(
-    { id, title }: UpdateChat,
+    { id, title }: UpdateChatArgs,
     options: { headers?: Record<string, string> } = {},
   ): Promise<ChatResult> {
     const response = await this.api.request<ChatSingleResponse>(

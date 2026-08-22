@@ -15,13 +15,29 @@ export type UserResource = components["schemas"]["UserResource"];
 export type UserSingleResponse = components["schemas"]["UserSingleResponse"];
 export type UserMetadata = UserSingleResponse["metadata"];
 export type UserResult = ApiResource<User, UserMetadata>;
-export type ResetPasswordRequest =
-  components["schemas"]["ResetPasswordRequest"];
+export type NewPasswordRequest = components["schemas"]["NewPasswordRequest"];
 export type VerifyEmailRequest = components["schemas"]["VerifyEmailRequest"];
 export type ResetPasswordResult = {
   message: string;
   deliveryEstimate: number;
 };
+export type EmailVerificationStatus =
+  components["schemas"]["EmailVerificationStatus"];
+export type EmailVerificationStatusSingleResponse =
+  components["schemas"]["EmailVerificationStatusSingleResponse"];
+export type EmailVerificationStatusMetadata =
+  components["schemas"]["EmailVerificationStatusSingleResponse"]["metadata"];
+export type EmailVerificationStatusResult = ApiResource<
+  EmailVerificationStatus,
+  EmailVerificationStatusMetadata
+>;
+export type UserRole = components["schemas"]["UserRole"];
+export type BaseTokenPayload = components["schemas"]["BaseTokenPayload"];
+export type AccessPayload = components["schemas"]["AccessPayload"];
+export type RefreshPayload = components["schemas"]["RefreshPayload"];
+export type AuthPayload = components["schemas"]["AuthPayload"];
+export type TokenGenerationArgs = components["schemas"]["TokenGenerationArgs"];
+export type AuthEventQuery = components["schemas"]["AuthEventQuery"];
 
 /**
  * Validation Schemas (Zod / OpenAPI Runtime Schemas)
@@ -86,7 +102,9 @@ export class AuthApiClient extends BaseApiClient {
     });
   }
 
-  public async requestReset(email: string): Promise<ResetPasswordResult> {
+  public async resetPasswordRequest(
+    email: string,
+  ): Promise<ResetPasswordResult> {
     return this.api.request<ResetPasswordResult>(
       AUTH_API_ROUTES.REQUEST_RESET,
       {
@@ -110,6 +128,22 @@ export class AuthApiClient extends BaseApiClient {
       method: "POST",
       headers: this.defaultHeaders,
       data: { token },
+    });
+  }
+
+  public async resendVerification(
+    email: string,
+  ): Promise<EmailVerificationStatusResult> {
+    const response =
+      await this.api.request<EmailVerificationStatusSingleResponse>(
+        `${this.path}/resend-verification`,
+        {
+          method: "POST",
+          data: { email },
+        },
+      );
+    return this.unpackSingle(response, {
+      errMsg: "Failed to queue verification email",
     });
   }
 }

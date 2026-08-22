@@ -1,50 +1,29 @@
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
-import { useLogin } from "@mah/api/src/hooks/use-auth";
-import { AuthForm } from "~/feature/auth/components/auth-form";
-import { AuthAlternative } from "~/feature/auth/components/auth-alternative";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import {
-  type LoginRequest,
-  loginRequestSchema,
-} from "@mah/api/src/clients/auth.api";
+import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
+import { AuthForm } from "~/feature/auth/components/AuthForm";
+import { AuthAlternative } from "~/feature/auth/components/AuthAlternative";
+import { type LoginRequest } from "@mah/api/src/clients/auth.api";
 
 export const LoginScreen = () => {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
-  const loginMutation = useLogin();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginRequest>({
-    resolver: zodResolver(loginRequestSchema),
-  });
+  const { login } = useAuthMutations();
 
   const onSubmit = (data: LoginRequest) => {
-    loginMutation.mutate(data, {
+    login.mutate(data, {
       onSuccess: () => {
-        navigate("/");
-      },
-      onError: () => {
-        toast.error(t("login.error"));
+        navigate("/app", {
+          state: { email: data.email },
+          replace: true,
+        });
       },
     });
   };
 
   return (
     <>
-      <AuthForm
-        mode="login"
-        handleSubmit={handleSubmit(onSubmit)}
-        isLoading={isSubmitting || loginMutation.isPending}
-        error={loginMutation.error ? t("login.invalidCredentials") : null}
-        register={register}
-        errors={errors}
-      />
+      <AuthForm mode="login" onSubmit={onSubmit} isLoading={login.isPending} />
       <AuthAlternative
         to="/signup"
         text={t("login.signUpLink")}

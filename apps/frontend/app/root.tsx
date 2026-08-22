@@ -15,6 +15,8 @@ import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken, decodeJWT } from "@mah/api/src/api/api.utils";
+import { configureApi } from "@mah/api/src/api/api.config";
+import { appConfig } from "~/config";
 import {
   getPageTitle,
   isAuthRoute,
@@ -24,6 +26,10 @@ import { UserProvider } from "~/context/user-provider";
 import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { useEffect } from "react";
 import i18n from "~/lib/i18n";
+
+configureApi({
+  baseURL: appConfig.api.baseURL,
+});
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
