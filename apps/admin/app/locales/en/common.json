@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "approve": "Approve",
+    "reject": "Reject",
+    "invite": "Invite",
+    "resend": "Resend",
+    "revoke": "Revoke",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "confirm": "Confirm"
+  },
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "expired": "Expired",
+    "revoked": "Revoked",
+    "draft": "Draft",
+    "submitted": "Submitted",
+    "underReview": "Under Review",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "tooShort": "This field is too short",
+    "tooLong": "This field is too long"
+  },
+  "feedback": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "success": "Done",
+    "noResults": "No results found"
+  }
+}

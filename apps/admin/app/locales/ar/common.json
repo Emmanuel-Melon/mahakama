@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "invite": "دعوة",
+    "resend": "إعادة الإرسال",
+    "revoke": "إلغاء الدعوة",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "back": "رجوع",
+    "confirm": "تأكيد"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "accepted": "مقبولة",
+    "expired": "منتهية الصلاحية",
+    "revoked": "ملغاة",
+    "draft": "مسودة",
+    "submitted": "تم الإرسال",
+    "underReview": "قيد المراجعة",
+    "approved": "مُعتمد",
+    "rejected": "مرفوض"
+  },
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "أدخل بريدًا إلكترونيًا صالحًا",
+    "tooShort": "هذا الحقل قصير جدًا",
+    "tooLong": "هذا الحقل طويل جدًا"
+  },
+  "feedback": {
+    "loading": "جارٍ التحميل…",
+    "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+    "success": "تم",
+    "noResults": "لا توجد نتائج"
+  }
+}

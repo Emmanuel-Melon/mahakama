@@ -1,5 +1,5 @@
-import { User } from "~/context/context.types";
-import { useUser } from "~/context/user";
+import type { User } from "@mah/api/src/clients/auth.api";
+import { useUser } from "~/context/user-provider";
 import { ALL_NAV_LINKS } from "./nav.config";
 
 export const NAV_PERMISSIONS: Record<string, string[]> = {
