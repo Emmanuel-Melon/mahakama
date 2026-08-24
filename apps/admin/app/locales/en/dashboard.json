@@ -1,0 +1,15 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overview of activity across Mahakama",
+  "widgets": {
+    "pendingInvites": {
+      "label": "Pending Invites",
+      "cta": "View invites"
+    },
+    "profilesAwaitingReview": {
+      "label": "Profiles Awaiting Review",
+      "cta": "Review profiles"
+    }
+  },
+  "emptyState": "Nothing needs your attention right now."
+}
