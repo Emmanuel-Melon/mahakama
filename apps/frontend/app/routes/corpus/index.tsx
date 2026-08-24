@@ -49,7 +49,8 @@ export async function loader({ context }: Route.LoaderArgs) {
 
 export default function LegalDatabase({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
-  const { data: documents = [], isLoading } = useCorpusEntries();
+  const { data: documentsPage, isLoading } = useCorpusEntries();
+  const documents = documentsPage?.data ?? [];
   const [displayMode, setDisplayMode] = useState<"grid" | "list">("grid");
 
   return (

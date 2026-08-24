@@ -14,7 +14,7 @@ export function meta({}: Route.MetaArgs) {
 export default function ChatDetailsPage({ params }: Route.ComponentProps) {
   const { chatId } = params;
   const { data: chat, isLoading, error } = useChat(chatId);
-  const { data: messages, isLoading: messagesLoading } = useMessages(
+  const { data: messagesPage, isLoading: messagesLoading } = useMessages(
     chat?.id || "",
   );
   return (
@@ -22,7 +22,7 @@ export default function ChatDetailsPage({ params }: Route.ComponentProps) {
       chat={chat}
       isLoading={isLoading}
       error={error}
-      messages={messages || []}
+      messages={messagesPage?.data ?? []}
       messagesLoading={messagesLoading}
     />
   );

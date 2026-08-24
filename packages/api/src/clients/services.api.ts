@@ -18,6 +18,10 @@ export type LegalServiceResult = ApiResource<
   LegalService,
   LegalServiceMetadata
 >;
+export type LegalServiceCollection = ApiCollection<
+  LegalService,
+  LegalServicesCollectionResponse["metadata"]
+>;
 
 export class ServicesApiClient extends BaseApiClient {
   protected readonly path = "/v1/services";
@@ -30,7 +34,7 @@ export class ServicesApiClient extends BaseApiClient {
     category?:
       "government" | "legal-aid" | "dispute-resolution" | "specialized",
     options: { headers?: Record<string, string> } = {},
-  ): Promise<LegalService[]> {
+  ): Promise<LegalServiceCollection> {
     let url = this.path;
 
     if (category) {

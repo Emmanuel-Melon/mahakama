@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   notificationsApi,
-  type Notification,
+  type NotificationCollection,
 } from "../clients/notifications.api";
 import type { ApiClientError } from "../api/api.errors";
 
@@ -33,13 +33,13 @@ export const notificationsQueries = {
 };
 
 export function useNotifications() {
-  return useQuery<Notification[], ApiClientError>(
+  return useQuery<NotificationCollection, ApiClientError>(
     notificationsQueries.notifications(),
   );
 }
 
 export function useNotificationsSimple() {
-  return useQuery<Notification[], ApiClientError>(
+  return useQuery<NotificationCollection, ApiClientError>(
     notificationsQueries.notifications(),
   );
 }

@@ -1,5 +1,5 @@
 import type { Route } from "./+types/index";
-import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
+import { AppTutorial } from "~/feature/app/AppTutorial";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [
@@ -41,5 +41,5 @@ export function meta({ loaderData }: Route.MetaArgs) {
 }
 
 export default function Home() {
-  return <NewChatScreen />;
+  return <AppTutorial />;
 }

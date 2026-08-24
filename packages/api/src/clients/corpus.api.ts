@@ -1,5 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
-import type { ApiResource } from "../api/api.types";
+import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import { CORPUS_API_ROUTES } from "../api.routes";
 import {
@@ -18,6 +18,10 @@ export type CorpusCollectionResponse =
 
 export type CorpusMetadata = CorpusSingleResponse["metadata"];
 export type CorpusResult = ApiResource<Corpus, CorpusMetadata>;
+export type CorpusCollection = ApiCollection<
+  Corpus,
+  CorpusCollectionResponse["metadata"]
+>;
 
 export type CorpusIngestionEvent =
   | {
@@ -61,7 +65,7 @@ export class CorpusApiClient extends BaseApiClient {
 
   public async getCorpusEntries(
     options: { headers?: Record<string, string> } = {},
-  ): Promise<Corpus[]> {
+  ): Promise<CorpusCollection> {
     const response = await this.api.request<CorpusCollectionResponse>(
       this.path,
       {

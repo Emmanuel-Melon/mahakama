@@ -22,7 +22,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     const cookieHeader = request.headers.get("Cookie");
     const cookies = parseCookies(cookieHeader);
     const token = cookies.token;
-    const chats = await chatApi.getChats({
+    const { data: chats } = await chatApi.getChats({
       headers: {
         Authorization: `Bearer ${token}`,
       },

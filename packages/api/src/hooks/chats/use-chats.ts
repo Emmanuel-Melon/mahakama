@@ -3,6 +3,8 @@ import {
   chatApi,
   type Chat,
   type ChatMessage,
+  type ChatCollection,
+  type ChatMessagesCollection,
   type CreateChatRequest,
   type SendMessageRequest,
   type ReplyStatus,
@@ -74,8 +76,8 @@ export const chatsQueries = {
     queryKey: chatsKeys.messages(chatId),
     queryFn: () => chatApi.getChatMessages(chatId),
     enabled: !!chatId,
-    refetchInterval: (query: { state: { data?: ChatMessage[] } }) => {
-      const messages = query.state.data;
+    refetchInterval: (query: { state: { data?: ChatMessagesCollection } }) => {
+      const messages = query.state.data?.data;
       const lastMessage = messages?.[messages.length - 1];
       return lastMessage && isReplyAwaiting(lastMessage)
         ? REPLY_POLL_INTERVAL_MS
@@ -85,13 +87,15 @@ export const chatsQueries = {
 };
 
 export const useChats = () =>
-  useQuery<Chat[], ApiClientError>(chatsQueries.chats());
+  useQuery<ChatCollection, ApiClientError>(chatsQueries.chats());
 
 export const useChat = (id: string) =>
   useQuery<Chat, ApiClientError>(chatsQueries.chat(id));
 
 export const useMessages = (chatId: string) =>
-  useQuery<ChatMessage[], ApiClientError>(chatsQueries.messages(chatId));
+  useQuery<ChatMessagesCollection, ApiClientError>(
+    chatsQueries.messages(chatId),
+  );
 
 export const useChatMutations = () => {
   const createChat = useAppMutation<Chat, ApiClientError, CreateChatRequest>({

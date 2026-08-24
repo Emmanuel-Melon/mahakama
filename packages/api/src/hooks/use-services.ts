@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import {
   servicesApi,
-  type LegalService,
+  type LegalServiceCollection,
   type LegalServiceResult,
 } from "../clients/services.api";
 import type { ApiClientError } from "../api/api.errors";
@@ -39,7 +39,7 @@ export const servicesQueries = {
 export function useServices(
   category?: "government" | "legal-aid" | "dispute-resolution" | "specialized",
 ) {
-  return useQuery<LegalService[], ApiClientError>(
+  return useQuery<LegalServiceCollection, ApiClientError>(
     servicesQueries.services(category),
   );
 }
