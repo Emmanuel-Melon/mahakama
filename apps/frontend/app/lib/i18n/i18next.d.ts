@@ -1,3 +1,4 @@
+import { appI18n } from "~/feature/app/AppConfig";
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { chatsI18n } from "~/feature/chats/ChatsConfig";
 import { corpusI18n } from "~/feature/corpus/CorpusConfig";
@@ -12,6 +13,7 @@ declare module "i18next" {
     defaultNS: "common";
     resources: {
       common: typeof commonEn;
+      app: typeof appI18n.resources.en;
       auth: typeof authI18n.resources.en;
       chats: typeof chatsI18n.resources.en;
       documents: typeof corpusI18n.resources.en;

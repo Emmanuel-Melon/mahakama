@@ -3,6 +3,7 @@ import type { Resource } from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import { initReactI18next } from "react-i18next";
 
+import { appI18n } from "~/feature/app/AppConfig";
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { chatsI18n } from "~/feature/chats/ChatsConfig";
 import { corpusI18n } from "~/feature/corpus/CorpusConfig";
@@ -15,6 +16,7 @@ import commonAr from "~/locales/ar/common.json";
 import commonEn from "~/locales/en/common.json";
 
 const i18nConfigs = [
+  appI18n,
   authI18n,
   chatsI18n,
   corpusI18n,
