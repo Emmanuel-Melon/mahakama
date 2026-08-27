@@ -1,5 +1,6 @@
 {
   "nav": {
+    "group": "Application",
     "dashboard": "Dashboard",
     "corpus": "Corpus",
     "lawyerInvites": "Lawyer Invites",

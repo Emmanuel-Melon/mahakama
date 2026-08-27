@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 
-import { type LucideIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,25 +10,24 @@ import {
   SidebarHeader,
 } from "../sidebar";
 import { SidebarNav } from "../molecules/SidebarNav";
-import { OnboardingProgress } from "../molecules/OnboardingProgress";
 import { NavUser } from "./NavUser";
-import { useUser } from "~/context/user-provider";
-
-export interface NavLinkItem {
-  id: string;
-  title: string;
-  url: string;
-  icon: LucideIcon;
-  badge?: number | string;
-}
+import type { NavLinkItem } from "@mah/client/nav";
+import type { User } from "@mah/api/src/clients/users.api";
 
 interface AppSidebarProps {
   navLinks: NavLinkItem[];
+  user: User | null;
+  onLogout: () => void;
+  footer?: React.ReactNode;
 }
 
-export function AppSidebar({ navLinks }: AppSidebarProps) {
+export function AppSidebar({
+  navLinks,
+  user,
+  onLogout,
+  footer,
+}: AppSidebarProps) {
   const { t } = useTranslation("common");
-  const { user, logout } = useUser();
   return (
     <Sidebar variant="inset">
       <SidebarHeader></SidebarHeader>
@@ -42,8 +40,8 @@ export function AppSidebar({ navLinks }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="py-4">
-        <OnboardingProgress />
-        <NavUser user={user} onLogout={logout} />
+        {footer}
+        <NavUser user={user} onLogout={onLogout} />
       </SidebarFooter>
     </Sidebar>
   );
