@@ -1,0 +1,25 @@
+{
+  "title": "Corpus Upload",
+  "subtitle": "Upload PDF documents to the legal corpus",
+  "dropZone": {
+    "title": "Drop PDFs here or click to browse",
+    "description": "Accepts .pdf files up to 25 MB. Files are uploaded one at a time.",
+    "browse": "Browse Files"
+  },
+  "upload": {
+    "uploading": "Uploading…",
+    "completed": "Completed",
+    "failed": "Failed",
+    "progress": "{{percentage}}% — chunk {{chunk}}/{{totalChunks}}",
+    "queued": "Queued"
+  },
+  "entries": {
+    "title": "Recent Entries",
+    "empty": "No corpus entries yet.",
+    "uploaded": "Uploaded {{date}}"
+  },
+  "actions": {
+    "clear": "Clear All",
+    "retry": "Retry"
+  }
+}

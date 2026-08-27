@@ -1,4 +1,4 @@
-import { LayoutDashboard, UserPlus, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, UserPlus, ShieldCheck, BookOpen } from "lucide-react";
 import type { NavLinkItem } from "@mah/client/nav";
 
 export const ADMIN_NAV_LINKS: NavLinkItem[] = [
@@ -7,6 +7,12 @@ export const ADMIN_NAV_LINKS: NavLinkItem[] = [
     title: "nav.dashboard",
     url: "/",
     icon: LayoutDashboard,
+  },
+  {
+    id: "nav-corpus",
+    title: "nav.corpus",
+    url: "/corpus",
+    icon: BookOpen,
   },
   {
     id: "nav-lawyer-invites",

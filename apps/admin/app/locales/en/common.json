@@ -1,4 +1,10 @@
 {
+  "nav": {
+    "dashboard": "Dashboard",
+    "corpus": "Corpus",
+    "lawyerInvites": "Lawyer Invites",
+    "lawyerProfiles": "Lawyer Profiles"
+  },
   "actions": {
     "save": "Save",
     "cancel": "Cancel",

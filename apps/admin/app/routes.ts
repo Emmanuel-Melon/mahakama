@@ -5,10 +5,14 @@ import {
   index,
 } from "@react-router/dev/routes";
 import { dashboardRoutes } from "./feature/dashboard/DashboardConfig";
+import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
+import { corpusRoutes } from "./feature/corpus/CorpusConfig";
 import type { RouteDefinition } from "@mah/client/nav";
 
 export default [
   ...toRouteConfig(dashboardRoutes),
+  ...toRouteConfig(lawyersRoutes),
+  ...toRouteConfig(corpusRoutes),
 ] satisfies RouteConfig;
 
 function toRouteConfig<K extends string>(feature: RouteDefinition<K>) {

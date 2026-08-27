@@ -1,4 +1,10 @@
 {
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "corpus": "الم Корпус",
+    "lawyerInvites": "دعوات المحامين",
+    "lawyerProfiles": "ملفات المحامين"
+  },
   "actions": {
     "save": "حفظ",
     "cancel": "إلغاء",

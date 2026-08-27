@@ -14,7 +14,9 @@ export function LoadingState({
   className = "",
 }: LoadingStateProps) {
   return (
-    <fieldset className={`border-2 border-gray-900 rounded-lg p-6 bg-white ${className}`}>
+    <fieldset
+      className={`border-2 border-gray-900 rounded-lg p-6 bg-white ${className}`}
+    >
       {label && (
         <legend className="px-3 text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-600 border-2 border-gray-900 rounded-md">
           {label}
