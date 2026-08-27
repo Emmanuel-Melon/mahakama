@@ -11,6 +11,7 @@
   "dependencies": {
     "@mah/api": "*",
     "@mah/client": "*",
+    "@mah/ui": "*",
     "@react-router/node": "^8",
     "@react-router/serve": "^8",
     "@tanstack/react-query": "^5.102.6",

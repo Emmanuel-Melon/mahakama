@@ -9,8 +9,12 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import i18n from "~/lib/i18n";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
+import { UserProvider } from "~/context/user-provider";
+import { AppShell } from "@mah/ui/components/organisms/AppShell";
+import { useNavLinks } from "~/lib/nav/nav.permissions";
+import { useUser } from "~/context/user-provider";
+import i18n from "~/lib/i18n";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,8 +50,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <QueryClientProviderWrapper>
-      <Outlet />
+      <UserProvider user={null}>
+        <AdminShell>
+          <Outlet />
+        </AdminShell>
+      </UserProvider>
     </QueryClientProviderWrapper>
+  );
+}
+
+function AdminShell({ children }: { children: React.ReactNode }) {
+  const navLinks = useNavLinks();
+  const { user, logout } = useUser();
+
+  return (
+    <AppShell
+      pageTitle="Mahakama Admin"
+      navLinks={navLinks}
+      user={user}
+      onLogout={logout}
+    >
+      {children}
+    </AppShell>
   );
 }
 

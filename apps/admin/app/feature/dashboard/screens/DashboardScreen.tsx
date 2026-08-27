@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Button } from "@mah/ui/components/Button";
 
 export const DashboardScreen = () => {
   const { t } = useTranslation("dashboard");
@@ -17,6 +18,9 @@ export const DashboardScreen = () => {
         {/* awaiting-review count wired up once lawyer-profiles hooks exist */}
         <h2>{t("widgets.profilesAwaitingReview.label")}</h2>
       </div>
+      <Button className="bg-red-500">
+        {t("widgets.profilesAwaitingReview.label")}
+      </Button>
     </div>
   );
 };
