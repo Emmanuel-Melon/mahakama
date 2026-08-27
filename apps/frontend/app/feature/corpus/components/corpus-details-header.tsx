@@ -1,9 +1,9 @@
 import { FileText, Download, Share2, Bookmark, Calendar } from "lucide-react";
-import { PageDetailHeader } from "~/layouts/page-detail-header";
-import { type Document } from "@mah/api/src/clients/documents.api";
+import { PageDetailHeader } from "@mah/ui";
+import { type Corpus } from "@mah/api/src/clients/documents.api";
 
 interface CorpusDetailsHeaderProps {
-  document: Document;
+  document: Corpus;
 }
 
 export function CorpusDetailsHeader({ document }: CorpusDetailsHeaderProps) {

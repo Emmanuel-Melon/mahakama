@@ -8,9 +8,16 @@ import {
   useLoaderData,
   useLocation,
 } from "react-router";
-import { AppShell } from "~/layouts/AppShell";
-import { WebsiteLayout } from "~/layouts/WebsiteLayout";
-import { AuthLayout } from "~/layouts/AuthLayout";
+import { AppShell as GenericAppShell } from "@mah/ui/components/organisms/AppShell";
+import { WebsiteLayout } from "@mah/ui/components/organisms/WebsiteLayout";
+import { AuthLayout } from "@mah/ui/components/organisms/AuthLayout";
+import { Toaster } from "sonner";
+import { CountryProvider } from "~/context/country-context";
+import { NavigationLoader } from "~/components/atoms/navigation-loader";
+import { useNavLinks } from "~/hooks/use-nav-links";
+import { useUser } from "~/context/user-provider";
+import { HeaderActions } from "~/components/organisms/header-actions";
+import { OnboardingProgress } from "~/components/molecules/onboarding-progress";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
@@ -70,6 +77,33 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+  );
+}
+
+interface AppShellProps {
+  children: React.ReactNode;
+  pageTitle: string;
+}
+
+function AppShell({ children, pageTitle }: AppShellProps) {
+  const navLinks = useNavLinks();
+  const { user, logout } = useUser();
+
+  return (
+    <CountryProvider>
+      <Toaster />
+      <NavigationLoader />
+      <GenericAppShell
+        pageTitle={pageTitle}
+        navLinks={navLinks}
+        user={user}
+        onLogout={logout}
+        headerRightContent={<HeaderActions />}
+        sidebarFooter={<OnboardingProgress />}
+      >
+        {children}
+      </GenericAppShell>
+    </CountryProvider>
   );
 }
 

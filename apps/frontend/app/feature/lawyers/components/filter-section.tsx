@@ -1,6 +1,6 @@
 import { FilterSelector } from "./filter-selector";
 import { FilterOptions } from "./filter-options";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Button } from "~/components/ui/button";
 import { Badge } from "~/components/ui/badge";
 import { X, Filter } from "lucide-react";

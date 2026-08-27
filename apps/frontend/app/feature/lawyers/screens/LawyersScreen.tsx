@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import { LawyersList } from "~/feature/lawyers/components/lawyers-list";
-import { HeroSection } from "~/layouts/HeroSection";
+import { HeroSection } from "@mah/ui";
 import { Gavel, Users } from "lucide-react";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";

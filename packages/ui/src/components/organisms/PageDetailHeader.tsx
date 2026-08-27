@@ -1,8 +1,7 @@
-import { Button } from "~/components/ui/button";
-import { CardWithLabel } from "~/components/ui/card-with-label";
-import { IconContainer } from "~/components/atoms/icon-container";
-import { Badge } from "~/components/ui/badge";
-import { MahButton, type MahAction } from "~/components/molecules/mah-button";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
+import { IconContainer } from "@mah/ui/components/IconContainer";
+import { Badge } from "@mah/ui/components/badge";
+import { MahButton } from "@mah/ui/components/molecules/MahButton";
 import type { LucideIcon } from "lucide-react";
 
 interface ActionButton {

@@ -1,4 +1,4 @@
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 interface CorpusMetadataProps {
   type: string;

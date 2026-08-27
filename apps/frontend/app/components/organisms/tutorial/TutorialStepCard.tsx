@@ -85,7 +85,9 @@ export const TutorialStepCard = ({
           >
             <Link to={href}>
               <Icon className="w-4 h-4" />
-              <span>{completed && completedLabel ? completedLabel : label}</span>
+              <span>
+                {completed && completedLabel ? completedLabel : label}
+              </span>
             </Link>
           </Button>
         ))}

@@ -1,8 +1,8 @@
 import React from "react";
-import { cn } from "~/lib/utils";
-import { HeroSectionAction } from "~/components/ui/hero-section-action";
-import { IconContainer } from "~/components/atoms/icon-container";
-import { SpecializationButton } from "~/components/ui/specialization-button";
+import { cn } from "@mah/ui/lib/utils";
+import { HeroSectionAction } from "@mah/ui/components/ui/hero-section-action";
+import { IconContainer } from "@mah/ui/components/IconContainer";
+import { SpecializationButton } from "@mah/ui/components/ui/specialization-button";
 import {
   ArrowRight,
   Scale,

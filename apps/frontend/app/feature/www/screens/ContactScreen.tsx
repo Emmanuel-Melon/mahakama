@@ -1,4 +1,4 @@
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Mail, Send, MapPin, Globe } from "lucide-react";
 
 export const ContactScreen = () => {

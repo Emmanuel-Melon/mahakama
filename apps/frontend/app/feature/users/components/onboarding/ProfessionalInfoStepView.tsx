@@ -1,6 +1,6 @@
 import { Briefcase } from "lucide-react";
 import { StepHeader } from "./StepHeader";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { LawyerProfessionalInfoStep } from "~/feature/users/components/LawyerProfessionalInfoStep";
 import type { User } from "@mah/api/src/clients/users.api";
 import type { RefObject } from "react";

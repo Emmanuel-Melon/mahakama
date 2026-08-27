@@ -1,5 +1,5 @@
 import { User as UserIcon } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { BasicInfoStep } from "~/feature/users/components/BasicInfoStep";
 import { LawyerBasicInfoStep } from "~/feature/users/components/LawyerBasicInfoStep";
 import type { User } from "@mah/api/src/clients/users.api";

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Button } from "~/components/ui/button";
 import { AuthSocialButtons } from "./AuthSocialButtons";
 import { User, Lock, Mail, Loader2 } from "lucide-react";

@@ -1,5 +1,5 @@
 import { StylizedList } from "~/components/ui/stylized-list";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import {
   Mail as MailIcon,
   Phone as PhoneIcon,

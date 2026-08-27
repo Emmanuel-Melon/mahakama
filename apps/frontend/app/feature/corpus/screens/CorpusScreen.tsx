@@ -4,7 +4,7 @@ import { Library } from "lucide-react";
 import EmptyState from "~/components/async-state/EmptyState";
 import { PageLoading } from "~/components/molecules/page-loading";
 import { type Corpus } from "@mah/api/src/clients/corpus.api";
-import { HeroSection } from "~/layouts/HeroSection";
+import { HeroSection } from "@mah/ui";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface CorpusScreenProps extends AsyncState {

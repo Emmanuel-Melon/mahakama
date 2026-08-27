@@ -61,7 +61,8 @@
     "vaul": "^1.1.2",
     "zod": "^3.25.76",
     "@mah/api": "*",
-    "@mah/client": "*"
+    "@mah/client": "*",
+    "@mah/ui": "*"
   },
   "devDependencies": {
     "@netlify/vite-plugin": "^2.7.19",

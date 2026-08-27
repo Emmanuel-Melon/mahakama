@@ -1,5 +1,5 @@
-import { PageHeader } from "~/layouts/PageHeader";
-import { PageDetailHeader } from "~/layouts/page-detail-header";
+import { PageHeader } from "@mah/ui";
+import { PageDetailHeader } from "@mah/ui";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
 import {

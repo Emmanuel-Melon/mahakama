@@ -3,7 +3,7 @@ import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { cn } from "@mah/ui/lib/utils";
-import { Button } from "@mah/ui/components/button";
+import { Button } from "@mah/ui";
 
 function Dialog({
   ...props

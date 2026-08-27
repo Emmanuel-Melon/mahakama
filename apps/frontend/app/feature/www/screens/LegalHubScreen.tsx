@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Building2, Scale, HeartHandshake, Shield, Search } from "lucide-react";
-import { HeroSection } from "~/layouts/HeroSection";
+import { HeroSection } from "@mah/ui";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { ServicesList } from "~/feature/www/components/legal-hub/services-list";
 import type {
