@@ -45,13 +45,15 @@ export function EmptyState({
     : actions;
 
   return (
-    <fieldset className={`border-2 border-gray-900 rounded-lg p-6 bg-white ${className}`}>
+    <fieldset
+      className={`border-2 border-gray-900 rounded-lg p-6 bg-white ${className}`}
+    >
       {label && (
         <legend className="px-3 text-xs font-bold uppercase tracking-wider bg-yellow-400 text-gray-900 border-2 border-gray-900 rounded-md">
           {label}
         </legend>
       )}
-      
+
       <div className="flex flex-col items-center text-center py-8 px-4">
         {/* Empty Media Icon */}
         <div className="w-12 h-12 rounded-full bg-gray-100 border-2 border-gray-900 flex items-center justify-center mb-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">

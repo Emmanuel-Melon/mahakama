@@ -1,0 +1,42 @@
+{
+  "title": "Lawyer Profiles",
+  "subtitle": "Review and manage lawyer profile submissions",
+  "tabs": {
+    "all": "All",
+    "submitted": "Submitted",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "card": {
+    "submittedOn": "Submitted {{date}}",
+    "viewProfile": "View Profile"
+  },
+  "detail": {
+    "backToList": "Back to profiles",
+    "profileInfo": "Profile Information",
+    "specialization": "Specialization",
+    "experience": "Experience",
+    "location": "Location",
+    "hourlyRate": "Hourly Rate",
+    "bio": "Bio",
+    "education": "Education",
+    "documents": "Documents",
+    "noDocuments": "No documents uploaded.",
+    "reviewActions": "Review Actions",
+    "submittedAt": "Submitted",
+    "reviewedBy": "Reviewed by",
+    "reviewedAt": "Reviewed at",
+    "rejectionReason": "Rejection reason"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "confirmApprove": "Approve this lawyer?",
+    "confirmReject": "Reject this lawyer?",
+    "rejectReasonPlaceholder": "Reason for rejection (required)"
+  },
+  "empty": {
+    "title": "No profiles to review",
+    "description": "There are no lawyer profiles matching this filter."
+  }
+}

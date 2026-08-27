@@ -28,7 +28,7 @@ export const ErrorState = ({
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 py-12 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
       <div className="relative mb-8">
-        <div 
+        <div
           className={`w-16 h-16 rounded-lg border-2 border-gray-900 flex items-center justify-center mb-8 shadow-[3px_3px_0_0_#000] ${iconColor}`}
         >
           <Icon className="w-8 h-8 text-gray-900" />
