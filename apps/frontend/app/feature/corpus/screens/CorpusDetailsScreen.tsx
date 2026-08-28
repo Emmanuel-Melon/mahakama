@@ -1,4 +1,4 @@
-import { PageHeader } from "~/layouts/PageHeader";
+import { PageHeader } from "@mah/ui";
 import {
   CorpusDetailsHeader,
   CorpusHighlights,

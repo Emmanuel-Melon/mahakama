@@ -1,14 +1,7 @@
 import { useTranslation } from "react-i18next";
-import {
-  FileSearch,
-  Library,
-  MapPin,
-  MessagesSquare,
-} from "lucide-react";
+import { FileSearch, Library, MapPin, MessagesSquare } from "lucide-react";
 import { TutorialHeader } from "~/components/organisms/tutorial/TutorialHeader";
-import {
-  TutorialLayout,
-} from "~/components/organisms/tutorial/TutorialLayout";
+import { TutorialLayout } from "~/components/organisms/tutorial/TutorialLayout";
 import { useUser } from "~/context/user-provider";
 import { ChatsPaths } from "~/feature/chats/ChatsConfig";
 import { CorpusPaths } from "~/feature/corpus/CorpusConfig";

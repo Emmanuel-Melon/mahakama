@@ -17,5 +17,9 @@ export const CORPUS_API_ROUTES = {
 
 export const LAWYERS_API_ROUTES = {
   ROOT: "/v1/lawyers",
-  LAWYER: "/v1/lawyers/:lawyerId",
+  DIRECTORY: "/v1/lawyers/directory",
+  PROFILE: "/v1/lawyers/profile",
+  PROFILE_SUBMIT: "/v1/lawyers/profile/submit",
+  PROFILE_DOCUMENTS: "/v1/lawyers/profile/documents",
+  INVITES: "/v1/lawyers/invites",
 } as const;

@@ -1,0 +1,19 @@
+{
+  "title": "Consultations",
+  "empty": {
+    "title": "No consultations yet",
+    "description": "Requests you send or receive will show up here."
+  },
+  "status": {
+    "pending": "Pending",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "engaged": "Engaged",
+    "closed": "Closed"
+  },
+  "actions": {
+    "request": "Request consultation",
+    "accept": "Accept",
+    "decline": "Decline"
+  }
+}

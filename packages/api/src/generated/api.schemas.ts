@@ -62,15 +62,37 @@ const postV1corpus_Body = z
 const postV1lawyers_Body = z
   .object({
     id: z.string().uuid().optional(),
-    name: z.string().max(255),
-    email: z.string().max(255),
-    specialization: z.string().max(100),
-    experienceYears: z.number().int().gte(-2147483648).lte(2147483647),
-    rating: z.string().max(10).nullish(),
+    userId: z.string().uuid(),
+    status: z.enum(["draft", "submitted", "approved", "rejected"]).optional(),
+    specialization: z.string().max(100).nullish(),
+    experienceYears: z
+      .number()
+      .int()
+      .gte(-2147483648)
+      .lte(2147483647)
+      .nullish(),
     casesHandled: z.number().int().gte(-2147483648).lte(2147483647).optional(),
     isAvailable: z.boolean().optional(),
-    location: z.string().max(100),
-    languages: z.array(z.string()),
+    location: z.string().max(100).nullish(),
+    languages: z.array(z.string()).nullish(),
+    bio: z.string().nullish(),
+    barNumber: z.string().max(100).nullish(),
+    issuingAuthority: z.string().max(255).nullish(),
+    jurisdiction: z.string().max(100).nullish(),
+    education: z
+      .union([
+        z.string(),
+        z.number(),
+        z.boolean(),
+        z.unknown(),
+        z.record(z.unknown().nullable()),
+        z.array(z.unknown().nullable()),
+      ])
+      .optional(),
+    submittedAt: z.string().datetime({ offset: true }).nullish(),
+    reviewedBy: z.string().uuid().nullish(),
+    reviewedAt: z.string().datetime({ offset: true }).nullish(),
+    rejectionReason: z.string().nullish(),
     createdAt: z.string().datetime({ offset: true }).optional(),
     updatedAt: z.string().datetime({ offset: true }).optional(),
   })
@@ -78,15 +100,35 @@ const postV1lawyers_Body = z
 const putV1lawyersId_Body = z
   .object({
     id: z.string().uuid(),
-    name: z.string().max(255),
-    email: z.string().max(255),
-    specialization: z.string().max(100),
-    experienceYears: z.number().int().gte(-2147483648).lte(2147483647),
-    rating: z.string().max(10).nullable(),
+    userId: z.string().uuid(),
+    status: z.enum(["draft", "submitted", "approved", "rejected"]),
+    specialization: z.string().max(100).nullable(),
+    experienceYears: z
+      .number()
+      .int()
+      .gte(-2147483648)
+      .lte(2147483647)
+      .nullable(),
     casesHandled: z.number().int().gte(-2147483648).lte(2147483647),
     isAvailable: z.boolean(),
-    location: z.string().max(100),
-    languages: z.array(z.string()),
+    location: z.string().max(100).nullable(),
+    languages: z.array(z.string()).nullable(),
+    bio: z.string().nullable(),
+    barNumber: z.string().max(100).nullable(),
+    issuingAuthority: z.string().max(255).nullable(),
+    jurisdiction: z.string().max(100).nullable(),
+    education: z.union([
+      z.string(),
+      z.number(),
+      z.boolean(),
+      z.unknown(),
+      z.record(z.unknown().nullable()),
+      z.array(z.unknown().nullable()),
+    ]),
+    submittedAt: z.string().datetime({ offset: true }).nullable(),
+    reviewedBy: z.string().uuid().nullable(),
+    reviewedAt: z.string().datetime({ offset: true }).nullable(),
+    rejectionReason: z.string().nullable(),
     createdAt: z.string().datetime({ offset: true }),
     updatedAt: z.string().datetime({ offset: true }),
   })
@@ -740,23 +782,44 @@ const endpoints = makeApi([
               attributes: z
                 .object({
                   id: z.string().uuid(),
-                  name: z.string().max(255),
-                  email: z.string().max(255),
-                  specialization: z.string().max(100),
+                  userId: z.string().uuid(),
+                  status: z.enum([
+                    "draft",
+                    "submitted",
+                    "approved",
+                    "rejected",
+                  ]),
+                  specialization: z.string().max(100).nullable(),
                   experienceYears: z
                     .number()
                     .int()
                     .gte(-2147483648)
-                    .lte(2147483647),
-                  rating: z.string().max(10).nullable(),
+                    .lte(2147483647)
+                    .nullable(),
                   casesHandled: z
                     .number()
                     .int()
                     .gte(-2147483648)
                     .lte(2147483647),
                   isAvailable: z.boolean(),
-                  location: z.string().max(100),
-                  languages: z.array(z.string()),
+                  location: z.string().max(100).nullable(),
+                  languages: z.array(z.string()).nullable(),
+                  bio: z.string().nullable(),
+                  barNumber: z.string().max(100).nullable(),
+                  issuingAuthority: z.string().max(255).nullable(),
+                  jurisdiction: z.string().max(100).nullable(),
+                  education: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                  ]),
+                  submittedAt: z.string().datetime({ offset: true }).nullable(),
+                  reviewedBy: z.string().uuid().nullable(),
+                  reviewedAt: z.string().datetime({ offset: true }).nullable(),
+                  rejectionReason: z.string().nullable(),
                   createdAt: z.string().datetime({ offset: true }),
                   updatedAt: z.string().datetime({ offset: true }),
                 })
@@ -826,19 +889,35 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                name: z.string().max(255),
-                email: z.string().max(255),
-                specialization: z.string().max(100),
+                userId: z.string().uuid(),
+                status: z.enum(["draft", "submitted", "approved", "rejected"]),
+                specialization: z.string().max(100).nullable(),
                 experienceYears: z
                   .number()
                   .int()
                   .gte(-2147483648)
-                  .lte(2147483647),
-                rating: z.string().max(10).nullable(),
+                  .lte(2147483647)
+                  .nullable(),
                 casesHandled: z.number().int().gte(-2147483648).lte(2147483647),
                 isAvailable: z.boolean(),
-                location: z.string().max(100),
-                languages: z.array(z.string()),
+                location: z.string().max(100).nullable(),
+                languages: z.array(z.string()).nullable(),
+                bio: z.string().nullable(),
+                barNumber: z.string().max(100).nullable(),
+                issuingAuthority: z.string().max(255).nullable(),
+                jurisdiction: z.string().max(100).nullable(),
+                education: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                submittedAt: z.string().datetime({ offset: true }).nullable(),
+                reviewedBy: z.string().uuid().nullable(),
+                reviewedAt: z.string().datetime({ offset: true }).nullable(),
+                rejectionReason: z.string().nullable(),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -897,19 +976,35 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                name: z.string().max(255),
-                email: z.string().max(255),
-                specialization: z.string().max(100),
+                userId: z.string().uuid(),
+                status: z.enum(["draft", "submitted", "approved", "rejected"]),
+                specialization: z.string().max(100).nullable(),
                 experienceYears: z
                   .number()
                   .int()
                   .gte(-2147483648)
-                  .lte(2147483647),
-                rating: z.string().max(10).nullable(),
+                  .lte(2147483647)
+                  .nullable(),
                 casesHandled: z.number().int().gte(-2147483648).lte(2147483647),
                 isAvailable: z.boolean(),
-                location: z.string().max(100),
-                languages: z.array(z.string()),
+                location: z.string().max(100).nullable(),
+                languages: z.array(z.string()).nullable(),
+                bio: z.string().nullable(),
+                barNumber: z.string().max(100).nullable(),
+                issuingAuthority: z.string().max(255).nullable(),
+                jurisdiction: z.string().max(100).nullable(),
+                education: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                submittedAt: z.string().datetime({ offset: true }).nullable(),
+                reviewedBy: z.string().uuid().nullable(),
+                reviewedAt: z.string().datetime({ offset: true }).nullable(),
+                rejectionReason: z.string().nullable(),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })
@@ -968,19 +1063,35 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                name: z.string().max(255),
-                email: z.string().max(255),
-                specialization: z.string().max(100),
+                userId: z.string().uuid(),
+                status: z.enum(["draft", "submitted", "approved", "rejected"]),
+                specialization: z.string().max(100).nullable(),
                 experienceYears: z
                   .number()
                   .int()
                   .gte(-2147483648)
-                  .lte(2147483647),
-                rating: z.string().max(10).nullable(),
+                  .lte(2147483647)
+                  .nullable(),
                 casesHandled: z.number().int().gte(-2147483648).lte(2147483647),
                 isAvailable: z.boolean(),
-                location: z.string().max(100),
-                languages: z.array(z.string()),
+                location: z.string().max(100).nullable(),
+                languages: z.array(z.string()).nullable(),
+                bio: z.string().nullable(),
+                barNumber: z.string().max(100).nullable(),
+                issuingAuthority: z.string().max(255).nullable(),
+                jurisdiction: z.string().max(100).nullable(),
+                education: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                submittedAt: z.string().datetime({ offset: true }).nullable(),
+                reviewedBy: z.string().uuid().nullable(),
+                reviewedAt: z.string().datetime({ offset: true }).nullable(),
+                rejectionReason: z.string().nullable(),
                 createdAt: z.string().datetime({ offset: true }),
                 updatedAt: z.string().datetime({ offset: true }),
               })

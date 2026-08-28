@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { IconContainer } from "~/components/atoms/icon-container";
 import { Briefcase, UserCircle } from "lucide-react";
 

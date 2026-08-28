@@ -1,4 +1,4 @@
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Scale } from "lucide-react";
 import { IconContainer } from "~/components/atoms/icon-container";
 

@@ -16,16 +16,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "~/components/ui/sidebar";
-import { useUser } from "~/context/user-provider";
-import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
+import type { User as UserType } from "@mah/api/src/clients/users.api";
 import { NavLink } from "react-router";
 
-export function NavUser() {
-  const { isMobile } = useSidebar();
-  const { user } = useUser();
+interface NavUserProps {
+  user: UserType | null;
+  onLogout: () => void;
+}
 
-  // Use the grouped auth mutations object and destructure the logout mutation
-  const { logout: logoutMutation } = useAuthMutations();
+export function NavUser({ user, onLogout }: NavUserProps) {
+  const { isMobile } = useSidebar();
 
   const userItems = [
     {
@@ -122,7 +122,7 @@ export function NavUser() {
                   return (
                     <DropdownMenuItem
                       key={item.id}
-                      onClick={() => logoutMutation.mutate()}
+                      onClick={onLogout}
                       className="text-red-600 hover:bg-yellow-50 cursor-pointer"
                     >
                       <Icon className="h-4 w-4 mr-2" />

@@ -1,4 +1,3 @@
-
 import type { UserRole } from "@mah/api/src/clients/auth.api";
 import { createPath } from "./nav.paths";
 

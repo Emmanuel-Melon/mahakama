@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 interface LoadingStateProps {
   label?: string;

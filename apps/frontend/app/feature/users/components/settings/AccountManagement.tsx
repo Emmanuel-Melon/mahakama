@@ -1,6 +1,6 @@
 import { Button } from "~/components/ui/button";
 import { LogOut, Shield, CreditCard, Settings } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import type { User } from "@mah/api/src/clients/users.api";
 
 interface AccountManagementProps {

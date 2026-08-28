@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { AboutIntro } from "~/feature/www/components/about/Intro";
-import { HeroSection } from "~/layouts/HeroSection";
+import { HeroSection } from "@mah/ui";
 import { FeaturesGrid } from "../components/about/FeaturesGrid";
 import { LegalServicesSection } from "../components/about/LegalServicesSection";
 import { StepsSection } from "../components/about/StepsSection";

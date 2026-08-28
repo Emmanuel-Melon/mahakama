@@ -1,4 +1,4 @@
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 export const AnswerDisclaimer = ({
   className = "",

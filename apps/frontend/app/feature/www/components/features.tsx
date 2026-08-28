@@ -3,7 +3,7 @@ import { IconContainer } from "~/components/atoms/icon-container";
 import { FileText } from "lucide-react";
 import { cn } from "~/lib/utils";
 import { NavLink } from "react-router";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 const features = [
   {

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Mail, ArrowLeft, ShieldCheck } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 const RecoveryForm = ({
   email,

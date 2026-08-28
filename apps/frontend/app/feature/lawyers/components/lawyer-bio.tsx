@@ -1,5 +1,5 @@
 import { cn } from "~/lib/utils";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 interface LawyerBioProps {
   bio: string;

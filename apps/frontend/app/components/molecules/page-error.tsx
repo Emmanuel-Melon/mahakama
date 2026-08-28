@@ -1,5 +1,5 @@
 import { AlertTriangle, RefreshCw } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 
 interface PageErrorProps {
   title?: string;

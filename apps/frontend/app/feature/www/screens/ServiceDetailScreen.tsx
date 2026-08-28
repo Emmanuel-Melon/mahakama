@@ -12,15 +12,13 @@ import {
   Home,
 } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { PageHeader } from "~/layouts/PageHeader";
-import { PageDetailHeader } from "~/layouts/page-detail-header";
+import { PageHeader } from "@mah/ui";
+import { PageDetailHeader } from "@mah/ui";
 import {
   ContactInformation,
   type ContactItem,
 } from "~/components/molecules/contact-information";
-import type { components } from "@mah/api/generated/api.types";
-
-export type LegalService = components["schemas"]["LegalService"];
+import type { LegalService } from "@mah/api/src/clients/services.api";
 
 interface ServiceDetailScreenProps {
   service: LegalService;

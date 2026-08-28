@@ -928,6 +928,678 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/v1/consultations": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get all consultations
+     * @description Returns a paginated list of consultations with filtering by status, lawyer, or customer.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              }[];
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                  [key: string]: unknown;
+                };
+                sortOptions: {
+                  fields: string[];
+                  default: string;
+                  /** @enum {string} */
+                  direction: "asc" | "desc";
+                };
+              };
+            };
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    put?: never;
+    /**
+     * Request a consultation
+     * @description Customer requests a consultation with a lawyer. Creates the consultation in 'pending' status.
+     */
+    post: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            /** Format: uuid */
+            lawyerId: string;
+            requestMessage?: string | null;
+          };
+        };
+      };
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              };
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+              } & {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/consultations/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get consultation by ID
+     * @description Retrieve a single consultation's details by ID.
+     */
+    get: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              };
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+              } & {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/v1/consultations/{id}/accept": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Accept a consultation request
+     * @description Lawyer accepts a pending consultation request.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              };
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+              } & {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  "/v1/consultations/{id}/decline": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Decline a consultation request
+     * @description Lawyer declines a pending consultation request, with a reason.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: {
+        content: {
+          "application/json": {
+            declineReason: string;
+          };
+        };
+      };
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              };
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+              } & {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+        /** @description The request could not be understood or was missing required parameters. */
+        400: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
+  "/v1/consultations/{id}/close": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    /**
+     * Close a consultation
+     * @description Marks a consultation as closed.
+     */
+    patch: {
+      parameters: {
+        query?: never;
+        header?: never;
+        path: {
+          id: string;
+        };
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description The request has succeeded. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": {
+              data: {
+                /** @enum {string} */
+                type: "consultation";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Consultation
+                 * @description Consultation response schema
+                 */
+                attributes: {
+                  /** Format: uuid */
+                  id: string;
+                  /** Format: uuid */
+                  customerId: string;
+                  /** Format: uuid */
+                  lawyerId: string;
+                  /** @enum {string} */
+                  status:
+                    "pending" | "accepted" | "declined" | "engaged" | "closed";
+                  requestMessage: string | null;
+                  /** Format: date-time */
+                  respondedAt: string | null;
+                  declineReason: string | null;
+                  /** Format: date-time */
+                  engagedAt: string | null;
+                  /** Format: date-time */
+                  closedAt: string | null;
+                  /** Format: date-time */
+                  createdAt: string;
+                  /** Format: date-time */
+                  updatedAt: string;
+                };
+                relationships?: {
+                  [key: string]: unknown;
+                };
+                meta?: {
+                  [key: string]: unknown;
+                };
+                links?: {
+                  [key: string]: string;
+                };
+              };
+              links: {
+                self: string;
+              };
+              metadata: {
+                requestId: string;
+                timestamp: string;
+              } & {
+                [key: string]: unknown;
+              };
+            };
+          };
+        };
+        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+        401: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+        /** @description The requested resource could not be found on the server. */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["JsonApiErrorResponse"];
+          };
+        };
+      };
+    };
+    trace?: never;
+  };
   "/v1/corpus": {
     parameters: {
       query?: never;
@@ -1628,15 +2300,36 @@ export interface paths {
                 attributes: {
                   /** Format: uuid */
                   id: string;
-                  name: string;
-                  email: string;
-                  specialization: string;
-                  experienceYears: number;
-                  rating: string | null;
+                  /** Format: uuid */
+                  userId: string;
+                  /** @enum {string} */
+                  status: "draft" | "submitted" | "approved" | "rejected";
+                  specialization: string | null;
+                  experienceYears: number | null;
                   casesHandled: number;
                   isAvailable: boolean;
-                  location: string;
-                  languages: string[];
+                  location: string | null;
+                  languages: string[] | null;
+                  bio: string | null;
+                  barNumber: string | null;
+                  issuingAuthority: string | null;
+                  jurisdiction: string | null;
+                  education:
+                    | string
+                    | number
+                    | boolean
+                    | unknown
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  /** Format: date-time */
+                  submittedAt: string | null;
+                  /** Format: uuid */
+                  reviewedBy: string | null;
+                  /** Format: date-time */
+                  reviewedAt: string | null;
+                  rejectionReason: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
@@ -1713,15 +2406,36 @@ export interface paths {
           "application/json": {
             /** Format: uuid */
             id?: string;
-            name: string;
-            email: string;
-            specialization: string;
-            experienceYears: number;
-            rating?: string | null;
+            /** Format: uuid */
+            userId: string;
+            /** @enum {string} */
+            status?: "draft" | "submitted" | "approved" | "rejected";
+            specialization?: string | null;
+            experienceYears?: number | null;
             casesHandled?: number;
             isAvailable?: boolean;
-            location: string;
-            languages: string[];
+            location?: string | null;
+            languages?: string[] | null;
+            bio?: string | null;
+            barNumber?: string | null;
+            issuingAuthority?: string | null;
+            jurisdiction?: string | null;
+            education?:
+              | string
+              | number
+              | boolean
+              | unknown
+              | {
+                  [key: string]: unknown;
+                }
+              | unknown[];
+            /** Format: date-time */
+            submittedAt?: string | null;
+            /** Format: uuid */
+            reviewedBy?: string | null;
+            /** Format: date-time */
+            reviewedAt?: string | null;
+            rejectionReason?: string | null;
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
@@ -1749,15 +2463,36 @@ export interface paths {
                 attributes: {
                   /** Format: uuid */
                   id: string;
-                  name: string;
-                  email: string;
-                  specialization: string;
-                  experienceYears: number;
-                  rating: string | null;
+                  /** Format: uuid */
+                  userId: string;
+                  /** @enum {string} */
+                  status: "draft" | "submitted" | "approved" | "rejected";
+                  specialization: string | null;
+                  experienceYears: number | null;
                   casesHandled: number;
                   isAvailable: boolean;
-                  location: string;
-                  languages: string[];
+                  location: string | null;
+                  languages: string[] | null;
+                  bio: string | null;
+                  barNumber: string | null;
+                  issuingAuthority: string | null;
+                  jurisdiction: string | null;
+                  education:
+                    | string
+                    | number
+                    | boolean
+                    | unknown
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  /** Format: date-time */
+                  submittedAt: string | null;
+                  /** Format: uuid */
+                  reviewedBy: string | null;
+                  /** Format: date-time */
+                  reviewedAt: string | null;
+                  rejectionReason: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
@@ -1870,15 +2605,36 @@ export interface paths {
                 attributes: {
                   /** Format: uuid */
                   id: string;
-                  name: string;
-                  email: string;
-                  specialization: string;
-                  experienceYears: number;
-                  rating: string | null;
+                  /** Format: uuid */
+                  userId: string;
+                  /** @enum {string} */
+                  status: "draft" | "submitted" | "approved" | "rejected";
+                  specialization: string | null;
+                  experienceYears: number | null;
                   casesHandled: number;
                   isAvailable: boolean;
-                  location: string;
-                  languages: string[];
+                  location: string | null;
+                  languages: string[] | null;
+                  bio: string | null;
+                  barNumber: string | null;
+                  issuingAuthority: string | null;
+                  jurisdiction: string | null;
+                  education:
+                    | string
+                    | number
+                    | boolean
+                    | unknown
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  /** Format: date-time */
+                  submittedAt: string | null;
+                  /** Format: uuid */
+                  reviewedBy: string | null;
+                  /** Format: date-time */
+                  reviewedAt: string | null;
+                  rejectionReason: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
@@ -1953,15 +2709,36 @@ export interface paths {
           "application/json": {
             /** Format: uuid */
             id?: string;
-            name?: string;
-            email?: string;
-            specialization?: string;
-            experienceYears?: number;
-            rating?: string | null;
+            /** Format: uuid */
+            userId?: string;
+            /** @enum {string} */
+            status?: "draft" | "submitted" | "approved" | "rejected";
+            specialization?: string | null;
+            experienceYears?: number | null;
             casesHandled?: number;
             isAvailable?: boolean;
-            location?: string;
-            languages?: string[];
+            location?: string | null;
+            languages?: string[] | null;
+            bio?: string | null;
+            barNumber?: string | null;
+            issuingAuthority?: string | null;
+            jurisdiction?: string | null;
+            education?:
+              | string
+              | number
+              | boolean
+              | unknown
+              | {
+                  [key: string]: unknown;
+                }
+              | unknown[];
+            /** Format: date-time */
+            submittedAt?: string | null;
+            /** Format: uuid */
+            reviewedBy?: string | null;
+            /** Format: date-time */
+            reviewedAt?: string | null;
+            rejectionReason?: string | null;
             /** Format: date-time */
             createdAt?: string;
             /** Format: date-time */
@@ -1989,15 +2766,36 @@ export interface paths {
                 attributes: {
                   /** Format: uuid */
                   id: string;
-                  name: string;
-                  email: string;
-                  specialization: string;
-                  experienceYears: number;
-                  rating: string | null;
+                  /** Format: uuid */
+                  userId: string;
+                  /** @enum {string} */
+                  status: "draft" | "submitted" | "approved" | "rejected";
+                  specialization: string | null;
+                  experienceYears: number | null;
                   casesHandled: number;
                   isAvailable: boolean;
-                  location: string;
-                  languages: string[];
+                  location: string | null;
+                  languages: string[] | null;
+                  bio: string | null;
+                  barNumber: string | null;
+                  issuingAuthority: string | null;
+                  jurisdiction: string | null;
+                  education:
+                    | string
+                    | number
+                    | boolean
+                    | unknown
+                    | {
+                        [key: string]: unknown;
+                      }
+                    | unknown[];
+                  /** Format: date-time */
+                  submittedAt: string | null;
+                  /** Format: uuid */
+                  reviewedBy: string | null;
+                  /** Format: date-time */
+                  reviewedAt: string | null;
+                  rejectionReason: string | null;
                   /** Format: date-time */
                   createdAt: string;
                   /** Format: date-time */
@@ -3965,6 +4763,199 @@ export interface components {
       };
     };
     /**
+     * Consultation
+     * @description Consultation response schema
+     */
+    Consultation: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      customerId: string;
+      /** Format: uuid */
+      lawyerId: string;
+      /** @enum {string} */
+      status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+      requestMessage: string | null;
+      /** Format: date-time */
+      respondedAt: string | null;
+      declineReason: string | null;
+      /** Format: date-time */
+      engagedAt: string | null;
+      /** Format: date-time */
+      closedAt: string | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    /**
+     * NewConsultation
+     * @description Request schema for creating a new consultation
+     */
+    NewConsultation: {
+      /** Format: uuid */
+      lawyerId: string;
+      requestMessage?: string | null;
+    };
+    UpdateConsultation: Record<string, never>;
+    ConsultationResource: {
+      /** @enum {string} */
+      type: "consultation";
+      /** Format: uuid */
+      id: string;
+      /**
+       * Consultation
+       * @description Consultation response schema
+       */
+      attributes: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        customerId: string;
+        /** Format: uuid */
+        lawyerId: string;
+        /** @enum {string} */
+        status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+        requestMessage: string | null;
+        /** Format: date-time */
+        respondedAt: string | null;
+        declineReason: string | null;
+        /** Format: date-time */
+        engagedAt: string | null;
+        /** Format: date-time */
+        closedAt: string | null;
+        /** Format: date-time */
+        createdAt: string;
+        /** Format: date-time */
+        updatedAt: string;
+      };
+      relationships?: {
+        [key: string]: unknown;
+      };
+      meta?: {
+        [key: string]: unknown;
+      };
+      links?: {
+        [key: string]: string;
+      };
+    };
+    ConsultationSingleResponse: {
+      data: {
+        /** @enum {string} */
+        type: "consultation";
+        /** Format: uuid */
+        id: string;
+        /**
+         * Consultation
+         * @description Consultation response schema
+         */
+        attributes: {
+          /** Format: uuid */
+          id: string;
+          /** Format: uuid */
+          customerId: string;
+          /** Format: uuid */
+          lawyerId: string;
+          /** @enum {string} */
+          status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+          requestMessage: string | null;
+          /** Format: date-time */
+          respondedAt: string | null;
+          declineReason: string | null;
+          /** Format: date-time */
+          engagedAt: string | null;
+          /** Format: date-time */
+          closedAt: string | null;
+          /** Format: date-time */
+          createdAt: string;
+          /** Format: date-time */
+          updatedAt: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      };
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+      } & {
+        [key: string]: unknown;
+      };
+    };
+    ConsultationCollectionResponse: {
+      data: {
+        /** @enum {string} */
+        type: "consultation";
+        /** Format: uuid */
+        id: string;
+        /**
+         * Consultation
+         * @description Consultation response schema
+         */
+        attributes: {
+          /** Format: uuid */
+          id: string;
+          /** Format: uuid */
+          customerId: string;
+          /** Format: uuid */
+          lawyerId: string;
+          /** @enum {string} */
+          status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+          requestMessage: string | null;
+          /** Format: date-time */
+          respondedAt: string | null;
+          declineReason: string | null;
+          /** Format: date-time */
+          engagedAt: string | null;
+          /** Format: date-time */
+          closedAt: string | null;
+          /** Format: date-time */
+          createdAt: string;
+          /** Format: date-time */
+          updatedAt: string;
+        };
+        relationships?: {
+          [key: string]: unknown;
+        };
+        meta?: {
+          [key: string]: unknown;
+        };
+        links?: {
+          [key: string]: string;
+        };
+      }[];
+      links: {
+        self: string;
+      };
+      metadata: {
+        requestId: string;
+        timestamp: string;
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+        /** @default {} */
+        availableFilters: {
+          [key: string]: unknown;
+        };
+        sortOptions: {
+          fields: string[];
+          default: string;
+          /** @enum {string} */
+          direction: "asc" | "desc";
+        };
+      };
+    };
+    /**
      * Corpus
      * @description Corpus response schema
      */
@@ -4427,36 +5418,74 @@ export interface components {
     Lawyer: {
       /** Format: uuid */
       id: string;
-      name: string;
-      email: string;
-      specialization: string;
-      experienceYears: number;
-      rating: string | null;
+      /** Format: uuid */
+      userId: string;
+      /** @enum {string} */
+      status: "draft" | "submitted" | "approved" | "rejected";
+      specialization: string | null;
+      experienceYears: number | null;
       casesHandled: number;
       isAvailable: boolean;
-      location: string;
-      languages: string[];
+      location: string | null;
+      languages: string[] | null;
+      bio: string | null;
+      barNumber: string | null;
+      issuingAuthority: string | null;
+      jurisdiction: string | null;
+      education:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      submittedAt: string | null;
+      /** Format: uuid */
+      reviewedBy: string | null;
+      /** Format: date-time */
+      reviewedAt: string | null;
+      rejectionReason: string | null;
       /** Format: date-time */
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
     };
-    /**
-     * NewLawyer
-     * @description Request schema for creating a new lawyer
-     */
     NewLawyer: {
       /** Format: uuid */
       id?: string;
-      name: string;
-      email: string;
-      specialization: string;
-      experienceYears: number;
-      rating?: string | null;
+      /** Format: uuid */
+      userId: string;
+      /** @enum {string} */
+      status?: "draft" | "submitted" | "approved" | "rejected";
+      specialization?: string | null;
+      experienceYears?: number | null;
       casesHandled?: number;
       isAvailable?: boolean;
-      location: string;
-      languages: string[];
+      location?: string | null;
+      languages?: string[] | null;
+      bio?: string | null;
+      barNumber?: string | null;
+      issuingAuthority?: string | null;
+      jurisdiction?: string | null;
+      education?:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      submittedAt?: string | null;
+      /** Format: uuid */
+      reviewedBy?: string | null;
+      /** Format: date-time */
+      reviewedAt?: string | null;
+      rejectionReason?: string | null;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -4465,15 +5494,36 @@ export interface components {
     UpdateLawyer: {
       /** Format: uuid */
       id?: string;
-      name?: string;
-      email?: string;
-      specialization?: string;
-      experienceYears?: number;
-      rating?: string | null;
+      /** Format: uuid */
+      userId?: string;
+      /** @enum {string} */
+      status?: "draft" | "submitted" | "approved" | "rejected";
+      specialization?: string | null;
+      experienceYears?: number | null;
       casesHandled?: number;
       isAvailable?: boolean;
-      location?: string;
-      languages?: string[];
+      location?: string | null;
+      languages?: string[] | null;
+      bio?: string | null;
+      barNumber?: string | null;
+      issuingAuthority?: string | null;
+      jurisdiction?: string | null;
+      education?:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      submittedAt?: string | null;
+      /** Format: uuid */
+      reviewedBy?: string | null;
+      /** Format: date-time */
+      reviewedAt?: string | null;
+      rejectionReason?: string | null;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */
@@ -4491,15 +5541,36 @@ export interface components {
       attributes: {
         /** Format: uuid */
         id: string;
-        name: string;
-        email: string;
-        specialization: string;
-        experienceYears: number;
-        rating: string | null;
+        /** Format: uuid */
+        userId: string;
+        /** @enum {string} */
+        status: "draft" | "submitted" | "approved" | "rejected";
+        specialization: string | null;
+        experienceYears: number | null;
         casesHandled: number;
         isAvailable: boolean;
-        location: string;
-        languages: string[];
+        location: string | null;
+        languages: string[] | null;
+        bio: string | null;
+        barNumber: string | null;
+        issuingAuthority: string | null;
+        jurisdiction: string | null;
+        education:
+          | string
+          | number
+          | boolean
+          | unknown
+          | {
+              [key: string]: unknown;
+            }
+          | unknown[];
+        /** Format: date-time */
+        submittedAt: string | null;
+        /** Format: uuid */
+        reviewedBy: string | null;
+        /** Format: date-time */
+        reviewedAt: string | null;
+        rejectionReason: string | null;
         /** Format: date-time */
         createdAt: string;
         /** Format: date-time */
@@ -4528,15 +5599,36 @@ export interface components {
         attributes: {
           /** Format: uuid */
           id: string;
-          name: string;
-          email: string;
-          specialization: string;
-          experienceYears: number;
-          rating: string | null;
+          /** Format: uuid */
+          userId: string;
+          /** @enum {string} */
+          status: "draft" | "submitted" | "approved" | "rejected";
+          specialization: string | null;
+          experienceYears: number | null;
           casesHandled: number;
           isAvailable: boolean;
-          location: string;
-          languages: string[];
+          location: string | null;
+          languages: string[] | null;
+          bio: string | null;
+          barNumber: string | null;
+          issuingAuthority: string | null;
+          jurisdiction: string | null;
+          education:
+            | string
+            | number
+            | boolean
+            | unknown
+            | {
+                [key: string]: unknown;
+              }
+            | unknown[];
+          /** Format: date-time */
+          submittedAt: string | null;
+          /** Format: uuid */
+          reviewedBy: string | null;
+          /** Format: date-time */
+          reviewedAt: string | null;
+          rejectionReason: string | null;
           /** Format: date-time */
           createdAt: string;
           /** Format: date-time */
@@ -4575,15 +5667,36 @@ export interface components {
         attributes: {
           /** Format: uuid */
           id: string;
-          name: string;
-          email: string;
-          specialization: string;
-          experienceYears: number;
-          rating: string | null;
+          /** Format: uuid */
+          userId: string;
+          /** @enum {string} */
+          status: "draft" | "submitted" | "approved" | "rejected";
+          specialization: string | null;
+          experienceYears: number | null;
           casesHandled: number;
           isAvailable: boolean;
-          location: string;
-          languages: string[];
+          location: string | null;
+          languages: string[] | null;
+          bio: string | null;
+          barNumber: string | null;
+          issuingAuthority: string | null;
+          jurisdiction: string | null;
+          education:
+            | string
+            | number
+            | boolean
+            | unknown
+            | {
+                [key: string]: unknown;
+              }
+            | unknown[];
+          /** Format: date-time */
+          submittedAt: string | null;
+          /** Format: uuid */
+          reviewedBy: string | null;
+          /** Format: date-time */
+          reviewedAt: string | null;
+          rejectionReason: string | null;
           /** Format: date-time */
           createdAt: string;
           /** Format: date-time */
@@ -4621,22 +5734,39 @@ export interface components {
         };
       };
     };
-    /**
-     * NewLawyer
-     * @description Request schema for creating a new lawyer
-     */
     CreateLawyer: {
       /** Format: uuid */
       id?: string;
-      name: string;
-      email: string;
-      specialization: string;
-      experienceYears: number;
-      rating?: string | null;
+      /** Format: uuid */
+      userId: string;
+      /** @enum {string} */
+      status?: "draft" | "submitted" | "approved" | "rejected";
+      specialization?: string | null;
+      experienceYears?: number | null;
       casesHandled?: number;
       isAvailable?: boolean;
-      location: string;
-      languages: string[];
+      location?: string | null;
+      languages?: string[] | null;
+      bio?: string | null;
+      barNumber?: string | null;
+      issuingAuthority?: string | null;
+      jurisdiction?: string | null;
+      education?:
+        | string
+        | number
+        | boolean
+        | unknown
+        | {
+            [key: string]: unknown;
+          }
+        | unknown[];
+      /** Format: date-time */
+      submittedAt?: string | null;
+      /** Format: uuid */
+      reviewedBy?: string | null;
+      /** Format: date-time */
+      reviewedAt?: string | null;
+      rejectionReason?: string | null;
       /** Format: date-time */
       createdAt?: string;
       /** Format: date-time */

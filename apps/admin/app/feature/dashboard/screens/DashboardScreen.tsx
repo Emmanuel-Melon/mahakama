@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button } from "@mah/ui/components/Button";
+import { Button } from "@mah/ui";
 
 export const DashboardScreen = () => {
   const { t } = useTranslation("dashboard");

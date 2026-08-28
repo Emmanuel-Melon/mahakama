@@ -97,7 +97,11 @@ export default function LawyersPage({ loaderData }: Route.ComponentProps) {
     q,
   };
 
-  const { data: lawyersPage, error: lawyersError, isLoading } = useLawyers(filters);
+  const {
+    data: lawyersPage,
+    error: lawyersError,
+    isLoading,
+  } = useLawyers(filters);
 
   const sortLawyers = (lawyersToSort: Lawyer[], sortValue: string) => {
     const sortOrder = sortValue.startsWith("-") ? "desc" : "asc";

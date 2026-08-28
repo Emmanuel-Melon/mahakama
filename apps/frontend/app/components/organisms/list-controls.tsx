@@ -1,6 +1,6 @@
 import { Filter, ArrowDownUp } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { CardWithLabel } from "~/components/ui/card-with-label";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { useState, useEffect } from "react";
 import { SearchBar } from "../molecules/search-bar";
 import { SortSelect } from "../molecules/sort-select";
