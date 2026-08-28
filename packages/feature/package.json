@@ -1,0 +1,39 @@
+{
+  "name": "@mah/feature",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./src/index.ts",
+    "./auth": "./src/auth/index.ts"
+  },
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@mah/api": "*"
+  },
+  "peerDependencies": {
+    "@hookform/resolvers": "^5.0.0",
+    "@mah/ui": "*",
+    "lucide-react": "^0.545.0",
+    "react": "^19.1.1",
+    "react-hook-form": "^7.0.0",
+    "react-i18next": "^17.0.12",
+    "react-router": "^7.0.0",
+    "sonner": "^2.0.0",
+    "zod": "^3.0.0"
+  },
+  "devDependencies": {
+    "react": "^19.1.1",
+    "@types/react": "^19.1.13",
+    "typescript": "^5.9.2"
+  }
+}

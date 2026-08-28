@@ -1,6 +1,5 @@
-import { Github, Twitter, Mail, Scale, Shield } from "lucide-react";
+import { Mail, Scale, Shield } from "lucide-react";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { IconContainer } from "@mah/ui/components/IconContainer";
 import { Link } from "react-router";
 
 export function MarketingFooter() {
@@ -28,8 +27,6 @@ export function MarketingFooter() {
               AI-driven legal discovery and verified professional connections.
             </p>
             <div className="flex gap-4">
-              <SocialLink icon={Twitter} href="#" />
-              <SocialLink icon={Github} href="#" />
               <SocialLink icon={Mail} href="#" />
             </div>
           </div>

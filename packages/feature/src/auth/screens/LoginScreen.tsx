@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
-import { AuthForm } from "~/feature/auth/components/AuthForm";
-import { AuthAlternative } from "~/feature/auth/components/AuthAlternative";
+import { AuthForm } from "../components/AuthForm";
+import { AuthAlternative } from "../components/AuthAlternative";
 import { type LoginRequest } from "@mah/api/src/clients/auth.api";
 
-export const LoginScreen = () => {
+export const LoginScreen = ({
+  successPath = "/app",
+}: {
+  successPath?: string;
+}) => {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
   const { login } = useAuthMutations();
@@ -13,7 +17,7 @@ export const LoginScreen = () => {
   const onSubmit = (data: LoginRequest) => {
     login.mutate(data, {
       onSuccess: () => {
-        navigate("/app", {
+        navigate(successPath, {
           state: { email: data.email },
           replace: true,
         });

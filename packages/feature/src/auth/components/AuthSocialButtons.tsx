@@ -1,4 +1,4 @@
-import { Button } from "@mah/ui";
+import { Button } from "@mah/ui/components/Button";
 import { Mail } from "lucide-react";
 
 export const AuthSocialButtons = () => {

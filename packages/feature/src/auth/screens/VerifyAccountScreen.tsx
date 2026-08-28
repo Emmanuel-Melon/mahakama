@@ -1,14 +1,17 @@
 import { useSearchParams, useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
-import { AuthPaths } from "../AuthConfig";
 import {
   AccountVerifiedState,
   AccountVerificationErrorState,
   AccountVerificationPromptState,
 } from "../components/AccountVerificationState";
 
-export function VerifyAccountScreen() {
+export function VerifyAccountScreen({
+  loginPath = "/login",
+}: {
+  loginPath?: string;
+}) {
   const { t } = useTranslation("auth");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,7 +31,7 @@ export function VerifyAccountScreen() {
             <h1 className="text-3xl">{t("verifyEmail.verifiedTitle")}</h1>
             {verifyEmail.isError ? (
               <AccountVerificationErrorState
-                onGoToLogin={() => navigate(AuthPaths.login())}
+                onGoToLogin={() => navigate(loginPath)}
               />
             ) : (
               <AccountVerificationPromptState

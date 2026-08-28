@@ -1,7 +1,7 @@
 import type { Route } from "./+types/reset-password";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 import { useAppError } from "~/lib/errors/errors.registry";
-import { PasswordResetScreen } from "~/feature/auth/screens/PasswordResetScreen";
+import { PasswordResetScreen } from "@mah/feature/auth";
 
 export function meta({}: Route.MetaArgs) {
   return [

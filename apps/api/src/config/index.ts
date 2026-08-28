@@ -201,7 +201,12 @@ export default config;
 export const isDev = process.env.NODE_ENV !== "production";
 
 // CORS
-export const corsOrigins = ["http://localhost:5173", "http://127.0.0.1:5173"];
+export const corsOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:5174",
+  "http://127.0.0.1:5174",
+];
 
 // API Servers
 export const mahakamaServers = [
