@@ -2,6 +2,7 @@ import { JobOptions, BullWorkerOptions } from "./bullmq.types";
 
 export enum QueueName {
   Auth = "auth",
+  Consultations = "consultations",
   Questions = "questions",
   Embeddings = "embeddings",
   Answers = "answers",

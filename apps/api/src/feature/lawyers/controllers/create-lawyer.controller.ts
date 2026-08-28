@@ -1,26 +1,15 @@
 import { Request, Response } from "express";
-import { db } from "@/lib/drizzle";
 import { createLawyer } from "../operations/lawyers.create";
-import { lawyersTable } from "../lawyers.schema";
-import { eq } from "drizzle-orm";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { SerializedLawyer } from "../lawyers.config";
 import { asyncHandler } from "@/lib/express/express.async-handler";
 import { HttpError } from "@/lib/http/http.error";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
-import { findLawyer } from "../operations/lawyers.find";
 
 export const createLawyerController = asyncHandler(
   async (req: Request, res: Response) => {
     const lawyerAttrs = req.body;
-    const existingLawyer = unwrap(
-      await findLawyer("email", lawyerAttrs.email),
-      new HttpError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        "Failed to check if lawyer exists",
-      ),
-    );
 
     const lawyer = unwrap(
       await createLawyer(lawyerAttrs),

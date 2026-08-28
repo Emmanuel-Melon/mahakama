@@ -45,6 +45,7 @@ export enum NotificationChannel {
 export const NotificationDomain = {
   Admin: "admin",
   Auth: "auth",
+  Consultations: "consultations",
   Payments: "payments",
   Plans: "plans",
   Relationships: "relationships",

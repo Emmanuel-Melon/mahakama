@@ -12,6 +12,7 @@ import { combinedAuthSchema } from "@/feature/auth/auth.schema";
 import { combinedServiceSchema } from "@/feature/services/services.schema";
 import { combinedInferenceSchema } from "@/feature/inference/inference.schema";
 import { allRelations } from "./drizzle.relations";
+import { combinedConsultationsSchema } from "@/feature/consultations/consultations.schema";
 
 const pool = new Pool({
   connectionString: dbConfig.postgres.url,
@@ -21,6 +22,7 @@ export const db = drizzle(pool, {
   schema: {
     ...combinedAuthSchema,
     ...combinedChatsSchema,
+    ...combinedConsultationsSchema,
     ...combinedCorpusSchema,
     ...combinedMessagesSchema,
     ...lawyersTable,

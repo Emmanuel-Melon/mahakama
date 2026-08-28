@@ -147,7 +147,7 @@ export const refreshTokenSelectSchema = z.object({
   token: z.string().jwt().describe("The new access token (JWT)"),
 });
 
-export const UserRoleSchema = z.enum(["admin", "user", "partner"]);
+export const UserRoleSchema = z.enum(["admin", "user", "lawyer"]);
 
 export const BaseTokenPayloadSchema = z.object({
   sub: z.string(),

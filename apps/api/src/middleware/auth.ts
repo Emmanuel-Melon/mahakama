@@ -5,6 +5,7 @@ import { findUser } from "@/feature/users/operations/users.find";
 import { logger } from "@/lib/logger";
 import { sendErrorResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
+import { UserRole } from "@/feature/auth/auth.types";
 
 export const authenticateToken = async (
   req: Request,
@@ -111,4 +112,15 @@ export const methodBasedAuth = async (
     return optionalAuth(req, res, next);
   }
   return authenticateToken(req, res, next);
+};
+
+export const requireRole = (allowedRoles: UserRole[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user)
+      return sendErrorResponse(req, res, { status: HttpStatus.UNAUTHORIZED });
+    if (!allowedRoles.includes(req.user.role)) {
+      return sendErrorResponse(req, res, { status: HttpStatus.FORBIDDEN });
+    }
+    next();
+  };
 };

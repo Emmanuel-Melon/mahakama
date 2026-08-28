@@ -6,6 +6,7 @@ import {
   validateHttpRequest,
 } from "@/middleware/request-validators";
 import { upload } from "@/middleware/multer";
+import { useAuthorization } from "@/routes/api.rules";
 import type { ApiManifest } from "@/routes/api.types";
 
 import { bookmarkCorpusController } from "./controllers/bookmark-corpus.controller";
@@ -17,6 +18,10 @@ import { ingestCorpusController } from "./controllers/ingest-corpus.controller";
 import { corpusInsertSchema } from "./corpus.types";
 
 const corpusRoutes = Router();
+
+useAuthorization(corpusRoutes, [
+  { path: "/ingest", roles: ["admin"] },
+]);
 
 corpusRoutes.get("/", getCorpusController);
 corpusRoutes.get(

@@ -1,0 +1,29 @@
+import { Request, Response } from "express";
+import { closeConsultation } from "../operations/consultations.update";
+import { sendSuccessResponse } from "@/lib/express/express.response";
+import { HttpStatus } from "@/lib/http/http.status";
+import { SerializedConsultation } from "../consultations.config";
+import { unwrap } from "@/lib/drizzle/drizzle.utils";
+import { HttpError } from "@/lib/http/http.error";
+import { asyncHandler } from "@/lib/express/express.async-handler";
+
+export const closeConsultationController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const consultationId = req.params.id as string;
+    const consultation = unwrap(
+      await closeConsultation(consultationId),
+      new HttpError(HttpStatus.NOT_FOUND, "Consultation not found"),
+    );
+
+    sendSuccessResponse(
+      req,
+      res,
+      {
+        data: { ...consultation },
+        serializerConfig: SerializedConsultation,
+        type: "single",
+      },
+      { status: HttpStatus.SUCCESS },
+    );
+  },
+);

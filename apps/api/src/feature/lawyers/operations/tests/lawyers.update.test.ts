@@ -5,9 +5,8 @@ import { mockDrizzleChain, mockDrizzleEmpty } from "@/tests/tests.utils";
 import { db } from "@/lib/drizzle";
 
 describe("updateLawyer", () => {
-  const lawyerId = 123;
+  const lawyerId = "test-lawyer-id";
   const updateData = createMockNewLawyer({
-    name: "Updated Name",
     specialization: "Family Law",
   });
 
@@ -16,19 +15,17 @@ describe("updateLawyer", () => {
   });
 
   it("should update a lawyer and return ok:true with updated lawyer", async () => {
-    const existingLawyer = createMockLawyer({ id: `uuid-${lawyerId}` });
-    const updateData = { name: "Updated Name" };
+    const existingLawyer = createMockLawyer({ id: lawyerId });
+    const updateData = { specialization: "Family Law" };
 
-    // Setup mock to return "updated" version
     mockDrizzleChain([{ ...existingLawyer, ...updateData }]);
     const result = await updateLawyer("id", lawyerId, updateData as any);
     expect(result.ok).toBe(true);
-    expect(result.data?.name).toBe("Updated Name");
+    expect(result.data?.specialization).toBe("Family Law");
     expect(db.update).toHaveBeenCalled();
   });
 
   it("should return ok:false if no lawyer was updated", async () => {
-    // Zero plumbing, pure intent
     mockDrizzleEmpty();
     const result = await updateLawyer("id", lawyerId, updateData);
     expect(result).toEqual({
@@ -40,14 +37,11 @@ describe("updateLawyer", () => {
   });
 
   it("should throw if the database itself fails", async () => {
-    // Setup the chain to explode at the end
     mockDrizzleChain("Connection Timeout", true);
 
-    const lawyerId = 123;
-    const updateData = { name: "New Name" };
-
-    // Assert
-    const result = await updateLawyer("id", lawyerId, updateData as any);
+    const result = await updateLawyer("id", lawyerId, {
+      bio: "New bio",
+    } as any);
     expect(result).toEqual({
       ok: false,
       data: null,
@@ -58,19 +52,18 @@ describe("updateLawyer", () => {
 
   it("should handle partial updates correctly", async () => {
     const existingLawyer = createMockLawyer({
-      id: `uuid-${lawyerId}`,
-      name: "Original Name",
+      id: lawyerId,
       specialization: "Criminal Law",
+      bio: "Original bio",
     });
     const partialUpdate = { specialization: "Family Law" };
 
-    // Setup mock to return partially updated lawyer
     mockDrizzleChain([{ ...existingLawyer, ...partialUpdate }]);
     const result = await updateLawyer("id", lawyerId, partialUpdate as any);
 
     expect(result.ok).toBe(true);
-    expect(result.data?.name).toBe("Original Name"); // unchanged
-    expect(result.data?.specialization).toBe("Family Law"); // updated
+    expect(result.data?.bio).toBe("Original bio");
+    expect(result.data?.specialization).toBe("Family Law");
     expect(db.update).toHaveBeenCalled();
   });
 });
