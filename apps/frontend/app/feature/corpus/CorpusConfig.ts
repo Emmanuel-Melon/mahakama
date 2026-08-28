@@ -1,7 +1,7 @@
-import { defineRoutes } from "../../lib/nav/nav.paths";
+import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/corpus.json";
 import ar from "../../locales/ar/corpus.json";
-import type { I18nConfig } from "~/lib/i18n/i18next.types";
+import type { I18nConfig } from "@mah/client/i18n";
 
 export const corpusRoutes = defineRoutes({
   index: { path: "documents", file: "routes/corpus/index.tsx" },

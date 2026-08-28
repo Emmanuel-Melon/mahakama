@@ -23,7 +23,7 @@ export const getUserPermissions = (user: User | null): string[] => {
 
 export const useNavLinks = () => {
   const user = useUser();
-  const permissions = getUserPermissions(user);
+  const permissions = getUserPermissions(user.user);
 
   return ALL_NAV_LINKS.filter((link) => {
     const required = NAV_PERMISSIONS[link.id];

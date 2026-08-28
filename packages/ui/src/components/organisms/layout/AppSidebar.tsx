@@ -8,8 +8,8 @@ import {
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-} from "../sidebar";
-import { SidebarNav } from "../molecules/SidebarNav";
+} from "../../sidebar";
+import { SidebarNav } from "../../molecules/SidebarNav";
 import { NavUser } from "./NavUser";
 import type { NavLinkItem } from "@mah/client/nav";
 import type { User } from "@mah/api/src/clients/users.api";

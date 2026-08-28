@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarInset } from "../sidebar";
+import { SidebarProvider, SidebarInset } from "../../sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { SiteHeader } from "./SiteHeader";
 import type { NavLinkItem } from "@mah/client/nav";

@@ -1,6 +1,6 @@
 import { User, Settings, LogOut, MoreVertical } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "../avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +9,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "../../dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "../sidebar";
+} from "../../sidebar";
 import type { User as UserType } from "@mah/api/src/clients/users.api";
 import { NavLink } from "react-router";
 

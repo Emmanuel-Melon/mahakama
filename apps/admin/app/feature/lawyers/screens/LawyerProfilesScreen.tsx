@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useLawyers } from "@mah/api/src/hooks/use-lawyers";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
-import { LoadingState } from "~/components/async-state/LoadingState";
-import { EmptyState } from "~/components/async-state/EmptyState";
+import { EmptyState, LoadingState } from "@mah/ui";
 import { LawyerProfileCard } from "../components/LawyerProfileCard";
 
 interface LawyerProfilesScreenProps {
@@ -34,7 +33,7 @@ export function LawyerProfilesScreen({
   if (error) {
     return (
       <div className="text-center py-12 text-red-600">
-        <p>Failed to load lawyer profiles.</p>
+        <p>{t("errors.loadProfiles")}</p>
       </div>
     );
   }

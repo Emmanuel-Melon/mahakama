@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 import { MapPin, Briefcase, Clock, Star } from "lucide-react";
 import { LawyerStatusBadge } from "./LawyerStatusBadge";
@@ -8,6 +9,7 @@ interface LawyerProfileCardProps {
 }
 
 export function LawyerProfileCard({ lawyer, onClick }: LawyerProfileCardProps) {
+  const { t } = useTranslation("lawyers");
   const submittedDate =
     "submittedAt" in lawyer && lawyer.submittedAt
       ? new Date(lawyer.submittedAt as string).toLocaleDateString()
@@ -26,7 +28,7 @@ export function LawyerProfileCard({ lawyer, onClick }: LawyerProfileCardProps) {
             {lawyer.userId.slice(0, 8)}…
           </p>
           <h3 className="text-lg font-bold text-gray-900 truncate">
-            {lawyer.specialization || "No specialization"}
+            {lawyer.specialization || t("card.noSpecialization")}
           </h3>
         </div>
         <LawyerStatusBadge status={lawyer.status} />
@@ -40,7 +42,8 @@ export function LawyerProfileCard({ lawyer, onClick }: LawyerProfileCardProps) {
         )}
         {lawyer.experienceYears != null && (
           <span className="inline-flex items-center gap-1">
-            <Briefcase className="h-3.5 w-3.5" /> {lawyer.experienceYears}y exp
+            <Briefcase className="h-3.5 w-3.5" />{" "}
+            {t("card.yearsExp", { years: lawyer.experienceYears })}
           </span>
         )}
         {lawyer.rating && (
@@ -53,7 +56,7 @@ export function LawyerProfileCard({ lawyer, onClick }: LawyerProfileCardProps) {
       {submittedDate && (
         <p className="text-xs text-gray-500">
           <Clock className="h-3 w-3 inline mr-1" />
-          Submitted {submittedDate}
+          {t("card.submittedOn", { date: submittedDate })}
         </p>
       )}
     </button>
