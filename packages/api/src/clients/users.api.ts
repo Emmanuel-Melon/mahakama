@@ -29,6 +29,7 @@ export class UsersApiClient extends BaseApiClient {
         headers: { ...this.defaultHeaders, ...options.headers },
       },
     );
+    console.log("this response", response);
     return this.unpackSingle(response, {
       errMsg: "Invalid user data received from the server",
     });

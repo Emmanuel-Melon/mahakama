@@ -127,11 +127,9 @@ export const AuthConfigSchema = z.object({
     joseSecret: z.instanceof(Uint8Array),
   }),
   audience: z.object({
-    USER: z.string().default(process.env.AUDIENCE_USER || "ivyi-app-user"),
-    PARTNER: z
-      .string()
-      .default(process.env.AUDIENCE_PARTNER || "ivyi-app-partner"),
-    ADMIN: z.string().default(process.env.AUDIENCE_ADMIN || "ivyi-app-admin"),
+    USER: z.string().default(process.env.AUDIENCE_USER || "mah-app-user"),
+    LAWYER: z.string().default(process.env.AUDIENCE_LAWYER || "mah-app-lawyer"),
+    ADMIN: z.string().default(process.env.AUDIENCE_ADMIN || "mah-app-admin"),
   }),
   tokens: z.object({
     access: z.literal("access").default("access"),

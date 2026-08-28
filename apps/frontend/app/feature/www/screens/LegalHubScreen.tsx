@@ -8,7 +8,7 @@ import type {
   ServiceCategory,
 } from "@mah/api/src/clients/services.api";
 import { Button } from "@mah/ui/components/Button";
-import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import { AsyncContainer } from "@mah/ui";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface LegalHubScreenProps extends AsyncState {

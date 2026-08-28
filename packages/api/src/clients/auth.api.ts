@@ -49,7 +49,7 @@ export const registerRequestSchema = schemas.postV1register_Body;
  * Auth API Client
  */
 export class AuthApiClient extends BaseApiClient {
-  protected readonly path = "";
+  protected readonly path = "v1/auth";
 
   constructor(api: AxiosApiClient = createApiClient()) {
     super(api);

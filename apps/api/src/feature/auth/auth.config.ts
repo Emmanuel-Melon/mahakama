@@ -22,7 +22,7 @@ export type AuthJobType = (typeof AuthJobs)[keyof typeof AuthJobs];
 export const AUTH_COOKIES: Record<UserRole, string> = {
   admin: "admin_accessToken",
   user: "user_accessToken",
-  partner: "partner_accessToken",
+  lawyer: "lawyer_accessToken",
 } as const;
 
 export const TIME_IN_MS = {
@@ -32,9 +32,9 @@ export const TIME_IN_MS = {
 } as const;
 
 export const AUTH_AUDIENCE = {
-  USER: "ivyi-app-user",
-  PARTNER: "ivyi-app-partner",
-  ADMIN: "ivyi-app-admin",
+  USER: "mah-app-user",
+  LAWYER: "mah-app-lawyer",
+  ADMIN: "mah-app-admin",
 } as const;
 
 export const AUTH_ISSUER = "ivyi-auth-service";

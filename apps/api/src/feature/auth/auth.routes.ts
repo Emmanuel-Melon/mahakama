@@ -41,6 +41,6 @@ authRouter.post("/resend-verification", resendVerification);
 
 export const authApi: ApiManifest = {
   router: authRouter,
-  path: "/auth",
+  path: "/v1/auth",
   isPrivate: false,
 };

@@ -18,11 +18,21 @@ export function parseCookies(
     );
 }
 
+const AUTH_COOKIE_NAMES = [
+  "user_accessToken",
+  "lawyer_accessToken",
+  "admin_accessToken",
+] as const;
+
 export function getAuthToken(request: Request): string | null {
   const cookieHeader = request.headers.get("Cookie");
   const cookies = parseCookies(cookieHeader);
-  const token = cookies?.token ?? null;
-  return token;
+  for (const cookieName of AUTH_COOKIE_NAMES) {
+    if (cookies?.[cookieName]) {
+      return cookies[cookieName];
+    }
+  }
+  return null;
 }
 
 export function requireAuth(request: Request) {

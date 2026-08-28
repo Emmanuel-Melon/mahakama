@@ -1,8 +1,16 @@
 import { useTranslation } from "react-i18next";
-import { FileSearch, Library, MapPin, MessagesSquare } from "lucide-react";
+import type { TFunction } from "i18next";
+import {
+  Briefcase,
+  FileSearch,
+  Library,
+  MapPin,
+  MessagesSquare,
+} from "lucide-react";
 import { useUser } from "~/context/user-provider";
 import { ChatsPaths } from "~/feature/chats/ChatsConfig";
 import { CorpusPaths } from "~/feature/corpus/CorpusConfig";
+import { ConsultationsPaths } from "~/feature/consultations/ConsultationsConfig";
 import { WebsitePaths } from "~/feature/www/WebsiteConfig";
 import {
   type TutorialStepConfig,
@@ -10,67 +18,126 @@ import {
   TutorialHeader,
 } from "@mah/ui";
 
+type TutorialRole = "user" | "lawyer";
+
+const buildUserSteps = (
+  t: TFunction<"app", undefined>,
+): TutorialStepConfig[] => [
+  {
+    id: "assistant",
+    badge: t("tutorial.user.steps.assistant.badge"),
+    title: t("tutorial.user.steps.assistant.title"),
+    description: t("tutorial.user.steps.assistant.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: MessagesSquare,
+        label: t("tutorial.user.steps.assistant.ctaLabel"),
+        href: ChatsPaths.new(),
+      },
+    ],
+  },
+  {
+    id: "upload-documents",
+    badge: t("tutorial.user.steps.uploadDocuments.badge"),
+    title: t("tutorial.user.steps.uploadDocuments.title"),
+    description: t("tutorial.user.steps.uploadDocuments.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: FileSearch,
+        label: t("tutorial.user.steps.uploadDocuments.ctaLabel"),
+        href: ChatsPaths.new(),
+      },
+    ],
+  },
+  {
+    id: "explore-resources",
+    badge: t("tutorial.user.steps.exploreResources.badge"),
+    title: t("tutorial.user.steps.exploreResources.title"),
+    description: t("tutorial.user.steps.exploreResources.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: Library,
+        label: t("tutorial.user.steps.exploreResources.ctaDocsLabel"),
+        href: CorpusPaths.index(),
+      },
+      {
+        icon: MapPin,
+        label: t("tutorial.user.steps.exploreResources.ctaServicesLabel"),
+        href: WebsitePaths.legalHub(),
+      },
+    ],
+  },
+];
+
+const buildLawyerSteps = (
+  t: TFunction<"app", undefined>,
+): TutorialStepConfig[] => [
+  {
+    id: "client-chats",
+    badge: t("tutorial.lawyer.steps.clientChats.badge"),
+    title: t("tutorial.lawyer.steps.clientChats.title"),
+    description: t("tutorial.lawyer.steps.clientChats.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: MessagesSquare,
+        label: t("tutorial.lawyer.steps.clientChats.ctaLabel"),
+        href: ChatsPaths.recents(),
+      },
+    ],
+  },
+  {
+    id: "consultations",
+    badge: t("tutorial.lawyer.steps.consultations.badge"),
+    title: t("tutorial.lawyer.steps.consultations.title"),
+    description: t("tutorial.lawyer.steps.consultations.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: Briefcase,
+        label: t("tutorial.lawyer.steps.consultations.ctaLabel"),
+        href: ConsultationsPaths.index(),
+      },
+    ],
+  },
+  {
+    id: "research",
+    badge: t("tutorial.lawyer.steps.research.badge"),
+    title: t("tutorial.lawyer.steps.research.title"),
+    description: t("tutorial.lawyer.steps.research.description"),
+    completed: false,
+    completedText: t("tutorial.status.completed"),
+    inProgressText: t("tutorial.status.inProgress"),
+    actions: [
+      {
+        icon: Library,
+        label: t("tutorial.lawyer.steps.research.ctaLabel"),
+        href: CorpusPaths.index(),
+      },
+    ],
+  },
+];
+
 export const AppTutorial = () => {
   const { t } = useTranslation("app");
   const { user } = useUser();
 
-  const statusLabels = {
-    completedText: t("tutorial.status.completed"),
-    inProgressText: t("tutorial.status.inProgress"),
-  };
+  const role: TutorialRole = user?.role === "lawyer" ? "lawyer" : "user";
 
-  const steps: TutorialStepConfig[] = [
-    {
-      id: "assistant",
-      badge: t("tutorial.steps.assistant.badge"),
-      title: t("tutorial.steps.assistant.title"),
-      description: t("tutorial.steps.assistant.description"),
-      completed: false,
-      actions: [
-        {
-          icon: MessagesSquare,
-          label: t("tutorial.steps.assistant.ctaLabel"),
-          href: ChatsPaths.new(),
-        },
-      ],
-      ...statusLabels,
-    },
-    {
-      id: "upload-documents",
-      badge: t("tutorial.steps.uploadDocuments.badge"),
-      title: t("tutorial.steps.uploadDocuments.title"),
-      description: t("tutorial.steps.uploadDocuments.description"),
-      completed: false,
-      actions: [
-        {
-          icon: FileSearch,
-          label: t("tutorial.steps.uploadDocuments.ctaLabel"),
-          href: ChatsPaths.new(),
-        },
-      ],
-      ...statusLabels,
-    },
-    {
-      id: "explore-resources",
-      badge: t("tutorial.steps.exploreResources.badge"),
-      title: t("tutorial.steps.exploreResources.title"),
-      description: t("tutorial.steps.exploreResources.description"),
-      completed: false,
-      actions: [
-        {
-          icon: Library,
-          label: t("tutorial.steps.exploreResources.ctaDocsLabel"),
-          href: CorpusPaths.index(),
-        },
-        {
-          icon: MapPin,
-          label: t("tutorial.steps.exploreResources.ctaServicesLabel"),
-          href: WebsitePaths.legalHub(),
-        },
-      ],
-      ...statusLabels,
-    },
-  ];
+  const steps = role === "lawyer" ? buildLawyerSteps(t) : buildUserSteps(t);
 
   const completedCount = steps.filter((step) => step.completed).length;
   const isComplete = completedCount === steps.length;
@@ -83,7 +150,7 @@ export const AppTutorial = () => {
           userName={user?.name ?? undefined}
           title={t("tutorial.header.title")}
           highlightedTitle={t("tutorial.header.highlightedTitle")}
-          description={t("tutorial.header.description")}
+          description={t(`tutorial.${role}.description`)}
           welcomeLabel={t("tutorial.header.welcome")}
           progressText={
             isComplete
@@ -94,9 +161,9 @@ export const AppTutorial = () => {
                 })
           }
           infoCard={{
-            title: t("tutorial.header.infoCard.title"),
-            description: t("tutorial.header.infoCard.description"),
-            actionLabel: t("tutorial.header.infoCard.actionLabel"),
+            title: t(`tutorial.${role}.infoCard.title`),
+            description: t(`tutorial.${role}.infoCard.description`),
+            actionLabel: t(`tutorial.${role}.infoCard.actionLabel`),
             actionHref: WebsitePaths.legalHub(),
           }}
         />

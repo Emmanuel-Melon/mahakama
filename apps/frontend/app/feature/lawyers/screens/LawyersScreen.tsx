@@ -3,7 +3,7 @@ import { LawyersList } from "~/feature/lawyers/components/lawyers-list";
 import { HeroSection } from "@mah/ui";
 import { Gavel, Users } from "lucide-react";
 import { DiagonalSeparator } from "@mah/ui/components/atoms/DiagnoalSeparator";
-import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import { AsyncContainer } from "@mah/ui";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 

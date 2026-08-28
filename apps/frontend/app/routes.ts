@@ -4,14 +4,15 @@ import {
   layout,
   index,
 } from "@react-router/dev/routes";
-import type { RouteDefinition } from "./lib/nav/nav.types";
 import { websiteRoutes } from "./feature/www/WebsiteConfig";
 import { authRoutes } from "./feature/auth/AuthConfig";
 import { chatsRoutes, messagesRoutes } from "./feature/chats/ChatsConfig";
 import { corpusRoutes } from "./feature/corpus/CorpusConfig";
+import { consultationsRoutes } from "./feature/consultations/ConsultationsConfig";
 import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
 import { notificationsRoutes } from "./feature/notifications/NotificationsConfig";
 import { usersRoutes } from "./feature/users/UsersConfig";
+import type { RouteDefinition } from "@mah/client/nav";
 
 export default [
   index("routes/index.tsx"),
@@ -23,6 +24,7 @@ export default [
   ...toRouteConfig(authRoutes),
   ...toRouteConfig(chatsRoutes),
   ...toRouteConfig(corpusRoutes),
+  ...toRouteConfig(consultationsRoutes),
   ...toRouteConfig(lawyersRoutes),
   ...toRouteConfig(usersRoutes),
   ...toRouteConfig(messagesRoutes),

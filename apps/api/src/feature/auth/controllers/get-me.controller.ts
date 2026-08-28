@@ -15,6 +15,8 @@ export const getMeController = asyncHandler(
       new HttpError(HttpStatus.NOT_FOUND, "User not found"),
     );
 
+    console.log("user", user);
+
     sendSuccessResponse(
       req,
       res,
