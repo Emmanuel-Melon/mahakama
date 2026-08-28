@@ -1,6 +1,6 @@
-import { useAppError } from "~/components/errors/useAppError";
+import { useAppError } from "~/lib/errors/errors.registry";
 import { VerifyAccountScreen } from "~/feature/auth/screens/VerifyAccountScreen";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 
 export default function VerifyAccountRoute() {
   return <VerifyAccountScreen />;

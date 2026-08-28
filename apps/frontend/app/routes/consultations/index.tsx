@@ -5,8 +5,9 @@ import {
   useConsultationMutations,
 } from "@mah/api/src/hooks/use-consultations";
 import { authContext, userContext } from "~/middleware/context";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta({}: Route.MetaArgs) {
   return [

@@ -4,8 +4,9 @@ import { useCorpusEntries } from "@mah/api/src/hooks/corpus/use-corpus";
 import { authContext, userContext } from "~/middleware/context";
 import { useState } from "react";
 import { documentsApi } from "@mah/api/src/clients/documents.api";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta({}: Route.MetaArgs) {
   return [

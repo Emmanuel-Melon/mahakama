@@ -12,7 +12,8 @@
   "type": "commonjs",
   "exports": {
     "./i18n": "./src/i18n/index.ts",
-    "./nav": "./src/nav/index.ts"
+    "./nav": "./src/nav/index.ts",
+    "./errors": "./src/errors/index.ts"
   },
   "dependencies": {
     "i18next": "^26.4.0",

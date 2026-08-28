@@ -2,9 +2,8 @@ import type { Route } from "./+types/chats.new";
 import { chatApi } from "@mah/api/src/clients/chat.api";
 import { parseCookies } from "@mah/api/src/api/api.utils";
 import { NewChatScreen } from "~/feature/chats/screens/NewChatScreen";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 
 export function meta({}: Route.MetaArgs) {
   return [

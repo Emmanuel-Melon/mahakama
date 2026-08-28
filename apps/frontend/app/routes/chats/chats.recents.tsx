@@ -2,9 +2,9 @@ import type { Route } from "./+types/chats.recents";
 import { chatApi } from "@mah/api/src/clients/chat.api";
 import { parseCookies } from "@mah/api/src/api/api.utils";
 import { RecentChatsScreen } from "~/feature/chats/screens/RecentChatsScreen";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta() {
   return [
@@ -29,7 +29,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     });
     return { chats, error: null };
   } catch (error) {
-    handleRouteError(error);
+    throw handleRouteError(error);
   }
 }
 

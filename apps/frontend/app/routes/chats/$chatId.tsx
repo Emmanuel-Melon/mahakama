@@ -1,8 +1,8 @@
 import type { Route } from "./+types/$chatId";
 import { ChatScreen } from "~/feature/chats/screens/ChatScreen";
 import { useChat, useMessages } from "@mah/api/src/hooks/chats/use-chats";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 
 export function meta({}: Route.MetaArgs) {
   return [

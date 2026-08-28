@@ -1,8 +1,8 @@
 import type { Route } from "./+types/$lawyerId";
 import { useParams, useNavigate } from "react-router";
 import { LawyerProfileDetailScreen } from "~/feature/lawyers/screens/LawyerProfileDetailScreen";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 
 export function meta({}: Route.MetaArgs) {
   return [

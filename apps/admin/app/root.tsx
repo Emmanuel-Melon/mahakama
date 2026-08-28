@@ -11,7 +11,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import { UserProvider } from "~/context/user-provider";
-import { AppShell } from "@mah/ui/components/organisms/AppShell";
+import { AppShell } from "@mah/ui/components/organisms/layout/AppShell";
 import { useNavLinks } from "~/lib/nav/nav.permissions";
 import { useUser } from "~/context/user-provider";
 import i18n from "~/lib/i18n";

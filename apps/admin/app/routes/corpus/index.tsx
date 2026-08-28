@@ -1,7 +1,7 @@
 import type { Route } from "./+types/index";
 import { CorpusUploadScreen } from "~/feature/corpus/screens/CorpusUploadScreen";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 
 export function meta({}: Route.MetaArgs) {
   return [
