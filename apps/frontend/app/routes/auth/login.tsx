@@ -1,5 +1,5 @@
 import type { Route } from "./+types/login";
-import { LoginScreen } from "~/feature/auth/screens/LoginScreen";
+import { LoginScreen } from "@mah/feature/auth";
 import { useAppError } from "~/lib/errors/errors.registry";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 

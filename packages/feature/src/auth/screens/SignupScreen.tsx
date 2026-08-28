@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router";
-import { AuthForm } from "~/feature/auth/components/AuthForm";
-import { AuthAlternative } from "~/feature/auth/components/AuthAlternative";
+import { AuthForm } from "../components/AuthForm";
+import { AuthAlternative } from "../components/AuthAlternative";
 import { useAuthMutations } from "@mah/api/src/hooks/use-auth";
 import { toast } from "sonner";
 

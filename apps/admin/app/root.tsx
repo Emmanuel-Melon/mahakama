@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "react-router";
 
 import type { Route } from "./+types/root";
@@ -12,9 +13,17 @@ import "./app.css";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import { UserProvider } from "~/context/user-provider";
 import { AppShell } from "@mah/ui/components/organisms/layout/AppShell";
+import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
 import { useNavLinks } from "~/lib/nav/nav.permissions";
 import { useUser } from "~/context/user-provider";
+import { isAuthPageRoute } from "~/config/routes.config";
+import { configureApi } from "@mah/api/src/api/api.config";
+import { appConfig } from "~/config";
 import i18n from "~/lib/i18n";
+
+configureApi({
+  baseURL: appConfig.api.baseURL,
+});
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -48,12 +57,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const location = useLocation();
+  const isAuthPage = isAuthPageRoute(location.pathname);
+
   return (
     <QueryClientProviderWrapper>
       <UserProvider user={null}>
-        <AdminShell>
-          <Outlet />
-        </AdminShell>
+        {isAuthPage ? (
+          <AuthLayout>
+            <Outlet />
+          </AuthLayout>
+        ) : (
+          <AdminShell>
+            <Outlet />
+          </AdminShell>
+        )}
       </UserProvider>
     </QueryClientProviderWrapper>
   );

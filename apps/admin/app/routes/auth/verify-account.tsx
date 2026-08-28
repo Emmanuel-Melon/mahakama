@@ -1,9 +1,10 @@
 import { useAppError } from "~/lib/errors/errors.registry";
-import { VerifyAccountScreen } from "~/feature/auth/screens/VerifyAccountScreen";
+import { VerifyAccountScreen } from "@mah/feature/auth";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { AuthPaths } from "~/feature/auth/AuthConfig";
 
 export default function VerifyAccountRoute() {
-  return <VerifyAccountScreen />;
+  return <VerifyAccountScreen loginPath={AuthPaths.login()} />;
 }
 
 export function ErrorBoundary() {
