@@ -1,42 +1,48 @@
 {
-  "title": "Lawyer Profiles",
-  "subtitle": "Review and manage lawyer profile submissions",
+  "title": "ملفات المحامين",
+  "subtitle": "مراجعة وإدارة طلبات ملفات المحامين الشخصية",
   "tabs": {
-    "all": "All",
-    "submitted": "Submitted",
-    "approved": "Approved",
-    "rejected": "Rejected"
+    "all": "الكل",
+    "submitted": "المقدمة",
+    "approved": "المقبولة",
+    "rejected": "المرفوضة"
   },
   "card": {
-    "submittedOn": "Submitted {{date}}",
-    "viewProfile": "View Profile"
+    "submittedOn": "تم التقديم {{date}}",
+    "viewProfile": "عرض الملف",
+    "noSpecialization": "بدون تخصص",
+    "yearsExp": "{{years}} سنوات خبرة"
   },
   "detail": {
-    "backToList": "Back to profiles",
-    "profileInfo": "Profile Information",
-    "specialization": "Specialization",
-    "experience": "Experience",
-    "location": "Location",
-    "hourlyRate": "Hourly Rate",
-    "bio": "Bio",
-    "education": "Education",
-    "documents": "Documents",
-    "noDocuments": "No documents uploaded.",
-    "reviewActions": "Review Actions",
-    "submittedAt": "Submitted",
-    "reviewedBy": "Reviewed by",
-    "reviewedAt": "Reviewed at",
-    "rejectionReason": "Rejection reason"
+    "backToList": "العودة للقائمة",
+    "profileInfo": "معلومات الملف الشخصي",
+    "specialization": "التخصص",
+    "experience": "الخبرة",
+    "location": "الموقع",
+    "hourlyRate": "الأجر بالساعة",
+    "bio": "نبذة شخصية",
+    "education": "التعليم",
+    "documents": "المستندات",
+    "noDocuments": "لم يتم رفع أي مستندات.",
+    "reviewActions": "إجراءات المراجعة",
+    "submittedAt": "تم التقديم",
+    "reviewedBy": "تمت المراجعة بواسطة",
+    "reviewedAt": "تمت المراجعة في",
+    "rejectionReason": "سبب الرفض"
   },
   "actions": {
-    "approve": "Approve",
-    "reject": "Reject",
-    "confirmApprove": "Approve this lawyer?",
-    "confirmReject": "Reject this lawyer?",
-    "rejectReasonPlaceholder": "Reason for rejection (required)"
+    "approve": "قبول",
+    "reject": "رفض",
+    "confirmApprove": "قبول هذا المحامي؟",
+    "confirmReject": "رفض هذا المحامي؟",
+    "rejectReasonPlaceholder": "سبب الرفض (مطلوب)"
+  },
+  "errors": {
+    "loadProfile": "فشل تحميل ملف المحامي.",
+    "loadProfiles": "فشل تحميل ملفات المحامين."
   },
   "empty": {
-    "title": "No profiles to review",
-    "description": "There are no lawyer profiles matching this filter."
+    "title": "لا توجد ملفات للمراجعة",
+    "description": "لا توجد ملفات محامين تطابق هذا الفلتر."
   }
 }

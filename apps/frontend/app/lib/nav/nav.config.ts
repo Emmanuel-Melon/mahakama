@@ -1,5 +1,5 @@
+import type { NavLinkItem } from "@mah/client/nav";
 import { Users, Library, History, Scale, Home, Briefcase } from "lucide-react";
-import type { NavLinkItem } from "./nav.types";
 
 export const BASE_NAV_LINKS: NavLinkItem[] = [
   {

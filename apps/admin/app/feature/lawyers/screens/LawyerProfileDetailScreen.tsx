@@ -9,7 +9,7 @@ import {
   FileText,
   GraduationCap,
 } from "lucide-react";
-import { LoadingState } from "~/components/async-state/LoadingState";
+import { EmptyState, LoadingState } from "@mah/ui";
 import { LawyerStatusBadge } from "../components/LawyerStatusBadge";
 import { ReviewActions } from "../components/ReviewActions";
 
@@ -32,7 +32,7 @@ export function LawyerProfileDetailScreen({
   if (error || !data?.data) {
     return (
       <div className="text-center py-12 text-red-600">
-        <p>Failed to load lawyer profile.</p>
+        <p>{t("errors.loadProfile")}</p>
         <button
           type="button"
           onClick={onBack}

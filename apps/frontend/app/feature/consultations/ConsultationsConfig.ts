@@ -1,7 +1,7 @@
-import { defineRoutes } from "../../lib/nav/nav.paths";
+import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/consultations.json";
 import ar from "../../locales/ar/consultations.json";
-import type { I18nConfig } from "~/lib/i18n/i18next.types";
+import type { I18nConfig } from "@mah/client/i18n";
 
 const API_V1 = "/api/v1";
 

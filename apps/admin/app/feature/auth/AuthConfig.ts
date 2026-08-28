@@ -1,7 +1,7 @@
-import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/auth.json";
 import ar from "../../locales/ar/auth.json";
 import type { I18nConfig } from "@mah/client/i18n";
+import { defineRoutes } from "@mah/client/nav";
 
 export const authRoutes = defineRoutes({
   login: { path: "login", file: "routes/auth/login.tsx" },

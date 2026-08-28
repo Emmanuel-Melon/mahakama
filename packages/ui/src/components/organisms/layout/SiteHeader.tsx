@@ -1,5 +1,5 @@
-import { SidebarTrigger } from "../sidebar";
-import { Separator } from "../separator";
+import { SidebarTrigger } from "../../sidebar";
+import { Separator } from "../../separator";
 import { NavLink } from "react-router";
 
 interface SiteHeaderProps {

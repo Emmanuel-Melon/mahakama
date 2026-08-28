@@ -1,7 +1,7 @@
-import { defineRoutes } from "../../lib/nav/nav.paths";
+import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/users.json";
 import ar from "../../locales/ar/users.json";
-import type { I18nConfig } from "~/lib/i18n/i18next.types";
+import type { I18nConfig } from "@mah/client/i18n";
 
 export const usersRoutes = defineRoutes({
   profile: { path: "users/:profile", file: "routes/users/$profile.tsx" },

@@ -1,7 +1,7 @@
-import { defineRoutes } from "../../lib/nav/nav.paths";
+import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/lawyers.json";
 import ar from "../../locales/ar/lawyers.json";
-import type { I18nConfig } from "~/lib/i18n/i18next.types";
+import type { I18nConfig } from "@mah/client/i18n";
 
 export const lawyersRoutes = defineRoutes({
   index: { path: "lawyers", file: "routes/lawyers/index.tsx" },

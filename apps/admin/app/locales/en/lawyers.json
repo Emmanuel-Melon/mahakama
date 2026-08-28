@@ -9,7 +9,9 @@
   },
   "card": {
     "submittedOn": "Submitted {{date}}",
-    "viewProfile": "View Profile"
+    "viewProfile": "View Profile",
+    "noSpecialization": "No specialization",
+    "yearsExp": "{{years}}y exp"
   },
   "detail": {
     "backToList": "Back to profiles",
@@ -34,6 +36,10 @@
     "confirmApprove": "Approve this lawyer?",
     "confirmReject": "Reject this lawyer?",
     "rejectReasonPlaceholder": "Reason for rejection (required)"
+  },
+  "errors": {
+    "loadProfile": "Failed to load lawyer profile.",
+    "loadProfiles": "Failed to load lawyer profiles."
   },
   "empty": {
     "title": "No profiles to review",

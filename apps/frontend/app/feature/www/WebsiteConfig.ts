@@ -1,7 +1,7 @@
-import { defineRoutes } from "../../lib/nav/nav.paths";
+import { defineRoutes } from "@mah/client/nav";
 import en from "../../locales/en/website.json";
 import ar from "../../locales/ar/website.json";
-import type { I18nConfig } from "~/lib/i18n/i18next.types";
+import type { I18nConfig } from "@mah/client/i18n";
 
 export const websiteRoutes = defineRoutes({
   about: { path: "about", file: "routes/www/about.tsx" },

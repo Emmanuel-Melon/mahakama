@@ -1,13 +1,45 @@
-import { createI18n } from "@mah/client/i18n";
-import { dashboardI18n } from "~/feature/dashboard/DashboardConfig";
-import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
-import { corpusI18n } from "~/feature/corpus/CorpusConfig";
-import commonEn from "~/locales/en/common.json";
-import commonAr from "~/locales/ar/common.json";
+import i18n from "i18next";
+import type { Resource } from "i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
-const i18n = createI18n({
-  configs: [dashboardI18n, lawyersI18n, corpusI18n],
-  common: { en: commonEn, ar: commonAr },
-});
+import { authI18n } from "~/feature/auth/AuthConfig";
+import { corpusI18n } from "~/feature/corpus/CorpusConfig";
+import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
+
+import commonAr from "~/locales/ar/common.json";
+import commonEn from "~/locales/en/common.json";
+
+const i18nConfigs = [authI18n, corpusI18n, lawyersI18n];
+
+const resources: Resource = i18nConfigs.reduce<Resource>(
+  (acc, Config) => {
+    acc.en[Config.namespace] = Config.resources.en;
+    acc.ar[Config.namespace] = Config.resources.ar;
+    return acc;
+  },
+  {
+    ar: { common: commonAr },
+    en: { common: commonEn },
+  },
+);
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    fallbackLng: "en",
+    supportedLngs: ["en", "ar"],
+    defaultNS: "common",
+    ns: Object.keys(resources.en).sort(),
+    resources,
+    detection: {
+      order: ["cookie", "localStorage", "navigator"],
+      caches: ["cookie", "localStorage"],
+    },
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
 export default i18n;
