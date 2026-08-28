@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { CircleCheck, TriangleAlert } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 
 interface AccountVerifiedStateProps {
   message: string;

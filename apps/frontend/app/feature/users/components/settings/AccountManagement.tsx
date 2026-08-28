@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { LogOut, Shield, CreditCard, Settings } from "lucide-react";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import type { User } from "@mah/api/src/clients/users.api";

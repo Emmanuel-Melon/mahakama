@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { useTranslation } from "react-i18next";
 import { Mail, ArrowRight } from "lucide-react";
 import { NavLink } from "react-router";

@@ -1,8 +1,8 @@
 import { FilterSelector } from "./filter-selector";
 import { FilterOptions } from "./filter-options";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { Button } from "~/components/ui/button";
-import { Badge } from "~/components/ui/badge";
+import { Button } from "@mah/ui/components/Button";
+import { Badge } from "@mah/ui/components/badge";
 import { X, Filter } from "lucide-react";
 
 interface FilterSectionProps {

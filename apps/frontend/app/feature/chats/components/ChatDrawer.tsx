@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { ChevronLeft } from "lucide-react";
 import {
   Drawer,
@@ -9,7 +9,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "~/components/ui/drawer";
+} from "@mah/ui/components/drawer";
 
 export const ChatDrawer = () => {
   return (

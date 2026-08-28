@@ -7,7 +7,7 @@ import {
   Scale,
   BookOpen,
 } from "lucide-react";
-import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
+import { DiagonalSeparator } from "@mah/ui/components/atoms/DiagnoalSeparator";
 import { AboutIntro } from "~/feature/www/components/about/Intro";
 import { HeroSection } from "@mah/ui";
 import { FeaturesGrid } from "../components/about/FeaturesGrid";

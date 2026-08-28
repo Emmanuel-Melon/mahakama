@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { useState, type FC } from "react";
 import { UserProfileForm } from "~/feature/users/components/settings/UserProfileForm";
 import { ProfileHeader } from "~/feature/users/components/profile/ProfileHeader";

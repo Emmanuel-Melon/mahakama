@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Building2, Scale, HeartHandshake, Shield, Search } from "lucide-react";
 import { HeroSection } from "@mah/ui";
-import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
+import { DiagonalSeparator } from "@mah/ui/components/atoms/DiagnoalSeparator";
 import { ServicesList } from "~/feature/www/components/legal-hub/services-list";
 import type {
   LegalService as ApiLegalService,
   ServiceCategory,
 } from "@mah/api/src/clients/services.api";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 

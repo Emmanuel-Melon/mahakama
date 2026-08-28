@@ -1,4 +1,4 @@
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 import type { ComponentType } from "react";
 
 interface StepHeaderProps {

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 
 interface ResendVerificationButtonProps {
   onClick: () => void;

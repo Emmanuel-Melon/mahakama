@@ -1,5 +1,5 @@
 import { Plus, Share2, MoreVertical, Edit, Trash2 } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { Link } from "react-router";
 import { useState } from "react";
 import {
@@ -7,7 +7,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
+} from "@mah/ui/components/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,7 +17,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "~/components/ui/alert-dialog";
+} from "@mah/ui/components/alert-dialog";
 
 export function ChatListHeader({ title = "Recent Chats" }: { title?: string }) {
   return (

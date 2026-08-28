@@ -10,8 +10,8 @@ import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
 import { DocumentIndicator } from "~/feature/chats/components/DocumentIndicator";
-import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
-import { PageDetailsError } from "~/components/molecules/page-details-error";
+import { PageDetailsLoading } from "@mah/ui/components/molecules/PageDetailsLoading";
+import { PageDetailsError } from "@mah/ui/components/molecules/PageDetailsError";
 import {
   isReplyAwaiting,
   useChatMutations,

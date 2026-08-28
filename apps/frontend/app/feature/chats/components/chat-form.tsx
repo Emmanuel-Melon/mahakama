@@ -10,10 +10,10 @@ import {
   InputGroupButton,
   InputGroupText,
   InputGroupTextarea,
-} from "~/components/ui/input-group";
-import { Separator } from "~/components/ui/separator";
-import { UploadDropdown } from "~/components/ui/upload-dropdown";
-import { Button } from "~/components/ui/button";
+} from "@mah/ui/components/input-group";
+import { Separator } from "@mah/ui/components/separator";
+import { UploadDropdown } from "@mah/ui/components/molecules/UploadDropdown";
+import { Button } from "@mah/ui/components/Button";
 import { getUploadKey } from "@mah/api/src/hooks/use-upload-manager";
 import { useUploadDocument } from "@mah/api/src/hooks/documents/use-documents.sse";
 

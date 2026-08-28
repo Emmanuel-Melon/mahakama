@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "@mah/ui/components/Button";
+import { Avatar, AvatarImage, AvatarFallback } from "@mah/ui/components/avatar";
 import { Camera, Upload } from "lucide-react";
 import { ProfessionalSection } from "~/feature/users/components/onboarding/professional-section";
 import { BioSection } from "~/feature/users/components/bio-section";

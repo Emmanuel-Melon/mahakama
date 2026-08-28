@@ -1,9 +1,9 @@
 import { MapPin, Briefcase, ChevronRight, Languages } from "lucide-react";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@mah/ui/components/avatar";
 import { BookmarkButton } from "@mah/ui";
-import { ShareButton } from "~/components/molecules/share-button";
-import { MahButton } from "~/components/molecules/mah-button";
-import { MahCard } from "~/components/atoms/mah-card";
+import { ShareButton } from "@mah/ui/components/molecules/ShareButton";
+import { MahButton } from "@mah/ui/components/molecules/MahButton";
+import { MahCard } from "@mah/ui/components/atoms/MahCard";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 const getFirstName = (name?: string) => {

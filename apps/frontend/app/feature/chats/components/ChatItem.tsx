@@ -13,7 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+} from "@mah/ui/components/alert-dialog";
 
 export type Chat = components["schemas"]["Chat"];
 interface ChatItemProps {

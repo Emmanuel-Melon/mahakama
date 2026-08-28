@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
 import { LocationSection } from "~/feature/users/components/settings/location-section";
 import { ContactSection } from "~/feature/users/components/contact-section";

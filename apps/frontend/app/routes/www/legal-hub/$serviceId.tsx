@@ -1,8 +1,8 @@
 import { ServiceDetailScreen } from "~/feature/www/screens/ServiceDetailScreen";
 import { authContext } from "~/middleware/context";
 import { useService } from "@mah/api/src/hooks/use-services";
-import { PageDetailsLoading } from "~/components/molecules/page-details-loading";
-import { PageDetailsError } from "~/components/molecules/page-details-error";
+import { PageDetailsLoading } from "@mah/ui/components/molecules/PageDetailsLoading";
+import { PageDetailsError } from "@mah/ui/components/molecules/PageDetailsError";
 import { useAppError } from "~/components/errors/useAppError";
 import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
 import { handleRouteError } from "~/lib/errors/errors.utils";

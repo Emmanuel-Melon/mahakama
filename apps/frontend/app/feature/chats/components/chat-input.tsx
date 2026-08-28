@@ -1,20 +1,19 @@
 import { useRef, useEffect, useState } from "react";
-import { Button } from "~/components/ui/button";
-import { ButtonGroup } from "~/components/ui/button-group";
+import { Button } from "@mah/ui/components/Button";
+import { ButtonGroup } from "@mah/ui/components/button-group";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "~/components/ui/input-group";
+} from "@mah/ui/components/input-group";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "~/components/ui/tooltip";
-import { UploadDropdown } from "~/components/ui/upload-dropdown";
+} from "@mah/ui/components/tooltip";
+import { UploadDropdown } from "@mah/ui/components/molecules/UploadDropdown";
 import { getUploadKey } from "@mah/api/src/hooks/use-upload-manager";
-import { useUploadDocument } from "@mah/api/src/hooks/documents/use-documents.sse";
 import { AudioLines, Paperclip, Plus, Send, X } from "lucide-react";
 import { cn } from "~/lib/utils";
 

@@ -1,12 +1,12 @@
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
+import { Input } from "@mah/ui/components/Input";
+import { Button } from "@mah/ui/components/Button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@mah/ui/components/select";
 import { Users, MapPin, CheckCircle } from "lucide-react";
 
 interface FilterOptionsProps {

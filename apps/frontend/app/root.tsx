@@ -12,11 +12,11 @@ import { WebsiteLayout } from "@mah/ui/components/organisms/layout/WebsiteLayout
 import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
 import { Toaster } from "sonner";
 import { CountryProvider } from "~/context/country-context";
-import { NavigationLoader } from "~/components/atoms/navigation-loader";
+import { NavigationLoader } from "@mah/ui/components/atoms/NavigationLoader";
 import { useNavLinks } from "~/hooks/use-nav-links";
 import { useUser } from "~/context/user-provider";
 import { HeaderActions } from "@mah/ui/components/organisms/layout/HeaderActions";
-import { OnboardingProgress } from "~/components/molecules/onboarding-progress";
+import { OnboardingProgress } from "@mah/ui/components/molecules/OnboardingProgress";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
