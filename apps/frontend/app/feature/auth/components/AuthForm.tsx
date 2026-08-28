@@ -11,7 +11,7 @@ import {
   type RegisterRequest,
 } from "@mah/api/src/clients/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormControl } from "~/components/molecules/FormControl";
+import { FormControl } from "@mah/ui/components/molecules/FormControl";
 
 export type AuthMode = "login" | "signup";
 export type AuthFormData<M extends AuthMode> = M extends "signup"

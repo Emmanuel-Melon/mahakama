@@ -4,7 +4,7 @@ import { Lock, ArrowRight } from "lucide-react";
 import { NavLink } from "react-router";
 import { z } from "zod";
 import { AuthFormHeader } from "./AuthFormHeader";
-import { FormField } from "~/components/molecules/FormField";
+import { FormField } from "@mah/ui/components/molecules/FormField";
 
 export const passwordResetFormSchema = z
   .object({

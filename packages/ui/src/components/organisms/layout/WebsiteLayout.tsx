@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
-import { MarketingHeader } from "@mah/ui/components/organisms/MarketingHeader";
-import { MarketingFooter } from "@mah/ui/components/organisms/MarketingFooter";
+import { MarketingHeader } from "../www/MarketingHeader";
+import { MarketingFooter } from "../www/MarketingFooter";
 
 interface WebsiteLayoutProps {
   children?: React.ReactNode;

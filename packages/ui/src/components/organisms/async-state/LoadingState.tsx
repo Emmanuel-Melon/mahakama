@@ -1,5 +1,5 @@
 import { Loader2 } from "lucide-react";
-import { Card } from "../Card";
+import { Card } from "../../Card";
 
 interface LoadingStateProps {
   label?: string;

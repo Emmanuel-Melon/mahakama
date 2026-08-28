@@ -1,12 +1,14 @@
 import { useTranslation } from "react-i18next";
 import { FileSearch, Library, MapPin, MessagesSquare } from "lucide-react";
-import { TutorialHeader } from "~/components/organisms/tutorial/TutorialHeader";
-import { TutorialLayout } from "~/components/organisms/tutorial/TutorialLayout";
 import { useUser } from "~/context/user-provider";
 import { ChatsPaths } from "~/feature/chats/ChatsConfig";
 import { CorpusPaths } from "~/feature/corpus/CorpusConfig";
 import { WebsitePaths } from "~/feature/www/WebsiteConfig";
-import type { TutorialStepConfig } from "~/components/organisms/tutorial/TutorialStepCard";
+import {
+  type TutorialStepConfig,
+  TutorialLayout,
+  TutorialHeader,
+} from "@mah/ui";
 
 export const AppTutorial = () => {
   const { t } = useTranslation("app");

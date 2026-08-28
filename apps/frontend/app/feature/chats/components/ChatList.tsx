@@ -2,8 +2,7 @@ import { ChatItem } from "./ChatItem";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 
 import type { Chat } from "@mah/api/src/clients/chat.api";
-import EmptyState from "~/components/async-state/EmptyState";
-import { ErrorState } from "~/components/async-state/ErrorState";
+import { EmptyState, ErrorState } from "@mah/ui";
 
 export interface ChatListProps extends AsyncState {
   chats: Chat[];

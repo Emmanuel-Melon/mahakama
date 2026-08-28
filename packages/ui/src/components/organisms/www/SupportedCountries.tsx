@@ -1,5 +1,5 @@
 import { Globe2 } from "lucide-react";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "../../IconContainer";
 
 const countries = [
   { name: "South Sudan", flag: "🇸🇸" },

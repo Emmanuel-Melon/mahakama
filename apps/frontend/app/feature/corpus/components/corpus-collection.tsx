@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { CorpusCard } from "./corpus-card";
-import { ListControls } from "~/components/organisms/list-controls";
-import { type Document } from "@mah/api/src/clients/documents.api";
+import { ListControls } from "@mah/ui";
+import { type Corpus } from "@mah/api/src/clients/corpus.api";
 
 interface CorpusCollectionProps {
-  documents: Document[];
+  documents: Corpus[];
   displayMode?: "list" | "grid";
   variant?: "default" | "minimal";
   showControls?: boolean;

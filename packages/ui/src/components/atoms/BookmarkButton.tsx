@@ -1,5 +1,5 @@
 import { Bookmark } from "lucide-react";
-import { Toggle } from "~/components/ui/toggle";
+import { Toggle } from "../Toggle";
 
 interface BookmarkButtonProps {
   onClick: (e: React.MouseEvent) => void;

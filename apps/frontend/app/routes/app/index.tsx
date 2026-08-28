@@ -1,5 +1,5 @@
 import type { Route } from "./+types/index";
-import { AppTutorial } from "~/feature/app/AppTutorial";
+import { AppTutorial } from "~/feature/app/components/AppTutorial";
 
 export function meta({ loaderData }: Route.MetaArgs) {
   return [

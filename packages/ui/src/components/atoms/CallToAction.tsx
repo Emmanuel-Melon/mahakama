@@ -1,7 +1,7 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "../Button";
 import { NavLink } from "react-router";
 import { Scale, Gavel, ArrowRight } from "lucide-react";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "../IconContainer";
 
 export const CallToAction = () => {
   return (

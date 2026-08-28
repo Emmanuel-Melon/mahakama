@@ -4,7 +4,7 @@ import { Mail, ArrowRight } from "lucide-react";
 import { NavLink } from "react-router";
 import { forgotPasswordSchema, type ForgotPasswordData } from "../auth.types";
 import { AuthFormHeader } from "./AuthFormHeader";
-import { FormField } from "~/components/molecules/FormField";
+import { FormField } from "@mah/ui/components/molecules/FormField";
 
 interface ForgotPasswordFormProps {
   onSubmit: (data: ForgotPasswordData) => void;

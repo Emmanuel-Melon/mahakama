@@ -1,19 +1,8 @@
 import { useState, useEffect } from "react";
 import { ServiceCard } from "./service-card";
-import { ListControls } from "~/components/organisms/list-controls";
-import type { components } from "@mah/api/generated/api.types";
-import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
-
-export type LegalService = components["schemas"]["LegalService"];
-export type LegalServiceResource =
-  components["schemas"]["LegalServiceResource"];
-export type LegalServiceSingleResponse =
-  components["schemas"]["LegalServiceSingleResponse"];
-export type LegalServicesCollectionResponse =
-  components["schemas"]["LegalServicesCollectionResponse"];
-export type CategoryLabels = components["schemas"]["CategoryLabels"];
-export type ServiceCategory = components["schemas"]["ServiceCategory"];
+import { ListControls } from "@mah/ui";
+import { EmptyState, LoadingState } from "@mah/ui";
+import type { LegalService } from "@mah/api/src/clients/services.api";
 
 interface ServicesListProps {
   services: LegalService[];

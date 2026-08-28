@@ -1,7 +1,7 @@
 import { CorpusCollection } from "~/feature/corpus/components/corpus-collection";
 import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
 import { Library } from "lucide-react";
-import EmptyState from "~/components/async-state/EmptyState";
+import { EmptyState, ErrorState } from "@mah/ui";
 import { PageLoading } from "~/components/molecules/page-loading";
 import { type Corpus } from "@mah/api/src/clients/corpus.api";
 import { HeroSection } from "@mah/ui";
