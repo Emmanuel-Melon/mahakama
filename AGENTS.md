@@ -2,10 +2,9 @@
 
 ## Repo
 
-- npm-workspaces monorepo: `apps/api` (workspace `server`, Express 5 + TS), `apps/frontend` (workspace `client`, React Router 7 framework-mode/SSR + Vite + Tailwind v4 + shadcn/ui), and shared source packages in `packages/` (`@mah/client`, `@mah/api`).
+- npm-workspaces monorepo: `apps/api` (workspace `server`, Express 5 + TS), `apps/frontend` (workspace `client`, React Router 7 framework-mode/SSR + Vite + Tailwind v4 + shadcn/ui), `apps/admin` (workspace `admin`, React Router 8 framework-mode/SSR), and shared source packages in `packages/` (`@mah/client`, `@mah/api`, `@mah/ui`, `@mah/eslint-config`, `@mah/typescript-config`).
 - Node v22.14.0 (`.nvmrc`). No committed lockfiles — CI runs `npm ci` and fails until they exist; use `npm install` locally.
-- Root: `npm run dev` runs both (API `:3000`, frontend `:5173`); `npm run lint` / `format` / `build` cover all workspaces.
-- The repo was recently consolidated into a monorepo; `apps/api/README.md`, `apps/frontend/README.md`, `apps/api/contributing.md`, and `apps/frontend/API.md` are stale on structure and stack. Trust `package.json` scripts and this file over prose docs.
+- Root: `npm run dev` runs `apps/api` (`:3000`) and `apps/frontend` (`:5173`) concurrently (admin runs separately via `npm run dev --workspace=admin`); `npm run lint` / `format` / `build` cover all workspaces.
 
 ## Workflow (manual execution)
 
@@ -34,3 +33,22 @@
 - Default API base is `http://localhost:3000/api` (see `app/config/index.ts`); override with `VITE_API_BASE_URL`. API CORS only allows `localhost:5173`.
 - There is no test script and no tests (CI's `npm test` step is a no-op/fails). For manual verification the user runs `npm run typecheck` and `npm run build`.
 - Deployment: API on Railway (`mahakama-api-production.up.railway.app`), frontend on Netlify (README) with a Vercel preset in `react-router.config.ts`; Dockerfiles in `infra/`.
+
+## Admin (`apps/admin/`)
+
+- React Router 8 framework-mode app (workspace `admin`) for internal content review/management. Shares the same stack and conventions as the frontend and reuses `@mah/client`, `@mah/api`, and `@mah/ui`.
+- Routes are NOT file-based. Declared centrally in `app/routes.ts`, pulling per-feature route config objects from `app/feature/<feature>/<Feature>Config.ts` (e.g. `LawyersConfig.ts`, `AuthConfig.ts`, `CorpusConfig.ts`, `DashboardConfig.ts`). To add/change a route, edit the feature config and `app/routes.ts`.
+- Feature-organized code in `app/feature/<domain>/` (`screens/`, `components/`); page components live in `app/routes/`.
+- Path alias `~/*` → `app/*`.
+- i18n mirrors the established pattern: each feature config exports an `I18nConfig` (`authI18n`, `lawyersI18n`, etc.) built from `app/locales/{en,ar}/<feature>.json`; `app/lib/i18n/index.ts` aggregates them for i18next. Type-safe keys are declared in `app/lib/i18n/i18next.d.ts` — register the `resources.<namespace>` slot when adding a feature. Uses `useTranslation("<namespace>")` in screens/components.
+- `npm run typecheck` = `react-router typegen && tsc`; `npm run build` = `react-router build`. No test script.
+
+## Packages (`packages/`)
+
+Shared source packages consumed by the apps. Each has its own `AGENTS.md`; key contracts:
+
+- `@mah/client` — framework-agnostic client primitives: `i18n` (the `I18nConfig` type + aggregator), `nav` (`defineRoutes`/typed routing helpers used by feature Configs), and `errors` (unified error config/types/utils).
+- `@mah/api` — TypeScript client for the backend, generated from the OpenAPI spec: `src/generated/api.types.ts` + `api.schemas.ts`, hand-written `src/clients/*.api.ts` (axios) and `src/hooks/use-*.ts(x)` (react-query). Regenerate types after backend schema/route changes (see Frontend section).
+- `@mah/ui` — shared design system (shadcn/ui based): `src/components/` organized into primitives, `atoms/`, `molecules/`, `organisms/`, `errors/`, `layout/`, plus `src/lib` and `src/hooks`. Exposes `globals.css`.
+- `@mah/eslint-config` — shared ESLint presets (`base`, `next-js`, `react-internal`).
+- `@mah/typescript-config` — shared TS configs (`base`, `node`, `react-library`).
