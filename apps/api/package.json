@@ -99,6 +99,7 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "drizzle-zod": "^0.8.3",
+    "express-rate-limit": "^8.6.2",
     "express-useragent": "^1.0.15",
     "express-validator": "^7.2.1",
     "glob": "^13.0.6",

@@ -3,7 +3,25 @@ import { type Lawyer } from "./lawyers.types";
 
 export const SerializedLawyer: JsonApiResourceConfig<Lawyer> = {
   type: "lawyer",
-  attributes: (lawyer: Lawyer) => lawyer,
+  attributes: (lawyer: Lawyer) => ({
+    id: lawyer.id,
+    userId: lawyer.userId,
+    status: lawyer.status,
+    specialization: lawyer.specialization,
+    experienceYears: lawyer.experienceYears,
+    rating: lawyer.rating,
+    casesHandled: lawyer.casesHandled,
+    isAvailable: lawyer.isAvailable,
+    location: lawyer.location,
+    languages: lawyer.languages,
+    bio: lawyer.bio,
+    barNumber: lawyer.barNumber,
+    issuingAuthority: lawyer.issuingAuthority,
+    jurisdiction: lawyer.jurisdiction,
+    education: lawyer.education,
+    createdAt: lawyer.createdAt,
+    updatedAt: lawyer.updatedAt,
+  }),
 };
 
 export const LawyerJobs = {

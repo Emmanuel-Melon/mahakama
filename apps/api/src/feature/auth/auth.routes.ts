@@ -1,5 +1,6 @@
 import { Router } from "express";
 import type { ApiManifest } from "@/routes/api.types";
+import { useAuthentication } from "@/routes/api.rules";
 
 import { loginController } from "./controllers/login.controller";
 import { logoutController } from "./controllers/logout.controller";
@@ -9,14 +10,16 @@ import { refreshController } from "./controllers/refresh.controller";
 import { requestResetController } from "./controllers/request-reset.controller";
 import { resetPasswordController } from "./controllers/reset-password.controller";
 import { verifyEmailController } from "./controllers/verify-email.controller";
+import { resendVerification } from "./controllers/resend-verification.controller";
 import { registerRequestSchema, loginRequestSchema } from "./auth.types";
 import {
   HttpLocation,
   validateHttpRequest,
 } from "@/middleware/request-validators";
-import { resendVerification } from "./controllers/resend-verification.controller";
 
 export const authRouter = Router();
+
+useAuthentication(authRouter, ["/me", "/logout"]);
 
 authRouter.post(
   "/register",
@@ -37,9 +40,7 @@ authRouter.post("/verify-email", verifyEmailController);
 authRouter.post("/resend-verification", resendVerification);
 
 export const authApi: ApiManifest = {
-  path: "/v1",
   router: authRouter,
+  path: "/auth",
+  isPrivate: false,
 };
-
-export const authRoutes = authRouter.stack.map((layer) => layer.route?.path);
-export const AUTH_PATH = "/v1";

@@ -5,6 +5,7 @@ import {
   HttpLocation,
   validateHttpRequest,
 } from "@/middleware/request-validators";
+import { useAuthorization } from "@/routes/api.rules";
 import type { ApiManifest } from "@/routes/api.types";
 
 import { addInstitutionController } from "./controllers/add-institution.controller";
@@ -16,6 +17,10 @@ import { getLegalServicesController } from "./controllers/get-services.controlle
 import { serviceInsertSchema } from "./services.types";
 
 const servicesRouter = Router();
+
+useAuthorization(servicesRouter, [
+  { path: "/institutions", roles: ["admin"] },
+]);
 
 servicesRouter.get("/", getLegalServicesController);
 servicesRouter.get(

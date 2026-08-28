@@ -35,12 +35,25 @@ export async function findLawyers(
     filters.push(eq(lawyersTable.specialization, query.specialization));
   }
 
+  if (query.status) {
+    filters.push(
+      eq(
+        lawyersTable.status,
+        query.status as "draft" | "submitted" | "approved" | "rejected",
+      ),
+    );
+  }
+
+  if (query.userId) {
+    filters.push(eq(lawyersTable.userId, query.userId));
+  }
+
   const result = await paginate<"lawyers", Lawyer>("lawyers", lawyersTable, {
     ...query,
     filters,
     search: {
       q: query.q,
-      columns: [lawyersTable.name, lawyersTable.location],
+      columns: [lawyersTable.specialization, lawyersTable.location],
     },
   });
 

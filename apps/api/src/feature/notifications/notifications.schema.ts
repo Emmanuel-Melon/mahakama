@@ -17,6 +17,7 @@ import { usersSchema } from "../users/users.schema";
 export const notificationTypeEnum = pgEnum("notification_type", [
   "admin",
   "auth",
+  "consultations",
   "payments",
   "plans",
   "system",
@@ -75,15 +76,12 @@ export const notificationsSchema = pgTable(
     title: varchar("title", { length: 255 }).notNull(),
     message: text("message").notNull(),
     actionUrl: text("action_url"),
-    occasionId: text("occasion_id"),
-    processId: text("process_id"),
     scheduledAt: timestamp("scheduled_at").notNull(),
     sentAt: timestamp("sent_at"),
     deliveredAt: timestamp("delivered_at"),
     status: notificationStatusEnum("status")
       .notNull()
       .default("notification_pending"),
-    failureReason: notificationFailureReasonEnum("failure_reason"),
     metadata: jsonb("metadata").$type<Record<string, unknown>>(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

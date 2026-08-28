@@ -1,11 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { db } from "@/lib/drizzle";
-import { findLawyer } from "../lawyers.find";
-import { createMockLawyer } from "../../lawyers.factory";
+import { findLawyer, findLawyers } from "../lawyers.find";
+import { createMockLawyer, createMockLawyers } from "../../lawyers.factory";
 import { eq } from "drizzle-orm";
 import { lawyersTable } from "../../lawyers.schema";
-import { findLawyers } from "../lawyers.find";
-import { createMockLawyers } from "../../lawyers.factory";
 import { paginate } from "@/lib/drizzle/drizzle.paginate";
 import { mockDrizzleQuery } from "@/tests/tests.utils";
 
@@ -34,7 +32,6 @@ describe("findLawyers", () => {
     };
     const result = await findLawyers(query);
 
-    // toManyResult transforms the paginated result to DbManyResult
     expect(result).toEqual({
       data: mockLawyers,
       count: 5,
@@ -75,12 +72,39 @@ describe("findLawyers", () => {
       metadata: mockPaginatedResult.metadata,
     });
   });
+
+  it("should filter by status", async () => {
+    const mockPaginatedResult = {
+      data: [],
+      metadata: { total: 0, page: 1, limit: 10, totalPages: 0 },
+    };
+
+    vi.mocked(paginate).mockResolvedValue(mockPaginatedResult as any);
+
+    const query = {
+      page: 1,
+      limit: 10,
+      status: "approved",
+      order: "asc" as const,
+      offset: 0,
+    };
+    await findLawyers(query);
+
+    expect(paginate).toHaveBeenCalledWith(
+      "lawyers",
+      lawyersTable,
+      expect.objectContaining({
+        filters: expect.arrayContaining([eq(lawyersTable.status, "approved")]),
+      }),
+    );
+  });
 });
 
 describe("findLawyer", () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
+
   it("should return ok:true with lawyer data", async () => {
     const mockLawyer = createMockLawyer();
     mockDrizzleQuery("lawyers", "findFirst", mockLawyer);
@@ -89,7 +113,6 @@ describe("findLawyer", () => {
   });
 
   it("should return ok:false with null data when lawyer not found", async () => {
-    // Mock findFirst to return undefined (no lawyer found)
     vi.mocked(db.query.lawyers.findFirst).mockResolvedValue(undefined);
 
     const result = await findLawyer("id", "non-existent-id");
