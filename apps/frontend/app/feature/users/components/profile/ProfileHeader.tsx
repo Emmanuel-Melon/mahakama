@@ -1,5 +1,5 @@
-import { Button } from "~/components/ui/button";
-import { Avatar, AvatarImage, AvatarFallback } from "~/components/ui/avatar";
+import { Button } from "@mah/ui/components/Button";
+import { Avatar, AvatarImage, AvatarFallback } from "@mah/ui/components/avatar";
 import { Pencil, User as UserIcon } from "lucide-react";
 
 import type { User } from "~/feature/users/screens/ProfileScreen";

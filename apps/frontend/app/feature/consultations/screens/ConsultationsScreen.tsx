@@ -1,5 +1,5 @@
 import { EmptyState, ErrorState } from "@mah/ui";
-import { PageLoading } from "~/components/molecules/page-loading";
+import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
 import { MessageSquare } from "lucide-react";
 import type { Consultation } from "@mah/api/src/clients/consultations.api";
 import type { AsyncState } from "@mah/api/src/api/api.types";

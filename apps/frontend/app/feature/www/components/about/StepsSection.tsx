@@ -1,5 +1,5 @@
 import { StepCard } from "./StepCard";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 
 type Step = {
   number: number;

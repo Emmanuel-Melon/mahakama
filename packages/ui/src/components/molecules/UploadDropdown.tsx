@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, File } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "../Button";
 
 interface UploadDropdownProps {
   onFileUpload: (files: File[]) => void;

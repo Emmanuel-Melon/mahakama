@@ -7,9 +7,9 @@ import {
   Calendar,
   Scale,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { BorderedBox } from "~/components/ui/bordered-box";
-import { HandDrawnAvatar } from "~/components/ui/hand-drawn-avatar";
+import { Button } from "@mah/ui/components/Button";
+import { BorderedBox } from "@mah/ui/components/molecules/bordered-box";
+import { HandDrawnAvatar } from "@mah/ui/components/molecules/hand-drawn-avatar";
 
 interface LawyerProfileHeaderProps {
   lawyer: any & {

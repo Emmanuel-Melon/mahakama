@@ -1,5 +1,5 @@
 import { User, Bookmark } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "~/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@mah/ui/components/tabs";
 
 interface ProfileTabsProps {
   activeTab: "personal" | "account";

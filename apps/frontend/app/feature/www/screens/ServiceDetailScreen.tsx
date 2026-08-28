@@ -11,7 +11,7 @@ import {
   Building,
   Home,
 } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { PageHeader } from "@mah/ui";
 import { PageDetailHeader } from "@mah/ui";
 import { ContactInformation, type ContactItem } from "@mah/ui";

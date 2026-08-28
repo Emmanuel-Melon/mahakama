@@ -1,4 +1,4 @@
-import { StylizedList } from "~/components/ui/stylized-list";
+import { StylizedList } from "@mah/ui/components/molecules/stylized-list";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import {
   Mail as MailIcon,

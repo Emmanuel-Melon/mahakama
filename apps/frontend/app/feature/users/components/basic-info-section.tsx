@@ -1,12 +1,12 @@
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
+import { Input } from "@mah/ui/components/Input";
+import { Label } from "@mah/ui/components/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@mah/ui/components/select";
 
 interface BasicInfoSectionProps {
   formData: {

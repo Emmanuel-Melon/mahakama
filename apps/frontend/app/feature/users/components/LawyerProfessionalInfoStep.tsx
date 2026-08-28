@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
+import { Button } from "@mah/ui/components/Button";
+import { Input } from "@mah/ui/components/Input";
 import { LawyerInfoSection } from "~/feature/users/components/LawyerInfoSection";
 import type { User } from "@mah/api/src/clients/users.api";
 import { z } from "zod";
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "~/components/ui/form";
+} from "@mah/ui/components/form";
 
 const lawyerProfessionalSchema = z.object({
   specialization: z.string().min(1, "Specialization is required"),

@@ -1,5 +1,5 @@
 import { FileText, Eye, Download } from "lucide-react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 
 interface DocumentItem {
   id: number;

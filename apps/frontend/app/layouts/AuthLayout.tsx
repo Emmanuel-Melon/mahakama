@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { Scale } from "lucide-react";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 
 interface AuthLayoutProps {
   children?: React.ReactNode;

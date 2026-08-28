@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
 import type { User } from "@mah/api/src/clients/users.api";
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "../../lib/utils";
 
 type SizeVariant = "sm" | "md" | "lg";
 type ColorVariant = "green" | "gray" | "outline" | "handdrawn";

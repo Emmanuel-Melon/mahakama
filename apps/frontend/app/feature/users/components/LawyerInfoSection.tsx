@@ -1,13 +1,13 @@
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
+import { Input } from "@mah/ui/components/Input";
+import { Label } from "@mah/ui/components/Label";
+import { Textarea } from "@mah/ui/components/Textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@mah/ui/components/select";
 
 interface LawyerInfoSectionProps {
   formData: {

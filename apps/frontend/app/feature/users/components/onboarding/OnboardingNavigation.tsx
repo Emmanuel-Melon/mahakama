@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { ArrowRight } from "lucide-react";
 import type { UserRole } from "./RoleSelector";
 

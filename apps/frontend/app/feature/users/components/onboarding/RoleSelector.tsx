@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 import { Briefcase, UserCircle } from "lucide-react";
 
 export type UserRole = "user" | "lawyer";

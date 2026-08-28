@@ -3,7 +3,7 @@ import { LawyersScreen } from "~/feature/lawyers/screens/LawyersScreen";
 import { useLawyers } from "@mah/api/src/hooks/use-lawyers";
 import { useSearchParams } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
-import { PageLoading } from "~/components/molecules/page-loading";
+import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
 import { useState, useEffect } from "react";
 import { useDebouncedValue } from "~/hooks/use-debounce";
 import { Users, MapPin, CheckCircle } from "lucide-react";

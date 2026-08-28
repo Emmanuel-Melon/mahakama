@@ -1,5 +1,5 @@
 import { formatDate } from "~/utils/time";
-import { BorderedBox } from "~/components/ui/bordered-box";
+import { BorderedBox } from "@mah/ui/components/molecules/bordered-box";
 import type { User } from "@mah/api/src/clients/users.api";
 
 interface AccountStatusCardProps {

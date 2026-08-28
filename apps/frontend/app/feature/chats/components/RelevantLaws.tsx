@@ -1,6 +1,6 @@
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Scale } from "lucide-react";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 
 export interface LawItem {
   title: string;

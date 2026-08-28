@@ -2,7 +2,7 @@ import type { LucideIcon } from "lucide-react";
 import { Info, Heart } from "lucide-react";
 import { FeatureCard } from "./FeatureCard";
 import { cn } from "~/lib/utils";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 
 type Feature = {
   title: string;

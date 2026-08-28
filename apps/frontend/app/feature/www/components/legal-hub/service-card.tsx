@@ -11,10 +11,10 @@ import {
 } from "lucide-react";
 import { NavLink } from "react-router";
 import { BookmarkButton } from "@mah/ui";
-import { ShareButton } from "~/components/molecules/share-button";
-import { MahButton } from "~/components/molecules/mah-button";
-import { MahCard } from "~/components/atoms/mah-card";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { ShareButton } from "@mah/ui/components/molecules/ShareButton";
+import { MahButton } from "@mah/ui/components/molecules/MahButton";
+import { MahCard } from "@mah/ui/components/atoms/MahCard";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 import { cn } from "~/lib/utils";
 
 type CardVariant = "default" | "minimal";

@@ -1,4 +1,4 @@
-import { Button } from "~/components/ui/button";
+import { Button } from "@mah/ui/components/Button";
 import { Github, Mail, Facebook } from "lucide-react";
 
 export const AuthSocialButtons = () => {

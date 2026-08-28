@@ -7,8 +7,8 @@ import {
   MessageCircle,
   Shield,
 } from "lucide-react";
-import { CardWithLabel } from "~/components/ui/card-with-label";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 import { Link } from "react-router";
 
 export function Footer() {

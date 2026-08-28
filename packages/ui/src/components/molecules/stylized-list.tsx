@@ -1,5 +1,5 @@
-import { cn } from "~/lib/utils";
-import { IconContainer } from "~/components/atoms/icon-container";
+import { cn } from "../../lib/utils";
+import { IconContainer } from "@mah/ui/components/IconContainer";
 import type { LucideIcon } from "lucide-react";
 
 export type ListItem =

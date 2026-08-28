@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "~/components/ui/select";
+} from "@mah/ui/components/select";
 import type { Lawyer } from "@mah/api/clients/lawyers.api";
 
 interface FilterSelectorProps {
