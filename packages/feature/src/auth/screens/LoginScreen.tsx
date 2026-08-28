@@ -16,8 +16,9 @@ export const LoginScreen = ({
 
   const onSubmit = (data: LoginRequest) => {
     login.mutate(data, {
-      onSuccess: () => {
-        navigate(successPath, {
+      onSuccess: (result) => {
+        const onboarded = !!result?.data?.isOnboarded;
+        navigate(onboarded ? successPath : "/onboarding", {
           state: { email: data.email },
           replace: true,
         });

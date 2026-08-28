@@ -9,14 +9,14 @@ import { StepHeader } from "./StepHeader";
 
 interface BasicInfoStepViewProps {
   user: User;
-  selectedRole: UserRole | null;
+  role: UserRole;
   formRef: RefObject<HTMLFormElement | null>;
   onNext: (data: any) => void;
 }
 
 export const BasicInfoStepView = ({
   user,
-  selectedRole,
+  role,
   formRef,
   onNext,
 }: BasicInfoStepViewProps) => (
@@ -27,12 +27,10 @@ export const BasicInfoStepView = ({
       icon={UserIcon}
     />
     <CardWithLabel
-      label={
-        selectedRole === "lawyer" ? "lawyer-basic-info" : "user-basic-info"
-      }
+      label={role === "lawyer" ? "lawyer-basic-info" : "user-basic-info"}
       className="rounded-xl border-2 border-gray-900 border-solid"
     >
-      {selectedRole === "lawyer" ? (
+      {role === "lawyer" ? (
         <LawyerBasicInfoStep user={user} onNext={onNext} formRef={formRef} />
       ) : (
         <BasicInfoStep user={user} onNext={onNext} formRef={formRef} />

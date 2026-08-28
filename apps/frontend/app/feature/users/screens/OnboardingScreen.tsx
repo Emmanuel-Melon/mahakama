@@ -1,6 +1,5 @@
 import { ProgressIndicator } from "../components/onboarding/ProgressIndicator";
 import { OnboardingNavigation } from "../components/onboarding/OnboardingNavigation";
-import { RoleStepView } from "../components/onboarding/RoleStepView";
 import { BasicInfoStepView } from "../components/onboarding/BasicInfoStepView";
 import { ProfessionalInfoStepView } from "../components/onboarding/ProfessionalInfoStepView";
 import { EnhancementsStepView } from "../components/onboarding/EnhancementsStepView";
@@ -15,10 +14,10 @@ interface OnboardingScreenProps {
 }
 
 export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
-  const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
+  const role: UserRole = user.role === "lawyer" ? "lawyer" : "user";
   const [step, setStep] = useState<
-    "role" | "basic" | "professional" | "enhancements"
-  >("role");
+    "basic" | "professional" | "enhancements"
+  >("basic");
 
   const [basicInfo, setBasicInfo] = useState<{
     name: string;
@@ -52,11 +51,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
     },
   });
 
-  const handleRoleSelect = (role: UserRole) => {
-    setSelectedRole(role);
-    setStep("basic");
-  };
-
   const handleBasicInfoNext = (data: {
     name: string;
     age: string;
@@ -66,7 +60,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   }) => {
     setBasicInfo({ name: data.name, age: data.age, gender: data.gender });
     setLocationInfo({ country: data.country || "", city: data.city || "" });
-    if (selectedRole === "lawyer") {
+    if (role === "lawyer") {
       setStep("professional");
     } else {
       setStep("enhancements");
@@ -86,7 +80,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
       ...basicInfo,
       ...locationInfo,
       ...data,
-      role: selectedRole,
       age: basicInfo?.age ? parseInt(basicInfo.age, 10) : null,
       gender: basicInfo?.gender as any,
       country: locationInfo?.country?.trim() || null,
@@ -94,7 +87,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
       occupation: data.occupation.trim() || null,
       bio: data.bio.trim() || null,
       isOnboarded: true,
-      ...(selectedRole === "lawyer" && lawyerInfo
+      ...(role === "lawyer" && lawyerInfo
         ? {
             specialization: lawyerInfo.specialization,
             experienceYears: parseInt(lawyerInfo.experienceYears, 10),
@@ -116,12 +109,10 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   };
 
   const handleGoBack = () => {
-    if (step === "basic") {
-      setStep("role");
-    } else if (step === "professional") {
+    if (step === "professional") {
       setStep("basic");
     } else if (step === "enhancements") {
-      if (selectedRole === "lawyer") {
+      if (role === "lawyer") {
         setStep("professional");
       } else {
         setStep("basic");
@@ -146,14 +137,12 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   return (
     <div>
       <div className="mx-auto max-w-2xl space-y-4">
-        <ProgressIndicator currentStep={step} selectedRole={selectedRole} />
-
-        {step === "role" && <RoleStepView onRoleSelect={handleRoleSelect} />}
+        <ProgressIndicator currentStep={step} role={role} />
 
         {step === "basic" && (
           <BasicInfoStepView
             user={user}
-            selectedRole={selectedRole}
+            role={role}
             formRef={basicFormRef}
             onNext={handleBasicInfoNext}
           />
@@ -170,7 +159,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
         {step === "enhancements" && (
           <EnhancementsStepView
             user={user}
-            selectedRole={selectedRole}
+            role={role}
             basicInfo={basicInfo!}
             formRef={enhancementsFormRef}
             onComplete={handleEnhancementsComplete}
@@ -180,7 +169,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
 
       <OnboardingNavigation
         currentStep={step}
-        selectedRole={selectedRole}
+        role={role}
         onBack={handleGoBack}
         onNext={step !== "enhancements" ? handleNextStep : undefined}
         onComplete={step === "enhancements" ? handleComplete : undefined}
