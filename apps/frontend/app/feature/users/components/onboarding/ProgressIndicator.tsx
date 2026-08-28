@@ -1,23 +1,21 @@
 import type { UserRole } from "./RoleSelector";
 
 interface ProgressIndicatorProps {
-  currentStep: "role" | "basic" | "professional" | "enhancements";
-  selectedRole: UserRole | null;
+  currentStep: "basic" | "professional" | "enhancements";
+  role: UserRole;
 }
 
 export function ProgressIndicator({
   currentStep,
-  selectedRole,
+  role,
 }: ProgressIndicatorProps) {
-  const totalSteps = selectedRole === "professional" ? 4 : 3;
+  const totalSteps = role === "lawyer" ? 4 : 3;
   const currentStepNumber =
-    currentStep === "role"
+    currentStep === "basic"
       ? 1
-      : currentStep === "basic"
+      : currentStep === "professional"
         ? 2
-        : currentStep === "professional"
-          ? 3
-          : 4;
+        : 3;
 
   return (
     <div className="flex items-center justify-center gap-2 mb-8">

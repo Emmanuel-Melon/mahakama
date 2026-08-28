@@ -8,7 +8,7 @@ import { StepHeader } from "./StepHeader";
 
 interface EnhancementsStepViewProps {
   user: User;
-  selectedRole: UserRole | null;
+  role: UserRole;
   basicInfo: { name: string; age: string; gender: string };
   formRef: RefObject<HTMLFormElement | null>;
   onComplete: (data: any) => void;
@@ -16,7 +16,7 @@ interface EnhancementsStepViewProps {
 
 export const EnhancementsStepView = ({
   user,
-  selectedRole,
+  role,
   basicInfo,
   formRef,
   onComplete,
@@ -33,7 +33,7 @@ export const EnhancementsStepView = ({
     >
       <EnhancementsStep
         user={user}
-        role={selectedRole as UserRole | undefined}
+        role={role}
         basicInfo={basicInfo}
         onComplete={onComplete}
         formRef={formRef}

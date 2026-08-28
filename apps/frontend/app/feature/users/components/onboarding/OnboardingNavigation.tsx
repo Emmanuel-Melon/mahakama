@@ -3,8 +3,8 @@ import { ArrowRight } from "lucide-react";
 import type { UserRole } from "./RoleSelector";
 
 interface OnboardingNavigationProps {
-  currentStep: "role" | "basic" | "professional" | "enhancements";
-  selectedRole: UserRole | null;
+  currentStep: "basic" | "professional" | "enhancements";
+  role: UserRole;
   onBack: () => void;
   onNext?: () => void;
   onComplete?: () => void;
@@ -14,19 +14,16 @@ interface OnboardingNavigationProps {
 
 export function OnboardingNavigation({
   currentStep,
-  selectedRole,
   onBack,
   onNext,
   onComplete,
   nextDisabled = false,
   nextText = "Continue",
 }: OnboardingNavigationProps) {
-  const showBackButton = currentStep !== "role";
   const isLastStep = currentStep === "enhancements";
-  const isLawyerFlow = selectedRole === "legal_professional";
 
-  // Determine if we should show next button (role selection has its own continue button)
-  const showNextButton = currentStep !== "role" && (onNext || onComplete);
+  const showBackButton = true;
+  const showNextButton = Boolean(onNext || onComplete);
 
   return (
     <div className="w-full p-4">

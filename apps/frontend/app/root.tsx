@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
   useLoaderData,
   useLocation,
+  redirect,
 } from "react-router";
 import { WebsiteLayout } from "@mah/ui/components/organisms/layout/WebsiteLayout";
 import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
@@ -48,6 +49,7 @@ export const links: Route.LinksFunction = () => [
 ];
 
 export async function loader({ context, request }: Route.LoaderArgs) {
+  const url = new URL(request.url);
   const user = context.get(userContext) || null;
   const auth = context.get(authContext) || null;
 
@@ -66,6 +68,16 @@ export async function loader({ context, request }: Route.LoaderArgs) {
         error,
       );
     }
+  }
+
+  if (
+    auth?.token &&
+    fullUser &&
+    fullUser.isOnboarded === false &&
+    !url.pathname.startsWith("/onboarding") &&
+    isAuthRoute(url.pathname)
+  ) {
+    return redirect("/onboarding");
   }
 
   return { user: fullUser, token: auth?.token };
