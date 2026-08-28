@@ -43,7 +43,7 @@ export async function seedAuthSystem() {
           name: `${userData.firstName} ${userData.lastName}`,
           role: userData.role,
           password: hashedPassword,
-          isOnboarded: true,
+          isOnboarded: false,
           isFirstLogin: false,
           emailVerifiedAt: now,
         })

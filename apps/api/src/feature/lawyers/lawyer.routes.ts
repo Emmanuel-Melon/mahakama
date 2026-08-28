@@ -43,8 +43,6 @@ useAuthorization(lawyersRoutes, [
   { path: "/profile/documents/:documentId", roles: ["lawyer"] },
   { path: "/invites", roles: ["admin"] },
   { path: "/invites/:inviteId", roles: ["admin"] },
-  { path: "/", roles: ["admin"] },
-  { path: "/:id", roles: ["admin"] },
   { path: "/:id/approve", roles: ["admin"] },
   { path: "/:id/reject", roles: ["admin"] },
 ]);
