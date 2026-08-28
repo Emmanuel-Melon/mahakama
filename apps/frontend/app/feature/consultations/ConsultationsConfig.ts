@@ -8,11 +8,7 @@ const API_V1 = "/api/v1";
 export const consultationsRoutes = defineRoutes({
   index: {
     path: "consultations",
-    file: "routes/consultations/consultations.index.tsx",
-  },
-  detail: {
-    path: "consultations/:consultationId",
-    file: "routes/consultations/$consultationId.tsx",
+    file: "routes/consultations/index.tsx",
   },
 });
 

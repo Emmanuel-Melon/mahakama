@@ -6,7 +6,7 @@ import { ContactInformation } from "~/feature/users/components/profile/ContactIn
 import { ProfileTabs } from "~/feature/users/components/ProfileTabs";
 import type { User } from "@mah/api/src/clients/users.api";
 import { type SavedItem, SavedItems } from "../components/profile/SavedItems";
-import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import { AsyncContainer } from "@mah/ui";
 import { UserCheck } from "lucide-react";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 import { UserDetailsSection } from "../components/profile/UserDetailsSection";

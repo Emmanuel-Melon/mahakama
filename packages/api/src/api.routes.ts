@@ -1,11 +1,11 @@
 export const AUTH_API_ROUTES = {
   ROOT: `/v1`,
-  LOGIN: `/v1/login`,
-  REGISTER: `/v1/register`,
-  LOGOUT: `/v1/logout`,
-  ME: `/v1/me`,
-  REQUEST_RESET: `/v1/request-reset`,
-  RESET_PASSWORD: `/v1/reset-password`,
+  LOGIN: `/v1/auth/login`,
+  REGISTER: `/v1/auth/register`,
+  LOGOUT: `/v1/auth/logout`,
+  ME: `/v1/auth/me`,
+  REQUEST_RESET: `/v1/auth/request-reset`,
+  RESET_PASSWORD: `/v1/auth/reset-password`,
   VERIFY_EMAIL: `/v1/verify-email`,
 } as const;
 

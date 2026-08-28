@@ -74,7 +74,10 @@ export function NavUser({ user, onLogout }: NavUserProps) {
               }}
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user?.avatar} alt={user?.name || "User"} />
+                <AvatarImage
+                  src={user?.profilePicture || undefined}
+                  alt={user?.name || "User"}
+                />
                 <AvatarFallback className="rounded-lg">
                   {getInitials(user?.name, user?.email)}
                 </AvatarFallback>
@@ -99,7 +102,10 @@ export function NavUser({ user, onLogout }: NavUserProps) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user?.avatar} alt={user?.name || "User"} />
+                  <AvatarImage
+                    src={user?.profilePicture || undefined}
+                    alt={user?.name || "User"}
+                  />
                   <AvatarFallback className="rounded-lg">
                     {getInitials(user?.name, user?.email)}
                   </AvatarFallback>

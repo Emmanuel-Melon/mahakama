@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { NotificationsList } from "../components/NotificationsList";
 import type { Notification } from "@mah/api/src/clients/notifications.api";
 import { Bell } from "lucide-react";
-import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import { AsyncContainer } from "@mah/ui";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 
 interface NotificationsScreenProps extends AsyncState {

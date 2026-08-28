@@ -116,7 +116,7 @@ export const signupUserSchema = createInsertSchema(usersSchema)
   })
   .extend({
     password: z.string().min(6, "Password must be at least 6 characters"),
-    role: z.enum(["user", "partner", "admin"]).optional(),
+    role: z.enum(["user", "admin", "lawyer"]).optional(),
   })
   .openapi({
     title: "RegisterUser",
@@ -126,7 +126,7 @@ export const loginUserSchema = z
   .object({
     email: z.string().email("Invalid email format"),
     password: z.string().min(1, "Password is required"),
-    role: z.enum(["user", "partner", "admin"]).optional(),
+    role: z.enum(["user", "admin", "lawyer"]).optional(),
   })
   .openapi({
     title: "LoginUser",

@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@source "../../../packages/ui/src";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -93,6 +95,7 @@ body {
   --shadow-hover: oklch(0 0 0 0.05);
   --shadow-border: oklch(0 0 0 0.08);
   --border-radius-chat: 8px 16px 8px 16px;
+  --header-height: 4rem;
 }
 
 .dark {
@@ -131,6 +134,7 @@ body {
   --shadow-hover: oklch(0 0 0 0.05);
   --shadow-border: oklch(0 0 0 0.08);
   --border-radius-chat: 8px 16px 8px 16px;
+  --header-height: 4rem;
 }
 
 @layer base {

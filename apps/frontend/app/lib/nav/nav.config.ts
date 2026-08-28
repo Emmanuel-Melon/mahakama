@@ -1,5 +1,13 @@
 import type { NavLinkItem } from "@mah/client/nav";
-import { Users, Library, History, Scale, Home, Briefcase } from "lucide-react";
+import {
+  Users,
+  Library,
+  History,
+  Scale,
+  Home,
+  Briefcase,
+  ClipboardList,
+} from "lucide-react";
 
 export const BASE_NAV_LINKS: NavLinkItem[] = [
   {
@@ -47,6 +55,12 @@ export const LAWYER_NAV_LINKS: NavLinkItem[] = [
     icon: Briefcase,
   },
   {
+    id: "nav-consultations",
+    title: "nav.consultations",
+    url: "/consultations",
+    icon: ClipboardList,
+  },
+  {
     id: "nav-justice-hub",
     title: "nav.justiceHub",
     url: "/legal-hub",
@@ -63,6 +77,7 @@ export const LAWYER_NAV_LINKS: NavLinkItem[] = [
 export const ROLE_NAV_LINKS: Record<string, NavLinkItem[]> = {
   lawyer: LAWYER_NAV_LINKS,
   user: APP_NAV_LINKS,
+  admin: [],
 };
 
 export const ALL_NAV_LINKS: NavLinkItem[] = Array.from(

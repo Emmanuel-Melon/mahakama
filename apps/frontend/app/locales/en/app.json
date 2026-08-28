@@ -3,15 +3,9 @@
     "header": {
       "title": "Getting started with",
       "highlightedTitle": "Mahakama",
-      "description": "Three ways Mahakama gives you free, plain-language legal help for South Sudan & Uganda.",
       "welcome": "Welcome,",
       "progress": "{{done}} of {{total}} steps completed",
-      "progressComplete": "All steps completed",
-      "infoCard": {
-        "title": "Know your rights",
-        "description": "Mahakama turns laws and regulations into plain language anyone can understand — no law degree required.",
-        "actionLabel": "Explore the Legal Hub"
-      }
+      "progressComplete": "All steps completed"
     },
     "status": {
       "completed": "Completed",
@@ -21,25 +15,61 @@
       "title": "What you can do",
       "description": "Work through the steps below at your own pace, or jump straight to whatever you need."
     },
-    "steps": {
-      "assistant": {
-        "badge": "AI ASSISTANT",
-        "title": "Chat with an AI Legal Assistant",
-        "description": "Ask any legal question and get clear answers in plain language, grounded in the law of South Sudan and Uganda.",
-        "ctaLabel": "Start chatting"
+    "user": {
+      "description": "Three ways Mahakama gives you free, plain-language legal help for South Sudan & Uganda.",
+      "infoCard": {
+        "title": "Know your rights",
+        "description": "Mahakama turns laws and regulations into plain language anyone can understand — no law degree required.",
+        "actionLabel": "Explore the Legal Hub"
       },
-      "uploadDocuments": {
-        "badge": "DOCUMENTS",
-        "title": "Upload & Analyze Documents",
-        "description": "Upload contracts, notices or court papers and get a simple breakdown of what they mean for you.",
-        "ctaLabel": "Analyze a document"
+      "steps": {
+        "assistant": {
+          "badge": "AI ASSISTANT",
+          "title": "Chat with an AI Legal Assistant",
+          "description": "Ask any legal question and get clear answers in plain language, grounded in the law of South Sudan and Uganda.",
+          "ctaLabel": "Start chatting"
+        },
+        "uploadDocuments": {
+          "badge": "DOCUMENTS",
+          "title": "Upload & Analyze Documents",
+          "description": "Upload contracts, notices or court papers and get a simple breakdown of what they mean for you.",
+          "ctaLabel": "Analyze a document"
+        },
+        "exploreResources": {
+          "badge": "EXPLORE",
+          "title": "Find Local Documents & Services",
+          "description": "Browse laws and regulations from South Sudan and Uganda, or discover legal services near you.",
+          "ctaDocsLabel": "Browse documents",
+          "ctaServicesLabel": "Find services"
+        }
+      }
+    },
+    "lawyer": {
+      "description": "Everything you need to serve your clients with Mahakama — from client conversations to research.",
+      "infoCard": {
+        "title": "Grow your practice",
+        "description": "Find new clients, answer their questions and stay on top of the law with plain-language tools built for lawyers.",
+        "actionLabel": "Explore the Legal Hub"
       },
-      "exploreResources": {
-        "badge": "EXPLORE",
-        "title": "Find Local Documents & Services",
-        "description": "Browse laws and regulations from South Sudan and Uganda, or discover legal services near you.",
-        "ctaDocsLabel": "Browse documents",
-        "ctaServicesLabel": "Find services"
+      "steps": {
+        "clientChats": {
+          "badge": "CLIENTS",
+          "title": "Respond to client chats",
+          "description": "Answer legal questions from clients directly in chat, with answers grounded in the law of South Sudan and Uganda.",
+          "ctaLabel": "Open chats"
+        },
+        "consultations": {
+          "badge": "CONSULTATIONS",
+          "title": "Review consultation requests",
+          "description": "Receive, accept or decline consultation requests from people who need your expertise.",
+          "ctaLabel": "Review requests"
+        },
+        "research": {
+          "badge": "RESEARCH",
+          "title": "Research the legal database",
+          "description": "Browse laws and regulations from South Sudan and Uganda to back your advice with the source law.",
+          "ctaLabel": "Browse documents"
+        }
       }
     },
     "footer": {

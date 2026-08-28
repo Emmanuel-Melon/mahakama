@@ -44,8 +44,8 @@ export const clearAuthCookie = (
 
 export const getCookieAudience = (role: UserRole): string => {
   switch (role) {
-    case "partner":
-      return authConfig.audience.PARTNER;
+    case "lawyer":
+      return authConfig.audience.LAWYER;
     case "admin":
       return authConfig.audience.ADMIN;
     default:

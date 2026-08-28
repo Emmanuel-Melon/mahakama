@@ -16,6 +16,8 @@ import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken, decodeJWT } from "@mah/api/src/api/api.utils";
+import { createIsolatedClient } from "@mah/api/src/axios/axios.ssr";
+import { AuthApiClient } from "@mah/api/src/clients/auth.api";
 import { configureApi } from "@mah/api/src/api/api.config";
 import { appConfig } from "~/config";
 import {
@@ -45,10 +47,28 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
-export async function loader({ context }: Route.LoaderArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   const user = context.get(userContext) || null;
   const auth = context.get(authContext) || null;
-  return { user, token: auth?.token };
+
+  let fullUser = user;
+  if (auth?.token) {
+    try {
+      const isolatedClient = createIsolatedClient(request);
+      const authApi = new AuthApiClient(isolatedClient);
+      const res = await authApi.getMe();
+      if (res?.data) {
+        fullUser = res.data;
+      }
+    } catch (error) {
+      console.error(
+        "Failed to fetch full user info via Auth API in loader:",
+        error,
+      );
+    }
+  }
+
+  return { user: fullUser, token: auth?.token };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -156,13 +176,12 @@ async function authMiddleware({ request, context }) {
       return;
     }
 
-    // Extract user info from decoded token
     const user = {
       id: decodedToken.sub,
       email: decodedToken.email,
       name: decodedToken.name,
       isOnboarded: decodedToken.isOnboarded,
-      // Add any other user fields from your token payload
+      role: decodedToken.role,
     };
 
     context.set(userContext, user);
