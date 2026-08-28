@@ -1,7 +1,7 @@
 import { HelpCircle, PhoneCall } from "lucide-react";
 import { NavLink } from "react-router";
-import { NotificationsDropdown } from "../molecules/notifications-dropdown";
-import { LanguageSwitcher } from "../molecules/language-switcher";
+import { NotificationsDropdown } from "../../molecules/NotificationsDropdown";
+import { LanguageSwitcher } from "../../molecules/LanguageSwitcher";
 
 export function HeaderActions() {
   return (

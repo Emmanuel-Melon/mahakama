@@ -14,10 +14,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { PageHeader } from "@mah/ui";
 import { PageDetailHeader } from "@mah/ui";
-import {
-  ContactInformation,
-  type ContactItem,
-} from "~/components/molecules/contact-information";
+import { ContactInformation, type ContactItem } from "@mah/ui";
 import type { LegalService } from "@mah/api/src/clients/services.api";
 
 interface ServiceDetailScreenProps {

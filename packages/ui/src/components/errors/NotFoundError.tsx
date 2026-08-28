@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import { ErrorState } from "../async-state/ErrorState";
+import { ErrorState } from "../organisms/async-state/ErrorState";
 import type { ErrorComponentProps } from "../../lib/errors/errors.types";
 
 export const NotFoundError = ({

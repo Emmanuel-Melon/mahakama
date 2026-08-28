@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import { ServerError } from "~/components/errors/ServerError";
+import { ServerError } from "@mah/ui";
 import { ERROR_MAP } from "./errors.config";
 import { ERROR_COMPONENT_MAP } from "./errors.registry";
 import type { ErrorComponentProps } from "./errors.types";

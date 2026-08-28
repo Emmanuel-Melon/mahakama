@@ -1,7 +1,6 @@
 import { HeroSection } from "@mah/ui";
-import { DiagonalSeparator } from "~/components/atoms/diagnoal-separator";
-import { SupportedCountries } from "~/components/molecules/countries";
-import { CallToAction } from "~/components/molecules/call-to-action";
+import { SupportedCountries } from "@mah/ui";
+import { CallToAction } from "@mah/ui";
 import { MahakamaFeatures } from "~/feature/www/components/features";
 import { Scale } from "lucide-react";
 

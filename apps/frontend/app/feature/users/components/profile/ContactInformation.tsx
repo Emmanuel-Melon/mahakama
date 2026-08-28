@@ -1,10 +1,10 @@
 import {
   ContactInformation as UniversalContactInformation,
   type ContactItem,
-} from "~/components/molecules/contact-information";
+} from "@mah/ui";
 import { formatDate } from "~/utils/time";
 
-import type { User } from "~/feature/users/screens/ProfileScreen";
+import type { User } from "@mah/api/src/clients/users.api";
 
 interface ContactInformationProps {
   user: User;

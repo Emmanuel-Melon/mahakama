@@ -8,15 +8,14 @@ import {
   useLoaderData,
   useLocation,
 } from "react-router";
-import { AppShell as GenericAppShell } from "@mah/ui/components/organisms/AppShell";
-import { WebsiteLayout } from "@mah/ui/components/organisms/WebsiteLayout";
-import { AuthLayout } from "@mah/ui/components/organisms/AuthLayout";
+import { WebsiteLayout } from "@mah/ui/components/organisms/layout/WebsiteLayout";
+import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
 import { Toaster } from "sonner";
 import { CountryProvider } from "~/context/country-context";
 import { NavigationLoader } from "~/components/atoms/navigation-loader";
 import { useNavLinks } from "~/hooks/use-nav-links";
 import { useUser } from "~/context/user-provider";
-import { HeaderActions } from "~/components/organisms/header-actions";
+import { HeaderActions } from "@mah/ui/components/organisms/layout/HeaderActions";
 import { OnboardingProgress } from "~/components/molecules/onboarding-progress";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
@@ -30,7 +29,7 @@ import {
   isAuthPageRoute,
 } from "~/config/routes.config";
 import { UserProvider } from "~/context/user-provider";
-import { RootErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { RootErrorBoundary } from "@mah/ui/components/errors/RootErrorBoundary";
 import { useEffect } from "react";
 import i18n from "~/lib/i18n";
 

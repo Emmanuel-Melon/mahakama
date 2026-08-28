@@ -1,9 +1,8 @@
 import { LawyerCard } from "./lawyer-card";
-import { ListControls } from "~/components/organisms/list-controls";
+import { ListControls } from "@mah/ui";
 import { FilterSection } from "./filter-section";
-import EmptyState from "~/components/async-state/EmptyState";
-import LoadingState from "~/components/async-state/LoadingState";
-import type { Lawyer } from "@mah/api/clients/lawyers.api";
+import { EmptyState, LoadingState } from "@mah/ui";
+import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 interface LawyersListProps {
   lawyers: Lawyer[];

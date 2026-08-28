@@ -10,7 +10,7 @@ import {
   Building,
 } from "lucide-react";
 import { NavLink } from "react-router";
-import { BookmarkButton } from "~/components/molecules/bookmark-button";
+import { BookmarkButton } from "@mah/ui";
 import { ShareButton } from "~/components/molecules/share-button";
 import { MahButton } from "~/components/molecules/mah-button";
 import { MahCard } from "~/components/atoms/mah-card";

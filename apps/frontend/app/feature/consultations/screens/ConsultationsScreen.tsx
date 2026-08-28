@@ -1,4 +1,4 @@
-import EmptyState from "~/components/async-state/EmptyState";
+import { EmptyState, ErrorState } from "@mah/ui";
 import { PageLoading } from "~/components/molecules/page-loading";
 import { MessageSquare } from "lucide-react";
 import type { Consultation } from "@mah/api/src/clients/consultations.api";

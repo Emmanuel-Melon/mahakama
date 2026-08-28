@@ -2,12 +2,9 @@ import { PageHeader } from "@mah/ui";
 import { PageDetailHeader } from "@mah/ui";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
-import {
-  ContactInformation,
-  type ContactItem,
-} from "~/components/molecules/contact-information";
+import { ContactInformation, type ContactItem } from "@mah/ui";
 import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
-import { AsyncContainer } from "~/components/organisms/async-state/AsyncBoundary";
+import { AsyncContainer } from "@mah/ui";
 
 import type { AsyncState } from "@mah/api/src/api/api.types";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";

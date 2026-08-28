@@ -1,6 +1,6 @@
 import { Outlet } from "react-router";
 import { Footer } from "~/layouts/footer";
-import { FAQSection } from "~/components/molecules/faq";
+import { FAQSection } from "@mah/ui";
 
 export default function WebsiteLayout(props: any) {
   return (

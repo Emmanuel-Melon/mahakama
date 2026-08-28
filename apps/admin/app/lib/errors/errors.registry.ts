@@ -1,9 +1,11 @@
 import type { ComponentType } from "react";
-import { OfflineError } from "~/components/errors/OfflineError";
-import { SessionExpiredError } from "~/components/errors/SessionExpiredError";
-import { AccessDeniedError } from "~/components/errors/AccessDeniedError";
-import { NotFoundError } from "~/components/errors/NotFoundError";
-import { ServerError } from "~/components/errors/ServerError";
+import {
+  OfflineError,
+  SessionExpiredError,
+  AccessDeniedError,
+  NotFoundError,
+  ServerError,
+} from "@mah/ui";
 import type { ErrorComponentProps } from "./errors.types";
 
 export const ERROR_COMPONENT_MAP: Record<
