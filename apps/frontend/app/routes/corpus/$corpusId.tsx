@@ -1,9 +1,9 @@
 import type { Route } from "./+types/$corpusId";
 import { CorpusDetailsScreen } from "~/feature/corpus/screens/CorpusDetailsScreen";
 import { useCorpusEntry } from "@mah/api/src/hooks/corpus/use-corpus";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta({}: Route.MetaArgs) {
   return [

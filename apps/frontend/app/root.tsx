@@ -10,13 +10,8 @@ import {
 } from "react-router";
 import { WebsiteLayout } from "@mah/ui/components/organisms/layout/WebsiteLayout";
 import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
-import { Toaster } from "sonner";
-import { CountryProvider } from "~/context/country-context";
-import { NavigationLoader } from "@mah/ui/components/atoms/NavigationLoader";
 import { useNavLinks } from "~/hooks/use-nav-links";
-import { useUser } from "~/context/user-provider";
-import { HeaderActions } from "@mah/ui/components/organisms/layout/HeaderActions";
-import { OnboardingProgress } from "@mah/ui/components/molecules/OnboardingProgress";
+import { useUser, UserProvider } from "~/context/user-provider";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import "./app.css";
 import { userContext, authContext } from "~/middleware/context";
@@ -28,10 +23,10 @@ import {
   isAuthRoute,
   isAuthPageRoute,
 } from "~/config/routes.config";
-import { UserProvider } from "~/context/user-provider";
-import { RootErrorBoundary } from "@mah/ui/components/errors/RootErrorBoundary";
 import { useEffect } from "react";
 import i18n from "~/lib/i18n";
+import { RootErrorBoundary } from "./components/RootErrorBoundary";
+import { AppShell } from "@mah/ui/components/organisms/layout/AppShell";
 
 configureApi({
   baseURL: appConfig.api.baseURL,
@@ -71,38 +66,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
-        <QueryClientProviderWrapper>{children}</QueryClientProviderWrapper>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
     </html>
-  );
-}
-
-interface AppShellProps {
-  children: React.ReactNode;
-  pageTitle: string;
-}
-
-function AppShell({ children, pageTitle }: AppShellProps) {
-  const navLinks = useNavLinks();
-  const { user, logout } = useUser();
-
-  return (
-    <CountryProvider>
-      <Toaster />
-      <NavigationLoader />
-      <GenericAppShell
-        pageTitle={pageTitle}
-        navLinks={navLinks}
-        user={user}
-        onLogout={logout}
-        headerRightContent={<HeaderActions />}
-        sidebarFooter={<OnboardingProgress />}
-      >
-        {children}
-      </GenericAppShell>
-    </CountryProvider>
   );
 }
 
@@ -114,21 +82,55 @@ export default function App() {
   const isAuthRoutePage = isAuthPageRoute(location.pathname);
 
   return (
-    <UserProvider user={user}>
-      {isAuthRoutePage ? (
-        <AuthLayout>
-          <Outlet />
-        </AuthLayout>
-      ) : isAppRoute ? (
-        <AppShell pageTitle={pageTitle}>
-          <Outlet />
-        </AppShell>
-      ) : (
-        <WebsiteLayout>
-          <Outlet />
-        </WebsiteLayout>
-      )}
-    </UserProvider>
+    <QueryClientProviderWrapper>
+      <UserProvider user={user}>
+        <AuthenticatedApp
+          pageTitle={pageTitle}
+          isAppRoute={isAppRoute}
+          isAuthRoutePage={isAuthRoutePage}
+        />
+      </UserProvider>
+    </QueryClientProviderWrapper>
+  );
+}
+
+function AuthenticatedApp({
+  pageTitle,
+  isAppRoute,
+  isAuthRoutePage,
+}: {
+  pageTitle: string;
+  isAppRoute: boolean;
+  isAuthRoutePage: boolean;
+}) {
+  const navLinks = useNavLinks();
+  const { user, logout } = useUser();
+
+  if (isAuthRoutePage) {
+    return (
+      <AuthLayout>
+        <Outlet />
+      </AuthLayout>
+    );
+  }
+
+  if (isAppRoute) {
+    return (
+      <AppShell
+        pageTitle={pageTitle}
+        navLinks={navLinks}
+        user={user}
+        onLogout={logout}
+      >
+        <Outlet />
+      </AppShell>
+    );
+  }
+
+  return (
+    <WebsiteLayout>
+      <Outlet />
+    </WebsiteLayout>
   );
 }
 

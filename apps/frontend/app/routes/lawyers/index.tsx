@@ -7,9 +7,9 @@ import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
 import { useState, useEffect } from "react";
 import { useDebouncedValue } from "~/hooks/use-debounce";
 import { Users, MapPin, CheckCircle } from "lucide-react";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
-import { handleRouteError } from "~/lib/errors/errors.utils";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 export function meta({}: Route.MetaArgs) {

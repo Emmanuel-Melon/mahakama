@@ -1,7 +1,7 @@
 import type { Route } from "./+types/verify-email-pending";
-import { useAppError } from "~/components/errors/useAppError";
+import { useAppError } from "~/lib/errors/errors.registry";
 import { VerifyEmailPendingScreen } from "~/feature/auth/screens/VerifyEmailPendingScreen";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 import { authPayloadContext } from "~/context";
 import { useLoaderData } from "react-router";
 import { createIsolatedClient } from "@mah/api/src/axios/axios.ssr";

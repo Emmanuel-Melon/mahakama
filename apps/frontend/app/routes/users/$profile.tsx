@@ -1,8 +1,9 @@
 import type { Route } from "./+types/$profile";
 import { useCurrentUser } from "@mah/api/src/hooks/use-users";
 import { ProfileScreen } from "~/feature/users/screens/ProfileScreen";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 import type { SavedItem } from "~/feature/users/components/profile/SavedItems";
 
 export function meta({}: Route.MetaArgs) {

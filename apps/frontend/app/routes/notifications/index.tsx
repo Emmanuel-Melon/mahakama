@@ -4,8 +4,9 @@ import { useNotifications } from "@mah/api/src/hooks/use-notifications";
 import { useLoaderData } from "react-router";
 import { authContext } from "~/middleware/context";
 import { notificationsApi } from "@mah/api/src/clients/notifications.api";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta({}: Route.MetaArgs) {
   return [{ title: "Notifications" }];

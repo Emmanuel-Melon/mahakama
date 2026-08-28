@@ -1,8 +1,9 @@
 import type { Route } from "./+types/$lawyerId";
 import { LawyerProfileScreen } from "~/feature/lawyers/screens/LawyerProfileScreen";
 import { useLawyer } from "@mah/api/src/hooks/use-lawyers";
-import { useAppError } from "~/components/errors/useAppError";
-import { MahErrorBoundary } from "~/components/errors/ErrorBoundary";
+import { useAppError } from "~/lib/errors/errors.registry";
+import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { handleRouteError } from "@mah/client/errors";
 
 export function meta({ params }: Route.MetaArgs) {
   const { lawyerId } = params;

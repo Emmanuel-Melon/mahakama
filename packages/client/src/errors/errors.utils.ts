@@ -1,8 +1,4 @@
-import type { ComponentType } from "react";
-import { ServerError } from "~/components/errors/ServerError";
 import { ERROR_MAP } from "./errors.config";
-import { ERROR_COMPONENT_MAP } from "./errors.registry";
-import type { ErrorComponentProps } from "./errors.types";
 
 export function handleRouteError(error: unknown, context?: string): never {
   if (error instanceof Response) throw error;
@@ -47,9 +43,3 @@ export function handleRouteError(error: unknown, context?: string): never {
     status: 500,
   });
 }
-
-export const getErrorComponent = (
-  status?: number,
-): ComponentType<ErrorComponentProps> => {
-  return (status && ERROR_COMPONENT_MAP[status]) || ServerError;
-};
