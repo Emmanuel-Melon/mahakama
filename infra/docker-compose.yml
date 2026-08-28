@@ -3,7 +3,7 @@ version: '3.8'
 services:
   # Relational Database
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     container_name: mahakama-postgres
     restart: always
     environment:
