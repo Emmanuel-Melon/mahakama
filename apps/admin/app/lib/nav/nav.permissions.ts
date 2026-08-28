@@ -4,10 +4,10 @@ import { ALL_NAV_LINKS } from "./nav.config";
 import type { User } from "@mah/api/src/clients/auth.api";
 
 export const NAV_PERMISSIONS: Record<string, string[]> = {
-  "nav-orders": ["admin"],
-  "nav-partners": ["admin"],
-  "nav-vouchers": ["partner"],
-  "nav-occasions": ["user", "partner"],
+  "nav-dashboard": ["admin"],
+  "nav-corpus": ["admin"],
+  "nav-lawyer-invites": ["admin"],
+  "nav-lawyer-profiles": ["admin"],
 };
 
 const rolePermissions: Record<string, string[]> = {

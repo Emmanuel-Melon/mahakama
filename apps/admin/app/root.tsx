@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
   useLocation,
 } from "react-router";
 
@@ -20,6 +21,10 @@ import { isAuthPageRoute } from "~/config/routes.config";
 import { configureApi } from "@mah/api/src/api/api.config";
 import { appConfig } from "~/config";
 import i18n from "~/lib/i18n";
+import { userContext, authContext } from "~/middleware/context";
+import { getAuthToken, decodeJWT } from "@mah/api/src/api/api.utils";
+import { createIsolatedClient } from "@mah/api/src/axios/axios.ssr";
+import { AuthApiClient } from "@mah/api/src/clients/auth.api";
 
 configureApi({
   baseURL: appConfig.api.baseURL,
@@ -37,6 +42,30 @@ export const links: Route.LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
+
+export async function loader({ context, request }: Route.LoaderArgs) {
+  const user = context.get(userContext) || null;
+  const auth = context.get(authContext) || null;
+
+  let fullUser = user;
+  if (auth?.token) {
+    try {
+      const isolatedClient = createIsolatedClient(request);
+      const authApi = new AuthApiClient(isolatedClient);
+      const res = await authApi.getMe();
+      if (res?.data) {
+        fullUser = res.data;
+      }
+    } catch (error) {
+      console.error(
+        "Failed to fetch full user info via Auth API in admin root loader:",
+        error,
+      );
+    }
+  }
+
+  return { user: fullUser };
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -57,12 +86,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
   const location = useLocation();
   const isAuthPage = isAuthPageRoute(location.pathname);
 
   return (
     <QueryClientProviderWrapper>
-      <UserProvider user={null}>
+      <UserProvider user={user}>
         {isAuthPage ? (
           <AuthLayout>
             <Outlet />
@@ -121,3 +151,38 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     </main>
   );
 }
+
+async function authMiddleware({ request, context }) {
+  const token = getAuthToken(request);
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+  if (isAuthPageRoute(pathname)) {
+    return;
+  }
+
+  if (!token) {
+    return;
+  }
+
+  try {
+    const decodedToken = await decodeJWT(token);
+    if (!decodedToken) {
+      return;
+    }
+
+    const user = {
+      id: decodedToken.sub,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      isOnboarded: decodedToken.isOnboarded,
+      role: decodedToken.role,
+    };
+
+    context.set(userContext, user);
+    context.set(authContext, { token });
+  } catch (error) {
+    console.error("Auth middleware error:", error);
+  }
+}
+
+export const middleware: Route.MiddlewareFunction[] = [authMiddleware];
