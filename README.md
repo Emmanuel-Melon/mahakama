@@ -42,27 +42,27 @@ This repository is an npm-workspaces monorepo. Application entry points live in 
 
 ### Apps
 
-| Directory        | Description                                                                  |
-| ---------------- | ---------------------------------------------------------------------------- |
-| `apps/frontend`  | The public-facing React web interface for users (React Router 7 SSR + Vite). |
-| `apps/api`       | The Express.js backend and AI-driven legal analysis engine.                  |
-| `apps/admin`     | The internal admin console for reviewing and managing content (React Router 8 SSR). |
+| Directory       | Description                                                                         |
+| --------------- | ----------------------------------------------------------------------------------- |
+| `apps/frontend` | The public-facing React web interface for users (React Router 7 SSR + Vite).        |
+| `apps/api`      | The Express.js backend and AI-driven legal analysis engine.                         |
+| `apps/admin`    | The internal admin console for reviewing and managing content (React Router 8 SSR). |
 
 ### Packages
 
-| Directory                            | Description                                                          |
-| ------------------------------------ | -------------------------------------------------------------------- |
-| `packages/client` (`@mah/client`)    | Shared client primitives: i18n config, nav/routing, error handling.  |
-| `packages/api` (`@mah/api`)          | TypeScript API client generated from the backend OpenAPI spec + hooks. |
-| `packages/ui` (`@mah/ui`)            | Shared design system and UI components (shadcn/ui based).            |
-| `packages/eslint-config`             | Shared ESLint presets.                                               |
-| `packages/typescript-config`         | Shared TypeScript configs.                                           |
+| Directory                         | Description                                                            |
+| --------------------------------- | ---------------------------------------------------------------------- |
+| `packages/client` (`@mah/client`) | Shared client primitives: i18n config, nav/routing, error handling.    |
+| `packages/api` (`@mah/api`)       | TypeScript API client generated from the backend OpenAPI spec + hooks. |
+| `packages/ui` (`@mah/ui`)         | Shared design system and UI components (shadcn/ui based).              |
+| `packages/eslint-config`          | Shared ESLint presets.                                                 |
+| `packages/typescript-config`      | Shared TypeScript configs.                                             |
 
 ### Infrastructure
 
-| Directory | Description                                                  |
-| --------- | ------------------------------------------------------------ |
-| `infra/`  | Dockerfiles and `docker-compose.yml` for local services.     |
+| Directory | Description                                              |
+| --------- | -------------------------------------------------------- |
+| `infra/`  | Dockerfiles and `docker-compose.yml` for local services. |
 
 ## Getting Started
 

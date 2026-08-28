@@ -44,27 +44,27 @@ Domain-Driven Design: code is organized by business domain under `src/feature/<d
 
 ## Scripts
 
-| Command                     | Purpose                                               |
-| --------------------------- | ----------------------------------------------------- |
-| `npm run dev`               | Start dev server (tsx watch)                          |
-| `npm run build`             | `tsc` + `build:docs`                                  |
-| `npm start`                 | Run `dist/src/server.js`                              |
-| `npm run typecheck`         | `tsc --noEmit`                                        |
-| `npm run lint` / `format`   | ESLint / Prettier                                     |
-| `npm test` / `test:watch`   | Vitest (all `src/**/*.test.ts`)                       |
-| `npm run test:unit`         | Operations tests only                                 |
-| `npm run test:integration`  | Controller tests (requires Postgres + Redis)          |
-| `npm run drizzle:push|generate|migrate|studio|drop|reset` | Drizzle DB commands        |
-| `npm run db:reset` / `seed` | Reset and seed the database                           |
+| Command                     | Purpose                                      |
+| --------------------------- | -------------------------------------------- |
+| `npm run dev`               | Start dev server (tsx watch)                 |
+| `npm run build`             | `tsc` + `build:docs`                         |
+| `npm start`                 | Run `dist/src/server.js`                     |
+| `npm run typecheck`         | `tsc --noEmit`                               |
+| `npm run lint` / `format`   | ESLint / Prettier                            |
+| `npm test` / `test:watch`   | Vitest (all `src/**/*.test.ts`)              |
+| `npm run test:unit`         | Operations tests only                        |
+| `npm run test:integration`  | Controller tests (requires Postgres + Redis) |
+| `npm run drizzle:push       | generate                                     | migrate | studio | drop | reset` | Drizzle DB commands |
+| `npm run db:reset` / `seed` | Reset and seed the database                  |
 
 ### Useful endpoints
 
-| Path           | Description                       |
-| -------------- | --------------------------------- |
-| `/api/health`  | Health check                      |
-| `/api-docs`    | OpenAPI interactive UI            |
-| `/api-docs-json` | OpenAPI spec JSON               |
-| `/docs`        | 11ty project documentation        |
+| Path             | Description                |
+| ---------------- | -------------------------- |
+| `/api/health`    | Health check               |
+| `/api-docs`      | OpenAPI interactive UI     |
+| `/api-docs-json` | OpenAPI spec JSON          |
+| `/docs`          | 11ty project documentation |
 
 ## Contributing
 

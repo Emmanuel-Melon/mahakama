@@ -19,9 +19,7 @@ import { corpusInsertSchema } from "./corpus.types";
 
 const corpusRoutes = Router();
 
-useAuthorization(corpusRoutes, [
-  { path: "/ingest", roles: ["admin"] },
-]);
+useAuthorization(corpusRoutes, [{ path: "/ingest", roles: ["admin"] }]);
 
 corpusRoutes.get("/", getCorpusController);
 corpusRoutes.get(

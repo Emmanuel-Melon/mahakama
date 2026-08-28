@@ -38,12 +38,12 @@ npm run dev --workspace=frontend
 
 ## Scripts
 
-| Command                     | Purpose                                        |
-| --------------------------- | ---------------------------------------------- |
-| `npm run dev`               | Start dev server                               |
-| `npm run typecheck`         | `react-router typegen && tsc`                  |
-| `npm run build`             | `react-router build`                           |
-| `npm run generate:types[:local|:prod]` | Regenerate `@mah/api` types from the OpenAPI spec |
+| Command                        | Purpose                       |
+| ------------------------------ | ----------------------------- |
+| `npm run dev`                  | Start dev server              |
+| `npm run typecheck`            | `react-router typegen && tsc` |
+| `npm run build`                | `react-router build`          |
+| `npm run generate:types[:local | :prod]`                       | Regenerate `@mah/api` types from the OpenAPI spec |
 
 Default API base is `http://localhost:3000/api` (see `app/config/index.ts`); override with `VITE_API_BASE_URL`. API CORS only allows `localhost:5173`.
 
