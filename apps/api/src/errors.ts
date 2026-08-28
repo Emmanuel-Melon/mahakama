@@ -1,4 +1,4 @@
-import { AppError } from "@/lib/http/http.error";
+import { AppError, HttpError } from "@/lib/http/http.error";
 import { ZodError } from "zod";
 import { HttpStatus } from "./lib/http/http.status";
 
@@ -16,6 +16,10 @@ export const mapErrorToResponse = (error: Error): ErrorResponseData => {
       ) || HttpStatus.INTERNAL_SERVER_ERROR;
 
     return { status, message: error.message };
+  }
+
+  if (error instanceof HttpError) {
+    return { status: error.status, message: error.message };
   }
 
   if (error instanceof ZodError) {

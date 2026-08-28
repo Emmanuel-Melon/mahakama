@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { serverConfig } from "@/config";
 import { findUser } from "@/feature/users/operations/users.find";
+import { getAccessToken } from "@/feature/auth/auth.tokens";
 import { logger } from "@/lib/logger";
 import { sendErrorResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
@@ -12,8 +13,20 @@ export const authenticateToken = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const token =
-    req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+  const authHeader = req.headers["authorization"];
+  const cookieNames = Object.keys(req.cookies ?? {});
+  const token = getAccessToken(req);
+  logger.info(
+    {
+      path: req.path,
+      method: req.method,
+      hasAuthHeader: !!authHeader,
+      authHeaderPrefix: authHeader ? authHeader.slice(0, 7) : null,
+      cookieNames,
+      tokenResolved: !!token,
+    },
+    "Auth attempt: checking credentials",
+  );
   if (!token) {
     sendErrorResponse(req, res, {
       status: HttpStatus.UNAUTHORIZED,
@@ -23,8 +36,26 @@ export const authenticateToken = async (
   }
   try {
     const verified = jwt.verify(token!, serverConfig.jwtSecret!) as JwtPayload;
-    const user = await findUser("id", verified.id);
+    if (!verified.sub) {
+      logger.warn(
+        { path: req.path },
+        "Auth failed: token payload missing 'sub'",
+      );
+      sendErrorResponse(req, res, {
+        status: HttpStatus.UNAUTHORIZED,
+        description: "Authentication Error",
+      });
+      return;
+    }
+    const user = await findUser("id", verified.sub);
     if (!user.ok || !user.data) {
+      logger.warn(
+        {
+          path: req.path,
+          userId: verified.sub,
+        },
+        "Auth success but user not found for valid token",
+      );
       sendErrorResponse(req, res, {
         status: HttpStatus.NOT_FOUND,
         description: "User not found for valid token",
@@ -32,6 +63,15 @@ export const authenticateToken = async (
       return;
     }
     req.user = user.data;
+    logger.info(
+      {
+        path: req.path,
+        method: req.method,
+        userId: user.data.id,
+        role: user.data.role,
+      },
+      "Auth success",
+    );
     next();
   } catch (error) {
     const errorMessage =
@@ -40,7 +80,6 @@ export const authenticateToken = async (
       { error: errorMessage, path: req.path },
       "Token verification failed",
     );
-
     if (error instanceof jwt.JsonWebTokenError) {
       sendErrorResponse(req, res, {
         status: HttpStatus.UNAUTHORIZED,
@@ -70,8 +109,7 @@ export const optionalAuth = async (
   _res: Response,
   next: NextFunction,
 ) => {
-  const token =
-    req.cookies?.token || req.headers["authorization"]?.split(" ")[1];
+  const token = getAccessToken(req);
 
   if (!token) {
     req.user = null;
@@ -80,7 +118,9 @@ export const optionalAuth = async (
 
   try {
     const verified = jwt.verify(token, serverConfig.jwtSecret!) as JwtPayload;
-    const user = await findUser("id", verified.id);
+    const user = verified.sub
+      ? await findUser("id", verified.sub)
+      : { ok: false as const, error: new Error("Missing sub") };
 
     if (user.ok && user.data) {
       req.user = user.data;

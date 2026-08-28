@@ -101,6 +101,15 @@ export function createResponseErrorHandler(context: InterceptorContext) {
       // capture api error
     }
 
+    if (status === undefined) {
+      console.error("[api:network-error]", {
+        url: config?.url,
+        baseURL: config?.baseURL,
+        message: error.message,
+        code: error.code,
+      });
+    }
+
     throw new ApiClientError(status ?? 500, errors);
   };
 }
