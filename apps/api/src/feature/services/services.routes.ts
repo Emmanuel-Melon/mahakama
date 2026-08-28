@@ -18,8 +18,6 @@ import { serviceInsertSchema } from "./services.types";
 
 const servicesRouter = Router();
 
-useAuthorization(servicesRouter, [{ path: "/institutions", roles: ["admin"] }]);
-
 servicesRouter.get("/", getLegalServicesController);
 servicesRouter.get(
   "/:serviceId",

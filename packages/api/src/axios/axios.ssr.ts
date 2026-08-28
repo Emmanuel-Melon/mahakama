@@ -1,16 +1,21 @@
 import { data } from "react-router";
 import { AxiosApiClient } from "./index.js";
 import { createBaseConfig } from "./axios.utils.js";
+import { getAuthToken } from "../api/api.utils.js";
 
 /**
  * Spawns an isolated client for a single server request thread.
  */
 export function createIsolatedClient(request: Request): AxiosApiClient {
   const cookie = request.headers.get("Cookie") || "";
+  const token = getAuthToken(request);
 
   const client = new AxiosApiClient(
     createBaseConfig({
-      headers: { Cookie: cookie },
+      headers: {
+        Cookie: cookie,
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
     }),
   );
 

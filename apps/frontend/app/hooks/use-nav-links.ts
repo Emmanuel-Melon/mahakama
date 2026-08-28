@@ -8,7 +8,7 @@ import {
 import type { NavLinkItem } from "@mah/client/nav";
 
 export const useNavLinks = (): NavLinkItem[] => {
-  const user = useUser();
+  const { user } = useUser();
 
   return useMemo(() => {
     const role = user?.role ?? "user";
