@@ -1,5 +1,6 @@
 import { db } from "@/lib/drizzle";
 import { lawyersTable } from "../lawyers.schema";
+import { usersSchema } from "@/feature/users/users.schema";
 import { eq } from "drizzle-orm";
 import type { Lawyer } from "../lawyers.types";
 import {
@@ -45,6 +46,14 @@ export async function approveLawyer(
       })
       .where(eq(lawyersTable.id, lawyerId))
       .returning()
-      .then(([result]) => result),
+      .then(async ([result]) => {
+        if (result) {
+          await db
+            .update(usersSchema)
+            .set({ isOnboarded: true, updatedAt: new Date() })
+            .where(eq(usersSchema.id, existing.userId));
+        }
+        return result;
+      }),
   );
 }

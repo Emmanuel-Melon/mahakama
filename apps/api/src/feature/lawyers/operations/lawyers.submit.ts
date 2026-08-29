@@ -23,11 +23,11 @@ export async function submitLawyerProfile(
     };
   }
 
-  if (existing.status !== "draft") {
+  if (existing.status !== "draft" && existing.status !== "rejected") {
     return {
       ok: false,
       data: null,
-      reason: `Cannot submit profile in "${existing.status}" status — must be "draft"`,
+      reason: `Cannot submit profile in "${existing.status}" status — must be "draft" or "rejected"`,
       type: "VALIDATION_ERROR",
     };
   }
@@ -38,6 +38,7 @@ export async function submitLawyerProfile(
       .set({
         status: "submitted",
         submittedAt: new Date(),
+        rejectionReason: null,
         updatedAt: new Date(),
       })
       .where(eq(lawyersTable.userId, userId))

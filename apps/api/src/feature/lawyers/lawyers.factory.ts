@@ -24,7 +24,6 @@ export const createMockLawyer = (overrides?: Partial<Lawyer>): Lawyer => ({
     "Tax",
   ]),
   experienceYears: faker.number.int({ min: 1, max: 30 }),
-  rating: faker.number.float({ min: 1, max: 5 }).toString(),
   casesHandled: faker.number.int({ min: 0, max: 1000 }),
   isAvailable: faker.datatype.boolean(),
   location: faker.location.city(),

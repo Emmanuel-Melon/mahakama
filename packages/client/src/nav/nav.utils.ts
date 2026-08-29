@@ -1,6 +1,12 @@
 import type { UserRole } from "@mah/api/src/clients/auth.api";
 import { createPath } from "./nav.paths";
 
+export const ONBOARDING_PATH = "/onboarding";
+export const LAWYER_ONBOARDING_PATH = "/onboarding/lawyer";
+
+export const getOnboardingPath = (role?: string | null): string =>
+  role === "lawyer" ? LAWYER_ONBOARDING_PATH : ONBOARDING_PATH;
+
 export const getAuthToggleUrl = (mode: "login" | "signup", role?: UserRole) => {
   const isPartner = role === "partner";
   if (mode === "login") {
