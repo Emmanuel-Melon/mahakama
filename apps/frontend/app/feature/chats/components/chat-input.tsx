@@ -16,6 +16,7 @@ import { UploadDropdown } from "@mah/ui/components/molecules/UploadDropdown";
 import { getUploadKey } from "@mah/api/src/hooks/use-upload-manager";
 import { AudioLines, Paperclip, Plus, Send, X } from "lucide-react";
 import { cn } from "~/lib/utils";
+import { useUploadDocument } from "@mah/api/src/hooks/documents/use-documents.sse";
 
 interface ChatInputProps {
   value: string;

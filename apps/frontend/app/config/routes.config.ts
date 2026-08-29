@@ -13,6 +13,7 @@ export const AUTH_ROUTES = [
   "/chats",
   "/chat",
   "/consultations",
+  "/matters",
   "/legal-hub",
   "/users",
 ] as const;

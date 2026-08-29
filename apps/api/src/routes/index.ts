@@ -6,6 +6,7 @@ import { consultationsApi } from "@/feature/consultations/consultations.routes";
 import { corpusApi } from "@/feature/corpus/corpus.routes";
 import { documentsApi } from "@/feature/documents/documents.routes";
 import { lawyersApi } from "@/feature/lawyers/lawyer.routes";
+import { matterApi } from "@/feature/matter/matter.routes";
 import { messagesApi } from "@/feature/messages/messages.routes";
 import { notificationsApi } from "@/feature/notifications/notifications.routes";
 import { servicesApi } from "@/feature/services/services.routes";
@@ -21,6 +22,7 @@ useApiRouters(mahakamaRouter, [
   corpusApi,
   documentsApi,
   lawyersApi,
+  matterApi,
   messagesApi,
   notificationsApi,
   servicesApi,

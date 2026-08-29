@@ -7,6 +7,7 @@ import {
   Home,
   Briefcase,
   ClipboardList,
+  FolderOpen,
 } from "lucide-react";
 
 export const BASE_NAV_LINKS: NavLinkItem[] = [
@@ -21,6 +22,12 @@ export const BASE_NAV_LINKS: NavLinkItem[] = [
     title: "nav.recents",
     url: "/chats/recents",
     icon: History,
+  },
+  {
+    id: "nav-matters",
+    title: "nav.matters",
+    url: "/matters",
+    icon: FolderOpen,
   },
 ];
 

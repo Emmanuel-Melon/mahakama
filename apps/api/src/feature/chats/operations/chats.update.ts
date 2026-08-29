@@ -13,6 +13,24 @@ import {
   type DbResult,
 } from "@/lib/drizzle/results/results.single";
 
+export const updateChat = async <K extends ChatColumnKey>(
+  field: K,
+  value: ChatColumn[K]["_"]["data"],
+  data: UpdateChat,
+): Promise<DbResult<ChatSession>> => {
+  return executeSingle(
+    db
+      .update(chatsSchema)
+      .set({
+        ...data,
+        updatedAt: new Date(),
+      })
+      .where(eq(chatsSchema[field], value))
+      .returning()
+      .then(([result]) => result),
+  );
+};
+
 export const deleteChat = async <K extends ChatColumnKey>(
   field: K,
   value: ChatColumn[K]["_"]["data"],
@@ -28,24 +46,6 @@ export const deleteChat = async <K extends ChatColumnKey>(
     db
       .delete(chatsSchema)
       .where(and(...conditions))
-      .returning()
-      .then(([result]) => result),
-  );
-};
-
-export const updateChat = async <K extends ChatColumnKey>(
-  field: K,
-  value: ChatColumn[K]["_"]["data"],
-  data: UpdateChat,
-): Promise<DbResult<ChatSession>> => {
-  return executeSingle(
-    db
-      .update(chatsSchema)
-      .set({
-        ...data,
-        updatedAt: new Date(),
-      })
-      .where(eq(chatsSchema[field], value))
       .returning()
       .then(([result]) => result),
   );

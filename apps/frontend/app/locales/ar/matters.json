@@ -1,0 +1,48 @@
+{
+  "title": "القضايا",
+  "loading": {
+    "title": "جارٍ تحميل القضايا",
+    "description": "يرجى الانتظار بينما نستعرض قضاياك..."
+  },
+  "loadingDetail": {
+    "title": "جارٍ تحميل القضية",
+    "description": "يرجى الانتظار بينما نستعرض تفاصيل القضية..."
+  },
+  "empty": {
+    "title": "لا توجد قضايا بعد",
+    "description": "القضايا التي تشارك فيها ستظهر هنا."
+  },
+  "notFound": {
+    "title": "القضية غير موجودة",
+    "description": "تعذر العثور على القضية التي تبحث عنها."
+  },
+  "status": {
+    "draft": "مسودة",
+    "open": "مفتوحة",
+    "waiting_client": "بانتظار العميل",
+    "waiting_lawyer": "بانتظار المحامي",
+    "in_progress": "قيد المعالجة",
+    "resolved": "تمت الحل",
+    "closed": "مغلقة",
+    "archived": "مؤرشفة"
+  },
+  "fields": {
+    "status": "الحالة",
+    "jurisdiction": "الاختصاص القضائي",
+    "practiceArea": "مجال الممارسة",
+    "urgency": "درجة الاستعجال",
+    "client": "العميل",
+    "summary": "الملخص",
+    "caseDetails": "تفاصيل القضية",
+    "overview": "نظرة عامة",
+    "timeline": "الجدول الزمني",
+    "matterDetails": "تفاصيل القضية",
+    "created": "أنشئت",
+    "updated": "حدّثت",
+    "opened": "فُتحت",
+    "closed": "أغلقت"
+  },
+  "actions": {
+    "viewDetails": "عرض التفاصيل"
+  }
+}

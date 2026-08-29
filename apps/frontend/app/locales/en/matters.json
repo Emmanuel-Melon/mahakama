@@ -1,0 +1,48 @@
+{
+  "title": "Matters",
+  "loading": {
+    "title": "Loading matters",
+    "description": "Please wait while we fetch your matters..."
+  },
+  "loadingDetail": {
+    "title": "Loading matter",
+    "description": "Please wait while we fetch the matter details..."
+  },
+  "empty": {
+    "title": "No matters yet",
+    "description": "Matters you are involved in will show up here."
+  },
+  "notFound": {
+    "title": "Matter not found",
+    "description": "We couldn't find the matter you're looking for."
+  },
+  "status": {
+    "draft": "Draft",
+    "open": "Open",
+    "waiting_client": "Waiting on client",
+    "waiting_lawyer": "Waiting on lawyer",
+    "in_progress": "In progress",
+    "resolved": "Resolved",
+    "closed": "Closed",
+    "archived": "Archived"
+  },
+  "fields": {
+    "status": "Status",
+    "jurisdiction": "Jurisdiction",
+    "practiceArea": "Practice area",
+    "urgency": "Urgency",
+    "client": "Client",
+    "summary": "Summary",
+    "caseDetails": "Case details",
+    "overview": "Overview",
+    "timeline": "Timeline",
+    "matterDetails": "Matter details",
+    "created": "Created",
+    "updated": "Updated",
+    "opened": "Opened",
+    "closed": "Closed"
+  },
+  "actions": {
+    "viewDetails": "View Details"
+  }
+}

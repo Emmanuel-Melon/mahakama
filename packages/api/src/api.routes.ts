@@ -23,3 +23,11 @@ export const LAWYERS_API_ROUTES = {
   PROFILE_DOCUMENTS: "/v1/lawyers/profile/documents",
   INVITES: "/v1/lawyers/invites",
 } as const;
+
+export const MATTERS_API_ROUTES = {
+  ROOT: "/v1/matters",
+  TIMELINE: "/v1/matters/:matterId/timeline",
+  NOTES: "/v1/matters/:matterId/notes",
+  LAWYERS: "/v1/matters/:matterId/lawyers",
+  LAWYERS_ME: "/v1/matters/:matterId/lawyers/me",
+} as const;

@@ -1,10 +1,13 @@
-import { MapPin, Briefcase, ChevronRight, Languages } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { MapPin, Briefcase, ChevronRight, CalendarClock } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@mah/ui/components/avatar";
 import { BookmarkButton } from "@mah/ui";
 import { ShareButton } from "@mah/ui/components/molecules/ShareButton";
 import { MahButton } from "@mah/ui/components/molecules/MahButton";
 import { MahCard } from "@mah/ui/components/atoms/MahCard";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
+import { ConsultationRequestDialog } from "~/feature/consultations/components/ConsultationRequestDialog";
 
 const getFirstName = (name?: string) => {
   if (!name) return "Lawyer";
@@ -18,6 +21,7 @@ interface LawyerCardProps {
   lawyer: Lawyer;
   variant?: CardVariant;
   displayMode?: DisplayMode;
+  isAuthenticated?: boolean;
 }
 
 const handleBookmark = (e: React.MouseEvent) => {
@@ -32,15 +36,25 @@ const handleShare = (e: React.MouseEvent) => {
 
 export function LawyerCard({
   lawyer,
+  isAuthenticated = false,
   variant = "default",
   displayMode = "list",
 }: LawyerCardProps) {
+  const navigate = useNavigate();
+  const [requestOpen, setRequestOpen] = useState(false);
+
   const getExperienceText = (years?: number) => {
     if (years === undefined || years === null) return "No experience";
     return years === 1 ? `${years} year` : `${years} years`;
   };
 
-  const languages = Array.isArray(lawyer.languages) ? lawyer.languages : [];
+  const handleRequestConsultation = () => {
+    if (isAuthenticated) {
+      setRequestOpen(true);
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <MahCard
@@ -71,11 +85,18 @@ export function LawyerCard({
             </AvatarFallback>
           </Avatar>
         </div>
-        <ShareButton
-          onClick={handleShare}
-          className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000]"
-          aria-label="Share lawyer"
-        />
+        <div className="flex gap-2">
+          <ShareButton
+            onClick={handleShare}
+            className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000]"
+            aria-label="Share lawyer"
+          />
+          <BookmarkButton
+            onClick={handleBookmark}
+            className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000]"
+            aria-label="Bookmark lawyer"
+          />
+        </div>
       </div>
 
       <div className="text-left mb-4">
@@ -109,18 +130,27 @@ export function LawyerCard({
           <MahButton
             href={`/lawyers/${lawyer.id}`}
             variant="card"
-            className="flex-[2]"
+            className="flex-1"
           >
             View {getFirstName(lawyer.name)}'s Profile
             <ChevronRight className="h-4 w-4 ml-1" />
           </MahButton>
-          <BookmarkButton
-            onClick={handleBookmark}
-            className="p-2 text-sm font-medium border-2 border-black rounded-full bg-white shadow-[3px_3px_0_0_#000] flex-[1] h-full"
-            aria-label="Bookmark lawyer"
-          />
+          <MahButton
+            variant="secondary"
+            className="flex-1"
+            onClick={handleRequestConsultation}
+          >
+            Request Consultation
+            <CalendarClock className="h-4 w-4 ml-1" />
+          </MahButton>
         </div>
       </div>
+
+      <ConsultationRequestDialog
+        lawyer={lawyer}
+        open={requestOpen}
+        onOpenChange={setRequestOpen}
+      />
     </MahCard>
   );
 }

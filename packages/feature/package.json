@@ -18,7 +18,8 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx}\""
   },
   "dependencies": {
-    "@mah/api": "*"
+    "@mah/api": "*",
+    "@mah/client": "*"
   },
   "peerDependencies": {
     "@hookform/resolvers": "^5.0.0",
