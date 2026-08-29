@@ -19,6 +19,14 @@ import {
   inferenceModelsSchema,
   userInferencePreferencesSchema,
 } from "@/feature/inference/inference.schema";
+import {
+  mattersTable,
+  matterLawyersTable,
+  matterNotesTable,
+  matterDocumentsTable,
+  matterStatusHistoryTable,
+  matterEventsTable,
+} from "@/feature/matter/matter.schema";
 
 // Users Relations
 export const usersRelations = relations(usersSchema, ({ many }) => ({
@@ -147,6 +155,62 @@ export const userInferencePreferencesRelations = relations(
   }),
 );
 
+// Matter Relations
+export const mattersRelations = relations(mattersTable, ({ many }) => ({
+  lawyers: many(matterLawyersTable),
+  notes: many(matterNotesTable),
+  documents: many(matterDocumentsTable),
+  statusHistory: many(matterStatusHistoryTable),
+  events: many(matterEventsTable),
+}));
+
+export const matterLawyersRelations = relations(
+  matterLawyersTable,
+  ({ one }) => ({
+    matter: one(mattersTable, {
+      fields: [matterLawyersTable.matterId],
+      references: [mattersTable.id],
+    }),
+  }),
+);
+
+export const matterNotesRelations = relations(matterNotesTable, ({ one }) => ({
+  matter: one(mattersTable, {
+    fields: [matterNotesTable.matterId],
+    references: [mattersTable.id],
+  }),
+}));
+
+export const matterDocumentsRelations = relations(
+  matterDocumentsTable,
+  ({ one }) => ({
+    matter: one(mattersTable, {
+      fields: [matterDocumentsTable.matterId],
+      references: [mattersTable.id],
+    }),
+  }),
+);
+
+export const matterStatusHistoryRelations = relations(
+  matterStatusHistoryTable,
+  ({ one }) => ({
+    matter: one(mattersTable, {
+      fields: [matterStatusHistoryTable.matterId],
+      references: [mattersTable.id],
+    }),
+  }),
+);
+
+export const matterEventsRelations = relations(
+  matterEventsTable,
+  ({ one }) => ({
+    matter: one(mattersTable, {
+      fields: [matterEventsTable.matterId],
+      references: [mattersTable.id],
+    }),
+  }),
+);
+
 // Combined Relations Export
 export const allRelations = {
   usersRelations,
@@ -162,4 +226,10 @@ export const allRelations = {
   inferenceProvidersRelations,
   inferenceModelsRelations,
   userInferencePreferencesRelations,
+  mattersRelations,
+  matterLawyersRelations,
+  matterNotesRelations,
+  matterDocumentsRelations,
+  matterStatusHistoryRelations,
+  matterEventsRelations,
 };

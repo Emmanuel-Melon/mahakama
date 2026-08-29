@@ -1,23 +1,30 @@
+import { useState } from "react";
+import { useNavigate } from "react-router";
 import { PageHeader } from "@mah/ui";
 import { PageDetailHeader } from "@mah/ui";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
 import { ContactInformation, type ContactItem } from "@mah/ui";
-import { Scale, MapPin, Briefcase, Home, Users } from "lucide-react";
+import { Scale, MapPin, Briefcase, Home, Users, CalendarClock } from "lucide-react";
 import { AsyncContainer } from "@mah/ui";
+import { ConsultationRequestDialog } from "~/feature/consultations/components/ConsultationRequestDialog";
 
 import type { AsyncState } from "@mah/api/src/api/api.types";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
 
 interface LawyerProfileScreenProps extends AsyncState {
   lawyer: Lawyer;
+  isAuthenticated?: boolean;
 }
 
 export const LawyerProfileScreen = ({
   error,
   lawyer,
   isLoading,
+  isAuthenticated = false,
 }: LawyerProfileScreenProps) => {
+  const navigate = useNavigate();
+  const [requestOpen, setRequestOpen] = useState(false);
   const getExperienceText = (years?: number) => {
     if (!years) return "No experience info";
     if (years === 1) return "1 year";
@@ -70,6 +77,19 @@ export const LawyerProfileScreen = ({
       variant: "primary" as const,
     });
   }
+
+  actions.push({
+    label: "Request Consultation",
+    icon: CalendarClock,
+    onClick: () => {
+      if (isAuthenticated) {
+        setRequestOpen(true);
+      } else {
+        navigate("/login");
+      }
+    },
+    variant: "secondary" as const,
+  });
 
   const breadcrumbs = [
     { label: "Home", to: "/", icon: Home },
@@ -138,6 +158,12 @@ export const LawyerProfileScreen = ({
               />
             </div>
           </div>
+
+          <ConsultationRequestDialog
+            lawyer={lawyer}
+            open={requestOpen}
+            onOpenChange={setRequestOpen}
+          />
         </>
       )}
     </AsyncContainer>

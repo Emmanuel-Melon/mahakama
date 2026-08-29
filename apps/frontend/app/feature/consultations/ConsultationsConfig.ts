@@ -10,6 +10,10 @@ export const consultationsRoutes = defineRoutes({
     path: "consultations",
     file: "routes/consultations/index.tsx",
   },
+  detail: {
+    path: "consultations/:consultationId",
+    file: "routes/consultations/$consultationId.tsx",
+  },
 });
 
 export const ConsultationsPaths = consultationsRoutes.to;

@@ -42,8 +42,8 @@ export type AuthEventQuery = components["schemas"]["AuthEventQuery"];
 /**
  * Validation Schemas (Zod / OpenAPI Runtime Schemas)
  */
-export const loginRequestSchema = schemas.postV1login_Body;
-export const registerRequestSchema = schemas.postV1register_Body;
+export const loginRequestSchema = schemas.postV1authlogin_Body;
+export const registerRequestSchema = schemas.postV1authregister_Body;
 
 /**
  * Auth API Client

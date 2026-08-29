@@ -10,6 +10,7 @@ interface LawyersListProps {
   onDisplayModeChange: (mode: "list" | "grid") => void;
   variant?: "default" | "minimal";
   showControls?: boolean;
+  isAuthenticated?: boolean;
   // Filter props
   currentFilter: string;
   currentSpecialization: string;
@@ -35,6 +36,7 @@ export function LawyersList({
   onDisplayModeChange,
   variant = "default",
   showControls = true,
+  isAuthenticated = false,
   // Filter props
   currentFilter,
   currentSpecialization,
@@ -123,6 +125,7 @@ export function LawyersList({
                     lawyer={lawyer}
                     variant={variant}
                     displayMode="grid"
+                    isAuthenticated={isAuthenticated}
                   />
                 </div>
               ))}
@@ -135,6 +138,7 @@ export function LawyersList({
                   lawyer={lawyer}
                   variant={variant}
                   displayMode="list"
+                  isAuthenticated={isAuthenticated}
                 />
               ))}
             </div>

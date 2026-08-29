@@ -43,7 +43,7 @@ export const ConsultationsScreen = ({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {consultations.map((consultation) => (
         <ConsultationCard
           key={consultation.id}

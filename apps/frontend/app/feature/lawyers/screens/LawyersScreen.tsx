@@ -93,6 +93,7 @@ export const LawyersScreen: FC<LawyersScreenProps> = ({
             onDisplayModeChange={onDisplayModeChange}
             variant="default"
             showControls={true}
+            isAuthenticated={isAuthenticated}
             // Filter props
             currentFilter={currentFilter}
             currentSpecialization={currentSpecialization}

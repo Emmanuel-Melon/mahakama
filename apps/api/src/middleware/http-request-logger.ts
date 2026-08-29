@@ -14,8 +14,9 @@ export const requestLogger = (
       url: req.originalUrl,
       user: req.user ? { id: req.user.id, role: req.user.role } : null,
       cookieNames: Object.keys(req.cookies ?? {}),
-      setCookieNames: (res.getHeaders()["set-cookie"] as string[] | undefined)
-        ?.map((c) => c.split("=")[0]),
+      setCookieNames: (
+        res.getHeaders()["set-cookie"] as string[] | undefined
+      )?.map((c) => c.split("=")[0]),
       message: "Request received",
     },
     "Incoming request",

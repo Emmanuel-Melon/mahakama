@@ -15,7 +15,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function LoginRoute() {
-  return <LoginScreen successPath="/" />;
+  return <LoginScreen successPath="/" redirectOnboarded={false} />;
 }
 
 export function ErrorBoundary() {

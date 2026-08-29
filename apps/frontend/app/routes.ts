@@ -10,6 +10,7 @@ import { chatsRoutes, messagesRoutes } from "./feature/chats/ChatsConfig";
 import { corpusRoutes } from "./feature/corpus/CorpusConfig";
 import { consultationsRoutes } from "./feature/consultations/ConsultationsConfig";
 import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
+import { mattersRoutes } from "./feature/matters/MattersConfig";
 import { notificationsRoutes } from "./feature/notifications/NotificationsConfig";
 import { usersRoutes } from "./feature/users/UsersConfig";
 import type { RouteDefinition } from "@mah/client/nav";
@@ -26,6 +27,7 @@ export default [
   ...toRouteConfig(corpusRoutes),
   ...toRouteConfig(consultationsRoutes),
   ...toRouteConfig(lawyersRoutes),
+  ...toRouteConfig(mattersRoutes),
   ...toRouteConfig(usersRoutes),
   ...toRouteConfig(messagesRoutes),
   layout("./feature/users/layouts/onboarding.layout.tsx", [
