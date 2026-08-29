@@ -142,6 +142,17 @@ const matterPaths: PathDefinition[] = [
     errorCodes: [400, 401, 404],
   },
   {
+    handlerName: "getMatterLawyersController",
+    method: "get",
+    path: `${matterApi.path}/{matterId}/lawyers`,
+    summary: "Get matter lawyers",
+    description: "List the lawyers assigned or invited to a specific matter.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MatterLawyerApiSchemas.colResSchema,
+    errorCodes: [401, 403, 404],
+  },
+  {
     handlerName: "createMatterLawyerController",
     method: "post",
     path: `${matterApi.path}/{matterId}/lawyers`,

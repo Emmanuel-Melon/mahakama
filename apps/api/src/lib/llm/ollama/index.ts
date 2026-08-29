@@ -18,6 +18,36 @@ export interface OllamaProviderConfig {
   host?: string;
 }
 
+/**
+ * Extracts the first JSON value from a model response that may wrap the JSON
+ * in markdown code fences (e.g. ```json ... ```) or include surrounding
+ * prose. Falls back to the raw string when no JSON value can be isolated.
+ */
+function extractJson(raw: string): string {
+  const content = raw.trim();
+
+  // Strip a leading markdown code-fence block (e.g. ```json / ```).
+  const fenced = content.match(/^```[a-zA-Z]*\s*([\s\S]*?)```\s*$/);
+  if (fenced?.[1]) {
+    return fenced[1].trim();
+  }
+
+  // Otherwise, try to isolate the first JSON object or array in the output.
+  const start = content.search(/[[{]/);
+  if (start === -1) {
+    return content;
+  }
+  const open = content[start];
+  const close = open === "{" ? "}" : "]";
+  const end = content.lastIndexOf(close);
+  if (end > start) {
+    return content.slice(start, end + 1);
+  }
+
+  return content;
+}
+
+
 export class OllamaClient implements ILLMProvider<"ollama"> {
   private static instance: OllamaClient;
   private client: Ollama;
@@ -98,7 +128,9 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
 
       let parsedContent;
       try {
-        parsedContent = JSON.parse(content);
+        parsedContent = JSON.parse(
+          extractJson(content),
+        );
       } catch (e) {
         throw new Error(`Failed to parse JSON response from Ollama: ${e}`);
       }

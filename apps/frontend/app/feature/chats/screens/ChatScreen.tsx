@@ -12,10 +12,8 @@ import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
 import { DocumentIndicator } from "~/feature/chats/components/DocumentIndicator";
 import { PageDetailsLoading } from "@mah/ui/components/molecules/PageDetailsLoading";
 import { PageDetailsError } from "@mah/ui/components/molecules/PageDetailsError";
-import {
-  isReplyAwaiting,
-  useChatMutations,
-} from "@mah/api/src/hooks/chats/use-chats";
+import { isReplyAwaiting, useChatMutations } from "@mah/api/src/hooks/chats/use-chats";
+import { useOpenMatter } from "@mah/api/src/hooks/use-matters";
 import { useDocumentStatus } from "@mah/api/src/hooks/documents/use-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -49,6 +47,12 @@ export const ChatScreen = ({
     deleteChat: deleteChatMutation,
     retryMessage: retryMessageMutation,
   } = useChatMutations();
+
+  const openMatter = useOpenMatter({
+    onOpenSuccess: ({ data }) => {
+      navigate(`/matters/${data.id}`);
+    },
+  });
 
   const { data: userDocumentStatus } = useDocumentStatus(chat?.id ?? "");
 
@@ -107,6 +111,15 @@ export const ChatScreen = ({
       navigator.clipboard.writeText(shareUrl);
       alert("Chat link copied to clipboard!");
     }
+  };
+
+  const handleOpenMatter = () => {
+    if (!chat) return;
+    openMatter.mutate({
+      clientUserId: chat.userId,
+      sourceChatId: chat.id,
+      title: chat.title || "New Matter",
+    });
   };
 
   const onSubmit = (data: SendMessageForm) => {
@@ -175,6 +188,8 @@ export const ChatScreen = ({
             onDeleteChat={handleDeleteChat}
             onRenameChat={handleRenameChat}
             onShareChat={handleShareChat}
+            onOpenMatter={handleOpenMatter}
+            isOpeningMatter={openMatter.isPending}
           />
         </div>
 

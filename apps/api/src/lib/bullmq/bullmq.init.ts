@@ -5,6 +5,7 @@ import { initCorpusWorker } from "@/feature/corpus/jobs/corpus.worker";
 import { initLawyersWorker } from "@/feature/lawyers/jobs/lawyers.worker";
 import { initMessagesWorker } from "@/feature/messages/jobs/messages.worker";
 import { initLawSourcesWorker } from "@/service/law-sources/jobs/law-sources.worker";
+import { initMatterWorker } from "@/feature/matter/jobs/matter.worker";
 import { registerLawSourceScheduler } from "@/service/law-sources/jobs/law-sources.scheduler";
 import { initShadowReplayWorker } from "@/service/embedding-service/jobs/embeddings.worker";
 import { registerShadowReplayScheduler } from "@/service/embedding-service/jobs/embeddings.scheduler";
@@ -15,6 +16,7 @@ export const initAllWorkers = () => {
   initCorpusWorker();
   initChatsWorker();
   initLawSourcesWorker();
+  initMatterWorker();
   initShadowReplayWorker();
   // initLawyersWorker();
   // initMessagesWorker();

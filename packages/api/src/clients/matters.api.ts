@@ -43,6 +43,10 @@ export type MatterLawyerResult = ApiResource<
   MatterLawyer,
   MatterLawyerMetadata
 >;
+export type MatterLawyerCollection = ApiCollection<
+  MatterLawyer,
+  MatterLawyerCollectionResponse["metadata"]
+>;
 
 export type MatterNoteMetadata = MatterNoteSingleResponse["metadata"];
 export type MatterNoteResult = ApiResource<MatterNote, MatterNoteMetadata>;
@@ -168,6 +172,21 @@ export class MattersApiClient extends BaseApiClient {
     );
     return this.unpackSingle(response, {
       errMsg: "Invalid matter lawyer data received from the server",
+    });
+  }
+
+  public async getMatterLawyers(
+    matterId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterLawyerCollection> {
+    const response = await this.api.request<MatterLawyerCollectionResponse>(
+      MATTERS_API_ROUTES.LAWYERS.replace(":matterId", matterId),
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackCollection(response, {
+      errMsg: "Invalid matter lawyers data received from the server",
     });
   }
 

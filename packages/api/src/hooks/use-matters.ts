@@ -4,6 +4,7 @@ import {
   type MatterResult,
   type MattersResult,
   type MatterLawyerResult,
+  type MatterLawyerCollection,
   type MatterNoteResult,
   type MatterTimelineEntry,
   type MatterListParams,
@@ -23,6 +24,7 @@ export const matterKeys = {
     [...matterKeys.lists(), { filters }] as const,
   details: () => [...matterKeys.all, "detail"] as const,
   detail: (id: string) => [...matterKeys.details(), id] as const,
+  lawyers: (id: string) => [...matterKeys.all, "lawyers", id] as const,
   timeline: (id: string) => [...matterKeys.all, "timeline", id] as const,
 } as const;
 
@@ -35,6 +37,7 @@ export const invalidations = {
   detail: (id: string) => [
     matterKeys.lists(),
     matterKeys.detail(id),
+    matterKeys.lawyers(id),
     matterKeys.timeline(id),
   ],
   lists: () => [matterKeys.lists()],
@@ -53,6 +56,11 @@ export const matterQueries = {
   detail: (matterId: string) => ({
     queryKey: matterKeys.detail(matterId),
     queryFn: () => mattersApi.getMatterById(matterId),
+    enabled: !!matterId,
+  }),
+  lawyers: (matterId: string) => ({
+    queryKey: matterKeys.lawyers(matterId),
+    queryFn: () => mattersApi.getMatterLawyers(matterId),
     enabled: !!matterId,
   }),
   timeline: (matterId: string) => ({
@@ -82,6 +90,12 @@ export function useMatter(matterId: string) {
 export function useMatterTimeline(matterId: string) {
   return useQuery<MatterTimelineEntry[], ApiClientError>({
     ...matterQueries.timeline(matterId),
+  });
+}
+
+export function useMatterLawyers(matterId: string) {
+  return useQuery<MatterLawyerCollection, ApiClientError>({
+    ...matterQueries.lawyers(matterId),
   });
 }
 

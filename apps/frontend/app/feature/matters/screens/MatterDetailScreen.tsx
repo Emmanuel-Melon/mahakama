@@ -17,6 +17,8 @@ import { useUser } from "@mah/api/src/hooks/use-users";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 import type { Matter, MatterTimelineEntry } from "@mah/api/src/clients/matters.api";
 import { MattersPaths } from "../MattersConfig";
+import { MatterLawyersCard } from "../components/MatterLawyersCard";
+import { LawyerInvitePanel } from "../components/LawyerInvitePanel";
 
 type BadgeVariant = "default" | "secondary" | "destructive";
 
@@ -45,6 +47,7 @@ const formatDateTime = (value?: string | null) =>
 interface MatterDetailScreenProps extends AsyncState {
   matter?: Matter;
   timeline?: MatterTimelineEntry[];
+  role: "lawyer" | "user";
 }
 
 export const MatterDetailScreen = ({
@@ -52,6 +55,7 @@ export const MatterDetailScreen = ({
   timeline = [],
   isLoading,
   error,
+  role,
 }: MatterDetailScreenProps) => {
   const { t } = useTranslation("matters");
   const clientQuery = useUser(matter?.clientUserId || "");
@@ -151,6 +155,12 @@ export const MatterDetailScreen = ({
               {matter.summary || "—"}
             </p>
           </CardWithLabel>
+
+          {role === "lawyer" ? (
+            <LawyerInvitePanel matter={matter} />
+          ) : (
+            <MatterLawyersCard matterId={matter.id} role={role} />
+          )}
 
           <CardWithLabel
             label={t("fields.timeline")}

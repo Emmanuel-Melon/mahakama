@@ -10,6 +10,7 @@ import {
 } from "./matter.schema";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
+import { MattersJobs } from "./matter.config";
 
 /*
  * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
@@ -62,7 +63,10 @@ export const matterLawyerInsertSchema = crudMeta(
 export const matterLawyerUpdateSchema = crudMeta(
   baseMatterLawyerInsert
     .omit({ id: true, matterId: true, invitedAt: true })
-    .partial(),
+    .partial()
+    .extend({
+      acceptedAt: z.coerce.date().nullable().optional(),
+    }),
   "update",
   "MatterLawyer",
 );
@@ -226,18 +230,49 @@ export type MatterEventColumnKey = keyof MatterEventColumn;
  * QUEUE-RELATED TYPES
  */
 
-export const MatterCreatedPayloadSchema = z.object({
+export const MatterFromChatPayloadSchema = z.object({
+  chatId: z.string(),
   clientUserId: z.string(),
-  matterId: z.string(),
+  matterId: z.string().optional(),
 });
 
-export const MatterSharedPayloadSchema = z.object({
+export const GenerateMatterSummaryPayloadSchema = z.object({
+  matterId: z.string(),
+  clientUserId: z.string().optional(),
+});
+
+export const MatterStatusChangedPayloadSchema = z.object({
+  matterId: z.string(),
+  fromStatus: z.string().optional(),
+  toStatus: z.string(),
+  changedByUserId: z.string().optional(),
+});
+
+export const LawyerInvitedToMatterPayloadSchema = z.object({
   matterId: z.string(),
   lawyerId: z.string(),
+  invitedByUserId: z.string().optional(),
 });
 
-export type MatterCreatedPayload = z.infer<typeof MatterCreatedPayloadSchema>;
-export type MatterSharedPayload = z.infer<typeof MatterSharedPayloadSchema>;
+export type MatterFromChatPayload = z.infer<
+  typeof MatterFromChatPayloadSchema
+>;
+export type GenerateMatterSummaryPayload = z.infer<
+  typeof GenerateMatterSummaryPayloadSchema
+>;
+export type MatterStatusChangedPayload = z.infer<
+  typeof MatterStatusChangedPayloadSchema
+>;
+export type LawyerInvitedToMatterPayload = z.infer<
+  typeof LawyerInvitedToMatterPayloadSchema
+>;
+
+export interface MatterJobMap {
+  [MattersJobs.MatterFromChat]: MatterFromChatPayload;
+  [MattersJobs.GenerateMatterSummary]: GenerateMatterSummaryPayload;
+  [MattersJobs.MatterStatusChanged]: MatterStatusChangedPayload;
+  [MattersJobs.LawyerInvitedToMatter]: LawyerInvitedToMatterPayload;
+}
 
 /*
  * API PARAMETER TYPES

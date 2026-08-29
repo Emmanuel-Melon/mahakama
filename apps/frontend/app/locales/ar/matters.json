@@ -10,7 +10,15 @@
   },
   "empty": {
     "title": "لا توجد قضايا بعد",
-    "description": "القضايا التي تشارك فيها ستظهر هنا."
+    "description": "القضايا التي تشارك فيها ستظهر هنا.",
+    "user": {
+      "title": "لا توجد قضايا بعد",
+      "description": "القضايا التي تفتحها ستظهر هنا."
+    },
+    "lawyer": {
+      "title": "لا توجد دعوات قضايا بعد",
+      "description": "القضايا التي تتم دعوتك إليها ستظهر هنا."
+    }
   },
   "notFound": {
     "title": "القضية غير موجودة",
@@ -42,7 +50,49 @@
     "opened": "فُتحت",
     "closed": "أغلقت"
   },
+  "lawyers": {
+    "title": "المحامون",
+    "empty": "لم يتم تعيين أي محامٍ بعد",
+    "invite": "دعوة محامٍ",
+    "cancel": "إلغاء",
+    "inviting": "جارٍ الدعوة...",
+    "years": "سنوات",
+    "dialogTitle": "دعوة محامٍ",
+    "dialogDescription": "ابحث عن محامٍ معتمد للعمل على هذه القضية.",
+    "searchPlaceholder": "ابحث حسب التخصص أو الموقع...",
+    "noResults": "لم يتم العثور على محامين. جرّب بحثًا مختلفًا.",
+    "alreadyAssigned": "تم تعيينه بالفعل",
+    "selectLawyer": "اختر محاميًا",
+    "role": "الدور",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "ملاحظة اختيارية حول التعيين...",
+    "invitedAt": "دُعي في",
+    "inviteSuccess": "تمت دعوة المحامي إلى القضية!",
+    "inviteError": "تعذرت دعوة المحامي. يرجى المحاولة مرة أخرى.",
+    "roles": {
+      "primary": "رئيسي",
+      "consulting": "استشاري",
+      "referred": "محال إليه"
+    },
+    "statuses": {
+      "invited": "مدعو",
+      "active": "نشط",
+      "accepted": "مقبول",
+      "declined": "مرفوض",
+      "other": "أخرى"
+    }
+  },
   "actions": {
     "viewDetails": "عرض التفاصيل"
+  },
+  "invite": {
+    "myStatus": "حالة دعوتك",
+    "accept": "قبول",
+    "decline": "رفض",
+    "accepting": "جارٍ القبول...",
+    "declining": "جارٍ الرفض...",
+    "acceptSuccess": "قبلت الدعوة!",
+    "declineSuccess": "رفضت الدعوة.",
+    "actionError": "تعذر تحديث الدعوة. يرجى المحاولة مرة أخرى."
   }
 }

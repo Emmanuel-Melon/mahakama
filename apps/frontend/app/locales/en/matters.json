@@ -10,7 +10,15 @@
   },
   "empty": {
     "title": "No matters yet",
-    "description": "Matters you are involved in will show up here."
+    "description": "Matters you are involved in will show up here.",
+    "user": {
+      "title": "No matters yet",
+      "description": "Matters you open will show up here."
+    },
+    "lawyer": {
+      "title": "No matter invitations yet",
+      "description": "Matters you are invited to will show up here."
+    }
   },
   "notFound": {
     "title": "Matter not found",
@@ -42,7 +50,49 @@
     "opened": "Opened",
     "closed": "Closed"
   },
+  "lawyers": {
+    "title": "Lawyers",
+    "empty": "No lawyers assigned yet",
+    "invite": "Invite Lawyer",
+    "cancel": "Cancel",
+    "inviting": "Inviting...",
+    "years": "yrs",
+    "dialogTitle": "Invite a Lawyer",
+    "dialogDescription": "Search for an approved lawyer to work on this matter.",
+    "searchPlaceholder": "Search by specialization or location...",
+    "noResults": "No lawyers found. Try a different search.",
+    "alreadyAssigned": "Already assigned",
+    "selectLawyer": "Select a lawyer",
+    "role": "Role",
+    "notes": "Notes",
+    "notesPlaceholder": "Optional note about the assignment...",
+    "invitedAt": "Invited",
+    "inviteSuccess": "Lawyer invited to the matter!",
+    "inviteError": "Failed to invite lawyer. Please try again.",
+    "roles": {
+      "primary": "Primary",
+      "consulting": "Consulting",
+      "referred": "Referred"
+    },
+    "statuses": {
+      "invited": "Invited",
+      "active": "Active",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "other": "Other"
+    }
+  },
   "actions": {
     "viewDetails": "View Details"
+  },
+  "invite": {
+    "myStatus": "Your invite status",
+    "accept": "Accept",
+    "decline": "Decline",
+    "accepting": "Accepting...",
+    "declining": "Declining...",
+    "acceptSuccess": "You accepted the invitation!",
+    "declineSuccess": "You declined the invitation.",
+    "actionError": "Failed to update invitation. Please try again."
   }
 }

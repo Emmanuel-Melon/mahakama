@@ -1,4 +1,4 @@
-import { Plus, Share2, MoreVertical, Edit, Trash2 } from "lucide-react";
+import { Plus, Share2, MoreVertical, Edit, Trash2, FolderOpen } from "lucide-react";
 import { Button } from "@mah/ui/components/Button";
 import { Link } from "react-router";
 import { useState } from "react";
@@ -45,6 +45,8 @@ interface ActiveChatHeaderProps {
   onDeleteChat?: () => void;
   onRenameChat?: () => void;
   onShareChat?: () => void;
+  onOpenMatter?: () => void;
+  isOpeningMatter?: boolean;
 }
 
 export function ActiveChatHeader({
@@ -52,6 +54,8 @@ export function ActiveChatHeader({
   onDeleteChat,
   onRenameChat,
   onShareChat,
+  onOpenMatter,
+  isOpeningMatter,
 }: ActiveChatHeaderProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -62,6 +66,17 @@ export function ActiveChatHeader({
           {title}
         </h1>
         <div className="flex items-center gap-2">
+          <Button
+            onClick={onOpenMatter}
+            disabled={isOpeningMatter}
+            variant="outline"
+            size="sm"
+            className="gap-2 border-2 border-black rounded-lg text-gray-900 bg-white shadow-[3px_3px_0_0_#000] hover:bg-white hover:shadow-[2px_2px_0_0_#000]"
+          >
+            <FolderOpen className="h-4 w-4" />
+            {isOpeningMatter ? "Opening..." : "Open Matter"}
+          </Button>
+
           <Button
             onClick={onShareChat}
             variant="outline"

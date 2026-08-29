@@ -20,6 +20,7 @@ import type { ApiManifest } from "@/routes/api.types";
 import { createMatterLawyerController } from "./controllers/invite-lawyer.controller";
 import { updateMatterLawyerMeController } from "./controllers/invite-response.controller";
 import { addNoteController } from "./controllers/add-note.controller";
+import { getMatterLawyersController } from "./controllers/get-matter-lawyers.controller";
 
 const matterRouter = Router();
 
@@ -53,6 +54,11 @@ matterRouter.post(
     HttpLocation.Body,
   ),
   addNoteController,
+);
+matterRouter.get(
+  "/:matterId/lawyers",
+  validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
+  getMatterLawyersController,
 );
 matterRouter.post(
   "/:matterId/lawyers",

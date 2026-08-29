@@ -7,25 +7,39 @@ import { HttpStatus } from "@/lib/http/http.status";
 import { MatterLawyerSerializer } from "../matter.config";
 import { HttpError } from "@/lib/http/http.error";
 import { asyncHandler } from "@/lib/express/express.async-handler";
+import { findLawyer } from "@/feature/lawyers/operations/lawyers.find";
+import { unwrap } from "@/lib/drizzle/drizzle.utils";
+import type { User } from "@/feature/users/users.types";
 import { and, eq } from "drizzle-orm";
 
 export const updateMatterLawyerMeController = asyncHandler(
   async (req: Request, res: Response) => {
     const matterId = req.params.matterId as string;
-    const lawyerId = req.user?.id;
+    const user = req.user as User | undefined;
     const body = req.body as UpdateMatterLawyer;
 
-    if (!lawyerId) {
+    if (!user?.id) {
       throw new HttpError(HttpStatus.UNAUTHORIZED, "Unauthorized");
     }
 
+    const lawyer = unwrap(
+      await findLawyer("userId", user.id),
+      new HttpError(HttpStatus.NOT_FOUND, "No lawyer profile found"),
+    );
+
+    const accepted = body.status === "accepted";
+    const updateData: UpdateMatterLawyer = {
+      ...body,
+      acceptedAt: accepted ? new Date() : null,
+    };
+
     const [updatedLawyer] = await db
       .update(matterLawyersTable)
-      .set(body)
+      .set(updateData)
       .where(
         and(
           eq(matterLawyersTable.matterId, matterId),
-          eq(matterLawyersTable.lawyerId, lawyerId),
+          eq(matterLawyersTable.lawyerId, lawyer.id),
         ),
       )
       .returning();
