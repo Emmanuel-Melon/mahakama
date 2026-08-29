@@ -11,11 +11,7 @@ export function ProgressIndicator({
 }: ProgressIndicatorProps) {
   const totalSteps = role === "lawyer" ? 4 : 3;
   const currentStepNumber =
-    currentStep === "basic"
-      ? 1
-      : currentStep === "professional"
-        ? 2
-        : 3;
+    currentStep === "basic" ? 1 : currentStep === "professional" ? 2 : 3;
 
   return (
     <div className="flex items-center justify-center gap-2 mb-8">

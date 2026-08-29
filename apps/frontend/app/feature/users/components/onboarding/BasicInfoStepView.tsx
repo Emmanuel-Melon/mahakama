@@ -12,6 +12,13 @@ interface BasicInfoStepViewProps {
   role: UserRole;
   formRef: RefObject<HTMLFormElement | null>;
   onNext: (data: any) => void;
+  initialData?: {
+    name: string;
+    age: string;
+    gender: string;
+    country?: string;
+    city?: string;
+  };
 }
 
 export const BasicInfoStepView = ({
@@ -19,6 +26,7 @@ export const BasicInfoStepView = ({
   role,
   formRef,
   onNext,
+  initialData,
 }: BasicInfoStepViewProps) => (
   <>
     <StepHeader
@@ -31,9 +39,19 @@ export const BasicInfoStepView = ({
       className="rounded-xl border-2 border-gray-900 border-solid"
     >
       {role === "lawyer" ? (
-        <LawyerBasicInfoStep user={user} onNext={onNext} formRef={formRef} />
+        <LawyerBasicInfoStep
+          user={user}
+          onNext={onNext}
+          formRef={formRef}
+          initialData={initialData}
+        />
       ) : (
-        <BasicInfoStep user={user} onNext={onNext} formRef={formRef} />
+        <BasicInfoStep
+          user={user}
+          onNext={onNext}
+          formRef={formRef}
+          initialData={initialData}
+        />
       )}
     </CardWithLabel>
   </>

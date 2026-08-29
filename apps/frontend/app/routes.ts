@@ -28,7 +28,10 @@ export default [
   ...toRouteConfig(lawyersRoutes),
   ...toRouteConfig(usersRoutes),
   ...toRouteConfig(messagesRoutes),
-  route("onboarding", "routes/users/onboarding.tsx"),
+  layout("./feature/users/layouts/onboarding.layout.tsx", [
+    route("onboarding", "routes/users/onboarding.tsx"),
+    route("onboarding/lawyer", "routes/users/lawyer-onboarding.tsx"),
+  ]),
   route("help", "routes/help.tsx"),
   route("*", "routes/$.tsx"),
 ] satisfies RouteConfig;

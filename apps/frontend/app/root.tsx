@@ -19,6 +19,12 @@ import { userContext, authContext } from "~/middleware/context";
 import { getAuthToken, decodeJWT } from "@mah/api/src/api/api.utils";
 import { createIsolatedClient } from "@mah/api/src/axios/axios.ssr";
 import { AuthApiClient } from "@mah/api/src/clients/auth.api";
+import {
+  LawyersApiClient,
+  type Lawyer,
+} from "@mah/api/src/clients/lawyers.api";
+import type { User } from "@mah/api/src/clients/users.api";
+import { getOnboardingPath } from "@mah/client/nav";
 import { configureApi } from "@mah/api/src/api/api.config";
 import { appConfig } from "~/config";
 import {
@@ -70,17 +76,45 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     }
   }
 
+  let lawyerProfile = null;
+  if (
+    auth?.token &&
+    fullUser?.role === "lawyer" &&
+    fullUser.isOnboarded === false &&
+    !url.pathname.startsWith("/onboarding")
+  ) {
+    try {
+      const isolatedClient = createIsolatedClient(request);
+      const lawyersApi = new LawyersApiClient(isolatedClient);
+      const res = await lawyersApi.getProfile();
+      lawyerProfile = res?.data ?? null;
+    } catch (error) {
+      console.error(
+        "Failed to fetch lawyer profile info via API in loader:",
+        error,
+      );
+    }
+  }
+
   if (
     auth?.token &&
     fullUser &&
+    fullUser.role !== "admin" &&
     fullUser.isOnboarded === false &&
     !url.pathname.startsWith("/onboarding") &&
     isAuthRoute(url.pathname)
   ) {
-    return redirect("/onboarding");
+    if (fullUser.role === "lawyer") {
+      const status = lawyerProfile?.status;
+      if (status !== "submitted" && status !== "approved") {
+        return redirect(getOnboardingPath(fullUser.role));
+      }
+    } else {
+      return redirect(getOnboardingPath(fullUser.role));
+    }
   }
 
-  return { user: fullUser, token: auth?.token };
+  return { user: fullUser, token: auth?.token, lawyerProfile };
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -107,11 +141,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, lawyerProfile } = useLoaderData<typeof loader>();
   const location = useLocation();
   const pageTitle = getPageTitle(location.pathname);
   const isAppRoute = isAuthRoute(location.pathname);
   const isAuthRoutePage = isAuthPageRoute(location.pathname);
+  const isOnboardingRoute = location.pathname.startsWith("/onboarding");
 
   return (
     <QueryClientProviderWrapper>
@@ -120,6 +155,8 @@ export default function App() {
           pageTitle={pageTitle}
           isAppRoute={isAppRoute}
           isAuthRoutePage={isAuthRoutePage}
+          isOnboardingRoute={isOnboardingRoute}
+          lawyerProfile={lawyerProfile}
         />
       </UserProvider>
     </QueryClientProviderWrapper>
@@ -130,13 +167,21 @@ function AuthenticatedApp({
   pageTitle,
   isAppRoute,
   isAuthRoutePage,
+  isOnboardingRoute,
+  lawyerProfile,
 }: {
   pageTitle: string;
   isAppRoute: boolean;
   isAuthRoutePage: boolean;
+  isOnboardingRoute: boolean;
+  lawyerProfile: Lawyer | null;
 }) {
   const navLinks = useNavLinks();
   const { user, logout } = useUser();
+
+  if (isOnboardingRoute) {
+    return <Outlet />;
+  }
 
   if (isAuthRoutePage) {
     return (
@@ -154,6 +199,7 @@ function AuthenticatedApp({
         user={user}
         onLogout={logout}
       >
+        <LawyerReviewBanner lawyerProfile={lawyerProfile} role={user?.role} />
         <Outlet />
       </AppShell>
     );
@@ -163,6 +209,27 @@ function AuthenticatedApp({
     <WebsiteLayout>
       <Outlet />
     </WebsiteLayout>
+  );
+}
+
+function LawyerReviewBanner({
+  lawyerProfile,
+  role,
+}: {
+  lawyerProfile: Lawyer | null;
+  role?: User["role"];
+}) {
+  if (role !== "lawyer" || lawyerProfile?.status !== "submitted") {
+    return null;
+  }
+
+  return (
+    <div className="border-b-2 border-amber-300 bg-amber-50">
+      <p className="mx-auto max-w-6xl px-4 py-2 text-sm text-amber-800">
+        Your lawyer profile has been submitted for review. You will be notified
+        once it has been approved.
+      </p>
+    </div>
   );
 }
 

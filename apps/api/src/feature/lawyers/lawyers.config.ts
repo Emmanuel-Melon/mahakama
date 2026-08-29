@@ -9,7 +9,6 @@ export const SerializedLawyer: JsonApiResourceConfig<Lawyer> = {
     status: lawyer.status,
     specialization: lawyer.specialization,
     experienceYears: lawyer.experienceYears,
-    rating: lawyer.rating,
     casesHandled: lawyer.casesHandled,
     isAvailable: lawyer.isAvailable,
     location: lawyer.location,

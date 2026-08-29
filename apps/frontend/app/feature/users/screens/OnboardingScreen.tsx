@@ -3,10 +3,14 @@ import { OnboardingNavigation } from "../components/onboarding/OnboardingNavigat
 import { BasicInfoStepView } from "../components/onboarding/BasicInfoStepView";
 import { ProfessionalInfoStepView } from "../components/onboarding/ProfessionalInfoStepView";
 import { EnhancementsStepView } from "../components/onboarding/EnhancementsStepView";
-import { useState, useRef, type FC } from "react";
+import { useReducer, useRef, type FC } from "react";
 import { type User } from "@mah/api/src/clients/users.api";
 import { type UserRole } from "../components/onboarding/RoleSelector";
 import { useUpdateUser } from "@mah/api/src/hooks/use-users";
+import {
+  onboardingReducer,
+  initialOnboardingState,
+} from "./onboardingReducer";
 
 interface OnboardingScreenProps {
   user: User;
@@ -15,27 +19,11 @@ interface OnboardingScreenProps {
 
 export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   const role: UserRole = user.role === "lawyer" ? "lawyer" : "user";
-  const [step, setStep] = useState<
-    "basic" | "professional" | "enhancements"
-  >("basic");
-
-  const [basicInfo, setBasicInfo] = useState<{
-    name: string;
-    age: string;
-    gender: string;
-  } | null>(null);
-  const [locationInfo, setLocationInfo] = useState<{
-    country: string;
-    city: string;
-  } | null>(null);
-  const [lawyerInfo, setLawyerInfo] = useState<{
-    specialization: string;
-    experienceYears: string;
-    rating: string;
-    casesHandled: string;
-    location: string;
-    languages: string;
-  } | null>(null);
+  const [state, dispatch] = useReducer(
+    onboardingReducer,
+    initialOnboardingState,
+  );
+  const { step, basicInfo, locationInfo } = state;
 
   // Form refs for better control
   const basicFormRef = useRef<HTMLFormElement>(null);
@@ -58,18 +46,18 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
     country?: string;
     city?: string;
   }) => {
-    setBasicInfo({ name: data.name, age: data.age, gender: data.gender });
-    setLocationInfo({ country: data.country || "", city: data.city || "" });
-    if (role === "lawyer") {
-      setStep("professional");
-    } else {
-      setStep("enhancements");
-    }
+    dispatch({
+      type: "BASIC_INFO_SUBMITTED",
+      payload: {
+        role,
+        basicInfo: { name: data.name, age: data.age, gender: data.gender },
+        locationInfo: { country: data.country || "", city: data.city || "" },
+      },
+    });
   };
 
   const handleLawyerProfessionalNext = (data: any) => {
-    setLawyerInfo(data);
-    setStep("enhancements");
+    dispatch({ type: "LAWYER_INFO_SUBMITTED", payload: { lawyerInfo: data } });
   };
 
   const handleEnhancementsComplete = (data: {
@@ -87,19 +75,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
       occupation: data.occupation.trim() || null,
       bio: data.bio.trim() || null,
       isOnboarded: true,
-      ...(role === "lawyer" && lawyerInfo
-        ? {
-            specialization: lawyerInfo.specialization,
-            experienceYears: parseInt(lawyerInfo.experienceYears, 10),
-            rating: lawyerInfo.rating,
-            casesHandled: parseInt(lawyerInfo.casesHandled, 10),
-            location: lawyerInfo.location,
-            languages: lawyerInfo.languages
-              .split(",")
-              .map((lang) => lang.trim())
-              .filter(Boolean),
-          }
-        : {}),
     };
 
     updateMutation.mutate({
@@ -109,15 +84,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   };
 
   const handleGoBack = () => {
-    if (step === "professional") {
-      setStep("basic");
-    } else if (step === "enhancements") {
-      if (role === "lawyer") {
-        setStep("professional");
-      } else {
-        setStep("basic");
-      }
-    }
+    dispatch({ type: "WENT_BACK", payload: { role } });
   };
 
   const handleNextStep = () => {

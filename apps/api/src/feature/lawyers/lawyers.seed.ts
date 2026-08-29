@@ -90,8 +90,7 @@ export async function seedLawyers() {
 
     // Filter out optional fields that NewLawyer type doesn't expect
     const lawyersToInsert: NewLawyer[] = lawyers.map((lawyer) => {
-      const { id, createdAt, updatedAt, rating, casesHandled, ...newLawyer } =
-        lawyer;
+      const { id, createdAt, updatedAt, casesHandled, ...newLawyer } = lawyer;
       return newLawyer;
     });
 

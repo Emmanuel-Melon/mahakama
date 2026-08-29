@@ -2,12 +2,21 @@ import { Button } from "@mah/ui/components/Button";
 import { ArrowRight } from "lucide-react";
 import type { UserRole } from "./RoleSelector";
 
+type Step =
+  | "country"
+  | "basic"
+  | "professional"
+  | "practice"
+  | "credentials"
+  | "enhancements";
+
 interface OnboardingNavigationProps {
-  currentStep: "basic" | "professional" | "enhancements";
+  currentStep: Step;
   role: UserRole;
   onBack: () => void;
   onNext?: () => void;
   onComplete?: () => void;
+  lastStep?: Step;
   nextDisabled?: boolean;
   nextText?: string;
 }
@@ -17,10 +26,11 @@ export function OnboardingNavigation({
   onBack,
   onNext,
   onComplete,
+  lastStep = "enhancements",
   nextDisabled = false,
   nextText = "Continue",
 }: OnboardingNavigationProps) {
-  const isLastStep = currentStep === "enhancements";
+  const isLastStep = currentStep === lastStep;
 
   const showBackButton = true;
   const showNextButton = Boolean(onNext || onComplete);

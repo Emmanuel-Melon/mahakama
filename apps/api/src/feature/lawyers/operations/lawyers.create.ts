@@ -29,7 +29,6 @@ export async function createLawyer(
     status: lawyerData.status ?? "draft",
     casesHandled: lawyerData.casesHandled ?? 0,
     isAvailable: lawyerData.isAvailable ?? false,
-    rating: lawyerData.rating ?? "0",
   };
 
   return executeSingle(
