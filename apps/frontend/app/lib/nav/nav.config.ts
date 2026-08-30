@@ -18,12 +18,6 @@ export const BASE_NAV_LINKS: NavLinkItem[] = [
     icon: Home,
   },
   {
-    id: "nav-recents",
-    title: "nav.recents",
-    url: "/chats/recents",
-    icon: History,
-  },
-  {
     id: "nav-matters",
     title: "nav.matters",
     url: "/matters",
@@ -51,6 +45,12 @@ export const APP_NAV_LINKS: NavLinkItem[] = [
     url: "/documents",
     icon: Library,
   },
+  {
+    id: "nav-recents",
+    title: "nav.recents",
+    url: "/chats/recents",
+    icon: History,
+  },
 ];
 
 export const LAWYER_NAV_LINKS: NavLinkItem[] = [
@@ -66,12 +66,6 @@ export const LAWYER_NAV_LINKS: NavLinkItem[] = [
     title: "nav.consultations",
     url: "/consultations",
     icon: ClipboardList,
-  },
-  {
-    id: "nav-justice-hub",
-    title: "nav.justiceHub",
-    url: "/legal-hub",
-    icon: Scale,
   },
   {
     id: "nav-legal-database",

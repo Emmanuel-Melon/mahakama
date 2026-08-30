@@ -5,15 +5,9 @@ import { Button } from "@mah/ui";
 import { Badge } from "@mah/ui/components/badge";
 import { Input } from "@mah/ui/components/Input";
 import { IconContainer } from "@mah/ui/components/IconContainer";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@mah/ui/components/select";
 import { useMatterMutations } from "@mah/api/src/hooks/use-matters";
 import type { Matter } from "@mah/api/src/clients/matters.api";
+import { MatterStatusSelect } from "./MatterStatusSelect";
 
 type BadgeVariant = "default" | "secondary" | "destructive";
 
@@ -27,17 +21,6 @@ const STATUS_VARIANT: Record<string, BadgeVariant> = {
   closed: "secondary",
   archived: "secondary",
 };
-
-const STATUS_OPTIONS: Matter["status"][] = [
-  "draft",
-  "open",
-  "waiting_client",
-  "waiting_lawyer",
-  "in_progress",
-  "resolved",
-  "closed",
-  "archived",
-];
 
 export function MatterHeader({
   matter,
@@ -90,7 +73,7 @@ export function MatterHeader({
 
   return (
     <header className="sticky top-0 z-30 border-b-2 border-gray-900 bg-white">
-      <div className="mx-auto w-full max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0">
             <IconContainer
@@ -154,25 +137,11 @@ export function MatterHeader({
                   {statusLabel}
                 </Badge>
                 {role === "lawyer" && (
-                  <Select
-                    value={matter.status}
+                  <MatterStatusSelect
+                    status={matter.status}
                     onValueChange={changeStatus}
                     disabled={updateMatter.isPending}
-                  >
-                    <SelectTrigger className="h-7 w-fit gap-1.5 rounded-md border-2 border-gray-900 text-xs shadow-none [&_svg]:size-3.5">
-                      <span className="sr-only">
-                        {t("header.changeStatus")}
-                      </span>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {STATUS_OPTIONS.map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {t(`status.${status}`)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  />
                 )}
               </div>
             </div>
