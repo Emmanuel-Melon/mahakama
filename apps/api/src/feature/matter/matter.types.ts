@@ -7,6 +7,7 @@ import {
   matterDocumentsTable,
   matterStatusHistoryTable,
   matterEventsTable,
+  matterActivitiesTable,
 } from "./matter.schema";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
@@ -156,6 +157,21 @@ export const matterEventUpdateSchema = crudMeta(
   "MatterEvent",
 );
 
+// Matter Activities (audit/activity log)
+const baseMatterActivityInsert = createInsertSchema(matterActivitiesTable);
+const baseMatterActivitySelect = createSelectSchema(matterActivitiesTable);
+
+export const matterActivitySelectSchema = crudMeta(
+  baseMatterActivitySelect,
+  "select",
+  "MatterActivity",
+);
+export const matterActivityInsertSchema = crudMeta(
+  baseMatterActivityInsert,
+  "insert",
+  "MatterActivity",
+);
+
 /*
  * DOMAIN-RELATED TYPES
  */
@@ -195,6 +211,10 @@ export type NewMatterEvent = z.infer<typeof matterEventInsertSchema>;
 export type UpdateMatterEvent = z.infer<typeof matterEventUpdateSchema>;
 export type MatterEventAttrs = z.infer<typeof matterEventsTable>;
 
+export type MatterActivity = z.infer<typeof matterActivitySelectSchema>;
+export type NewMatterActivity = z.infer<typeof matterActivityInsertSchema>;
+export type MatterActivityAttrs = z.infer<typeof matterActivitiesTable>;
+
 export type MatterWithRelations = Matter & {
   lawyers?: MatterLawyer[];
   notes?: MatterNote[];
@@ -225,6 +245,9 @@ export type MatterStatusHistoryColumnKey = keyof MatterStatusHistoryColumn;
 
 export type MatterEventColumn = typeof matterEventsTable._.columns;
 export type MatterEventColumnKey = keyof MatterEventColumn;
+
+export type MatterActivityColumn = typeof matterActivitiesTable._.columns;
+export type MatterActivityColumnKey = keyof MatterActivityColumn;
 
 /*
  * QUEUE-RELATED TYPES

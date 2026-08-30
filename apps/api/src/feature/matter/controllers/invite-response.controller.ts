@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { db } from "@/lib/drizzle";
 import { matterLawyersTable } from "../matter.schema";
+import { recordMatterActivity } from "../operations/matter.insert";
 import type { UpdateMatterLawyer } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
@@ -49,6 +50,17 @@ export const updateMatterLawyerMeController = asyncHandler(
         HttpStatus.NOT_FOUND,
         "Matter lawyer assignment not found",
       );
+    }
+
+    if (body.status === "accepted" || body.status === "declined") {
+      await recordMatterActivity({
+        matterId,
+        actorUserId: user.id,
+        type: body.status === "accepted" ? "lawyer_accepted" : "lawyer_declined",
+        title:
+          body.status === "accepted" ? "Lawyer accepted" : "Lawyer declined",
+        metadata: { lawyerId: lawyer.id },
+      });
     }
 
     return sendSuccessResponse(

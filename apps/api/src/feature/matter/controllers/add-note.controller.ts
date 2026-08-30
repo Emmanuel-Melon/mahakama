@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { findMatter } from "../operations/matter.find";
-import { insertMatterNote } from "../operations/matter.insert";
+import { insertMatterNote, recordMatterActivity } from "../operations/matter.insert";
 import type { NewMatterNote } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
@@ -33,6 +33,16 @@ export const addNoteController = asyncHandler(
       }),
       new HttpError(HttpStatus.BAD_REQUEST, "Failed to create matter note"),
     );
+
+    await recordMatterActivity({
+      matterId,
+      actorUserId: authorUserId,
+      type: "note_added",
+      title: body.isInternal ? "Internal note added" : "Note added",
+      description: body.content ? body.content.slice(0, 200) : null,
+      isInternal: body.isInternal ?? false,
+      metadata: { noteId: note.id },
+    });
 
     return sendSuccessResponse(
       req,

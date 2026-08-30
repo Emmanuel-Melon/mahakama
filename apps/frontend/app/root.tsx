@@ -36,6 +36,7 @@ import { useEffect } from "react";
 import i18n from "~/lib/i18n";
 import { RootErrorBoundary } from "./components/RootErrorBoundary";
 import { AppShell } from "@mah/ui/components/organisms/layout/AppShell";
+import { Toaster } from "@mah/ui/components/Sonner";
 
 configureApi({
   baseURL: appConfig.api.baseURL,
@@ -133,6 +134,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body className="min-h-screen flex flex-col bg-background font-['Inter'] antialiased">
         {children}
+        <Toaster richColors position="top-center" />
         <ScrollRestoration />
         <Scripts />
       </body>

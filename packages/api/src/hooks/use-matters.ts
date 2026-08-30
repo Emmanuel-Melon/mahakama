@@ -6,6 +6,8 @@ import {
   type MatterLawyerResult,
   type MatterLawyerCollection,
   type MatterNoteResult,
+  type MatterNoteCollection,
+  type MatterDocumentCollection,
   type MatterTimelineEntry,
   type MatterListParams,
   type NewMatter,
@@ -26,6 +28,8 @@ export const matterKeys = {
   detail: (id: string) => [...matterKeys.details(), id] as const,
   lawyers: (id: string) => [...matterKeys.all, "lawyers", id] as const,
   timeline: (id: string) => [...matterKeys.all, "timeline", id] as const,
+  notes: (id: string) => [...matterKeys.all, "notes", id] as const,
+  documents: (id: string) => [...matterKeys.all, "documents", id] as const,
 } as const;
 
 /*
@@ -39,6 +43,8 @@ export const invalidations = {
     matterKeys.detail(id),
     matterKeys.lawyers(id),
     matterKeys.timeline(id),
+    matterKeys.notes(id),
+    matterKeys.documents(id),
   ],
   lists: () => [matterKeys.lists()],
 };
@@ -66,6 +72,16 @@ export const matterQueries = {
   timeline: (matterId: string) => ({
     queryKey: matterKeys.timeline(matterId),
     queryFn: () => mattersApi.getMatterTimeline(matterId),
+    enabled: !!matterId,
+  }),
+  notes: (matterId: string) => ({
+    queryKey: matterKeys.notes(matterId),
+    queryFn: () => mattersApi.getMatterNotes(matterId),
+    enabled: !!matterId,
+  }),
+  documents: (matterId: string) => ({
+    queryKey: matterKeys.documents(matterId),
+    queryFn: () => mattersApi.getMatterDocuments(matterId),
     enabled: !!matterId,
   }),
 };
@@ -96,6 +112,18 @@ export function useMatterTimeline(matterId: string) {
 export function useMatterLawyers(matterId: string) {
   return useQuery<MatterLawyerCollection, ApiClientError>({
     ...matterQueries.lawyers(matterId),
+  });
+}
+
+export function useMatterNotes(matterId: string) {
+  return useQuery<MatterNoteCollection, ApiClientError>({
+    ...matterQueries.notes(matterId),
+  });
+}
+
+export function useMatterDocuments(matterId: string) {
+  return useQuery<MatterDocumentCollection, ApiClientError>({
+    ...matterQueries.documents(matterId),
   });
 }
 

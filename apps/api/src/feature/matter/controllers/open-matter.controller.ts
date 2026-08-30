@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { insertMatter } from "../operations/matter.insert";
+import { insertMatter, recordMatterActivity } from "../operations/matter.insert";
 import type { NewMatter } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
@@ -45,6 +45,17 @@ export const openMatterController = asyncHandler(
         );
       }
     }
+
+    await recordMatterActivity({
+      matterId: matter.id,
+      actorUserId: clientUserId,
+      type: "matter_created",
+      title: "Matter opened",
+      metadata: {
+        fromChat: Boolean(body.sourceChatId),
+        sourceChatId: body.sourceChatId ?? null,
+      },
+    });
 
     return sendSuccessResponse(
       req,

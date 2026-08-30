@@ -13,6 +13,7 @@ import {
 import {
   insertMatter,
   insertMatterStatusHistory,
+  recordMatterActivity,
 } from "../operations/matter.insert";
 import { updateMatter } from "../operations/matter.update";
 import type {
@@ -152,6 +153,14 @@ export class MattersJobHandler {
 
       await this.enqueueSummaryGeneration(updated.id);
 
+      await recordMatterActivity({
+        matterId: updated.id,
+        actorUserId: clientUserId,
+        type: "chat_linked",
+        title: "Conversation linked to matter",
+        metadata: { chatId },
+      });
+
       return { success: true, matterId: updated.id };
     }
 
@@ -185,6 +194,14 @@ export class MattersJobHandler {
 
     await this.enqueueSummaryGeneration(matter.id);
 
+    await recordMatterActivity({
+      matterId: matter.id,
+      actorUserId: clientUserId,
+      type: "chat_linked",
+      title: "Conversation linked to matter",
+      metadata: { chatId },
+    });
+
     return { success: true, matterId: matter.id };
   }
 
@@ -217,9 +234,12 @@ export class MattersJobHandler {
 
     const { summary, updatedTitle } = result.content;
 
+    const currentMetadata = (matter.metadata ?? {}) as Record<string, unknown>;
+
     const updateData: {
       summary?: string;
       title?: string;
+      metadata?: Record<string, unknown>;
     } = {};
 
     if (summary && summary.trim()) {
@@ -227,6 +247,13 @@ export class MattersJobHandler {
     }
     if (updatedTitle && updatedTitle.trim()) {
       updateData.title = updatedTitle.trim();
+    }
+
+    // Mark the matter as fully prepared even when the LLM produced no
+    // diffs, so client-side "preparing → ready" polling can settle.
+    const readyAt = new Date().toISOString();
+    if (currentMetadata.readyAt !== readyAt) {
+      updateData.metadata = { ...currentMetadata, readyAt };
     }
 
     if (Object.keys(updateData).length === 0) {
@@ -241,6 +268,16 @@ export class MattersJobHandler {
       await updateMatter("id", matterId, updateData),
       new HttpError(HttpStatus.BAD_REQUEST, "Failed to update matter summary"),
     );
+
+    if (updateData.summary || updateData.title) {
+      await recordMatterActivity({
+        matterId,
+        actorUserId: matter.clientUserId,
+        type: "summary_updated",
+        title: "Matter summary updated",
+        metadata: { chatId: matter.sourceChatId ?? undefined },
+      });
+    }
 
     return { success: true, matterId: updated.id };
   }

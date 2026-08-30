@@ -6,6 +6,7 @@ import type {
   MatterDocument,
   MatterStatusHistory,
   MatterEvent,
+  MatterActivity,
 } from "./matter.types";
 
 export const MatterSerializer: JsonApiResourceConfig<Matter> = {
@@ -37,6 +38,11 @@ export const MatterStatusHistorySerializer: JsonApiResourceConfig<MatterStatusHi
 export const MatterEventSerializer: JsonApiResourceConfig<MatterEvent> = {
   type: "matter-event",
   attributes: (matterEvent: MatterEvent) => matterEvent,
+};
+
+export const MatterActivitySerializer: JsonApiResourceConfig<MatterActivity> = {
+  type: "matter-activity",
+  attributes: (matterActivity: MatterActivity) => matterActivity,
 };
 
 export const MattersJobs = {

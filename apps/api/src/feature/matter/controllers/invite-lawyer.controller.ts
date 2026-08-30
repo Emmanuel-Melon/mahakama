@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { findMatter, findMatterLawyersByMatter } from "../operations/matter.find";
-import { insertMatterLawyer } from "../operations/matter.insert";
+import { insertMatterLawyer, recordMatterActivity } from "../operations/matter.insert";
 import type { NewMatterLawyer } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
@@ -44,6 +44,14 @@ export const createMatterLawyerController = asyncHandler(
         "Failed to assign lawyer to matter",
       ),
     );
+
+    await recordMatterActivity({
+      matterId,
+      actorUserId: req.user?.id ?? null,
+      type: "lawyer_invited",
+      title: "Lawyer invited",
+      metadata: { lawyerId: body.lawyerId, role: body.role ?? "primary" },
+    });
 
     // Kick off the side-effect workflow for the invite (notifications, etc.).
     try {

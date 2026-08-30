@@ -6,6 +6,7 @@ import {
   matterDocumentsTable,
   matterStatusHistoryTable,
   matterEventsTable,
+  matterActivitiesTable,
 } from "../matter.schema";
 import type {
   NewMatter,
@@ -20,11 +21,14 @@ import type {
   MatterStatusHistory,
   NewMatterEvent,
   MatterEvent,
+  NewMatterActivity,
+  MatterActivity,
 } from "../matter.types";
 import {
   executeSingle,
   type DbResult,
 } from "@/lib/drizzle/results/results.single";
+import { logger } from "@/lib/logger";
 
 export const insertMatter = async (
   params: NewMatter,
@@ -103,4 +107,50 @@ export const insertMatterEvent = async (
       .returning()
       .then(([newEvent]) => newEvent),
   );
+};
+
+export const insertMatterActivity = async (
+  params: NewMatterActivity,
+): Promise<DbResult<MatterActivity>> => {
+  return executeSingle(
+    db
+      .insert(matterActivitiesTable)
+      .values({
+        ...params,
+        metadata: params.metadata || {},
+      })
+      .returning()
+      .then(([newActivity]) => newActivity),
+  );
+};
+
+type RecordMatterActivityParams = {
+  matterId: string;
+  actorUserId?: string | null;
+  type: MatterActivity["type"];
+  title: string;
+  description?: string | null;
+  isInternal?: boolean;
+  metadata?: Record<string, unknown>;
+};
+
+export const recordMatterActivity = async (
+  params: RecordMatterActivityParams,
+): Promise<void> => {
+  try {
+    await insertMatterActivity({
+      matterId: params.matterId,
+      actorUserId: params.actorUserId ?? null,
+      type: params.type,
+      title: params.title,
+      description: params.description ?? null,
+      isInternal: params.isInternal ?? false,
+      metadata: params.metadata ?? {},
+    });
+  } catch (error) {
+    logger.error(
+      { error, ...params },
+      "Failed to record matter activity",
+    );
+  }
 };

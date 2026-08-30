@@ -14,5 +14,20 @@
   "messages": {
     "title": "Messages - Mahakama",
     "description": "Manage your direct communications and messages"
+  },
+  "openMatter": {
+    "banner": {
+      "title": "Ready to take this further?",
+      "description": "Turn this conversation into a Matter so you can track it, add documents, and connect with a lawyer.",
+      "openAsMatter": "Open as Matter",
+      "notNow": "Not now"
+    },
+    "header": {
+      "openAsMatter": "Open as Matter",
+      "openingMatter": "Opening Matter…",
+      "menuOpenAsMatter": "Open as Matter"
+    },
+    "tooShort": "Add a bit more detail in the chat first so we can create a useful Matter.",
+    "ready": "Your Matter is ready"
   }
 }

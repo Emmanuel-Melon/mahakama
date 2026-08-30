@@ -28,6 +28,7 @@ export const MATTERS_API_ROUTES = {
   ROOT: "/v1/matters",
   TIMELINE: "/v1/matters/:matterId/timeline",
   NOTES: "/v1/matters/:matterId/notes",
+  DOCUMENTS: "/v1/matters/:matterId/documents",
   LAWYERS: "/v1/matters/:matterId/lawyers",
   LAWYERS_ME: "/v1/matters/:matterId/lawyers/me",
 } as const;

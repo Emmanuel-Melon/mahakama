@@ -2,6 +2,7 @@ import { Plus, Share2, MoreVertical, Edit, Trash2, FolderOpen } from "lucide-rea
 import { Button } from "@mah/ui/components/Button";
 import { Link } from "react-router";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,6 +59,7 @@ export function ActiveChatHeader({
   isOpeningMatter,
 }: ActiveChatHeaderProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const { t } = useTranslation("chats");
 
   return (
     <div className="sticky top-0 z-10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
@@ -74,7 +76,9 @@ export function ActiveChatHeader({
             className="gap-2 border-2 border-black rounded-lg text-gray-900 bg-white shadow-[3px_3px_0_0_#000] hover:bg-white hover:shadow-[2px_2px_0_0_#000]"
           >
             <FolderOpen className="h-4 w-4" />
-            {isOpeningMatter ? "Opening..." : "Open Matter"}
+            {isOpeningMatter
+              ? t("openMatter.header.openingMatter")
+              : t("openMatter.header.openAsMatter")}
           </Button>
 
           <Button
@@ -101,6 +105,14 @@ export function ActiveChatHeader({
               className="w-40 border-2 border-gray-900 shadow-[4px_4px_0_0_rgba(0,0,0,1)] rounded-lg"
               align="end"
             >
+              <DropdownMenuItem
+                onClick={onOpenMatter}
+                disabled={isOpeningMatter}
+                className="cursor-pointer"
+              >
+                <FolderOpen className="h-4 w-4 mr-2" />
+                {t("openMatter.header.menuOpenAsMatter")}
+              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={onRenameChat}
                 className="cursor-pointer"
