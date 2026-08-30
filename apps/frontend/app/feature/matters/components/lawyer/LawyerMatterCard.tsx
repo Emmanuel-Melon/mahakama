@@ -5,7 +5,7 @@ import { MahButton } from "@mah/ui/components/molecules/MahButton";
 import { MahCard } from "@mah/ui/components/atoms/MahCard";
 import { useUser } from "@mah/api/src/hooks/use-users";
 import type { Matter } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../MattersConfig";
+import { MattersPaths } from "../../MattersConfig";
 
 type BadgeVariant = "default" | "secondary" | "destructive";
 

@@ -1,13 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { FolderOpen } from "lucide-react";
-import { PageHeader } from "@mah/ui";
 import { AsyncContainer } from "@mah/ui";
 import type { AsyncState } from "@mah/api/src/api/api.types";
 import type { Matter } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../MattersConfig";
 import { MatterHeader } from "../components/MatterHeader";
-import { MatterSummaryCard } from "../components/MatterSummaryCard";
-import { MatterChatPanel } from "../components/MatterChatPanel";
+import { MatterRightPanel } from "../components/MatterRightPanel";
 import { MatterTabs } from "../components/MatterTabs";
 
 interface MatterDetailScreenProps extends AsyncState {
@@ -24,11 +21,6 @@ export const MatterDetailScreen = ({
   currentUserId,
 }: MatterDetailScreenProps) => {
   const { t } = useTranslation("matters");
-
-  const breadcrumbs = [
-    { label: t("title"), to: MattersPaths.index(), icon: FolderOpen },
-    { label: matter?.title ?? t("title"), to: "#" },
-  ];
 
   return (
     <AsyncContainer
@@ -49,13 +41,9 @@ export const MatterDetailScreen = ({
     >
       {matter && (
         <div className="w-full">
-          <PageHeader breadcrumbs={breadcrumbs} className="hidden sm:flex" />
-
           <MatterHeader matter={matter} role={role} />
-
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="min-w-0 space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-              <MatterSummaryCard matter={matter} role={role} />
               <MatterTabs
                 matter={matter}
                 role={role}
@@ -63,7 +51,10 @@ export const MatterDetailScreen = ({
               />
             </div>
 
-            <MatterChatPanel chatId={matter.sourceChatId} />
+            <MatterRightPanel
+              chatId={matter.sourceChatId}
+              threadId={matter.sourceChatId}
+            />
           </div>
         </div>
       )}

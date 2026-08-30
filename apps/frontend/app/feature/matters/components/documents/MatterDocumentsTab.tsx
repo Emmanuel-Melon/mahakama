@@ -1,54 +1,13 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FileText, Download, Upload, Paperclip, Search } from "lucide-react";
-import { Link } from "react-router";
-import { IconContainer } from "@mah/ui/components/IconContainer";
+import { Upload, Paperclip } from "lucide-react";
 import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
 import { Button } from "@mah/ui";
 import {
   useMatterDocuments,
   useMatterMutations,
 } from "@mah/api/src/hooks/use-matters";
-import type { MatterDocument } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../MattersConfig";
-
-const formatDate = (value?: string | null) =>
-  value ? new Date(value).toLocaleDateString() : "—";
-
-const formatSize = (bytes?: number | null) => {
-  if (!bytes) return "";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
-
-function DocumentRow({ document }: { document: MatterDocument }) {
-  const { t } = useTranslation("matters");
-  const size = formatSize(document.fileSize);
-
-  return (
-    <Link
-      to={MattersPaths.document({
-        matterId: document.matterId,
-        documentId: document.id,
-      })}
-      className="flex items-center gap-3 py-3 first:pt-0 last:pb-0 hover:bg-gray-50 rounded-lg px-2 -mx-2 transition-colors"
-    >
-      <IconContainer icon={FileText} size="sm" color="handdrawn" />
-      <div className="min-w-0 flex-1">
-        <p className="text-sm font-medium text-gray-900 truncate">
-          {document.fileName}
-        </p>
-        <p className="text-xs text-gray-400 mt-0.5">
-          {document.fileType || "—"}
-          {size ? ` · ${size}` : ""} · {t("documents.uploaded")}{" "}
-          {formatDate(document.createdAt)}
-        </p>
-      </div>
-      <Search className="h-4 w-4 text-gray-400 shrink-0" />
-    </Link>
-  );
-}
+import { DocumentRow } from "./DocumentRow";
 
 export function MatterDocumentsTab({ matterId }: { matterId: string }) {
   const { t } = useTranslation("matters");

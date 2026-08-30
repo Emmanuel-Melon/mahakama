@@ -1,11 +1,10 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FolderOpen } from "lucide-react";
-import { EmptyState, ErrorState } from "@mah/ui";
-import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
+import { AsyncContainer, ListControls } from "@mah/ui";
 import type { Matter } from "@mah/api/src/clients/matters.api";
 import type { AsyncState } from "@mah/api/src/api/api.types";
-import { UserMatterCard } from "../components/UserMatterCard";
-import { LawyerMatterCard } from "../components/LawyerMatterCard";
+import { MattersList } from "../components/MattersList";
 
 interface MattersScreenProps extends AsyncState {
   matters: Matter[];
@@ -19,59 +18,66 @@ export const MattersScreen = ({
   role,
 }: MattersScreenProps) => {
   const { t } = useTranslation("matters");
+  const [viewMode, setViewMode] = useState<"list" | "grid">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [filterBy, setFilterBy] = useState("");
 
-  if (isLoading) {
-    return (
-      <PageLoading
-        title={t("loading.title")}
-        description={t("loading.description")}
-        skeletonCount={5}
-        displayMode="list"
-      />
-    );
-  }
-
-  if (error) {
-    return (
-      <ErrorState>
-        <ErrorState.Visual />
-        <ErrorState.Header>
-          <ErrorState.Subtitle>{t("title")}</ErrorState.Subtitle>
-          <ErrorState.Title>
-            {error.errors?.[0]?.detail ?? "Failed to load matters"}
-          </ErrorState.Title>
-          <ErrorState.Description>
-            {t(`empty.${role}.description`)}
-          </ErrorState.Description>
-        </ErrorState.Header>
-      </ErrorState>
-    );
-  }
-
-  if (matters.length === 0) {
-    return (
-      <EmptyState>
-        <EmptyState.Visual icon={FolderOpen} />
-        <EmptyState.Content>
-          <EmptyState.Badge>{t("title")}</EmptyState.Badge>
-          <EmptyState.Title>{t(`empty.${role}.title`)}</EmptyState.Title>
-          <EmptyState.Description>
-            {t(`empty.${role}.description`)}
-          </EmptyState.Description>
-        </EmptyState.Content>
-      </EmptyState>
-    );
-  }
+  const filteredMatters = matters.filter((matter) => {
+    if (!searchQuery) return true;
+    return matter.title.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
-    <div className="flex flex-col gap-4">
-      {matters.map((matter) =>
-        role === "lawyer" ? (
-          <LawyerMatterCard key={matter.id} matter={matter} />
+    <AsyncContainer
+      data={matters}
+      isLoading={isLoading}
+      error={error}
+      loadingComponent={
+        <div className="text-center py-12 text-muted-foreground">
+          {t("loading.description")}
+        </div>
+      }
+      emptyState={{
+        icon: FolderOpen,
+        badge: t("title"),
+        title: t(`empty.${role}.title`),
+        description: t(`empty.${role}.description`),
+      }}
+    >
+      <div className="space-y-4">
+        <ListControls
+          totalItems={filteredMatters.length}
+          label="Matters"
+          itemName="matter"
+          displayMode={viewMode}
+          onDisplayModeChange={setViewMode}
+          searchValue={searchQuery}
+          onSearch={setSearchQuery}
+          sortBy={sortBy}
+          sortOrder={sortOrder}
+          onSortChange={(newSortBy, newSortOrder) => {
+            setSortBy(newSortBy);
+            setSortOrder(newSortOrder);
+          }}
+          filterBy={filterBy}
+          onFilterChange={setFilterBy}
+          isLoading={isLoading}
+        />
+
+        {filteredMatters.length > 0 ? (
+          <MattersList
+            matters={filteredMatters}
+            role={role}
+            viewMode={viewMode}
+          />
         ) : (
-          <UserMatterCard key={matter.id} matter={matter} />
-        ),
-      )}
-    </div>
+          <div className="text-center py-12 text-muted-foreground">
+            No matters found matching your search.
+          </div>
+        )}
+      </div>
+    </AsyncContainer>
   );
 };

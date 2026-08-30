@@ -34,7 +34,7 @@ export function AppShell({
         />
         <SidebarInset>
           <SiteHeader title={pageTitle} rightContent={headerRightContent} />
-          {children}
+          <div className="p-8">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </main>
