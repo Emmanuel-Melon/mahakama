@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { findMatter } from "../operations/matter.find";
-import { insertMatterNote, recordMatterActivity } from "../operations/matter.insert";
+import {
+  insertMatterNote,
+  recordMatterActivity,
+} from "../operations/matter.insert";
 import type { NewMatterNote } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";

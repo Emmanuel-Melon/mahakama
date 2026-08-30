@@ -14,6 +14,10 @@ const matterHandlers: JobHandlerMap<MatterJobMap> = {
     MattersJobHandler.handleMatterStatusChanged(data),
   [MattersJobs.LawyerInvitedToMatter]: (data) =>
     MattersJobHandler.handleLawyerInvitedToMatter(data),
+  [MattersJobs.ProcessMatterDocument]: (data) =>
+    MattersJobHandler.handleProcessMatterDocument(data),
+  [MattersJobs.ProcessMatterDocumentAnalysis]: (data) =>
+    MattersJobHandler.handleAnalyzeMatterDocument(data),
 };
 
 export const initMatterWorker = () =>

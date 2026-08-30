@@ -23,6 +23,10 @@ import { addNoteController } from "./controllers/add-note.controller";
 import { getMatterLawyersController } from "./controllers/get-matter-lawyers.controller";
 import { getMatterNotesController } from "./controllers/get-matter-notes.controller";
 import { getMatterDocumentsController } from "./controllers/get-matter-documents.controller";
+import { getMatterDocumentController } from "./controllers/get-matter-document.controller";
+import { uploadMatterDocumentController } from "./controllers/upload-matter-document.controller";
+import { analyzeMatterDocumentController } from "./controllers/analyze-matter-document.controller";
+import { upload } from "@/middleware/multer";
 
 const matterRouter = Router();
 
@@ -66,6 +70,28 @@ matterRouter.get(
   "/:matterId/documents",
   validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
   getMatterDocumentsController,
+);
+matterRouter.get(
+  "/:matterId/documents/:documentId",
+  validateHttpRequest(
+    z.object({ matterId: z.string(), documentId: z.string() }),
+    HttpLocation.Params,
+  ),
+  getMatterDocumentController,
+);
+matterRouter.post(
+  "/:matterId/documents/:documentId/analyze",
+  validateHttpRequest(
+    z.object({ matterId: z.string(), documentId: z.string() }),
+    HttpLocation.Params,
+  ),
+  analyzeMatterDocumentController,
+);
+matterRouter.post(
+  "/:matterId/documents",
+  validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
+  upload.single("file"),
+  uploadMatterDocumentController,
 );
 matterRouter.get(
   "/:matterId/lawyers",

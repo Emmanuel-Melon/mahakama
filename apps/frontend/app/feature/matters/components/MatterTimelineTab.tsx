@@ -61,9 +61,7 @@ function TimelineRow({
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className="text-sm font-semibold text-gray-900">
-            {entry.title}
-          </p>
+          <p className="text-sm font-semibold text-gray-900">{entry.title}</p>
           {entry.isInternal && (
             <Badge variant="secondary">
               <EyeOff className="h-3 w-3" />
@@ -77,9 +75,7 @@ function TimelineRow({
           </p>
         ) : null}
         <p className="text-xs text-gray-400 mt-1">
-          {entry.actorUserId === currentUserId
-            ? `${t("timeline.you")} · `
-            : ""}
+          {entry.actorUserId === currentUserId ? `${t("timeline.you")} · ` : ""}
           {formatDateTime(entry.timestamp)}
         </p>
       </div>

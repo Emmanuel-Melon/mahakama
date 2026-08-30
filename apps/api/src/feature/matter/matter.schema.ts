@@ -80,6 +80,8 @@ export const matterDocumentsTable = pgTable("matter_documents", {
   fileType: varchar("file_type", { length: 100 }),
   fileSize: integer("file_size"),
   description: text("description"),
+  analysis: jsonb("analysis"),
+  analyzedAt: timestamp("analyzed_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

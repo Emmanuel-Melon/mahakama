@@ -77,7 +77,9 @@ export function MatterLawyersCard({
 
   const { data, isLoading } = useMatterLawyers(matterId);
   const assignments = data?.data ?? [];
-  const assignedLawyerIds = assignments.map((assignment) => assignment.lawyerId);
+  const assignedLawyerIds = assignments.map(
+    (assignment) => assignment.lawyerId,
+  );
 
   return (
     <CardWithLabel

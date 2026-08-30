@@ -148,9 +148,6 @@ export const recordMatterActivity = async (
       metadata: params.metadata ?? {},
     });
   } catch (error) {
-    logger.error(
-      { error, ...params },
-      "Failed to record matter activity",
-    );
+    logger.error({ error, ...params }, "Failed to record matter activity");
   }
 };

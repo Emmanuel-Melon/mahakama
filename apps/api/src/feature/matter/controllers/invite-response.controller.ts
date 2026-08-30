@@ -56,7 +56,8 @@ export const updateMatterLawyerMeController = asyncHandler(
       await recordMatterActivity({
         matterId,
         actorUserId: user.id,
-        type: body.status === "accepted" ? "lawyer_accepted" : "lawyer_declined",
+        type:
+          body.status === "accepted" ? "lawyer_accepted" : "lawyer_declined",
         title:
           body.status === "accepted" ? "Lawyer accepted" : "Lawyer declined",
         metadata: { lawyerId: lawyer.id },

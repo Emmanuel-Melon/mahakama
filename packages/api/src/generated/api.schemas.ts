@@ -183,6 +183,9 @@ const postV1mattersMatterIdnotes_Body = z
     createdAt: z.string().datetime({ offset: true }).optional(),
   })
   .passthrough();
+const postV1mattersMatterIddocuments_Body = z
+  .object({ file: z.instanceof(File), description: z.string().optional() })
+  .passthrough();
 const patchV1mattersMatterId_Body = z
   .object({
     sourceChatId: z.string().uuid().nullable(),
@@ -292,6 +295,7 @@ export const schemas = {
   putV1lawyersId_Body,
   postV1matters_Body,
   postV1mattersMatterIdnotes_Body,
+  postV1mattersMatterIddocuments_Body,
   patchV1mattersMatterId_Body,
   postV1mattersMatterIdlawyers_Body,
   patchV1mattersMatterIdlawyersme_Body,
@@ -647,7 +651,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -780,7 +784,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1173,7 +1177,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1578,7 +1582,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1929,7 +1933,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2204,6 +2208,372 @@ const endpoints = makeApi([
     ],
   },
   {
+    method: "get",
+    path: "/v1/matters/:matterId/documents",
+    alias: "getV1mattersMatterIddocuments",
+    description: `List the documents attached to a specific matter.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("matter-document"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  matterId: z.string().uuid(),
+                  uploadedByUserId: z.string().uuid(),
+                  fileName: z.string().max(255),
+                  fileUrl: z.string().max(1024),
+                  fileType: z.string().max(100).nullable(),
+                  fileSize: z
+                    .number()
+                    .int()
+                    .gte(-2147483648)
+                    .lte(2147483647)
+                    .nullable(),
+                  description: z.string().nullable(),
+                  analysis: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                  ]),
+                  analyzedAt: z.string().datetime({ offset: true }).nullable(),
+                  createdAt: z.string().datetime({ offset: true }),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough(),
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 403,
+        description: `The server understood the request but refuses to authorize it.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/matters/:matterId/documents",
+    alias: "postV1mattersMatterIddocuments",
+    description: `Upload and persist a document to a specific matter, enqueuing async RAG processing.`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: postV1mattersMatterIddocuments_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("matter-document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                matterId: z.string().uuid(),
+                uploadedByUserId: z.string().uuid(),
+                fileName: z.string().max(255),
+                fileUrl: z.string().max(1024),
+                fileType: z.string().max(100).nullable(),
+                fileSize: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647)
+                  .nullable(),
+                description: z.string().nullable(),
+                analysis: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                analyzedAt: z.string().datetime({ offset: true }).nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/matters/:matterId/documents/:documentId",
+    alias: "getV1mattersMatterIddocumentsDocumentId",
+    description: `Retrieve a single document attached to a specific matter.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("matter-document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                matterId: z.string().uuid(),
+                uploadedByUserId: z.string().uuid(),
+                fileName: z.string().max(255),
+                fileUrl: z.string().max(1024),
+                fileType: z.string().max(100).nullable(),
+                fileSize: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647)
+                  .nullable(),
+                description: z.string().nullable(),
+                analysis: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                analyzedAt: z.string().datetime({ offset: true }).nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 403,
+        description: `The server understood the request but refuses to authorize it.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/matters/:matterId/documents/:documentId/analyze",
+    alias: "postV1mattersMatterIddocumentsDocumentIdanalyze",
+    description: `Enqueues an async job to analyze a matter&#x27;s legal document. Poll the document to retrieve the result once analysis is complete.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("matter-document"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                id: z.string().uuid(),
+                matterId: z.string().uuid(),
+                uploadedByUserId: z.string().uuid(),
+                fileName: z.string().max(255),
+                fileUrl: z.string().max(1024),
+                fileType: z.string().max(100).nullable(),
+                fileSize: z
+                  .number()
+                  .int()
+                  .gte(-2147483648)
+                  .lte(2147483647)
+                  .nullable(),
+                description: z.string().nullable(),
+                analysis: z.union([
+                  z.string(),
+                  z.number(),
+                  z.boolean(),
+                  z.unknown(),
+                  z.record(z.unknown().nullable()),
+                  z.array(z.unknown().nullable()),
+                ]),
+                analyzedAt: z.string().datetime({ offset: true }).nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/matters/:matterId/lawyers",
+    alias: "getV1mattersMatterIdlawyers",
+    description: `List the lawyers assigned or invited to a specific matter.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("matter-lawyer"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  matterId: z.string().uuid(),
+                  lawyerId: z.string().uuid(),
+                  role: z.enum(["primary", "consulting", "referred"]),
+                  status: z.string().max(50).nullable(),
+                  invitedAt: z.string().datetime({ offset: true }),
+                  acceptedAt: z.string().datetime({ offset: true }).nullable(),
+                  notes: z.string().nullable(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough(),
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 403,
+        description: `The server understood the request but refuses to authorize it.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
     method: "post",
     path: "/v1/matters/:matterId/lawyers",
     alias: "postV1mattersMatterIdlawyers",
@@ -2377,6 +2747,77 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/v1/matters/:matterId/notes",
+    alias: "getV1mattersMatterIdnotes",
+    description: `List notes for a matter. Internal notes are only returned to lawyers.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("matter-note"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  matterId: z.string().uuid(),
+                  authorUserId: z.string().uuid(),
+                  content: z.string(),
+                  isInternal: z.boolean(),
+                  createdAt: z.string().datetime({ offset: true }),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough(),
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 403,
+        description: `The server understood the request but refuses to authorize it.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/v1/matters/:matterId/timeline",
     alias: "getV1mattersMatterIdtimeline",
     description: `Retrieve the chronological timeline of events and status changes for a specific matter.`,
@@ -2509,7 +2950,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2642,7 +3083,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2739,7 +3180,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough()
+            .passthrough(),
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z

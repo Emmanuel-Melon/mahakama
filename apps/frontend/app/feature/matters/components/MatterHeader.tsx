@@ -160,7 +160,9 @@ export function MatterHeader({
                     disabled={updateMatter.isPending}
                   >
                     <SelectTrigger className="h-7 w-fit gap-1.5 rounded-md border-2 border-gray-900 text-xs shadow-none [&_svg]:size-3.5">
-                      <span className="sr-only">{t("header.changeStatus")}</span>
+                      <span className="sr-only">
+                        {t("header.changeStatus")}
+                      </span>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>

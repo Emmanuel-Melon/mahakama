@@ -7,6 +7,7 @@ import { getMessagesByChatId } from "@/feature/messages/operations/messages.list
 import type { ChatMessage } from "@/feature/messages/messages.types";
 import {
   findMatter,
+  findMatterDocument,
   findMatterNotesByMatter,
   findMatterStatusHistoriesByMatter,
 } from "../operations/matter.find";
@@ -15,10 +16,16 @@ import {
   insertMatterStatusHistory,
   recordMatterActivity,
 } from "../operations/matter.insert";
-import { updateMatter } from "../operations/matter.update";
+import {
+  updateMatter,
+  updateMatterDocument,
+} from "../operations/matter.update";
+import { processMatterDocument } from "../operations/matter.rag";
 import type {
   GenerateMatterSummaryPayload,
   LawyerInvitedToMatterPayload,
+  MatterDocumentRagJobPayload,
+  MatterDocumentAnalysisJobPayload,
   MatterFromChatPayload,
   MatterStatusChangedPayload,
 } from "../matter.types";
@@ -27,13 +34,18 @@ import { MattersJobs } from "../matter.config";
 import {
   buildMatterFromChatPrompt,
   buildMatterSummaryPrompt,
+  buildMatterDocumentAnalysisPrompt,
   matterExtractionSchema,
   matterSummarySchema,
+  matterDocumentAnalysisSchema,
   MATTER_PROMPT_CONFIG,
   type MatterConversationTurn,
   type MatterExtraction,
   type MatterSummary,
+  type MatterDocumentAnalysis,
 } from "./matter.prompt";
+import { parsePdfFromPath } from "@/lib/pdf-parse";
+import { getStoragePath } from "@/lib/storage/storage";
 
 export class MattersJobHandler {
   private static async loadConversationTranscript(
@@ -132,7 +144,10 @@ export class MattersJobHandler {
           urgency: urgency ?? null,
           metadata: { ...existing.metadata, ...metadata },
         }),
-        new HttpError(HttpStatus.BAD_REQUEST, "Failed to update matter from chat"),
+        new HttpError(
+          HttpStatus.BAD_REQUEST,
+          "Failed to update matter from chat",
+        ),
       );
 
       // Controller-created matters have no timeline yet; seed it once.
@@ -176,7 +191,10 @@ export class MattersJobHandler {
         status: "draft",
         metadata,
       }),
-      new HttpError(HttpStatus.BAD_REQUEST, "Failed to create matter from chat"),
+      new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "Failed to create matter from chat",
+      ),
     );
 
     // Seed the timeline with an initial status entry (matter_created draft).
@@ -212,7 +230,10 @@ export class MattersJobHandler {
 
     const matter = unwrap(
       await findMatter("id", matterId),
-      new HttpError(HttpStatus.NOT_FOUND, "Matter not found for summary generation"),
+      new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter not found for summary generation",
+      ),
     );
 
     const transcript = matter.sourceChatId
@@ -310,5 +331,133 @@ export class MattersJobHandler {
     // - Send confirmation to the client
 
     return { success: true, matterId };
+  }
+
+  static async handleProcessMatterDocument(data: MatterDocumentRagJobPayload) {
+    const { matterId, documentId } = data;
+
+    logger.info({ matterId, documentId }, "Processing matter document RAG job");
+
+    unwrap(
+      await findMatter("id", matterId),
+      new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter not found for document processing",
+      ),
+    );
+
+    const document = unwrap(
+      await findMatterDocument("id", documentId),
+      new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter document not found for processing",
+      ),
+    );
+
+    if (document.matterId !== matterId) {
+      throw new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "Matter document does not belong to the specified matter",
+      );
+    }
+
+    const result = await processMatterDocument({
+      matterId,
+      documentId: document.id,
+      fileUrl: document.fileUrl,
+      fileName: document.fileName,
+    });
+
+    logger.info(
+      { matterId, documentId, totalChunks: result.totalChunks },
+      "Matter document processed successfully",
+    );
+
+    return {
+      success: true,
+      matterId,
+      documentId,
+      totalChunks: result.totalChunks,
+    };
+  }
+
+  static async handleAnalyzeMatterDocument(
+    data: MatterDocumentAnalysisJobPayload,
+  ) {
+    const { matterId, documentId } = data;
+
+    logger.info(
+      { matterId, documentId },
+      "Processing matter document analysis job",
+    );
+
+    unwrap(
+      await findMatter("id", matterId),
+      new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter not found for document analysis",
+      ),
+    );
+
+    const document = unwrap(
+      await findMatterDocument("id", documentId),
+      new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter document not found for analysis",
+      ),
+    );
+
+    if (document.matterId !== matterId) {
+      throw new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "Matter document does not belong to the specified matter",
+      );
+    }
+
+    const parsed = await parsePdfFromPath(getStoragePath(document.fileUrl));
+    const text = parsed.text ?? "";
+
+    if (!text || text.trim().length === 0) {
+      throw new HttpError(
+        HttpStatus.BAD_REQUEST,
+        "PDF contains no extractable text",
+      );
+    }
+
+    const prompt = buildMatterDocumentAnalysisPrompt(document.fileName, text);
+    const client = llmProviderManager.getClient();
+    const result = await client.generateTextContent<MatterDocumentAnalysis>(
+      prompt,
+      {
+        outputType: "structured",
+        responseJsonSchema: matterDocumentAnalysisSchema,
+      },
+    );
+
+    const analysis = result.content;
+
+    unwrap(
+      await updateMatterDocument("id", document.id, {
+        analysis,
+        analyzedAt: new Date(),
+      }),
+      new HttpError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        "Failed to save matter document analysis",
+      ),
+    );
+
+    await recordMatterActivity({
+      matterId,
+      actorUserId: document.uploadedByUserId,
+      type: "document_analyzed",
+      title: "Document analyzed",
+      description: document.fileName,
+      metadata: { documentId: document.id },
+    });
+
+    logger.info({ matterId, documentId }, "Matter document analysis completed");
+
+    return { success: true, matterId, documentId };
   }
 }

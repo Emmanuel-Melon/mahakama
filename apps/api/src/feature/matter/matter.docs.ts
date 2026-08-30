@@ -169,6 +169,51 @@ const matterPaths: PathDefinition[] = [
     errorCodes: [401, 403, 404],
   },
   {
+    handlerName: "getMatterDocumentController",
+    method: "get",
+    path: `${matterApi.path}/{matterId}/documents/{documentId}`,
+    summary: "Get a matter document",
+    description: "Retrieve a single document attached to a specific matter.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MatterDocumentApiSchemas.singleResSchema,
+    errorCodes: [401, 403, 404],
+  },
+  {
+    handlerName: "analyzeMatterDocumentController",
+    method: "post",
+    path: `${matterApi.path}/{matterId}/documents/{documentId}/analyze`,
+    summary: "Analyze a matter document",
+    description:
+      "Enqueues an async job to analyze a matter's legal document. Poll the document to retrieve the result once analysis is complete.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.ACCEPTED,
+    successSchema: MatterDocumentApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 404],
+  },
+  {
+    handlerName: "uploadMatterDocumentController",
+    method: "post",
+    path: `${matterApi.path}/{matterId}/documents`,
+    summary: "Upload a matter document",
+    description:
+      "Upload and persist a document to a specific matter, enqueuing async RAG processing.",
+    security: [{ bearerAuth: [] }],
+    requestBodySchema: z.object({
+      file: z.string().openapi({
+        format: "binary",
+        description: "The PDF document to upload",
+      }),
+      description: z
+        .string()
+        .optional()
+        .openapi({ description: "Optional description of the document" }),
+    }),
+    successStatus: HttpStatus.CREATED,
+    successSchema: MatterDocumentApiSchemas.singleResSchema,
+    errorCodes: [400, 401, 404],
+  },
+  {
     handlerName: "updateMatterController",
     method: "patch",
     path: `${matterApi.path}/{matterId}`,

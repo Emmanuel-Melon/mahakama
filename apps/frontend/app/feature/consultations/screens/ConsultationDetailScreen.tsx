@@ -1,4 +1,11 @@
-import { Home, MessageSquare, UserRound, Scale, CalendarClock, type LucideIcon } from "lucide-react";
+import {
+  Home,
+  MessageSquare,
+  UserRound,
+  Scale,
+  CalendarClock,
+  type LucideIcon,
+} from "lucide-react";
 import { Badge } from "@mah/ui/components/badge";
 import { PageHeader } from "@mah/ui";
 import { PageDetailHeader } from "@mah/ui";
@@ -210,7 +217,9 @@ export const ConsultationDetailScreen = ({
                 </Badge>
               </div>
               <div className="space-y-1">
-                <div className="text-sm font-medium text-gray-500">Customer</div>
+                <div className="text-sm font-medium text-gray-500">
+                  Customer
+                </div>
                 <div className="flex items-center gap-2 text-gray-900">
                   <UserRound className="h-4 w-4 text-gray-400" />
                   {customerName}

@@ -14,6 +14,10 @@ export const mattersRoutes = defineRoutes({
     path: "matters/:matterId",
     file: "routes/matters/$matterId.tsx",
   },
+  document: {
+    path: "matters/:matterId/documents/:documentId",
+    file: "routes/matters/$matterId.documents.$documentId.tsx",
+  },
 });
 
 export const MattersPaths = mattersRoutes.to;
@@ -22,6 +26,9 @@ export const MATTERS_API_ROUTES = {
   ROOT: `${API_V1}/matters`,
   TIMELINE: `${API_V1}/matters/:matterId/timeline`,
   NOTES: `${API_V1}/matters/:matterId/notes`,
+  DOCUMENTS: `${API_V1}/matters/:matterId/documents`,
+  DOCUMENT: `${API_V1}/matters/:matterId/documents/:documentId`,
+  ANALYZE: `${API_V1}/matters/:matterId/documents/:documentId/analyze`,
   LAWYERS: `${API_V1}/matters/:matterId/lawyers`,
   LAWYERS_ME: `${API_V1}/matters/:matterId/lawyers/me`,
 } as const;

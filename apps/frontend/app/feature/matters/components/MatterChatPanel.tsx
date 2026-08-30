@@ -49,9 +49,7 @@ function MatterChatConversation({ chatId }: { chatId: string }) {
 
   const usedInSummaryIds = useMemo(
     () =>
-      new Set(
-        messages.filter(isSubstantiveAssistantMessage).map((m) => m.id),
-      ),
+      new Set(messages.filter(isSubstantiveAssistantMessage).map((m) => m.id)),
     [messages],
   );
 

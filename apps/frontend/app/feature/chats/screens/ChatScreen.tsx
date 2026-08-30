@@ -22,7 +22,10 @@ import { MatterPreparingSheet } from "~/feature/matters/components/MatterPrepari
 import { isMatterPrepared } from "~/feature/matters/components/matter-utils";
 import { PageDetailsLoading } from "@mah/ui/components/molecules/PageDetailsLoading";
 import { PageDetailsError } from "@mah/ui/components/molecules/PageDetailsError";
-import { isReplyAwaiting, useChatMutations } from "@mah/api/src/hooks/chats/use-chats";
+import {
+  isReplyAwaiting,
+  useChatMutations,
+} from "@mah/api/src/hooks/chats/use-chats";
 import { useOpenMatter } from "@mah/api/src/hooks/use-matters";
 import { useDocumentStatus } from "@mah/api/src/hooks/documents/use-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -62,7 +65,9 @@ export const ChatScreen = ({
   } = useChatMutations();
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [preparingMatterId, setPreparingMatterId] = useState<string | null>(null);
+  const [preparingMatterId, setPreparingMatterId] = useState<string | null>(
+    null,
+  );
   const [showPreparingSheet, setShowPreparingSheet] = useState(false);
 
   const openMatter = useOpenMatter({

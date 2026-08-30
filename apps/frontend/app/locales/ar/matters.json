@@ -99,7 +99,26 @@
     "empty": "لم تُرفع أي مستندات بعد.",
     "uploaded": "رُفع في",
     "by": "بواسطة",
-    "download": "تنزيل"
+    "download": "تنزيل",
+    "chooseFile": "اختر ملفًا",
+    "noFile": "لم يتم اختيار ملف",
+    "upload": "رفع",
+    "uploading": "جارٍ الرفع…",
+    "analyze": "تحليل",
+    "analyzing": "جارٍ التحليل…",
+    "analyzed": "تم التحليل",
+    "analysisResults": "نتائج التحليل",
+    "analysisSummary": "الملخص",
+    "analysisType": "نوع المستند",
+    "analysisParties": "الأطراف",
+    "analysisClaims": "المطالبات",
+    "analysisRelief": "المطلوب من القضاء",
+    "analysisKeyDates": "التواريخ المهمة",
+    "analysisRisks": "المخاطر",
+    "analysisLaws": "القوانين المعمول بها",
+    "analysisRecommendations": "التوصيات",
+    "showAnalysis": "عرض التحليل",
+    "hideAnalysis": "إخفاء التحليل"
   },
   "notes": {
     "empty": "لا توجد ملاحظات بعد.",
@@ -150,7 +169,8 @@
     }
   },
   "actions": {
-    "viewDetails": "عرض التفاصيل"
+    "viewDetails": "عرض التفاصيل",
+    "backToMatter": "العودة للقضية"
   },
   "invite": {
     "myStatus": "حالة دعوتك",

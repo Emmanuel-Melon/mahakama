@@ -21,6 +21,16 @@ export const CATEGORY_MAP: Record<string, string[]> = {
  */
 export const USER_DOCUMENT_COLLECTION_PREFIX = "user_docs_";
 
+export const MATTER_DOCUMENT_COLLECTION_PREFIX = "matter_docs_";
+
+/**
+ * Generate a ChromaDB collection name for a matter's attached documents.
+ * Format: `matter_docs_{matterId}`
+ */
+export function getMatterCollectionName(matterId: string): string {
+  return `${MATTER_DOCUMENT_COLLECTION_PREFIX}${matterId}`;
+}
+
 /**
  * Generate a ChromaDB collection name for a document session
  * @param sessionId - The chat session ID

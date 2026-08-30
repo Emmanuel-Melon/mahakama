@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import {
-  findMatter,
-  findMatterNotesByMatter,
-} from "../operations/matter.find";
+import { findMatter, findMatterNotesByMatter } from "../operations/matter.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { MatterNoteSerializer } from "../matter.config";
