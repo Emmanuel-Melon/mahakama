@@ -5,7 +5,14 @@ import { PageDetailHeader } from "@mah/ui";
 import { LawyerBio } from "~/feature/lawyers/components/lawyer-bio";
 import { EducationSection } from "~/feature/lawyers/components/LawyerEducation";
 import { ContactInformation, type ContactItem } from "@mah/ui";
-import { Scale, MapPin, Briefcase, Home, Users, CalendarClock } from "lucide-react";
+import {
+  Scale,
+  MapPin,
+  Briefcase,
+  Home,
+  Users,
+  CalendarClock,
+} from "lucide-react";
 import { AsyncContainer } from "@mah/ui";
 import { ConsultationRequestDialog } from "~/feature/consultations/components/ConsultationRequestDialog";
 

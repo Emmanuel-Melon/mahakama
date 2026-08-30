@@ -3,7 +3,10 @@ import { Check, X, UserRound } from "lucide-react";
 import { Button } from "@mah/ui";
 import { Badge } from "@mah/ui/components/badge";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { useMatterLawyers, useMatterMutations } from "@mah/api/src/hooks/use-matters";
+import {
+  useMatterLawyers,
+  useMatterMutations,
+} from "@mah/api/src/hooks/use-matters";
 import { useLawyerProfile } from "@mah/api/src/hooks/use-lawyers";
 import type { Matter } from "@mah/api/src/clients/matters.api";
 
@@ -61,9 +64,7 @@ export function LawyerInvitePanel({ matter }: { matter: Matter }) {
             <UserRound className="h-4 w-4 text-gray-400" />
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-medium text-gray-900">
-              {matter.title}
-            </p>
+            <p className="text-sm font-medium text-gray-900">{matter.title}</p>
             <div className="mt-0.5">
               <Badge variant={STATUS_VARIANT[status] ?? "secondary"}>
                 {statusLabel}

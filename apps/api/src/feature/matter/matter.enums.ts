@@ -31,6 +31,7 @@ export const matterActivityTypeEnum = pgEnum("matter_activity_type", [
   "status_changed",
   "note_added",
   "document_uploaded",
+  "document_analyzed",
   "lawyer_invited",
   "lawyer_accepted",
   "lawyer_declined",

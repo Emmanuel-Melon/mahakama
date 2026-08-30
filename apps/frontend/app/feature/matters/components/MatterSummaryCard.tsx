@@ -39,11 +39,16 @@ export function MatterSummaryCard({
 
   const metadata = getMetadataRecord(matter.metadata);
   const keyParties = Array.isArray(metadata.keyParties)
-    ? metadata.keyParties.filter((party): party is string => typeof party === "string")
+    ? metadata.keyParties.filter(
+        (party): party is string => typeof party === "string",
+      )
     : [];
   const requestedRelief =
-    typeof metadata.requestedRelief === "string" ? metadata.requestedRelief : "";
-  const readyAt = typeof metadata.readyAt === "string" ? metadata.readyAt : undefined;
+    typeof metadata.requestedRelief === "string"
+      ? metadata.requestedRelief
+      : "";
+  const readyAt =
+    typeof metadata.readyAt === "string" ? metadata.readyAt : undefined;
 
   const startEdit = () => {
     setDraftSummary(matter.summary ?? "");
@@ -68,7 +73,8 @@ export function MatterSummaryCard({
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm text-gray-500">
-          {t("summary.label")} · {t("fields.updated")} {formatDate(matter.updatedAt)}
+          {t("summary.label")} · {t("fields.updated")}{" "}
+          {formatDate(matter.updatedAt)}
         </p>
         {role === "user" &&
           (editing ? (
@@ -160,7 +166,9 @@ export function MatterSummaryCard({
                 </p>
               </div>
               <p className="text-xs text-gray-400">
-                {readyAt ? `${t("analysis.prepared")} ${formatDate(readyAt)} · ` : ""}
+                {readyAt
+                  ? `${t("analysis.prepared")} ${formatDate(readyAt)} · `
+                  : ""}
                 {t("analysis.hint")}
               </p>
             </div>

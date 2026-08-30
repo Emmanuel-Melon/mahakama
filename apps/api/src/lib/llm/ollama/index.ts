@@ -47,7 +47,6 @@ function extractJson(raw: string): string {
   return content;
 }
 
-
 export class OllamaClient implements ILLMProvider<"ollama"> {
   private static instance: OllamaClient;
   private client: Ollama;
@@ -128,9 +127,7 @@ export class OllamaClient implements ILLMProvider<"ollama"> {
 
       let parsedContent;
       try {
-        parsedContent = JSON.parse(
-          extractJson(content),
-        );
+        parsedContent = JSON.parse(extractJson(content));
       } catch (e) {
         throw new Error(`Failed to parse JSON response from Ollama: ${e}`);
       }

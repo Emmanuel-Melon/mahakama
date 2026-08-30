@@ -50,6 +50,8 @@ export const MattersJobs = {
   GenerateMatterSummary: "generate-matter-summary",
   MatterStatusChanged: "matter-status-changed",
   LawyerInvitedToMatter: "lawyer-invited-to-matter",
+  ProcessMatterDocument: "process-matter-document",
+  ProcessMatterDocumentAnalysis: "process-matter-document-analysis",
 } as const;
 
 export type MattersJobType = (typeof MattersJobs)[keyof typeof MattersJobs];

@@ -277,9 +277,17 @@ export const LawyerInvitedToMatterPayloadSchema = z.object({
   invitedByUserId: z.string().optional(),
 });
 
-export type MatterFromChatPayload = z.infer<
-  typeof MatterFromChatPayloadSchema
->;
+export const MatterDocumentRagJobPayloadSchema = z.object({
+  matterId: z.string(),
+  documentId: z.string(),
+});
+
+export const MatterDocumentAnalysisJobPayloadSchema = z.object({
+  matterId: z.string(),
+  documentId: z.string(),
+});
+
+export type MatterFromChatPayload = z.infer<typeof MatterFromChatPayloadSchema>;
 export type GenerateMatterSummaryPayload = z.infer<
   typeof GenerateMatterSummaryPayloadSchema
 >;
@@ -289,12 +297,20 @@ export type MatterStatusChangedPayload = z.infer<
 export type LawyerInvitedToMatterPayload = z.infer<
   typeof LawyerInvitedToMatterPayloadSchema
 >;
+export type MatterDocumentRagJobPayload = z.infer<
+  typeof MatterDocumentRagJobPayloadSchema
+>;
+export type MatterDocumentAnalysisJobPayload = z.infer<
+  typeof MatterDocumentAnalysisJobPayloadSchema
+>;
 
 export interface MatterJobMap {
   [MattersJobs.MatterFromChat]: MatterFromChatPayload;
   [MattersJobs.GenerateMatterSummary]: GenerateMatterSummaryPayload;
   [MattersJobs.MatterStatusChanged]: MatterStatusChangedPayload;
   [MattersJobs.LawyerInvitedToMatter]: LawyerInvitedToMatterPayload;
+  [MattersJobs.ProcessMatterDocument]: MatterDocumentRagJobPayload;
+  [MattersJobs.ProcessMatterDocumentAnalysis]: MatterDocumentAnalysisJobPayload;
 }
 
 /*

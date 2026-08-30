@@ -29,6 +29,8 @@ export const MATTERS_API_ROUTES = {
   TIMELINE: "/v1/matters/:matterId/timeline",
   NOTES: "/v1/matters/:matterId/notes",
   DOCUMENTS: "/v1/matters/:matterId/documents",
+  DOCUMENT: "/v1/matters/:matterId/documents/:documentId",
+  ANALYZE: "/v1/matters/:matterId/documents/:documentId/analyze",
   LAWYERS: "/v1/matters/:matterId/lawyers",
   LAWYERS_ME: "/v1/matters/:matterId/lawyers/me",
 } as const;

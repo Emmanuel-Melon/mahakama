@@ -99,7 +99,26 @@
     "empty": "No documents have been uploaded yet.",
     "uploaded": "Uploaded",
     "by": "by",
-    "download": "Download"
+    "download": "Download",
+    "chooseFile": "Choose file",
+    "noFile": "No file chosen",
+    "upload": "Upload",
+    "uploading": "Uploading…",
+    "analyze": "Analyze",
+    "analyzing": "Analyzing…",
+    "analyzed": "Analyzed",
+    "analysisResults": "Analysis Results",
+    "analysisSummary": "Summary",
+    "analysisType": "Document Type",
+    "analysisParties": "Parties",
+    "analysisClaims": "Claims",
+    "analysisRelief": "Requested Relief",
+    "analysisKeyDates": "Key Dates",
+    "analysisRisks": "Risks",
+    "analysisLaws": "Applicable Laws",
+    "analysisRecommendations": "Recommendations",
+    "showAnalysis": "Show Analysis",
+    "hideAnalysis": "Hide Analysis"
   },
   "notes": {
     "empty": "No notes yet.",
@@ -150,7 +169,8 @@
     }
   },
   "actions": {
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "backToMatter": "Back to Matter"
   },
   "invite": {
     "myStatus": "Your invite status",

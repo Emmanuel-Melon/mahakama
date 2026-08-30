@@ -1,4 +1,5 @@
 import { createApiClient, AxiosApiClient } from "../axios";
+import { getClientToken } from "../api/api.sse";
 import type { ApiCollection, ApiResource } from "../api/api.types";
 import { BaseApiClient } from "../api";
 import type { components } from "../generated/api.types";
@@ -63,8 +64,7 @@ export type MatterNoteCollection = ApiCollection<
   MatterNoteCollectionResponse["metadata"]
 >;
 
-export type MatterDocumentMetadata =
-  MatterDocumentSingleResponse["metadata"];
+export type MatterDocumentMetadata = MatterDocumentSingleResponse["metadata"];
 export type MatterDocumentResult = ApiResource<
   MatterDocument,
   MatterDocumentMetadata
@@ -72,6 +72,27 @@ export type MatterDocumentResult = ApiResource<
 export type MatterDocumentCollection = ApiCollection<
   MatterDocument,
   MatterDocumentCollectionResponse["metadata"]
+>;
+
+export type MatterDocumentAnalysis = {
+  summary: string;
+  documentType?: string;
+  parties?: { name: string; role?: string }[];
+  claims?: string[];
+  requestedRelief?: string;
+  keyDates?: { date: string; description: string }[];
+  risks?: string[];
+  applicableLaws?: string[];
+  recommendations?: string[];
+};
+
+export type MatterDocumentWithAnalysis = MatterDocument & {
+  analysis?: MatterDocumentAnalysis | null;
+  analyzedAt?: string | null;
+};
+export type MatterDocumentWithAnalysisResult = ApiResource<
+  MatterDocumentWithAnalysis,
+  MatterDocumentMetadata
 >;
 
 export type MatterTimelineEntry = {
@@ -160,14 +181,11 @@ export class MattersApiClient extends BaseApiClient {
     data: NewMatter,
     options: { headers?: Record<string, string> } = {},
   ): Promise<MatterResult> {
-    const response = await this.api.request<MatterSingleResponse>(
-      this.path,
-      {
-        method: "POST",
-        headers: { ...this.defaultHeaders, ...options.headers },
-        data,
-      },
-    );
+    const response = await this.api.request<MatterSingleResponse>(this.path, {
+      method: "POST",
+      headers: { ...this.defaultHeaders, ...options.headers },
+      data,
+    });
     return this.unpackSingle(response, {
       errMsg: "Invalid matter data received from the server",
     });
@@ -287,6 +305,85 @@ export class MattersApiClient extends BaseApiClient {
     );
     return this.unpackCollection(response, {
       errMsg: "Invalid matter documents data received from the server",
+    });
+  }
+
+  public async getMatterDocument(
+    matterId: string,
+    documentId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterDocumentWithAnalysisResult> {
+    const response = await this.api.request<MatterDocumentSingleResponse>(
+      MATTERS_API_ROUTES.DOCUMENT.replace(":matterId", matterId).replace(
+        ":documentId",
+        documentId,
+      ),
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackSingle(response as any, {
+      errMsg: "Invalid matter document data received from the server",
+    });
+  }
+
+  public async analyzeMatterDocument(
+    matterId: string,
+    documentId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterDocumentResult> {
+    const response = await this.api.request<MatterDocumentSingleResponse>(
+      MATTERS_API_ROUTES.ANALYZE.replace(":matterId", matterId).replace(
+        ":documentId",
+        documentId,
+      ),
+      {
+        method: "POST",
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackSingle(response, {
+      errMsg: "Invalid matter document data received from the server",
+    });
+  }
+
+  public async uploadMatterDocument(
+    matterId: string,
+    file: File,
+    description?: string,
+    options: { headers?: Record<string, string>; signal?: AbortSignal } = {},
+  ): Promise<MatterDocumentResult> {
+    const formData = new FormData();
+    formData.append("file", file);
+    if (description) formData.append("description", description);
+
+    const baseURL =
+      import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
+    const token = getClientToken();
+
+    const response = await fetch(
+      `${baseURL}${MATTERS_API_ROUTES.DOCUMENTS.replace(":matterId", matterId)}`,
+      {
+        method: "POST",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          ...options.headers,
+        },
+        body: formData,
+        credentials: "include",
+        signal: options.signal,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Failed to upload matter document: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const payload = (await response.json()) as MatterDocumentSingleResponse;
+    return this.unpackSingle(payload, {
+      errMsg: "Invalid matter document data received from the server",
     });
   }
 }

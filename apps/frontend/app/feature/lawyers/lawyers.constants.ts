@@ -4,14 +4,7 @@ export interface SelectOption {
 }
 
 export type EacCountryCode =
-  | "UG"
-  | "KE"
-  | "TZ"
-  | "RW"
-  | "BI"
-  | "SS"
-  | "CD"
-  | "SO";
+  "UG" | "KE" | "TZ" | "RW" | "BI" | "SS" | "CD" | "SO";
 
 // The EAC's eight partner states.
 export const EAC_COUNTRIES: SelectOption[] = [
@@ -53,33 +46,34 @@ export const ISSUING_AUTHORITIES_BY_COUNTRY: Record<
 // common-law-style structure and need sign-off from a legal SME before
 // shipping — Burundi and DRC in particular use civil-law court naming that
 // won't match this pattern.
-export const JURISDICTIONS_BY_COUNTRY: Record<EacCountryCode, SelectOption[]> = {
-  UG: [
-    { value: "high-court", label: "High Court of Uganda" },
-    { value: "court-of-appeal", label: "Court of Appeal of Uganda" },
-    { value: "supreme-court", label: "Supreme Court of Uganda" },
-  ],
-  KE: [
-    { value: "high-court", label: "High Court of Kenya" },
-    { value: "court-of-appeal", label: "Court of Appeal of Kenya" },
-    { value: "supreme-court", label: "Supreme Court of Kenya" },
-  ],
-  TZ: [
-    { value: "high-court", label: "High Court of Tanzania" },
-    { value: "court-of-appeal", label: "Court of Appeal of Tanzania" },
-  ],
-  RW: [
-    { value: "high-court", label: "High Court of Rwanda" },
-    { value: "supreme-court", label: "Supreme Court of Rwanda" },
-  ],
-  BI: [], // TODO: confirm Burundi's court structure (civil-law naming)
-  SS: [
-    { value: "high-court", label: "High Court of South Sudan" },
-    { value: "supreme-court", label: "Supreme Court of South Sudan" },
-  ],
-  CD: [], // TODO: confirm DRC's court structure (civil-law naming)
-  SO: [], // TODO: confirm Somalia's court structure
-};
+export const JURISDICTIONS_BY_COUNTRY: Record<EacCountryCode, SelectOption[]> =
+  {
+    UG: [
+      { value: "high-court", label: "High Court of Uganda" },
+      { value: "court-of-appeal", label: "Court of Appeal of Uganda" },
+      { value: "supreme-court", label: "Supreme Court of Uganda" },
+    ],
+    KE: [
+      { value: "high-court", label: "High Court of Kenya" },
+      { value: "court-of-appeal", label: "Court of Appeal of Kenya" },
+      { value: "supreme-court", label: "Supreme Court of Kenya" },
+    ],
+    TZ: [
+      { value: "high-court", label: "High Court of Tanzania" },
+      { value: "court-of-appeal", label: "Court of Appeal of Tanzania" },
+    ],
+    RW: [
+      { value: "high-court", label: "High Court of Rwanda" },
+      { value: "supreme-court", label: "Supreme Court of Rwanda" },
+    ],
+    BI: [], // TODO: confirm Burundi's court structure (civil-law naming)
+    SS: [
+      { value: "high-court", label: "High Court of South Sudan" },
+      { value: "supreme-court", label: "Supreme Court of South Sudan" },
+    ],
+    CD: [], // TODO: confirm DRC's court structure (civil-law naming)
+    SO: [], // TODO: confirm Somalia's court structure
+  };
 
 // Not country-dependent — same list regardless of where the lawyer practices.
 export const LEGAL_SPECIALIZATIONS: SelectOption[] = [

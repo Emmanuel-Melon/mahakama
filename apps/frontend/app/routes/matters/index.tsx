@@ -26,10 +26,12 @@ export default function MattersIndex({ loaderData }: Route.ComponentProps) {
   const { user } = loaderData;
   const isLawyer = user?.role === "lawyer";
 
-  const { data: mattersPage, isLoading, error } = useMatters(
-    isLawyer
-      ? { lawyerUserId: user?.id }
-      : { clientUserId: user?.id },
+  const {
+    data: mattersPage,
+    isLoading,
+    error,
+  } = useMatters(
+    isLawyer ? { lawyerUserId: user?.id } : { clientUserId: user?.id },
   );
 
   const matters = mattersPage?.data ?? [];

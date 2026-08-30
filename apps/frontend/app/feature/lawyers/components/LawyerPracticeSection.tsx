@@ -117,7 +117,10 @@ export function LawyerPracticeSection({
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
           <Form {...form}>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <SpecializationSelect control={form.control} name="specialization" />
+              <SpecializationSelect
+                control={form.control}
+                name="specialization"
+              />
 
               <JurisdictionSelect
                 control={form.control}

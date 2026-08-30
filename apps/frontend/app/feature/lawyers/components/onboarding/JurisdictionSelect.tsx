@@ -13,8 +13,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@mah/ui/components/Select";
-import { isEacCountryCode, JURISDICTIONS_BY_COUNTRY } from "../../lawyers.constants";
-
+import {
+  isEacCountryCode,
+  JURISDICTIONS_BY_COUNTRY,
+} from "../../lawyers.constants";
 
 const triggerStyling = {
   className: "border-2 border-gray-900",

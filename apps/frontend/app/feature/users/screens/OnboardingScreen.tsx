@@ -7,10 +7,7 @@ import { useReducer, useRef, type FC } from "react";
 import { type User } from "@mah/api/src/clients/users.api";
 import { type UserRole } from "../components/onboarding/RoleSelector";
 import { useUpdateUser } from "@mah/api/src/hooks/use-users";
-import {
-  onboardingReducer,
-  initialOnboardingState,
-} from "./onboardingReducer";
+import { onboardingReducer, initialOnboardingState } from "./onboardingReducer";
 
 interface OnboardingScreenProps {
   user: User;

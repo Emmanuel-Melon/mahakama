@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { updateMatter } from "../operations/matter.update";
 import { findMatter } from "../operations/matter.find";
-import { insertMatterStatusHistory, recordMatterActivity } from "../operations/matter.insert";
+import {
+  insertMatterStatusHistory,
+  recordMatterActivity,
+} from "../operations/matter.insert";
 import type { UpdateMatter } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";

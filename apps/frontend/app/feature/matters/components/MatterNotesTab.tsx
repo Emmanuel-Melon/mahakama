@@ -74,9 +74,7 @@ export function MatterNotesTab({
   );
 
   const canSubmit =
-    content.trim().length > 0 &&
-    !addNote.isPending &&
-    Boolean(currentUserId);
+    content.trim().length > 0 && !addNote.isPending && Boolean(currentUserId);
 
   const handleSubmit = () => {
     if (!canSubmit) return;

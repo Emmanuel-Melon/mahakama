@@ -1,9 +1,16 @@
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, Upload, Paperclip, Search } from "lucide-react";
+import { Link } from "react-router";
 import { IconContainer } from "@mah/ui/components/IconContainer";
 import { PageLoading } from "@mah/ui/components/molecules/PageLoading";
-import { useMatterDocuments } from "@mah/api/src/hooks/use-matters";
+import { Button } from "@mah/ui";
+import {
+  useMatterDocuments,
+  useMatterMutations,
+} from "@mah/api/src/hooks/use-matters";
 import type { MatterDocument } from "@mah/api/src/clients/matters.api";
+import { MattersPaths } from "../MattersConfig";
 
 const formatDate = (value?: string | null) =>
   value ? new Date(value).toLocaleDateString() : "—";
@@ -20,7 +27,13 @@ function DocumentRow({ document }: { document: MatterDocument }) {
   const size = formatSize(document.fileSize);
 
   return (
-    <div className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+    <Link
+      to={MattersPaths.document({
+        matterId: document.matterId,
+        documentId: document.id,
+      })}
+      className="flex items-center gap-3 py-3 first:pt-0 last:pb-0 hover:bg-gray-50 rounded-lg px-2 -mx-2 transition-colors"
+    >
       <IconContainer icon={FileText} size="sm" color="handdrawn" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-gray-900 truncate">
@@ -32,24 +45,35 @@ function DocumentRow({ document }: { document: MatterDocument }) {
           {formatDate(document.createdAt)}
         </p>
       </div>
-      {document.fileUrl ? (
-        <a
-          href={document.fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
-        >
-          <Download className="h-3.5 w-3.5" />
-          {t("documents.download")}
-        </a>
-      ) : null}
-    </div>
+      <Search className="h-4 w-4 text-gray-400 shrink-0" />
+    </Link>
   );
 }
 
 export function MatterDocumentsTab({ matterId }: { matterId: string }) {
   const { t } = useTranslation("matters");
   const { data, isLoading } = useMatterDocuments(matterId);
+  const { uploadDocument } = useMatterMutations();
+
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedFile(event.target.files?.[0] ?? null);
+  };
+
+  const handleUpload = () => {
+    if (!selectedFile || uploadDocument.isPending) return;
+    uploadDocument.mutate(
+      { matterId, file: selectedFile },
+      {
+        onSuccess: () => {
+          setSelectedFile(null);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        },
+      },
+    );
+  };
 
   if (isLoading) {
     return (
@@ -63,15 +87,56 @@ export function MatterDocumentsTab({ matterId }: { matterId: string }) {
 
   const documents = data?.data ?? [];
 
-  if (documents.length === 0) {
-    return <p className="text-sm text-gray-500">{t("documents.empty")}</p>;
-  }
-
   return (
-    <div className="divide-y divide-dashed divide-gray-200">
-      {documents.map((document) => (
-        <DocumentRow key={document.id} document={document} />
-      ))}
+    <div className="space-y-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,application/pdf"
+            onChange={handleFileChange}
+            className="hidden"
+          />
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadDocument.isPending}
+            className="shrink-0 gap-2"
+          >
+            <Paperclip className="h-4 w-4" />
+            {selectedFile ? selectedFile.name : t("documents.chooseFile")}
+          </Button>
+          {!selectedFile && (
+            <span className="truncate text-xs text-gray-400">
+              {t("documents.noFile")}
+            </span>
+          )}
+        </div>
+        <Button
+          size="sm"
+          onClick={handleUpload}
+          disabled={!selectedFile || uploadDocument.isPending}
+          className="gap-2 border-2 border-black rounded-lg text-gray-900 bg-yellow-300 shadow-[3px_3px_0_0_#000] hover:bg-yellow-400"
+        >
+          <Upload className="h-4 w-4" />
+          {uploadDocument.isPending
+            ? t("documents.uploading")
+            : t("documents.upload")}
+        </Button>
+      </div>
+
+      {documents.length === 0 ? (
+        <p className="text-sm text-gray-500">{t("documents.empty")}</p>
+      ) : (
+        <div className="divide-y divide-dashed divide-gray-200">
+          {documents.map((document) => (
+            <DocumentRow key={document.id} document={document} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

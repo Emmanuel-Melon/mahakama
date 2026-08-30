@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
-import { findMatter, findMatterLawyersByMatter } from "../operations/matter.find";
-import { insertMatterLawyer, recordMatterActivity } from "../operations/matter.insert";
+import {
+  findMatter,
+  findMatterLawyersByMatter,
+} from "../operations/matter.find";
+import {
+  insertMatterLawyer,
+  recordMatterActivity,
+} from "../operations/matter.insert";
 import type { NewMatterLawyer } from "../matter.types";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";

@@ -267,7 +267,10 @@ export function LawyerOnboardingScreen({
       </div>
 
       {step === "country" && (
-        <CountrySelectStep formRef={countryFormRef} onNext={handleCountryNext} />
+        <CountrySelectStep
+          formRef={countryFormRef}
+          onNext={handleCountryNext}
+        />
       )}
 
       {step === "basic" && (

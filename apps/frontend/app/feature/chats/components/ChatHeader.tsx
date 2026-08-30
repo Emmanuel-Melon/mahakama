@@ -1,4 +1,11 @@
-import { Plus, Share2, MoreVertical, Edit, Trash2, FolderOpen } from "lucide-react";
+import {
+  Plus,
+  Share2,
+  MoreVertical,
+  Edit,
+  Trash2,
+  FolderOpen,
+} from "lucide-react";
 import { Button } from "@mah/ui/components/Button";
 import { Link } from "react-router";
 import { useState } from "react";

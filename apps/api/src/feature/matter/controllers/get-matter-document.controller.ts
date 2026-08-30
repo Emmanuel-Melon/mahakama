@@ -1,8 +1,5 @@
 import { Request, Response } from "express";
-import {
-  findMatter,
-  findMatterDocumentsByMatter,
-} from "../operations/matter.find";
+import { findMatterDocument } from "../operations/matter.find";
 import { sendSuccessResponse } from "@/lib/express/express.response";
 import { HttpStatus } from "@/lib/http/http.status";
 import { MatterDocumentSerializer } from "../matter.config";
@@ -10,35 +7,33 @@ import { asyncHandler } from "@/lib/express/express.async-handler";
 import { unwrap } from "@/lib/drizzle/drizzle.utils";
 import { HttpError } from "@/lib/http/http.error";
 
-export const getMatterDocumentsController = asyncHandler(
+export const getMatterDocumentController = asyncHandler(
   async (req: Request, res: Response) => {
     const matterId = req.params.matterId as string;
+    const documentId = req.params.documentId as string;
 
-    unwrap(
-      await findMatter("id", matterId),
-      new HttpError(HttpStatus.NOT_FOUND, "Matter not found"),
+    const document = unwrap(
+      await findMatterDocument("id", documentId),
+      new HttpError(HttpStatus.NOT_FOUND, "Matter document not found"),
     );
 
-    const result = await findMatterDocumentsByMatter(matterId);
-
-    const documents = result.data.sort(
-      (a, b) =>
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+    if (document.matterId !== matterId) {
+      throw new HttpError(
+        HttpStatus.NOT_FOUND,
+        "Matter document not found for the specified matter",
+      );
+    }
 
     return sendSuccessResponse(
       req,
       res,
       {
-        data: documents,
-        type: "collection",
+        data: document,
+        type: "single",
         serializerConfig: MatterDocumentSerializer,
       },
       {
         status: HttpStatus.SUCCESS,
-        additionalMeta: {
-          total: documents.length,
-        },
       },
     );
   },

@@ -8,6 +8,8 @@ import {
   type MatterNoteResult,
   type MatterNoteCollection,
   type MatterDocumentCollection,
+  type MatterDocumentResult,
+  type MatterDocumentWithAnalysisResult,
   type MatterTimelineEntry,
   type MatterListParams,
   type NewMatter,
@@ -30,6 +32,8 @@ export const matterKeys = {
   timeline: (id: string) => [...matterKeys.all, "timeline", id] as const,
   notes: (id: string) => [...matterKeys.all, "notes", id] as const,
   documents: (id: string) => [...matterKeys.all, "documents", id] as const,
+  document: (matterId: string, documentId: string) =>
+    [...matterKeys.all, "document", matterId, documentId] as const,
 } as const;
 
 /*
@@ -45,6 +49,10 @@ export const invalidations = {
     matterKeys.timeline(id),
     matterKeys.notes(id),
     matterKeys.documents(id),
+  ],
+  document: (matterId: string, documentId: string) => [
+    matterKeys.documents(matterId),
+    matterKeys.document(matterId, documentId),
   ],
   lists: () => [matterKeys.lists()],
 };
@@ -83,6 +91,11 @@ export const matterQueries = {
     queryKey: matterKeys.documents(matterId),
     queryFn: () => mattersApi.getMatterDocuments(matterId),
     enabled: !!matterId,
+  }),
+  document: (matterId: string, documentId: string) => ({
+    queryKey: matterKeys.document(matterId, documentId),
+    queryFn: () => mattersApi.getMatterDocument(matterId, documentId),
+    enabled: !!matterId && !!documentId,
   }),
 };
 
@@ -127,6 +140,17 @@ export function useMatterDocuments(matterId: string) {
   });
 }
 
+export function useMatterDocument(matterId: string, documentId: string) {
+  return useQuery<MatterDocumentWithAnalysisResult, ApiClientError>({
+    ...matterQueries.document(matterId, documentId),
+  });
+}
+
+export const isDocumentAnalyzed = (document?: {
+  analysis?: unknown;
+  analyzedAt?: unknown;
+}): boolean => Boolean(document?.analysis) || Boolean(document?.analyzedAt);
+
 /*
  * ========================================
  * MUTATIONS
@@ -138,16 +162,12 @@ export interface UseMatterMutationsOptions {
   onAssignLawyerSuccess?: (data: MatterLawyerResult) => void;
   onUpdateLawyerMeSuccess?: (data: MatterLawyerResult) => void;
   onAddNoteSuccess?: (data: MatterNoteResult) => void;
+  onUploadDocumentSuccess?: (data: MatterDocumentResult) => void;
+  onAnalyzeDocumentSuccess?: (data: MatterDocumentResult) => void;
 }
 
-export const useMatterMutations = (
-  options?: UseMatterMutationsOptions,
-) => {
-  const openMatter = useAppMutation<
-    MatterResult,
-    ApiClientError,
-    NewMatter
-  >({
+export const useMatterMutations = (options?: UseMatterMutationsOptions) => {
+  const openMatter = useAppMutation<MatterResult, ApiClientError, NewMatter>({
     mutationFn: (data) => mattersApi.openMatter(data),
     messages: {
       success: "Matter created!",
@@ -163,8 +183,7 @@ export const useMatterMutations = (
     ApiClientError,
     { matterId: string; data: UpdateMatter }
   >({
-    mutationFn: ({ matterId, data }) =>
-      mattersApi.updateMatter(matterId, data),
+    mutationFn: ({ matterId, data }) => mattersApi.updateMatter(matterId, data),
     messages: {
       success: "Matter updated!",
       error: (err) =>
@@ -184,8 +203,7 @@ export const useMatterMutations = (
     messages: {
       success: "Lawyer assigned to matter!",
       error: (err) =>
-        err.errors?.[0]?.detail ??
-        "Failed to assign lawyer. Please try again.",
+        err.errors?.[0]?.detail ?? "Failed to assign lawyer. Please try again.",
     },
     invalidates: (variables) => invalidations.detail(variables.matterId),
     onSuccess: options?.onAssignLawyerSuccess,
@@ -224,12 +242,47 @@ export const useMatterMutations = (
     onSuccess: options?.onAddNoteSuccess,
   });
 
+  const uploadDocument = useAppMutation<
+    MatterDocumentResult,
+    ApiClientError,
+    { matterId: string; file: File; description?: string }
+  >({
+    mutationFn: ({ matterId, file, description }) =>
+      mattersApi.uploadMatterDocument(matterId, file, description),
+    messages: {
+      success: "Document uploaded!",
+      error: (err) =>
+        err.errors?.[0]?.detail ??
+        "Failed to upload document. Please try again.",
+    },
+    invalidates: (variables) => invalidations.detail(variables.matterId),
+    onSuccess: options?.onUploadDocumentSuccess,
+  });
+
+  const analyzeDocument = useAppMutation<
+    MatterDocumentResult,
+    ApiClientError,
+    { matterId: string; documentId: string }
+  >({
+    mutationFn: ({ matterId, documentId }) =>
+      mattersApi.analyzeMatterDocument(matterId, documentId),
+    messages: {
+      success: "Document analysis started!",
+      error: (err) =>
+        err.errors?.[0]?.detail ??
+        "Failed to analyze document. Please try again.",
+    },
+    onSuccess: options?.onAnalyzeDocumentSuccess,
+  });
+
   return {
     openMatter,
     updateMatter,
     assignLawyer,
     updateLawyerMe,
     addNote,
+    uploadDocument,
+    analyzeDocument,
   };
 };
 

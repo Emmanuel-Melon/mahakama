@@ -60,7 +60,8 @@ export const ConsultationCard = ({
       </div>
 
       <p className="text-sm text-muted-foreground line-clamp-2">
-        {consultation.requestMessage || "No message included with this request."}
+        {consultation.requestMessage ||
+          "No message included with this request."}
       </p>
 
       <div className="mt-4 pt-4 border-t flex flex-wrap items-center gap-2">

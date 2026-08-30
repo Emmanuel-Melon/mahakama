@@ -37,16 +37,18 @@ export default function LawyerProfileRoute({
 }: Route.ComponentProps) {
   const { lawyerId } = params;
   const { user, error } = loaderData;
-  const { data: lawyer, error: lawyerError, isLoading } = useLawyer(
-    lawyerId || "",
-  );
+  const {
+    data: lawyer,
+    error: lawyerError,
+    isLoading,
+  } = useLawyer(lawyerId || "");
 
   if (error)
     return (
-<MahErrorBoundary
-      status={500}
-      data="There was a problem loading your user session. Please try refreshing the page."
-    />
+      <MahErrorBoundary
+        status={500}
+        data="There was a problem loading your user session. Please try refreshing the page."
+      />
     );
 
   return (

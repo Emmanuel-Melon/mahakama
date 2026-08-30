@@ -207,9 +207,7 @@ export const OpenMatterDialog = ({
               {t("lawyers.cancel")}
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? t("open.dialog.opening")
-                : t("open.dialog.open")}
+              {isSubmitting ? t("open.dialog.opening") : t("open.dialog.open")}
             </Button>
           </DialogFooter>
         </form>
