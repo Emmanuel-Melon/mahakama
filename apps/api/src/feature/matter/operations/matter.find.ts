@@ -7,6 +7,7 @@ import {
   matterDocumentsTable,
   matterStatusHistoryTable,
   matterEventsTable,
+  matterActivitiesTable,
 } from "../matter.schema";
 import { lawyersTable } from "@/feature/lawyers/lawyers.schema";
 import type {
@@ -30,6 +31,7 @@ import type {
   MatterEvent,
   MatterEventColumnKey,
   MatterEventColumn,
+  MatterActivity,
 } from "../matter.types";
 import {
   executeSingle,
@@ -211,6 +213,15 @@ export const findMatterEventsByMatter = async (
 ): Promise<DbManyResult<MatterEvent>> => {
   const data = await db.query.matterEventsTable.findMany({
     where: eq(matterEventsTable.matterId, matterId),
+  });
+  return toManyResult(data);
+};
+
+export const findMatterActivitiesByMatter = async (
+  matterId: string,
+): Promise<DbManyResult<MatterActivity>> => {
+  const data = await db.query.matterActivitiesTable.findMany({
+    where: eq(matterActivitiesTable.matterId, matterId),
   });
   return toManyResult(data);
 };

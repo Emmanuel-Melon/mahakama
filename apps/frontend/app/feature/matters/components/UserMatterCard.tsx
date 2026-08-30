@@ -22,11 +22,11 @@ const STATUS_VARIANT: Record<string, BadgeVariant> = {
 const formatDate = (value?: string | null) =>
   value ? new Date(value).toLocaleDateString() : "—";
 
-interface MatterCardProps {
+interface UserMatterCardProps {
   matter: Matter;
 }
 
-export const MatterCard = ({ matter }: MatterCardProps) => {
+export const UserMatterCard = ({ matter }: UserMatterCardProps) => {
   const { t } = useTranslation("matters");
 
   return (

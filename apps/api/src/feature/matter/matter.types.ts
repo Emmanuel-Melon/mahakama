@@ -7,9 +7,11 @@ import {
   matterDocumentsTable,
   matterStatusHistoryTable,
   matterEventsTable,
+  matterActivitiesTable,
 } from "./matter.schema";
 import { baseQuerySchema } from "@/lib/express/express.types";
 import { crudMeta } from "@/lib/openapi/openapi.utils";
+import { MattersJobs } from "./matter.config";
 
 /*
  * DRIZZLE-GENERATED SCHEMAS (from PostgreSQL tables)
@@ -62,7 +64,10 @@ export const matterLawyerInsertSchema = crudMeta(
 export const matterLawyerUpdateSchema = crudMeta(
   baseMatterLawyerInsert
     .omit({ id: true, matterId: true, invitedAt: true })
-    .partial(),
+    .partial()
+    .extend({
+      acceptedAt: z.coerce.date().nullable().optional(),
+    }),
   "update",
   "MatterLawyer",
 );
@@ -152,6 +157,21 @@ export const matterEventUpdateSchema = crudMeta(
   "MatterEvent",
 );
 
+// Matter Activities (audit/activity log)
+const baseMatterActivityInsert = createInsertSchema(matterActivitiesTable);
+const baseMatterActivitySelect = createSelectSchema(matterActivitiesTable);
+
+export const matterActivitySelectSchema = crudMeta(
+  baseMatterActivitySelect,
+  "select",
+  "MatterActivity",
+);
+export const matterActivityInsertSchema = crudMeta(
+  baseMatterActivityInsert,
+  "insert",
+  "MatterActivity",
+);
+
 /*
  * DOMAIN-RELATED TYPES
  */
@@ -191,6 +211,10 @@ export type NewMatterEvent = z.infer<typeof matterEventInsertSchema>;
 export type UpdateMatterEvent = z.infer<typeof matterEventUpdateSchema>;
 export type MatterEventAttrs = z.infer<typeof matterEventsTable>;
 
+export type MatterActivity = z.infer<typeof matterActivitySelectSchema>;
+export type NewMatterActivity = z.infer<typeof matterActivityInsertSchema>;
+export type MatterActivityAttrs = z.infer<typeof matterActivitiesTable>;
+
 export type MatterWithRelations = Matter & {
   lawyers?: MatterLawyer[];
   notes?: MatterNote[];
@@ -222,22 +246,56 @@ export type MatterStatusHistoryColumnKey = keyof MatterStatusHistoryColumn;
 export type MatterEventColumn = typeof matterEventsTable._.columns;
 export type MatterEventColumnKey = keyof MatterEventColumn;
 
+export type MatterActivityColumn = typeof matterActivitiesTable._.columns;
+export type MatterActivityColumnKey = keyof MatterActivityColumn;
+
 /*
  * QUEUE-RELATED TYPES
  */
 
-export const MatterCreatedPayloadSchema = z.object({
+export const MatterFromChatPayloadSchema = z.object({
+  chatId: z.string(),
   clientUserId: z.string(),
-  matterId: z.string(),
+  matterId: z.string().optional(),
 });
 
-export const MatterSharedPayloadSchema = z.object({
+export const GenerateMatterSummaryPayloadSchema = z.object({
+  matterId: z.string(),
+  clientUserId: z.string().optional(),
+});
+
+export const MatterStatusChangedPayloadSchema = z.object({
+  matterId: z.string(),
+  fromStatus: z.string().optional(),
+  toStatus: z.string(),
+  changedByUserId: z.string().optional(),
+});
+
+export const LawyerInvitedToMatterPayloadSchema = z.object({
   matterId: z.string(),
   lawyerId: z.string(),
+  invitedByUserId: z.string().optional(),
 });
 
-export type MatterCreatedPayload = z.infer<typeof MatterCreatedPayloadSchema>;
-export type MatterSharedPayload = z.infer<typeof MatterSharedPayloadSchema>;
+export type MatterFromChatPayload = z.infer<
+  typeof MatterFromChatPayloadSchema
+>;
+export type GenerateMatterSummaryPayload = z.infer<
+  typeof GenerateMatterSummaryPayloadSchema
+>;
+export type MatterStatusChangedPayload = z.infer<
+  typeof MatterStatusChangedPayloadSchema
+>;
+export type LawyerInvitedToMatterPayload = z.infer<
+  typeof LawyerInvitedToMatterPayloadSchema
+>;
+
+export interface MatterJobMap {
+  [MattersJobs.MatterFromChat]: MatterFromChatPayload;
+  [MattersJobs.GenerateMatterSummary]: GenerateMatterSummaryPayload;
+  [MattersJobs.MatterStatusChanged]: MatterStatusChangedPayload;
+  [MattersJobs.LawyerInvitedToMatter]: LawyerInvitedToMatterPayload;
+}
 
 /*
  * API PARAMETER TYPES

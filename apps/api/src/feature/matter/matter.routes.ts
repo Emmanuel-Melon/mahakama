@@ -20,6 +20,9 @@ import type { ApiManifest } from "@/routes/api.types";
 import { createMatterLawyerController } from "./controllers/invite-lawyer.controller";
 import { updateMatterLawyerMeController } from "./controllers/invite-response.controller";
 import { addNoteController } from "./controllers/add-note.controller";
+import { getMatterLawyersController } from "./controllers/get-matter-lawyers.controller";
+import { getMatterNotesController } from "./controllers/get-matter-notes.controller";
+import { getMatterDocumentsController } from "./controllers/get-matter-documents.controller";
 
 const matterRouter = Router();
 
@@ -45,6 +48,11 @@ matterRouter.patch(
   validateHttpRequest(matterUpdateSchema, HttpLocation.Body),
   updateMatterController,
 );
+matterRouter.get(
+  "/:matterId/notes",
+  validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
+  getMatterNotesController,
+);
 matterRouter.post(
   "/:matterId/notes",
   validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
@@ -53,6 +61,16 @@ matterRouter.post(
     HttpLocation.Body,
   ),
   addNoteController,
+);
+matterRouter.get(
+  "/:matterId/documents",
+  validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
+  getMatterDocumentsController,
+);
+matterRouter.get(
+  "/:matterId/lawyers",
+  validateHttpRequest(z.object({ matterId: z.string() }), HttpLocation.Params),
+  getMatterLawyersController,
 );
 matterRouter.post(
   "/:matterId/lawyers",

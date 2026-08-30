@@ -32,6 +32,14 @@ export type MatterNoteCollectionResponse =
 export type NewMatterNote = components["schemas"]["NewMatterNote"];
 export type UpdateMatterNote = components["schemas"]["UpdateMatterNote"];
 
+export type MatterDocument = components["schemas"]["MatterDocument"];
+export type MatterDocumentResource =
+  components["schemas"]["MatterDocumentResource"];
+export type MatterDocumentSingleResponse =
+  components["schemas"]["MatterDocumentSingleResponse"];
+export type MatterDocumentCollectionResponse =
+  components["schemas"]["MatterDocumentCollectionResponse"];
+
 export type MatterMetadata = MatterSingleResponse["metadata"];
 export type MatterResult = ApiResource<Matter, MatterMetadata>;
 
@@ -43,15 +51,45 @@ export type MatterLawyerResult = ApiResource<
   MatterLawyer,
   MatterLawyerMetadata
 >;
+export type MatterLawyerCollection = ApiCollection<
+  MatterLawyer,
+  MatterLawyerCollectionResponse["metadata"]
+>;
 
 export type MatterNoteMetadata = MatterNoteSingleResponse["metadata"];
 export type MatterNoteResult = ApiResource<MatterNote, MatterNoteMetadata>;
+export type MatterNoteCollection = ApiCollection<
+  MatterNote,
+  MatterNoteCollectionResponse["metadata"]
+>;
+
+export type MatterDocumentMetadata =
+  MatterDocumentSingleResponse["metadata"];
+export type MatterDocumentResult = ApiResource<
+  MatterDocument,
+  MatterDocumentMetadata
+>;
+export type MatterDocumentCollection = ApiCollection<
+  MatterDocument,
+  MatterDocumentCollectionResponse["metadata"]
+>;
 
 export type MatterTimelineEntry = {
   id: string;
-  type: "status_history" | "event";
+  source: "activity" | "status_history" | "event";
+  type: string;
+  title: string;
+  description: string | null;
+  actorUserId: string | null;
   timestamp: string;
+  isInternal: boolean;
   data: Record<string, unknown>;
+};
+
+type MatterTimelineResource = {
+  type: string;
+  id: string;
+  attributes: MatterTimelineEntry;
 };
 
 export interface MatterListParams {
@@ -110,12 +148,12 @@ export class MattersApiClient extends BaseApiClient {
     options: { headers?: Record<string, string> } = {},
   ): Promise<MatterTimelineEntry[]> {
     const response = await this.api.request<{
-      data: MatterTimelineEntry[];
+      data: MatterTimelineResource[];
       metadata?: { total?: number };
     }>(MATTERS_API_ROUTES.TIMELINE.replace(":matterId", matterId), {
       headers: { ...this.defaultHeaders, ...options.headers },
     });
-    return response.data;
+    return response.data.map((resource) => resource.attributes);
   }
 
   public async openMatter(
@@ -171,6 +209,21 @@ export class MattersApiClient extends BaseApiClient {
     });
   }
 
+  public async getMatterLawyers(
+    matterId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterLawyerCollection> {
+    const response = await this.api.request<MatterLawyerCollectionResponse>(
+      MATTERS_API_ROUTES.LAWYERS.replace(":matterId", matterId),
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackCollection(response, {
+      errMsg: "Invalid matter lawyers data received from the server",
+    });
+  }
+
   public async updateMatterLawyerMe(
     matterId: string,
     data: UpdateMatterLawyer,
@@ -204,6 +257,36 @@ export class MattersApiClient extends BaseApiClient {
     );
     return this.unpackSingle(response, {
       errMsg: "Invalid matter note data received from the server",
+    });
+  }
+
+  public async getMatterNotes(
+    matterId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterNoteCollection> {
+    const response = await this.api.request<MatterNoteCollectionResponse>(
+      MATTERS_API_ROUTES.NOTES.replace(":matterId", matterId),
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackCollection(response, {
+      errMsg: "Invalid matter notes data received from the server",
+    });
+  }
+
+  public async getMatterDocuments(
+    matterId: string,
+    options: { headers?: Record<string, string> } = {},
+  ): Promise<MatterDocumentCollection> {
+    const response = await this.api.request<MatterDocumentCollectionResponse>(
+      MATTERS_API_ROUTES.DOCUMENTS.replace(":matterId", matterId),
+      {
+        headers: { ...this.defaultHeaders, ...options.headers },
+      },
+    );
+    return this.unpackCollection(response, {
+      errMsg: "Invalid matter documents data received from the server",
     });
   }
 }

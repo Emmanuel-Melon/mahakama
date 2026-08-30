@@ -4,7 +4,10 @@ import {
   type MatterResult,
   type MattersResult,
   type MatterLawyerResult,
+  type MatterLawyerCollection,
   type MatterNoteResult,
+  type MatterNoteCollection,
+  type MatterDocumentCollection,
   type MatterTimelineEntry,
   type MatterListParams,
   type NewMatter,
@@ -23,7 +26,10 @@ export const matterKeys = {
     [...matterKeys.lists(), { filters }] as const,
   details: () => [...matterKeys.all, "detail"] as const,
   detail: (id: string) => [...matterKeys.details(), id] as const,
+  lawyers: (id: string) => [...matterKeys.all, "lawyers", id] as const,
   timeline: (id: string) => [...matterKeys.all, "timeline", id] as const,
+  notes: (id: string) => [...matterKeys.all, "notes", id] as const,
+  documents: (id: string) => [...matterKeys.all, "documents", id] as const,
 } as const;
 
 /*
@@ -35,7 +41,10 @@ export const invalidations = {
   detail: (id: string) => [
     matterKeys.lists(),
     matterKeys.detail(id),
+    matterKeys.lawyers(id),
     matterKeys.timeline(id),
+    matterKeys.notes(id),
+    matterKeys.documents(id),
   ],
   lists: () => [matterKeys.lists()],
 };
@@ -55,9 +64,24 @@ export const matterQueries = {
     queryFn: () => mattersApi.getMatterById(matterId),
     enabled: !!matterId,
   }),
+  lawyers: (matterId: string) => ({
+    queryKey: matterKeys.lawyers(matterId),
+    queryFn: () => mattersApi.getMatterLawyers(matterId),
+    enabled: !!matterId,
+  }),
   timeline: (matterId: string) => ({
     queryKey: matterKeys.timeline(matterId),
     queryFn: () => mattersApi.getMatterTimeline(matterId),
+    enabled: !!matterId,
+  }),
+  notes: (matterId: string) => ({
+    queryKey: matterKeys.notes(matterId),
+    queryFn: () => mattersApi.getMatterNotes(matterId),
+    enabled: !!matterId,
+  }),
+  documents: (matterId: string) => ({
+    queryKey: matterKeys.documents(matterId),
+    queryFn: () => mattersApi.getMatterDocuments(matterId),
     enabled: !!matterId,
   }),
 };
@@ -82,6 +106,24 @@ export function useMatter(matterId: string) {
 export function useMatterTimeline(matterId: string) {
   return useQuery<MatterTimelineEntry[], ApiClientError>({
     ...matterQueries.timeline(matterId),
+  });
+}
+
+export function useMatterLawyers(matterId: string) {
+  return useQuery<MatterLawyerCollection, ApiClientError>({
+    ...matterQueries.lawyers(matterId),
+  });
+}
+
+export function useMatterNotes(matterId: string) {
+  return useQuery<MatterNoteCollection, ApiClientError>({
+    ...matterQueries.notes(matterId),
+  });
+}
+
+export function useMatterDocuments(matterId: string) {
+  return useQuery<MatterDocumentCollection, ApiClientError>({
+    ...matterQueries.documents(matterId),
   });
 }
 

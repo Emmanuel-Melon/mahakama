@@ -16,6 +16,7 @@ export enum QueueName {
   InApp = "in_app",
   Inference = "inference",
   Messages = "messages",
+  Matter = "matter",
   Scheduled = "scheduled",
   ShadowReplay = "shadow-replay",
 }

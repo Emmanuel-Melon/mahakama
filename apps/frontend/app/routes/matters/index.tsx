@@ -34,7 +34,14 @@ export default function MattersIndex({ loaderData }: Route.ComponentProps) {
 
   const matters = mattersPage?.data ?? [];
 
-  return <MattersScreen matters={matters} isLoading={isLoading} error={error} />;
+  return (
+    <MattersScreen
+      matters={matters}
+      isLoading={isLoading}
+      error={error}
+      role={isLawyer ? "lawyer" : "user"}
+    />
+  );
 }
 
 export function ErrorBoundary() {

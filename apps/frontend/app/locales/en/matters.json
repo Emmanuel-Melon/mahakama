@@ -10,7 +10,15 @@
   },
   "empty": {
     "title": "No matters yet",
-    "description": "Matters you are involved in will show up here."
+    "description": "Matters you are involved in will show up here.",
+    "user": {
+      "title": "No matters yet",
+      "description": "Matters you open will show up here."
+    },
+    "lawyer": {
+      "title": "No matter invitations yet",
+      "description": "Matters you are invited to will show up here."
+    }
   },
   "notFound": {
     "title": "Matter not found",
@@ -42,7 +50,153 @@
     "opened": "Opened",
     "closed": "Closed"
   },
+  "tabs": {
+    "timeline": "Timeline",
+    "documents": "Documents",
+    "notes": "Notes",
+    "lawyers": "Lawyers"
+  },
+  "header": {
+    "editTitle": "Edit title",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "requestLawyer": "Request lawyer",
+    "requestedLawyer": "Lawyer requested",
+    "updatingRequest": "Updating…",
+    "changeStatus": "Change status",
+    "updatingStatus": "Updating…"
+  },
+  "summary": {
+    "label": "AI Summary",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "saving": "Saving…",
+    "empty": "No summary has been written yet."
+  },
+  "analysis": {
+    "viewFull": "View full AI analysis",
+    "hideFull": "Hide full AI analysis",
+    "keyParties": "Key parties",
+    "requestedRelief": "Requested relief",
+    "none": "None identified",
+    "hint": "Extracted by AI from the original conversation",
+    "prepared": "Prepared"
+  },
+  "share": {
+    "nudgeTitle": "Connect with a lawyer",
+    "nudgeDescription": "Share this matter to allow our team to recommend a suitable lawyer.",
+    "share": "Share & request a lawyer",
+    "sharing": "Sharing…"
+  },
+  "timeline": {
+    "empty": "No activity in this matter yet.",
+    "internal": "Internal",
+    "you": "You"
+  },
+  "documents": {
+    "empty": "No documents have been uploaded yet.",
+    "uploaded": "Uploaded",
+    "by": "by",
+    "download": "Download"
+  },
+  "notes": {
+    "empty": "No notes yet.",
+    "placeholder": "Write a note…",
+    "internal": "Internal note",
+    "internalHint": "Only visible to lawyers",
+    "add": "Add note",
+    "adding": "Adding…"
+  },
+  "chat": {
+    "title": "Original conversation",
+    "openFull": "Open full chat",
+    "usedInSummary": "Used in summary",
+    "loading": "Loading conversation…",
+    "empty": "The original conversation is unavailable.",
+    "close": "Close"
+  },
+  "lawyers": {
+    "title": "Lawyers",
+    "empty": "No lawyers assigned yet",
+    "invite": "Invite Lawyer",
+    "cancel": "Cancel",
+    "inviting": "Inviting...",
+    "years": "yrs",
+    "dialogTitle": "Invite a Lawyer",
+    "dialogDescription": "Search for an approved lawyer to work on this matter.",
+    "searchPlaceholder": "Search by specialization or location...",
+    "noResults": "No lawyers found. Try a different search.",
+    "alreadyAssigned": "Already assigned",
+    "selectLawyer": "Select a lawyer",
+    "role": "Role",
+    "notes": "Notes",
+    "notesPlaceholder": "Optional note about the assignment...",
+    "invitedAt": "Invited",
+    "inviteSuccess": "Lawyer invited to the matter!",
+    "inviteError": "Failed to invite lawyer. Please try again.",
+    "roles": {
+      "primary": "Primary",
+      "consulting": "Consulting",
+      "referred": "Referred"
+    },
+    "statuses": {
+      "invited": "Invited",
+      "active": "Active",
+      "accepted": "Accepted",
+      "declined": "Declined",
+      "other": "Other"
+    }
+  },
   "actions": {
     "viewDetails": "View Details"
+  },
+  "invite": {
+    "myStatus": "Your invite status",
+    "accept": "Accept",
+    "decline": "Decline",
+    "accepting": "Accepting...",
+    "declining": "Declining...",
+    "acceptSuccess": "You accepted the invitation!",
+    "declineSuccess": "You declined the invitation.",
+    "actionError": "Failed to update invitation. Please try again."
+  },
+  "open": {
+    "dialog": {
+      "title": "Open as Matter",
+      "subtitle": "We'll create a structured record from this conversation.",
+      "titleLabel": "Matter title",
+      "titlePlaceholder": "Name this matter...",
+      "summaryLabel": "AI Summary preview",
+      "summaryHint": "This summary will be saved",
+      "summaryEmpty": "We'll generate a clear summary once this matter is opened.",
+      "jurisdiction": "Jurisdiction",
+      "jurisdictionPlaceholder": "e.g. Egypt",
+      "practiceArea": "Practice area",
+      "practiceAreaPlaceholder": "Select a practice area",
+      "requestLawyer": "Also request a lawyer recommendation",
+      "open": "Open Matter",
+      "opening": "Opening Matter…",
+      "titleRequired": "Please give this matter a title"
+    },
+    "preparing": {
+      "title": "Matter is being prepared",
+      "description": "We're generating a clear summary and organizing the details. This usually takes a few seconds.",
+      "viewDisabled": "View Matter",
+      "close": "You can close this"
+    },
+    "ready": {
+      "title": "Your Matter is ready",
+      "description": "We've organized your conversation into a Matter.",
+      "goToMatter": "Go to Matter",
+      "close": "You can close this"
+    },
+    "error": {
+      "title": "We couldn't open the Matter right now.",
+      "description": "Please try again.",
+      "retry": "Retry",
+      "close": "Close"
+    }
   }
 }

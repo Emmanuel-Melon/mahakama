@@ -26,6 +26,7 @@ import {
   matterDocumentsTable,
   matterStatusHistoryTable,
   matterEventsTable,
+  matterActivitiesTable,
 } from "@/feature/matter/matter.schema";
 
 // Users Relations
@@ -162,6 +163,7 @@ export const mattersRelations = relations(mattersTable, ({ many }) => ({
   documents: many(matterDocumentsTable),
   statusHistory: many(matterStatusHistoryTable),
   events: many(matterEventsTable),
+  activities: many(matterActivitiesTable),
 }));
 
 export const matterLawyersRelations = relations(
@@ -211,6 +213,16 @@ export const matterEventsRelations = relations(
   }),
 );
 
+export const matterActivitiesRelations = relations(
+  matterActivitiesTable,
+  ({ one }) => ({
+    matter: one(mattersTable, {
+      fields: [matterActivitiesTable.matterId],
+      references: [mattersTable.id],
+    }),
+  }),
+);
+
 // Combined Relations Export
 export const allRelations = {
   usersRelations,
@@ -232,4 +244,5 @@ export const allRelations = {
   matterDocumentsRelations,
   matterStatusHistoryRelations,
   matterEventsRelations,
+  matterActivitiesRelations,
 };

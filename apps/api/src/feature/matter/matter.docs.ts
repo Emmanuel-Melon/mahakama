@@ -20,6 +20,9 @@ import {
   matterLawyerInsertSchema,
   matterLawyerSelectSchema,
   matterLawyerUpdateSchema,
+  matterDocumentInsertSchema,
+  matterDocumentSelectSchema,
+  matterDocumentUpdateSchema,
 } from "./matter.types";
 
 export const matterRegistry = new OpenAPIRegistry();
@@ -61,6 +64,19 @@ export const MatterLawyerApiSchemas = registerJsonApiSchemas({
   resourceType: "matter-lawyer",
   pascalName: "MatterLawyer",
   schemas: matterLawyerApiResource,
+});
+
+const matterDocumentApiResource = defineApiResource({
+  select: matterDocumentSelectSchema,
+  insert: matterDocumentInsertSchema,
+  update: matterDocumentUpdateSchema,
+});
+
+export const MatterDocumentApiSchemas = registerJsonApiSchemas({
+  registry: matterRegistry,
+  resourceType: "matter-document",
+  pascalName: "MatterDocument",
+  schemas: matterDocumentApiResource,
 });
 
 const matterPaths: PathDefinition[] = [
@@ -130,6 +146,29 @@ const matterPaths: PathDefinition[] = [
     errorCodes: [400, 401, 404],
   },
   {
+    handlerName: "getMatterNotesController",
+    method: "get",
+    path: `${matterApi.path}/{matterId}/notes`,
+    summary: "Get matter notes",
+    description:
+      "List notes for a matter. Internal notes are only returned to lawyers.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MatterNoteApiSchemas.colResSchema,
+    errorCodes: [401, 403, 404],
+  },
+  {
+    handlerName: "getMatterDocumentsController",
+    method: "get",
+    path: `${matterApi.path}/{matterId}/documents`,
+    summary: "Get matter documents",
+    description: "List the documents attached to a specific matter.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MatterDocumentApiSchemas.colResSchema,
+    errorCodes: [401, 403, 404],
+  },
+  {
     handlerName: "updateMatterController",
     method: "patch",
     path: `${matterApi.path}/{matterId}`,
@@ -140,6 +179,17 @@ const matterPaths: PathDefinition[] = [
     successStatus: HttpStatus.SUCCESS,
     successSchema: MatterApiSchemas.singleResSchema,
     errorCodes: [400, 401, 404],
+  },
+  {
+    handlerName: "getMatterLawyersController",
+    method: "get",
+    path: `${matterApi.path}/{matterId}/lawyers`,
+    summary: "Get matter lawyers",
+    description: "List the lawyers assigned or invited to a specific matter.",
+    security: [{ bearerAuth: [] }],
+    successStatus: HttpStatus.SUCCESS,
+    successSchema: MatterLawyerApiSchemas.colResSchema,
+    errorCodes: [401, 403, 404],
   },
   {
     handlerName: "createMatterLawyerController",
@@ -179,3 +229,5 @@ matterRegistry.register("NewMatter", matterInsertSchema);
 matterRegistry.register("UpdateMatter", matterUpdateSchema);
 matterRegistry.register("MatterNote", matterNoteSelectSchema);
 matterRegistry.register("NewMatterNote", matterNoteInsertSchema);
+matterRegistry.register("MatterDocument", matterDocumentSelectSchema);
+matterRegistry.register("NewMatterDocument", matterDocumentInsertSchema);

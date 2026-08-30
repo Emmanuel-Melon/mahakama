@@ -1,9 +1,6 @@
 import type { Route } from "./+types/$matterId";
 import { MatterDetailScreen } from "~/feature/matters/screens/MatterDetailScreen";
-import {
-  useMatter,
-  useMatterTimeline,
-} from "@mah/api/src/hooks/use-matters";
+import { useMatter } from "@mah/api/src/hooks/use-matters";
 import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/lib/errors/errors.registry";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
@@ -31,17 +28,17 @@ export default function MatterDetailsRoute({
 }: Route.ComponentProps) {
   const { user } = loaderData;
   const { matterId } = params;
+  const isLawyer = user?.role === "lawyer";
 
   const { data, isLoading, error } = useMatter(matterId || "");
-  const { data: timeline, isLoading: timelineLoading } =
-    useMatterTimeline(matterId || "");
 
   return (
     <MatterDetailScreen
       matter={data?.data}
-      timeline={timeline}
-      isLoading={isLoading || timelineLoading}
+      isLoading={isLoading}
       error={error}
+      role={isLawyer ? "lawyer" : "user"}
+      currentUserId={user?.id}
     />
   );
 }
