@@ -24,7 +24,7 @@ export function AppShell({
   sidebarFooter,
 }: AppShellProps) {
   return (
-    <main className="h-svh overflow-hidden">
+    <main>
       <SidebarProvider className="h-full">
         <AppSidebar
           navLinks={navLinks}
@@ -34,7 +34,7 @@ export function AppShell({
         />
         <SidebarInset>
           <SiteHeader title={pageTitle} rightContent={headerRightContent} />
-          <div className="p-8">{children}</div>
+          <div className="p-8 h-full">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </main>

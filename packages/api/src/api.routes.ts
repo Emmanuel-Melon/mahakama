@@ -15,6 +15,10 @@ export const CORPUS_API_ROUTES = {
   INGEST: "/v1/corpus/ingest",
 } as const;
 
+export const CLIENTS_API_ROUTES = {
+  ROOT: "/v1/clients",
+} as const;
+
 export const LAWYERS_API_ROUTES = {
   ROOT: "/v1/lawyers",
   DIRECTORY: "/v1/lawyers/directory",

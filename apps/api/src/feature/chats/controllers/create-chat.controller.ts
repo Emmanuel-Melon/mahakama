@@ -29,6 +29,8 @@ export const createChatController = asyncHandler(
       new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to create chat"),
     );
 
+    logger.info({ chat }, "My chat");
+
     const userMessage = unwrap(
       await sendMessage({
         chatId: chat.id,

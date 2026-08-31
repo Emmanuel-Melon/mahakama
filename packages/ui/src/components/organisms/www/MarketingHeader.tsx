@@ -1,8 +1,13 @@
-import { Scale, Users, Menu, X, Library, LogIn } from "lucide-react";
+import { Scale, Users, Menu, X, Library, LogIn, LayoutDashboard } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "@mah/ui/components/IconContainer";
 import { LanguageSwitcher } from "@mah/ui/components/molecules/LanguageSwitcher";
+
+interface MarketingHeaderProps {
+  user?: { name?: string | null } | null;
+}
+
 const links = [
   {
     id: 1,
@@ -24,7 +29,7 @@ const links = [
   },
 ];
 
-export function MarketingHeader() {
+export function MarketingHeader({ user }: MarketingHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -132,23 +137,43 @@ export function MarketingHeader() {
                 })}
               </nav>
               <LanguageSwitcher />
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${
-                    isActive
-                      ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                      : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
-                  }`
-                }
-                style={({ isActive }) => ({
-                  boxShadow: isActive ? "2px 2px 0 0 #000" : "2px 2px 0 0 #000",
-                  borderRadius: "4px 8px 4px 8px",
-                })}
-              >
-                <LogIn className="h-4 w-4 mr-1" />
-                <span className="hidden lg:inline">Log in</span>
-              </NavLink>
+              {user ? (
+                <NavLink
+                  to="/app"
+                  className={({ isActive }) =>
+                    `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${
+                      isActive
+                        ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                        : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                    }`
+                  }
+                  style={() => ({
+                    boxShadow: "2px 2px 0 0 #000",
+                    borderRadius: "4px 8px 4px 8px",
+                  })}
+                >
+                  <LayoutDashboard className="h-4 w-4 mr-1" />
+                  <span className="hidden lg:inline">Dashboard</span>
+                </NavLink>
+              ) : (
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `inline-flex items-center justify-center px-3 py-1.5 text-sm font-bold transition-colors ${
+                      isActive
+                        ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                        : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                    }`
+                  }
+                  style={() => ({
+                    boxShadow: "2px 2px 0 0 #000",
+                    borderRadius: "4px 8px 4px 8px",
+                  })}
+                >
+                  <LogIn className="h-4 w-4 mr-1" />
+                  <span className="hidden lg:inline">Log in</span>
+                </NavLink>
+              )}
             </div>
 
             <button
@@ -221,26 +246,49 @@ export function MarketingHeader() {
 
                   <LanguageSwitcher />
 
-                  <NavLink
-                    to="/login"
-                    className={({ isActive }) =>
-                      `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
-                        isActive
-                          ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
-                          : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
-                      }`
-                    }
-                    style={({ isActive }) => ({
-                      boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
-                      borderRadius: isActive ? "4px 8px 4px 8px" : "0",
-                    })}
-                    onClick={closeMenu}
-                  >
-                    <div className="flex items-center gap-3">
-                      <LogIn className="h-5 w-5 flex-shrink-0" />
-                      Log in
-                    </div>
-                  </NavLink>
+                  {user ? (
+                    <NavLink
+                      to="/app"
+                      className={({ isActive }) =>
+                        `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
+                          isActive
+                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                            : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                        }`
+                      }
+                      style={({ isActive }) => ({
+                        boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                        borderRadius: isActive ? "4px 8px 4px 8px" : "0",
+                      })}
+                      onClick={closeMenu}
+                    >
+                      <div className="flex items-center gap-3">
+                        <LayoutDashboard className="h-5 w-5 flex-shrink-0" />
+                        Dashboard
+                      </div>
+                    </NavLink>
+                  ) : (
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) =>
+                        `flex items-center justify-between px-4 py-2.5 my-1 text-sm font-bold transition-colors ${
+                          isActive
+                            ? "bg-yellow-400 hover:bg-yellow-500 text-gray-900 border-2 border-gray-900"
+                            : "text-gray-700 hover:bg-yellow-50 hover:border-2 hover:border-gray-900"
+                        }`
+                      }
+                      style={({ isActive }) => ({
+                        boxShadow: isActive ? "2px 2px 0 0 #000" : "none",
+                        borderRadius: isActive ? "4px 8px 4px 8px" : "0",
+                      })}
+                      onClick={closeMenu}
+                    >
+                      <div className="flex items-center gap-3">
+                        <LogIn className="h-5 w-5 flex-shrink-0" />
+                        Log in
+                      </div>
+                    </NavLink>
+                  )}
                 </div>
               </nav>
             </div>

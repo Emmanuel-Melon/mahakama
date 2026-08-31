@@ -1,10 +1,12 @@
 import { ArrowRight } from "lucide-react";
 
 const suggestedQuestions = [
-  "What are my rights as a tenant in a rental dispute?",
-  "How do I file for divorce and what documents do I need?",
-  "What are the penalties for traffic violations?",
-  "How can I protect my business intellectual property?",
+  "What is the exact penalty under Section 9 of the Landlord and Tenant Act for a landlord who unlawfully evicts a tenant without a court order?",
+  "According to the Landlord and Tenant Act, what is the maximum notice period a landlord must give to terminate a monthly tenancy?",
+  "Under what specific circumstances does the Landlord and Tenant Act permit a tenant to withhold rent for unpaid utility bills?",
+  "What are the precise statutory requirements for a landlord seeking to increase rent under a fixed-term tenancy agreement?",
+  "According to the Landlord and Tenant Act, what steps must a landlord take to dispose of property left behind by a tenant after eviction?",
+  "What specific remedies does the Landlord and Tenant Act provide to a tenant subjected to unlawful distress for rent?",
 ];
 
 interface SuggestedQuestionsProps {

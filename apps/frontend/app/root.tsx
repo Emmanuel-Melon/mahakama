@@ -208,7 +208,7 @@ function AuthenticatedApp({
   }
 
   return (
-    <WebsiteLayout>
+    <WebsiteLayout user={user}>
       <Outlet />
     </WebsiteLayout>
   );

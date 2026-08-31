@@ -6,6 +6,7 @@ import { initReactI18next } from "react-i18next";
 import { appI18n } from "~/feature/app/AppConfig";
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { chatsI18n } from "~/feature/chats/ChatsConfig";
+import { clientsI18n } from "~/feature/clients/ClientsConfig";
 import { corpusI18n } from "~/feature/corpus/CorpusConfig";
 import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
 import { mattersI18n } from "~/feature/matters/MattersConfig";
@@ -20,6 +21,7 @@ const i18nConfigs = [
   appI18n,
   authI18n,
   chatsI18n,
+  clientsI18n,
   corpusI18n,
   lawyersI18n,
   mattersI18n,

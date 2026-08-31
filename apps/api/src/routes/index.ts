@@ -11,6 +11,7 @@ import { messagesApi } from "@/feature/messages/messages.routes";
 import { notificationsApi } from "@/feature/notifications/notifications.routes";
 import { servicesApi } from "@/feature/services/services.routes";
 import { usersApi } from "@/feature/users/users.routes";
+import { clientsApi } from "@/feature/clients/clients.routes";
 import { useApiRouters } from "@/routes/api.rules";
 
 export const mahakamaRouter = Router();
@@ -18,6 +19,7 @@ export const mahakamaRouter = Router();
 useApiRouters(mahakamaRouter, [
   authApi,
   chatsApi,
+  clientsApi,
   consultationsApi,
   corpusApi,
   documentsApi,
