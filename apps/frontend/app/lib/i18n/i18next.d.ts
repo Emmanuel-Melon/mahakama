@@ -1,6 +1,7 @@
 import { appI18n } from "~/feature/app/AppConfig";
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { chatsI18n } from "~/feature/chats/ChatsConfig";
+import { clientsI18n } from "~/feature/clients/ClientsConfig";
 import { corpusI18n } from "~/feature/corpus/CorpusConfig";
 import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
 import { mattersI18n } from "~/feature/matters/MattersConfig";
@@ -17,6 +18,7 @@ declare module "i18next" {
       app: typeof appI18n.resources.en;
       auth: typeof authI18n.resources.en;
       chats: typeof chatsI18n.resources.en;
+      clients: typeof clientsI18n.resources.en;
       documents: typeof corpusI18n.resources.en;
       lawyers: typeof lawyersI18n.resources.en;
       matters: typeof mattersI18n.resources.en;

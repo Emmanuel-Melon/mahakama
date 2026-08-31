@@ -58,7 +58,7 @@ export const LAWYER_NAV_LINKS: NavLinkItem[] = [
   {
     id: "nav-clients",
     title: "nav.clients",
-    url: "/lawyer/clients",
+    url: "/clients",
     icon: Briefcase,
   },
   {

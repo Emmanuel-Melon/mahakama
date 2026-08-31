@@ -7,6 +7,7 @@ import {
 import { websiteRoutes } from "./feature/www/WebsiteConfig";
 import { authRoutes } from "./feature/auth/AuthConfig";
 import { chatsRoutes, messagesRoutes } from "./feature/chats/ChatsConfig";
+import { clientsRoutes } from "./feature/clients/ClientsConfig";
 import { corpusRoutes } from "./feature/corpus/CorpusConfig";
 import { consultationsRoutes } from "./feature/consultations/ConsultationsConfig";
 import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
@@ -24,6 +25,7 @@ export default [
   ...toRouteConfig(notificationsRoutes),
   ...toRouteConfig(authRoutes),
   ...toRouteConfig(chatsRoutes),
+  ...toRouteConfig(clientsRoutes),
   ...toRouteConfig(corpusRoutes),
   ...toRouteConfig(consultationsRoutes),
   ...toRouteConfig(lawyersRoutes),

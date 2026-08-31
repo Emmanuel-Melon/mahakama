@@ -1,0 +1,15 @@
+{
+  "title": "Clients",
+  "empty": {
+    "title": "No clients yet",
+    "description": "Users who have matters with you will show up here."
+  },
+  "loading": "Loading clients",
+  "loadingDescription": "Please wait while we fetch your clients...",
+  "fields": {
+    "name": "Name",
+    "email": "Email",
+    "location": "Location",
+    "joined": "Joined"
+  }
+}

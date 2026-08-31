@@ -18,6 +18,7 @@ import { chatsRegistry } from "@/feature/chats/chats.docs";
 import { servicesRegistry } from "@/feature/services/services.docs";
 import { consultationsRegistry } from "@/feature/consultations/consultations.docs";
 import { matterRegistry } from "@/feature/matter/matter.docs";
+import { clientsRegistry } from "@/feature/clients/clients.docs";
 
 extendZodWithOpenApi(z);
 
@@ -33,6 +34,7 @@ securityRegistry.registerComponent("securitySchemes", "bearerAuth", {
 const registries = [
   authRegistry,
   chatsRegistry,
+  clientsRegistry,
   consultationsRegistry,
   corpusRegistry,
   expressRegistry,

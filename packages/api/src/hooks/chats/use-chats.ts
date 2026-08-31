@@ -105,8 +105,12 @@ export const useChatMutations = () => {
     },
     messages: {
       success: "Chat created successfully!",
-      error: (err) =>
-        err.errors?.[0]?.detail ?? "Failed to create chat. Please try again.",
+      error: (err) => {
+        console.log(err);
+        return (
+          err.errors?.[0]?.detail ?? "Failed to create chat. Please try again."
+        );
+      },
     },
     invalidates: [chatsKeys.chats()],
   });
