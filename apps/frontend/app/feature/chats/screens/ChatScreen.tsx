@@ -26,6 +26,7 @@ import {
   isReplyAwaiting,
   useChatMutations,
 } from "@mah/api/src/hooks/chats/use-chats";
+import { useSendMessageStream } from "@mah/api/src/hooks/chats/use-chats.sse";
 import { useOpenMatter } from "@mah/api/src/hooks/use-matters";
 import { useDocumentStatus } from "@mah/api/src/hooks/documents/use-documents";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,12 +58,17 @@ export const ChatScreen = ({
   const navigate = useNavigate();
   const { t } = useTranslation("chats");
 
-  // Using the grouped mutations hook
+  // Using the grouped mutations hook (non-streaming ops only)
   const {
-    sendMessage: sendMessageMutation,
     deleteChat: deleteChatMutation,
     retryMessage: retryMessageMutation,
   } = useChatMutations();
+
+  const {
+    mutate: sendMessageStream,
+    streamState: sendStreamState,
+    reset: resetSendStream,
+  } = useSendMessageStream();
 
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [preparingMatterId, setPreparingMatterId] = useState<string | null>(
@@ -212,16 +218,19 @@ export const ChatScreen = ({
       userId: chat.userId,
     };
 
-    sendMessageMutation.mutate(payload, {
-      onSuccess: () => {
-        reset();
-      },
-    });
+    sendMessageStream(payload);
   };
+
+  useEffect(() => {
+    if (sendStreamState.status === "completed") {
+      reset();
+      resetSendStream();
+    }
+  }, [sendStreamState.status, reset, resetSendStream]);
 
   const lastMessage = messages?.[messages.length - 1];
   const isReplyPending = lastMessage ? isReplyAwaiting(lastMessage) : false;
-  const showTyping = sendMessageMutation.isPending || isReplyPending;
+  const showTyping = sendStreamState.status === "streaming" || isReplyPending;
 
   // Citation focus state for sidebar highlighting
   const [focusedCitation, setFocusedCitation] = useState<number | null>(null);
@@ -312,8 +321,8 @@ export const ChatScreen = ({
                 onSubmit={() => handleSubmit(onSubmit)()}
                 sessionId={chat.id}
                 placeholder="Ask a legal question or paste a clause to analyze..."
-                isLoading={isSubmitting || sendMessageMutation.isPending}
-                disabled={isSubmitting || sendMessageMutation.isPending}
+                isLoading={isSubmitting || sendStreamState.status === "streaming"}
+                disabled={isSubmitting || sendStreamState.status === "streaming"}
               />
               {errors.content && (
                 <p className="text-red-500 text-sm mt-2">

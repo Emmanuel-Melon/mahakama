@@ -1,5 +1,6 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useChatMutations } from "@mah/api/src/hooks/chats/use-chats";
+import { useCreateChatStream } from "@mah/api/src/hooks/chats/use-chats.sse";
 import type { CreateChatRequest } from "@mah/api/src/clients/chat.api";
 import { ChatForm, SuggestedQuestions } from "../components";
 import { IconContainer } from "@mah/ui/components/IconContainer";
@@ -7,19 +8,18 @@ import { Scale } from "lucide-react";
 
 export const NewChatScreen = () => {
   const navigate = useNavigate();
+  const { mutate, streamState } = useCreateChatStream();
 
-  // Destructure createChat from the grouped mutations hook
-  const { createChat: createChatMutation } = useChatMutations();
+  const isSubmitting = streamState.status === "streaming";
+
+  useEffect(() => {
+    if (streamState.chatId) {
+      navigate(`/chats/${streamState.chatId}`);
+    }
+  }, [streamState.chatId, navigate]);
 
   const handleFormSubmit = (data: CreateChatRequest) => {
-    createChatMutation.mutate(data, {
-      onSuccess: (newChat) => {
-        navigate(`/chats/${newChat.id}`);
-      },
-      onError: () => {
-        // Error is handled by the hook's default message configuration
-      },
-    });
+    mutate(data);
   };
 
   const handleSuggestedQuestion = (question: string) => {
@@ -38,10 +38,13 @@ export const NewChatScreen = () => {
           </h1>
           <ChatForm
             onSubmit={handleFormSubmit}
-            isSubmitting={createChatMutation.isPending}
-            disabled={createChatMutation.isPending}
+            isSubmitting={isSubmitting}
+            disabled={isSubmitting}
           />
-          <SuggestedQuestions onQuestionClick={handleSuggestedQuestion} />
+          <SuggestedQuestions
+            onQuestionClick={handleSuggestedQuestion}
+            disabled={isSubmitting}
+          />
         </div>
       </div>
     </div>

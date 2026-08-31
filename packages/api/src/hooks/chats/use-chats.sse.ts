@@ -10,6 +10,7 @@ import { chatsKeys } from "./use-chats";
 
 export interface ChatStreamState {
   status: "idle" | "streaming" | "completed" | "error";
+  chatId: string | null;
   userMessage: ChatMessage | null;
   assistantContent: string;
   assistantMessageId: string | null;
@@ -22,6 +23,7 @@ export function useSendMessageStream() {
   const abortRef = useRef<AbortController | null>(null);
   const [streamState, setStreamState] = useState<ChatStreamState>({
     status: "idle",
+    chatId: null,
     userMessage: null,
     assistantContent: "",
     assistantMessageId: null,
@@ -37,6 +39,7 @@ export function useSendMessageStream() {
 
       setStreamState({
         status: "streaming",
+        chatId: payload.chatId,
         userMessage: null,
         assistantContent: "",
         assistantMessageId: null,
@@ -109,6 +112,7 @@ export function useSendMessageStream() {
     abortRef.current?.abort();
     setStreamState({
       status: "idle",
+      chatId: null,
       userMessage: null,
       assistantContent: "",
       assistantMessageId: null,
@@ -125,6 +129,7 @@ export function useCreateChatStream() {
   const abortRef = useRef<AbortController | null>(null);
   const [streamState, setStreamState] = useState<ChatStreamState>({
     status: "idle",
+    chatId: null,
     userMessage: null,
     assistantContent: "",
     assistantMessageId: null,
@@ -140,6 +145,7 @@ export function useCreateChatStream() {
 
       setStreamState({
         status: "streaming",
+        chatId: null,
         userMessage: null,
         assistantContent: "",
         assistantMessageId: null,
@@ -155,6 +161,7 @@ export function useCreateChatStream() {
               case "chat_created":
                 setStreamState((prev) => ({
                   ...prev,
+                  chatId: event.data.chat.id,
                   userMessage: event.data.userMessage,
                 }));
                 break;
@@ -209,6 +216,7 @@ export function useCreateChatStream() {
     abortRef.current?.abort();
     setStreamState({
       status: "idle",
+      chatId: null,
       userMessage: null,
       assistantContent: "",
       assistantMessageId: null,
