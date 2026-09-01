@@ -1,10 +1,5 @@
 import { logger } from "@/lib/logger";
-import { InferenceJobs } from "../inference.config";
-import {
-  TextGenerationPayload,
-  DocumentAnalysisPayload,
-  EmbeddingGenerationPayload,
-} from "../inference.types";
+import type { TextGenerationPayload } from "../inference.types";
 
 export class InferenceJobHandler {
   static async handleTextGeneration(data: TextGenerationPayload) {
@@ -26,56 +21,6 @@ export class InferenceJobHandler {
       sessionId,
       model: model || "default",
       response: "Generated text placeholder",
-    };
-  }
-
-  static async handleDocumentAnalysis(data: DocumentAnalysisPayload) {
-    const { documentId, userId, analysisType, options } = data;
-
-    logger.info(
-      { userId, documentId, analysisType },
-      "Processing document analysis job",
-    );
-
-    // TODO: Add document analysis logic here
-    // - Retrieve document content
-    // - Prepare analysis prompt based on type
-    // - Process through appropriate LLM
-    // - Extract insights/summaries
-    // - Store analysis results
-    // - Update document metadata
-
-    return {
-      success: true,
-      userId,
-      documentId,
-      analysisType,
-      result: `${analysisType} analysis placeholder`,
-    };
-  }
-
-  static async handleEmbeddingGeneration(data: EmbeddingGenerationPayload) {
-    const { documentId, userId, chunkSize, overlapSize } = data;
-
-    logger.info(
-      { userId, documentId, chunkSize },
-      "Processing embedding generation job",
-    );
-
-    // TODO: Add embedding generation logic here
-    // - Retrieve document content
-    // - Split into chunks
-    // - Generate embeddings for each chunk
-    // - Store in vector database
-    // - Update document embedding status
-    // - Log processing metrics
-
-    return {
-      success: true,
-      userId,
-      documentId,
-      chunkSize: chunkSize || 1000,
-      embeddingsGenerated: 0,
     };
   }
 }

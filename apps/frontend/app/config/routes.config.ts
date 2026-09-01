@@ -15,6 +15,7 @@ export const AUTH_ROUTES = [
   "/chat",
   "/consultations",
   "/matters",
+  "/notifications",
   "/legal-hub",
   "/users",
 ] as const;

@@ -8,6 +8,7 @@ import {
   Briefcase,
   ClipboardList,
   FolderOpen,
+  Bell,
 } from "lucide-react";
 
 export const BASE_NAV_LINKS: NavLinkItem[] = [
@@ -22,6 +23,12 @@ export const BASE_NAV_LINKS: NavLinkItem[] = [
     title: "nav.matters",
     url: "/matters",
     icon: FolderOpen,
+  },
+  {
+    id: "nav-notifications",
+    title: "nav.notifications",
+    url: "/notifications",
+    icon: Bell,
   },
 ];
 

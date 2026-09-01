@@ -59,10 +59,8 @@ export const ChatScreen = ({
   const { t } = useTranslation("chats");
 
   // Using the grouped mutations hook (non-streaming ops only)
-  const {
-    deleteChat: deleteChatMutation,
-    retryMessage: retryMessageMutation,
-  } = useChatMutations();
+  const { deleteChat: deleteChatMutation, retryMessage: retryMessageMutation } =
+    useChatMutations();
 
   const {
     mutate: sendMessageStream,
@@ -321,8 +319,12 @@ export const ChatScreen = ({
                 onSubmit={() => handleSubmit(onSubmit)()}
                 sessionId={chat.id}
                 placeholder="Ask a legal question or paste a clause to analyze..."
-                isLoading={isSubmitting || sendStreamState.status === "streaming"}
-                disabled={isSubmitting || sendStreamState.status === "streaming"}
+                isLoading={
+                  isSubmitting || sendStreamState.status === "streaming"
+                }
+                disabled={
+                  isSubmitting || sendStreamState.status === "streaming"
+                }
               />
               {errors.content && (
                 <p className="text-red-500 text-sm mt-2">

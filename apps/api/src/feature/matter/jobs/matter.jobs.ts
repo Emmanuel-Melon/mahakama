@@ -34,18 +34,15 @@ import { MattersJobs } from "../matter.config";
 import {
   buildMatterFromChatPrompt,
   buildMatterSummaryPrompt,
-  buildMatterDocumentAnalysisPrompt,
   matterExtractionSchema,
   matterSummarySchema,
-  matterDocumentAnalysisSchema,
   MATTER_PROMPT_CONFIG,
   type MatterConversationTurn,
   type MatterExtraction,
   type MatterSummary,
-  type MatterDocumentAnalysis,
 } from "./matter.prompt";
-import { parsePdfFromPath } from "@/lib/pdf-parse";
 import { getStoragePath } from "@/lib/storage/storage";
+import { documentAnalysisService } from "@/service/analysis";
 
 export class MattersJobHandler {
   private static async loadConversationTranscript(
@@ -414,27 +411,13 @@ export class MattersJobHandler {
       );
     }
 
-    const parsed = await parsePdfFromPath(getStoragePath(document.fileUrl));
-    const text = parsed.text ?? "";
+    const result = await documentAnalysisService.process({
+      filePath: getStoragePath(document.fileUrl),
+      fileName: document.fileName,
+      analysisType: "full",
+    });
 
-    if (!text || text.trim().length === 0) {
-      throw new HttpError(
-        HttpStatus.BAD_REQUEST,
-        "PDF contains no extractable text",
-      );
-    }
-
-    const prompt = buildMatterDocumentAnalysisPrompt(document.fileName, text);
-    const client = llmProviderManager.getClient();
-    const result = await client.generateTextContent<MatterDocumentAnalysis>(
-      prompt,
-      {
-        outputType: "structured",
-        responseJsonSchema: matterDocumentAnalysisSchema,
-      },
-    );
-
-    const analysis = result.content;
+    const analysis = result.analysis;
 
     unwrap(
       await updateMatterDocument("id", document.id, {

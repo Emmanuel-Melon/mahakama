@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { Notification } from "@mah/api/clients/notifications.api";
+import type { Notification } from "@mah/api/src/clients/notifications.api";
 
 type NotificationItemProps = {
   notification: Notification;
@@ -9,7 +9,11 @@ export const NotificationItem: FC<NotificationItemProps> = ({
   notification,
 }) => {
   const getStatusColor = (status: string) => {
-    switch (status) {
+    // Backend `status` enum values are prefixed (e.g. "notification_opened",
+    // "notification_sent"). Normalize to the bare label for styling.
+    const normalized = status.replace(/^notification_/, "");
+    switch (normalized) {
+      case "opened":
       case "read":
         return "bg-gray-100 text-gray-800";
       case "sent":

@@ -1,5 +1,6 @@
 import { UserCreatedNotificationSchema } from "./users.types";
 import { createNotificationGenerators } from "@/feature/notifications/notifications.factory";
+import { NotificationsDomainRegistry } from "@/feature/notifications/notifications.registry";
 
 export const UserNotificationTemplateMap = {
   USER_CREATED: {
@@ -24,4 +25,9 @@ export const usersNotificationGenerators = createNotificationGenerators(
       registrationMethod: data.registrationMethod || "standard",
     },
   }),
+});
+
+NotificationsDomainRegistry.register({
+  map: UserNotificationTemplateMap,
+  generators: usersNotificationGenerators,
 });

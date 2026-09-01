@@ -9,6 +9,12 @@ import { initMatterWorker } from "@/feature/matter/jobs/matter.worker";
 import { registerLawSourceScheduler } from "@/service/law-sources/jobs/law-sources.scheduler";
 import { initShadowReplayWorker } from "@/service/embedding-service/jobs/embeddings.worker";
 import { registerShadowReplayScheduler } from "@/service/embedding-service/jobs/embeddings.scheduler";
+import {
+  initNotificationsWorker,
+  initEmailWorker,
+  initInAppWorker,
+  initPushWorker,
+} from "@/feature/notifications/jobs/notifications.worker";
 
 export const initAllWorkers = () => {
   logger.info("Initializing background workers...");
@@ -18,6 +24,10 @@ export const initAllWorkers = () => {
   initLawSourcesWorker();
   initMatterWorker();
   initShadowReplayWorker();
+  initNotificationsWorker();
+  initEmailWorker();
+  initInAppWorker();
+  initPushWorker();
   // initLawyersWorker();
   // initMessagesWorker();
   registerLawSourceScheduler().catch((error) => {

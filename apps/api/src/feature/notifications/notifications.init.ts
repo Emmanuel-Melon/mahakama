@@ -2,10 +2,12 @@ import { NotificationsDomainRegistry } from "@/feature/notifications/notificatio
 import { logger } from "@/lib/logger";
 
 import "@/feature/auth/notifications/auth.notifications";
+import "@/feature/consultations/notifications/consultations.notifications";
+import "@/feature/users/users.notifications";
 
 /**
  * Initializes the notification system by registering all notification templates
- * from different domains (auth, decisions, occasions, etc.)
+ * from different domains (auth, consultations, users, etc.)
  */
 export function initNotifications(): void {
   const keys = NotificationsDomainRegistry.registeredKeys();

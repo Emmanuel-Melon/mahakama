@@ -27,9 +27,11 @@ export default function ClientsIndex({ loaderData }: Route.ComponentProps) {
 
   const isLawyer = user?.role === "lawyer";
 
-  const { data: clientsPage, isLoading, error } = useClients(
-    isLawyer && user ? { lawyerUserId: user.id } : undefined,
-  );
+  const {
+    data: clientsPage,
+    isLoading,
+    error,
+  } = useClients(isLawyer && user ? { lawyerUserId: user.id } : undefined);
 
   return (
     <ClientsScreen

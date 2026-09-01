@@ -15,6 +15,16 @@ import type {
   MatterDocumentAnalysis,
 } from "@mah/api/src/clients/matters.api";
 import { DocumentAnalysisSection } from "../components/analysis/DocumentAnalysisSection";
+import { appConfig } from "~/config";
+
+const UPLOADS_PATH = "/uploads/";
+
+function resolveFileUrl(fileUrl: string): string {
+  const apiUrl = appConfig.api.baseURL.replace(/\/+$/, "");
+  const path = fileUrl.slice(fileUrl.indexOf(UPLOADS_PATH));
+  const origin = apiUrl.replace(/\/api\/?$/, "");
+  return `${origin}${path}`;
+}
 
 interface MatterDocumentScreenProps {
   matterId: string;
@@ -101,7 +111,7 @@ export function MatterDocumentScreen({
       }}
     >
       {document && (
-        <div className="w-full max-w-4xl mx-auto px-4 py-6">
+        <div className="w-full px-4 py-6">
           <PageHeader breadcrumbs={breadcrumbs} className="mb-6" />
 
           <div className="space-y-4">
@@ -124,7 +134,7 @@ export function MatterDocumentScreen({
               <div className="flex items-center gap-2">
                 {document.fileUrl && (
                   <a
-                    href={document.fileUrl}
+                    href={resolveFileUrl(document.fileUrl)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -147,11 +157,11 @@ export function MatterDocumentScreen({
             </div>
 
             {document.fileUrl && (
-              <div className="aspect-[4/3] rounded-lg border border-gray-200 bg-white overflow-hidden">
+              <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
                 <embed
-                  src={`${document.fileUrl}#toolbar=0&navpanes=0&scrollbar=1`}
+                  src={`${resolveFileUrl(document.fileUrl)}#toolbar=0&navpanes=0&scrollbar=1`}
                   type="application/pdf"
-                  className="w-full h-full"
+                  className="w-full min-h-[70vh]"
                 />
               </div>
             )}
