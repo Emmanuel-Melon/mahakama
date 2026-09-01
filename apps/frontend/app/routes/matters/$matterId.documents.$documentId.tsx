@@ -34,7 +34,7 @@ export default function MatterDocumentRoute({
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="w-full px-4 py-6">
         <div className="animate-pulse space-y-4">
           <div className="h-8 bg-gray-200 rounded w-1/4" />
           <div className="aspect-[4/3] bg-gray-200 rounded" />
@@ -45,7 +45,7 @@ export default function MatterDocumentRoute({
 
   if (error) {
     return (
-      <div className="w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="w-full px-4 py-6">
         <div className="text-center py-12">
           <h2 className="text-lg font-medium text-gray-900 mb-2">
             Failed to load matter

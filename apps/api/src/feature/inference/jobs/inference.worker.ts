@@ -8,10 +8,6 @@ import { InferenceJobMap } from "../inference.types";
 const inferenceHandlers: JobHandlerMap<InferenceJobMap> = {
   [InferenceJobs.TextGeneration]: (data) =>
     InferenceJobHandler.handleTextGeneration(data),
-  [InferenceJobs.DocumentAnalysis]: (data) =>
-    InferenceJobHandler.handleDocumentAnalysis(data),
-  [InferenceJobs.EmbeddingGeneration]: (data) =>
-    InferenceJobHandler.handleEmbeddingGeneration(data),
 };
 
 export const initInferenceWorker = () =>

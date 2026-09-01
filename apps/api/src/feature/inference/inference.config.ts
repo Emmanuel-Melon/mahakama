@@ -30,8 +30,6 @@ export const SerializedStrategy: JsonApiResourceConfig<
 
 export const InferenceJobs = {
   TextGeneration: "text-generation",
-  DocumentAnalysis: "document-analysis",
-  EmbeddingGeneration: "embedding-generation",
 } as const;
 
 export const LLMProviders = {

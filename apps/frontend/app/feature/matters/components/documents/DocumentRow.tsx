@@ -1,15 +1,36 @@
 import { useTranslation } from "react-i18next";
-import { FileText, Search, CheckCircle2, Clock } from "lucide-react";
+import {
+  FileText,
+  Search,
+  CheckCircle2,
+  Clock,
+  Brain,
+  Loader2,
+} from "lucide-react";
 import { Link } from "react-router";
 import { IconContainer } from "@mah/ui/components/IconContainer";
+import { Button } from "@mah/ui";
 import type { MatterDocument } from "@mah/api/src/clients/matters.api";
 import { MattersPaths } from "../../MattersConfig";
 import { formatDate, formatSize } from "./documents.utils";
+import {
+  useMatterMutations,
+  isDocumentAnalyzed,
+} from "@mah/api/src/hooks/use-matters";
 
 export function DocumentRow({ document }: { document: MatterDocument }) {
   const { t } = useTranslation("matters");
   const size = formatSize(document.fileSize);
-  const isAnalyzed = Boolean(document.analyzedAt);
+  const analyzed = isDocumentAnalyzed(document);
+  const { analyzeDocument } = useMatterMutations();
+
+  const handleAnalyze = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    await analyzeDocument.mutateAsync({
+      matterId: document.matterId,
+      documentId: document.id,
+    });
+  };
 
   return (
     <Link
@@ -31,7 +52,34 @@ export function DocumentRow({ document }: { document: MatterDocument }) {
             {formatDate(document.createdAt)}
           </p>
         </div>
-        <Search className="h-4 w-4 text-gray-400 shrink-0" />
+        <div className="flex items-center gap-2">
+          <Search className="h-4 w-4 text-gray-400 shrink-0" />
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAnalyze}
+            disabled={analyzeDocument.isPending || analyzed}
+            className="gap-2"
+          >
+            {analyzeDocument.isPending ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                {t("documents.analyzing")}
+              </>
+            ) : analyzed ? (
+              <>
+                <Brain className="h-4 w-4" />
+                {t("documents.analyzed")}
+              </>
+            ) : (
+              <>
+                <Brain className="h-4 w-4" />
+                {t("documents.analyze")}
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
       {document.description && (
@@ -42,7 +90,7 @@ export function DocumentRow({ document }: { document: MatterDocument }) {
 
       <div className="flex items-center gap-3 pl-9 pt-1 text-[10px] text-gray-500">
         <span className="flex items-center gap-1 font-medium">
-          {isAnalyzed ? (
+          {analyzed ? (
             <>
               <CheckCircle2 className="h-3 w-3 text-emerald-600" />
               <span className="text-emerald-700">Analyzed</span>

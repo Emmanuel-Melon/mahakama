@@ -10,10 +10,7 @@ interface ClientsScreenProps extends AsyncState {
   clients: Client[];
 }
 
-export const ClientsScreen = ({
-  clients,
-  isLoading,
-}: ClientsScreenProps) => {
+export const ClientsScreen = ({ clients, isLoading }: ClientsScreenProps) => {
   const { t } = useTranslation("clients");
 
   if (isLoading) {

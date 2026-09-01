@@ -1,4 +1,12 @@
-import { Scale, Users, Menu, X, Library, LogIn, LayoutDashboard } from "lucide-react";
+import {
+  Scale,
+  Users,
+  Menu,
+  X,
+  Library,
+  LogIn,
+  LayoutDashboard,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router";
 import { IconContainer } from "@mah/ui/components/IconContainer";

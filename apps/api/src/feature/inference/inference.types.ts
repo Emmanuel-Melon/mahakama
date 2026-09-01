@@ -136,30 +136,8 @@ export const TextGenerationPayloadSchema = z.object({
   maxTokens: z.number().optional(),
 });
 
-export const DocumentAnalysisPayloadSchema = z.object({
-  documentId: z.string(),
-  userId: z.string(),
-  analysisType: z.string(),
-  options: z.record(z.string(), z.unknown()).optional(),
-});
-
-export const EmbeddingGenerationPayloadSchema = z.object({
-  documentId: z.string(),
-  userId: z.string(),
-  chunkSize: z.number().optional(),
-  overlapSize: z.number().optional(),
-});
-
 export type TextGenerationPayload = z.infer<typeof TextGenerationPayloadSchema>;
-export type DocumentAnalysisPayload = z.infer<
-  typeof DocumentAnalysisPayloadSchema
->;
-export type EmbeddingGenerationPayload = z.infer<
-  typeof EmbeddingGenerationPayloadSchema
->;
 
 export interface InferenceJobMap {
   [InferenceJobs.TextGeneration]: TextGenerationPayload;
-  [InferenceJobs.DocumentAnalysis]: DocumentAnalysisPayload;
-  [InferenceJobs.EmbeddingGeneration]: EmbeddingGenerationPayload;
 }
