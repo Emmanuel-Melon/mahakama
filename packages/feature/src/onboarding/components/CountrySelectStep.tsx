@@ -2,11 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Globe } from "lucide-react";
 import { z } from "zod";
-import { StepHeader } from "~/feature/users/components/onboarding/StepHeader";
+import { StepHeader } from "./StepHeader";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Form } from "@mah/ui/components/form";
 import { EacCountrySelect } from "./EacCountrySelect";
-import { useCountry } from "~/context/country-context";
+import { useCountry } from "../onboarding.context";
 import type { RefObject } from "react";
 
 const countrySchema = z.object({

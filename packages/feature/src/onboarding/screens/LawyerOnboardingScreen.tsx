@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Clock } from "lucide-react";
-import { BasicInfoStepView } from "~/feature/users/components/onboarding/BasicInfoStepView";
-import { OnboardingNavigation } from "~/feature/users/components/onboarding/OnboardingNavigation";
+import { BasicInfoStepView } from "../components/BasicInfoStepView";
+import { OnboardingNavigation } from "../components/OnboardingNavigation";
 import { Button } from "@mah/ui/components/Button";
 import type { User } from "@mah/api/src/clients/users.api";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
@@ -18,8 +18,8 @@ import {
   LawyerCredentialsSection,
   type LawyerCredentialsPayload,
 } from "../components/LawyerCredentialsSection";
-import { CountrySelectStep } from "../components/onboarding/CountrySelectStep";
-import { useCountry } from "~/context/country-context";
+import { CountrySelectStep } from "../components/CountrySelectStep";
+import { useCountry } from "../onboarding.context";
 
 type Step = "country" | "basic" | "practice" | "credentials";
 
@@ -35,12 +35,14 @@ interface LawyerOnboardingScreenProps {
   user: User;
   token: string;
   initialProfile: Lawyer | null;
+  dashboardPath?: string;
 }
 
 export function LawyerOnboardingScreen({
   user,
   token,
   initialProfile,
+  dashboardPath = "/app",
 }: LawyerOnboardingScreenProps) {
   const initialStatus = initialProfile?.status ?? "draft";
 
@@ -227,7 +229,7 @@ export function LawyerOnboardingScreen({
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button
-              onClick={() => (window.location.href = "/app")}
+              onClick={() => (window.location.href = dashboardPath)}
               className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold border-2 border-gray-900"
             >
               Go to Dashboard

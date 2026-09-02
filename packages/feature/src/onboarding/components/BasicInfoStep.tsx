@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button } from "@mah/ui/components/Button";
-import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
+import { BasicInfoSection } from "./BasicInfoSection";
 import type { User } from "@mah/api/src/clients/users.api";
 
-interface LawyerBasicInfoStepProps {
+interface BasicInfoStepProps {
   user: User;
   onNext: (data: {
     name: string;
@@ -22,12 +21,12 @@ interface LawyerBasicInfoStepProps {
   formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export function LawyerBasicInfoStep({
+export function BasicInfoStep({
   user,
   onNext,
   initialData,
   formRef,
-}: LawyerBasicInfoStepProps) {
+}: BasicInfoStepProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || user.name || "",
     age: initialData?.age || user.age?.toString() || "",
@@ -43,9 +42,18 @@ export function LawyerBasicInfoStep({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate required fields
     if (!formData.name.trim()) {
       alert("Name is required");
+      return;
+    }
+
+    if (!formData.age.trim() || isNaN(parseInt(formData.age, 10))) {
+      alert("Valid age is required");
+      return;
+    }
+
+    if (!formData.gender) {
+      alert("Gender selection is required");
       return;
     }
 

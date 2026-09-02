@@ -4,7 +4,7 @@ import type { ComponentType } from "react";
 interface StepHeaderProps {
   title: string;
   description: string;
-  icon?: ComponentType<any>; // Using any for flexibility since IconProps is not exported
+  icon?: ComponentType<any>;
 }
 
 export function StepHeader({ title, description, icon }: StepHeaderProps) {

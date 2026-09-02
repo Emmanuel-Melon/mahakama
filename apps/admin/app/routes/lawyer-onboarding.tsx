@@ -10,7 +10,7 @@ import { LawyersApiClient } from "@mah/api/src/clients/lawyers.api";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Lawyer Onboarding - Mahakama" },
+    { title: "Lawyer Onboarding - Mahakama Admin" },
     {
       name: "description",
       content:
@@ -57,6 +57,7 @@ export default function LawyerOnboardingRoute({
       user={user}
       token={token}
       initialProfile={lawyerProfile}
+      dashboardPath="/"
     />
   );
 }

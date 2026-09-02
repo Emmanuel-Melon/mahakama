@@ -1,14 +1,8 @@
 import { Button } from "@mah/ui/components/Button";
 import { ArrowRight } from "lucide-react";
-import type { UserRole } from "./RoleSelector";
+import type { UserRole } from "../onboarding.types";
 
-type Step =
-  | "country"
-  | "basic"
-  | "professional"
-  | "practice"
-  | "credentials"
-  | "enhancements";
+type Step = "country" | "basic" | "practice" | "credentials" | "enhancements";
 
 interface OnboardingNavigationProps {
   currentStep: Step;
@@ -51,12 +45,9 @@ export function OnboardingNavigation({
         {showNextButton && (
           <Button
             onClick={() => {
-              console.log("Next button clicked, isLastStep:", isLastStep);
               if (isLastStep && onComplete) {
-                console.log("Calling onComplete");
                 onComplete();
               } else if (onNext) {
-                console.log("Calling onNext");
                 onNext();
               }
             }}

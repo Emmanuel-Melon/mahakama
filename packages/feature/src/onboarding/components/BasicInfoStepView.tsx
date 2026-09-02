@@ -1,9 +1,9 @@
 import { User as UserIcon } from "lucide-react";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { BasicInfoStep } from "~/feature/users/components/BasicInfoStep";
-import { LawyerBasicInfoStep } from "~/feature/users/components/LawyerBasicInfoStep";
+import { BasicInfoStep } from "./BasicInfoStep";
+import { LawyerBasicInfoStep } from "./LawyerBasicInfoStep";
 import type { User } from "@mah/api/src/clients/users.api";
-import type { UserRole } from "~/feature/users/components/onboarding/RoleSelector";
+import type { UserRole } from "../onboarding.types";
 import type { RefObject } from "react";
 import { StepHeader } from "./StepHeader";
 

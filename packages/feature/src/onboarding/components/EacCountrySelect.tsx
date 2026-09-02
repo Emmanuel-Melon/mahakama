@@ -12,8 +12,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@mah/ui/components/Select";
-import { EAC_COUNTRIES } from "../../lawyers.constants";
+} from "@mah/ui/components/select";
+import { EAC_COUNTRIES } from "../onboarding.constants";
 
 const triggerStyling = {
   className: "border-2 border-gray-900",

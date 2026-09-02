@@ -2,7 +2,7 @@ import { Briefcase } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StepHeader } from "~/feature/users/components/onboarding/StepHeader";
+import { StepHeader } from "./StepHeader";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import {
   Form,
@@ -15,9 +15,9 @@ import {
 } from "@mah/ui/components/form";
 import { Input } from "@mah/ui/components/Input";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
-import { SpecializationSelect } from "./onboarding/SpecializationSelect";
-import { JurisdictionSelect } from "./onboarding/JurisdictionSelect";
-import { useCountry } from "~/context/country-context";
+import { SpecializationSelect } from "./SpecializationSelect";
+import { JurisdictionSelect } from "./JurisdictionSelect";
+import { useCountry } from "../onboarding.context";
 
 const practiceSchema = z.object({
   specialization: z.string().min(1, "Specialization is required"),

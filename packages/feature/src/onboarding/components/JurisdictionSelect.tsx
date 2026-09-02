@@ -12,11 +12,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@mah/ui/components/Select";
+} from "@mah/ui/components/select";
 import {
-  ISSUING_AUTHORITIES_BY_COUNTRY,
   isEacCountryCode,
-} from "../../lawyers.constants";
+  JURISDICTIONS_BY_COUNTRY,
+} from "../onboarding.constants";
 
 const triggerStyling = {
   className: "border-2 border-gray-900",
@@ -28,21 +28,20 @@ const triggerStyling = {
 
 const labelStyling = "block text-sm font-bold text-gray-700 mb-1";
 
-interface IssuingAuthoritySelectProps<TFieldValues extends FieldValues> {
+interface JurisdictionSelectProps<TFieldValues extends FieldValues> {
   control: Control<TFieldValues>;
   name: Path<TFieldValues>;
-  /** Currently selected country code (e.g. "UG"), used to filter options. */
   country: string | undefined;
 }
 
-export function IssuingAuthoritySelect<TFieldValues extends FieldValues>({
+export function JurisdictionSelect<TFieldValues extends FieldValues>({
   control,
   name,
   country,
-}: IssuingAuthoritySelectProps<TFieldValues>) {
+}: JurisdictionSelectProps<TFieldValues>) {
   const options =
     country && isEacCountryCode(country)
-      ? ISSUING_AUTHORITIES_BY_COUNTRY[country]
+      ? JURISDICTIONS_BY_COUNTRY[country]
       : [];
 
   return (
@@ -51,7 +50,7 @@ export function IssuingAuthoritySelect<TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className={labelStyling}>Issuing Authority *</FormLabel>
+          <FormLabel className={labelStyling}>Jurisdiction *</FormLabel>
           <Select
             onValueChange={field.onChange}
             value={field.value}
@@ -61,9 +60,7 @@ export function IssuingAuthoritySelect<TFieldValues extends FieldValues>({
               <SelectTrigger {...triggerStyling}>
                 <SelectValue
                   placeholder={
-                    country
-                      ? "Select an issuing authority"
-                      : "Select a country first"
+                    country ? "Select a jurisdiction" : "Select a country first"
                   }
                 />
               </SelectTrigger>

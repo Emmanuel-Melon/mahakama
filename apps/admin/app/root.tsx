@@ -89,11 +89,14 @@ export default function App() {
   const { user } = useLoaderData<typeof loader>();
   const location = useLocation();
   const isAuthPage = isAuthPageRoute(location.pathname);
+  const isOnboardingRoute = location.pathname.startsWith("/onboarding");
 
   return (
     <QueryClientProviderWrapper>
       <UserProvider user={user}>
-        {isAuthPage ? (
+        {isOnboardingRoute ? (
+          <Outlet />
+        ) : isAuthPage ? (
           <AuthLayout>
             <Outlet />
           </AuthLayout>
