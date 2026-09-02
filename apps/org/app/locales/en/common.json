@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "group": "Organization",
+    "home": "Home",
+    "matters": "Matters",
+    "team": "Team",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "billing": "Billing"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "back": "Back",
+    "confirm": "Confirm",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "tooShort": "This field is too short",
+    "tooLong": "This field is too long"
+  },
+  "feedback": {
+    "loading": "Loading…",
+    "error": "Something went wrong. Please try again.",
+    "success": "Done",
+    "noResults": "No results found"
+  }
+}
