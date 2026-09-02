@@ -1,8 +1,8 @@
 import { Sparkles } from "lucide-react";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
-import { EnhancementsStep } from "~/feature/users/components/EnhancementsStep";
+import { EnhancementsStep } from "./EnhancementsStep";
 import type { User } from "@mah/api/src/clients/users.api";
-import type { UserRole } from "~/feature/users/components/onboarding/RoleSelector";
+import type { UserRole } from "../onboarding.types";
 import type { RefObject } from "react";
 import { StepHeader } from "./StepHeader";
 

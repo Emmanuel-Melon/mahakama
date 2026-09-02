@@ -1,20 +1,23 @@
-import { ProgressIndicator } from "../components/onboarding/ProgressIndicator";
-import { OnboardingNavigation } from "../components/onboarding/OnboardingNavigation";
-import { BasicInfoStepView } from "../components/onboarding/BasicInfoStepView";
-import { ProfessionalInfoStepView } from "../components/onboarding/ProfessionalInfoStepView";
-import { EnhancementsStepView } from "../components/onboarding/EnhancementsStepView";
+import { BasicInfoStepView } from "../components/BasicInfoStepView";
+import { EnhancementsStepView } from "../components/EnhancementsStepView";
+import { OnboardingNavigation } from "../components/OnboardingNavigation";
+import { ProgressIndicator } from "../components/ProgressIndicator";
 import { useReducer, useRef, type FC } from "react";
-import { type User } from "@mah/api/src/clients/users.api";
-import { type UserRole } from "../components/onboarding/RoleSelector";
+import type { User } from "@mah/api/src/clients/users.api";
 import { useUpdateUser } from "@mah/api/src/hooks/use-users";
+import type { UserRole } from "../onboarding.types";
 import { onboardingReducer, initialOnboardingState } from "./onboardingReducer";
 
 interface OnboardingScreenProps {
   user: User;
   token: string;
+  successPath?: string;
 }
 
-export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
+export const OnboardingScreen: FC<OnboardingScreenProps> = ({
+  user,
+  successPath = "/app",
+}) => {
   const role: UserRole = user.role === "lawyer" ? "lawyer" : "user";
   const [state, dispatch] = useReducer(
     onboardingReducer,
@@ -22,16 +25,13 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   );
   const { step, basicInfo, locationInfo } = state;
 
-  // Form refs for better control
   const basicFormRef = useRef<HTMLFormElement>(null);
-  const professionalFormRef = useRef<HTMLFormElement>(null);
   const enhancementsFormRef = useRef<HTMLFormElement>(null);
 
-  // Hook instantiated inside the screen component
   const updateMutation = useUpdateUser({
     onUpdateSuccess: (data) => {
       if (data.data.isOnboarded) {
-        window.location.href = "/app";
+        window.location.href = successPath;
       }
     },
   });
@@ -51,10 +51,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
         locationInfo: { country: data.country || "", city: data.city || "" },
       },
     });
-  };
-
-  const handleLawyerProfessionalNext = (data: any) => {
-    dispatch({ type: "LAWYER_INFO_SUBMITTED", payload: { lawyerInfo: data } });
   };
 
   const handleEnhancementsComplete = (data: {
@@ -87,8 +83,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
   const handleNextStep = () => {
     if (step === "basic" && basicFormRef.current) {
       basicFormRef.current.requestSubmit();
-    } else if (step === "professional" && professionalFormRef.current) {
-      professionalFormRef.current.requestSubmit();
     }
   };
 
@@ -112,14 +106,6 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
           />
         )}
 
-        {step === "professional" && (
-          <ProfessionalInfoStepView
-            user={user}
-            formRef={professionalFormRef}
-            onNext={handleLawyerProfessionalNext}
-          />
-        )}
-
         {step === "enhancements" && (
           <EnhancementsStepView
             user={user}
@@ -134,6 +120,7 @@ export const OnboardingScreen: FC<OnboardingScreenProps> = ({ user }) => {
       <OnboardingNavigation
         currentStep={step}
         role={role}
+        lastStep="enhancements"
         onBack={handleGoBack}
         onNext={step !== "enhancements" ? handleNextStep : undefined}
         onComplete={step === "enhancements" ? handleComplete : undefined}

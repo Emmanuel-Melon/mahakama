@@ -12,11 +12,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@mah/ui/components/Select";
+} from "@mah/ui/components/select";
 import {
+  ISSUING_AUTHORITIES_BY_COUNTRY,
   isEacCountryCode,
-  JURISDICTIONS_BY_COUNTRY,
-} from "../../lawyers.constants";
+} from "../onboarding.constants";
 
 const triggerStyling = {
   className: "border-2 border-gray-900",
@@ -28,21 +28,20 @@ const triggerStyling = {
 
 const labelStyling = "block text-sm font-bold text-gray-700 mb-1";
 
-interface JurisdictionSelectProps<TFieldValues extends FieldValues> {
+interface IssuingAuthoritySelectProps<TFieldValues extends FieldValues> {
   control: Control<TFieldValues>;
   name: Path<TFieldValues>;
-  /** Currently selected country code (e.g. "UG"), used to filter options. */
   country: string | undefined;
 }
 
-export function JurisdictionSelect<TFieldValues extends FieldValues>({
+export function IssuingAuthoritySelect<TFieldValues extends FieldValues>({
   control,
   name,
   country,
-}: JurisdictionSelectProps<TFieldValues>) {
+}: IssuingAuthoritySelectProps<TFieldValues>) {
   const options =
     country && isEacCountryCode(country)
-      ? JURISDICTIONS_BY_COUNTRY[country]
+      ? ISSUING_AUTHORITIES_BY_COUNTRY[country]
       : [];
 
   return (
@@ -51,7 +50,7 @@ export function JurisdictionSelect<TFieldValues extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel className={labelStyling}>Jurisdiction *</FormLabel>
+          <FormLabel className={labelStyling}>Issuing Authority *</FormLabel>
           <Select
             onValueChange={field.onChange}
             value={field.value}
@@ -61,7 +60,9 @@ export function JurisdictionSelect<TFieldValues extends FieldValues>({
               <SelectTrigger {...triggerStyling}>
                 <SelectValue
                   placeholder={
-                    country ? "Select a jurisdiction" : "Select a country first"
+                    country
+                      ? "Select an issuing authority"
+                      : "Select a country first"
                   }
                 />
               </SelectTrigger>

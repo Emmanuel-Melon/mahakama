@@ -15,6 +15,10 @@ export default [
   ...toRouteConfig(lawyersRoutes),
   ...toRouteConfig(corpusRoutes),
   ...toRouteConfig(authRoutes),
+  layout("./feature/onboarding/layouts/onboarding.layout.tsx", [
+    route("onboarding", "routes/onboarding.tsx"),
+    route("onboarding/lawyer", "routes/lawyer-onboarding.tsx"),
+  ]),
 ] satisfies RouteConfig;
 
 function toRouteConfig<K extends string>(feature: RouteDefinition<K>) {

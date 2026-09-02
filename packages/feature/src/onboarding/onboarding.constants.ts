@@ -6,7 +6,6 @@ export interface SelectOption {
 export type EacCountryCode =
   "UG" | "KE" | "TZ" | "RW" | "BI" | "SS" | "CD" | "SO";
 
-// The EAC's eight partner states.
 export const EAC_COUNTRIES: SelectOption[] = [
   { value: "UG", label: "Uganda" },
   { value: "KE", label: "Kenya" },
@@ -18,11 +17,6 @@ export const EAC_COUNTRIES: SelectOption[] = [
   { value: "SO", label: "Somalia" },
 ];
 
-// National bar / law society a lawyer would have been admitted through.
-// Verified against the East Africa Law Society's list of national member
-// bars. DRC and Somalia are the EAC's newest partner states and don't have
-// a confirmed national bar entry yet — fill in once confirmed with
-// legal/compliance rather than guessing.
 export const ISSUING_AUTHORITIES_BY_COUNTRY: Record<
   EacCountryCode,
   SelectOption[]
@@ -36,16 +30,10 @@ export const ISSUING_AUTHORITIES_BY_COUNTRY: Record<
   RW: [{ value: "rba", label: "Rwanda Bar Association" }],
   BI: [{ value: "bba", label: "Burundi Bar Association" }],
   SS: [{ value: "ssbs", label: "South Sudan Bar Association" }],
-  CD: [], // TODO: confirm DRC's national bar association
-  SO: [], // TODO: confirm Somalia's national bar association
+  CD: [],
+  SO: [],
 };
 
-// Courts a lawyer practices before.
-// NOTE: only Uganda's hierarchy (Supreme Court / Court of Appeal / High
-// Court) has been verified. The others are placeholders following the same
-// common-law-style structure and need sign-off from a legal SME before
-// shipping — Burundi and DRC in particular use civil-law court naming that
-// won't match this pattern.
 export const JURISDICTIONS_BY_COUNTRY: Record<EacCountryCode, SelectOption[]> =
   {
     UG: [
@@ -66,16 +54,15 @@ export const JURISDICTIONS_BY_COUNTRY: Record<EacCountryCode, SelectOption[]> =
       { value: "high-court", label: "High Court of Rwanda" },
       { value: "supreme-court", label: "Supreme Court of Rwanda" },
     ],
-    BI: [], // TODO: confirm Burundi's court structure (civil-law naming)
+    BI: [],
     SS: [
       { value: "high-court", label: "High Court of South Sudan" },
       { value: "supreme-court", label: "Supreme Court of South Sudan" },
     ],
-    CD: [], // TODO: confirm DRC's court structure (civil-law naming)
-    SO: [], // TODO: confirm Somalia's court structure
+    CD: [],
+    SO: [],
   };
 
-// Not country-dependent — same list regardless of where the lawyer practices.
 export const LEGAL_SPECIALIZATIONS: SelectOption[] = [
   { value: "corporate", label: "Corporate & Commercial Law" },
   { value: "family", label: "Family Law" },

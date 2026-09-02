@@ -12,8 +12,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@mah/ui/components/Select";
-import { LEGAL_SPECIALIZATIONS } from "../../lawyers.constants";
+} from "@mah/ui/components/select";
+import { LEGAL_SPECIALIZATIONS } from "../onboarding.constants";
 
 const triggerStyling = {
   className: "border-2 border-gray-900",

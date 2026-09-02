@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button } from "@mah/ui/components/Button";
-import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
+import { BasicInfoSection } from "./BasicInfoSection";
 import type { User } from "@mah/api/src/clients/users.api";
 
-interface BasicInfoStepProps {
+interface LawyerBasicInfoStepProps {
   user: User;
   onNext: (data: {
     name: string;
@@ -22,12 +21,12 @@ interface BasicInfoStepProps {
   formRef?: React.RefObject<HTMLFormElement | null>;
 }
 
-export function BasicInfoStep({
+export function LawyerBasicInfoStep({
   user,
   onNext,
   initialData,
   formRef,
-}: BasicInfoStepProps) {
+}: LawyerBasicInfoStepProps) {
   const [formData, setFormData] = useState({
     name: initialData?.name || user.name || "",
     age: initialData?.age || user.age?.toString() || "",
@@ -41,26 +40,13 @@ export function BasicInfoStep({
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    console.log("BasicInfoStep handleSubmit called");
     e.preventDefault();
 
-    // Validation
     if (!formData.name.trim()) {
       alert("Name is required");
       return;
     }
 
-    if (!formData.age.trim() || isNaN(parseInt(formData.age, 10))) {
-      alert("Valid age is required");
-      return;
-    }
-
-    if (!formData.gender) {
-      alert("Gender selection is required");
-      return;
-    }
-
-    console.log("BasicInfoStep calling onNext with:", formData);
     onNext(formData);
   };
 

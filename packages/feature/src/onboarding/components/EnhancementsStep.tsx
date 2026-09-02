@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Button } from "@mah/ui/components/Button";
 import { Avatar, AvatarImage, AvatarFallback } from "@mah/ui/components/avatar";
 import { Camera, Upload } from "lucide-react";
-import { ProfessionalSection } from "~/feature/users/components/onboarding/professional-section";
-import { BioSection } from "~/feature/users/components/bio-section";
-import { type UserRole } from "~/feature/users/components/onboarding/RoleSelector";
+import { ProfessionalSection } from "./ProfessionalSection";
+import { BioSection } from "./BioSection";
+import type { UserRole } from "../onboarding.types";
 import type { User } from "@mah/api/src/clients/users.api";
 
 interface EnhancementsStepProps {
@@ -60,7 +60,6 @@ export function EnhancementsStep({
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-      {/* Photo Upload Section */}
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
           <Camera className="h-5 w-5" />

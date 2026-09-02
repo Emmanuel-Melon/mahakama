@@ -1,18 +1,18 @@
 import type { Route } from "./+types/onboarding";
 import { OnboardingScreen } from "@mah/feature/onboarding";
+import { redirect } from "react-router";
 import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/lib/errors/errors.registry";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
 import { handleRouteError } from "@mah/client/errors";
-import { redirect } from "react-router";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "Onboarding - Mahakama" },
+    { title: "Onboarding - Mahakama Admin" },
     {
       name: "description",
       content:
-        "Onboarding page for Mahakama account to access your legal resources and history.",
+        "Onboarding page for Mahakama admin account to access your legal resources and history.",
     },
   ];
 }
@@ -38,7 +38,7 @@ export async function loader({ context }: Route.LoaderArgs) {
 export default function OnboardingRoute({ loaderData }: Route.ComponentProps) {
   const { user, token } = loaderData;
 
-  return <OnboardingScreen user={user} token={token} />;
+  return <OnboardingScreen user={user} token={token} successPath="/" />;
 }
 
 export function ErrorBoundary() {

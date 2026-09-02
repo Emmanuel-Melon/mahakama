@@ -1,6 +1,4 @@
-import { type UserRole } from "../components/onboarding/RoleSelector";
-
-export type OnboardingStep = "basic" | "professional" | "enhancements";
+import type { OnboardingStep, UserRole } from "../onboarding.types";
 
 export interface BasicInfo {
   name: string;
@@ -13,20 +11,10 @@ export interface LocationInfo {
   city: string;
 }
 
-export interface LawyerInfo {
-  specialization: string;
-  experienceYears: string;
-  rating: string;
-  casesHandled: string;
-  location: string;
-  languages: string;
-}
-
 export interface OnboardingState {
   step: OnboardingStep;
   basicInfo: BasicInfo | null;
   locationInfo: LocationInfo | null;
-  lawyerInfo: LawyerInfo | null;
 }
 
 export type OnboardingAction =
@@ -38,14 +26,12 @@ export type OnboardingAction =
         locationInfo: LocationInfo;
       };
     }
-  | { type: "LAWYER_INFO_SUBMITTED"; payload: { lawyerInfo: LawyerInfo } }
   | { type: "WENT_BACK"; payload: { role: UserRole } };
 
 export const initialOnboardingState: OnboardingState = {
   step: "basic",
   basicInfo: null,
   locationInfo: null,
-  lawyerInfo: null,
 };
 
 export function onboardingReducer(
@@ -54,30 +40,17 @@ export function onboardingReducer(
 ): OnboardingState {
   switch (action.type) {
     case "BASIC_INFO_SUBMITTED": {
-      const { role, basicInfo, locationInfo } = action.payload;
       return {
         ...state,
-        basicInfo,
-        locationInfo,
-        step: role === "lawyer" ? "professional" : "enhancements",
-      };
-    }
-
-    case "LAWYER_INFO_SUBMITTED": {
-      return {
-        ...state,
-        lawyerInfo: action.payload.lawyerInfo,
+        basicInfo: action.payload.basicInfo,
+        locationInfo: action.payload.locationInfo,
         step: "enhancements",
       };
     }
 
     case "WENT_BACK": {
-      const { role } = action.payload;
-      if (state.step === "professional") {
-        return { ...state, step: "basic" };
-      }
       if (state.step === "enhancements") {
-        return { ...state, step: role === "lawyer" ? "professional" : "basic" };
+        return { ...state, step: "basic" };
       }
       return state;
     }

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@mah/ui/components/Button";
-import { BasicInfoSection } from "~/feature/users/components/basic-info-section";
+import {
+  BasicInfoSection,
+  ProfessionalSection,
+  BioSection,
+  type UserRole,
+} from "@mah/feature/onboarding";
 import { LocationSection } from "~/feature/users/components/settings/location-section";
 import { ContactSection } from "~/feature/users/components/contact-section";
-import { ProfessionalSection } from "~/feature/users/components/onboarding/professional-section";
-import { BioSection } from "~/feature/users/components/bio-section";
-import { type UserRole } from "~/feature/users/components/onboarding/RoleSelector";
 import type { User } from "@mah/api/hooks/use-users";
 
 interface UserProfileFormProps {

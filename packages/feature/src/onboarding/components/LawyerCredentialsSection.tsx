@@ -2,8 +2,8 @@ import { Award } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { StepHeader } from "~/feature/users/components/onboarding/StepHeader";
-import { IssuingAuthoritySelect } from "./onboarding/IssuingAuthoritySelect";
+import { StepHeader } from "./StepHeader";
+import { IssuingAuthoritySelect } from "./IssuingAuthoritySelect";
 import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import {
   Form,
@@ -16,7 +16,7 @@ import {
 import { Input } from "@mah/ui/components/Input";
 import { Textarea } from "@mah/ui/components/Textarea";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
-import { useCountry } from "~/context/country-context";
+import { useCountry } from "../onboarding.context";
 
 const credentialsSchema = z.object({
   barNumber: z.string().min(1, "Bar number is required"),
