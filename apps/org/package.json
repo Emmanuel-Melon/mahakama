@@ -1,0 +1,41 @@
+{
+  "name": "org",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@mah/api": "*",
+    "@mah/client": "*",
+    "@mah/feature": "*",
+    "@mah/ui": "*",
+    "@react-router/node": "^8",
+    "@react-router/serve": "^8",
+    "@tanstack/react-query": "^5.102.6",
+    "@tanstack/react-query-devtools": "^5.102.6",
+    "i18next": "^26.4.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "isbot": "^5.1.36",
+    "lucide-react": "^0.545.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-i18next": "^17.0.12",
+    "react-router": "^8",
+    "sonner": "^2.0.8",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@react-router/dev": "^8",
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^22",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3"
+  }
+}
