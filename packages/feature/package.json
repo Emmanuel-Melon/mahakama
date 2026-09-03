@@ -9,6 +9,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./auth": "./src/auth/index.ts",
+    "./notifications": "./src/notifications/index.ts",
     "./onboarding": "./src/onboarding/index.ts",
     "./matters": "./src/matters/index.ts"
   },
