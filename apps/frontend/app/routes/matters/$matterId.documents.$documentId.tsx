@@ -1,9 +1,16 @@
 import type { Route } from "./+types/$matterId.documents.$documentId";
-import { MatterDocumentScreen } from "~/feature/matters/screens/MatterDocumentScreen";
+import {
+  MatterDocumentScreen,
+  MatterFeatureProvider,
+} from "@mah/feature/matters";
 import { useMatter } from "@mah/api/src/hooks/use-matters";
 import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/lib/errors/errors.registry";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import appConfig from "~/config";
+import { MattersPaths } from "~/feature/matters/MattersConfig";
+import { ChatsPaths } from "~/feature/chats/ChatsConfig";
+import { MessageBubble } from "~/feature/chats/components/MessageBubble";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -59,12 +66,22 @@ export default function MatterDocumentRoute({
   }
 
   return (
-    <MatterDocumentScreen
-      matterId={matterId || ""}
-      documentId={documentId || ""}
-      role={isLawyer ? "lawyer" : "user"}
-      currentUserId={user?.id}
-    />
+    <MatterFeatureProvider
+      value={{
+        paths: MattersPaths,
+        chatPathResolver: (chatId) =>
+          ChatsPaths.chatDetail().replace(":chatId", chatId),
+        MessageComponent: MessageBubble,
+      }}
+    >
+      <MatterDocumentScreen
+        matterId={matterId || ""}
+        documentId={documentId || ""}
+        role={isLawyer ? "lawyer" : "user"}
+        currentUserId={user?.id}
+        apiBaseURL={appConfig.api.baseURL}
+      />
+    </MatterFeatureProvider>
   );
 }
 

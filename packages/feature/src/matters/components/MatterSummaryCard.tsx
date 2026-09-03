@@ -17,7 +17,7 @@ import { CardWithLabel } from "@mah/ui/components/ui/CardWithLabel";
 import { Textarea } from "@mah/ui/components/Textarea";
 import { useMatterMutations } from "@mah/api/src/hooks/use-matters";
 import type { Matter } from "@mah/api/src/clients/matters.api";
-import { ChatsPaths } from "~/feature/chats/ChatsConfig";
+import { useMatterFeature } from "../MatterFeatureContext";
 import { getMetadataRecord } from "./matter-utils";
 
 const formatDate = (value?: string | null) =>
@@ -32,6 +32,7 @@ export function MatterSummaryCard({
 }) {
   const { t } = useTranslation("matters");
   const { updateMatter } = useMatterMutations();
+  const { chatPathResolver } = useMatterFeature();
 
   const [editing, setEditing] = useState(false);
   const [draftSummary, setDraftSummary] = useState(matter.summary ?? "");
@@ -215,9 +216,9 @@ export function MatterSummaryCard({
             {matter.urgency}
           </Badge>
         )}
-        {matter.sourceChatId && (
+        {matter.sourceChatId && chatPathResolver && (
           <a
-            href={ChatsPaths.chatDetail({ chatId: matter.sourceChatId })}
+            href={chatPathResolver(matter.sourceChatId)}
             className="inline-flex items-center gap-1 rounded-full border-2 border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 hover:bg-blue-100"
           >
             <MessagesSquare className="h-3 w-3" />

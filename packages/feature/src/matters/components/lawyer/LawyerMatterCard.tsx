@@ -5,7 +5,7 @@ import { MahButton } from "@mah/ui/components/molecules/MahButton";
 import { MahCard } from "@mah/ui/components/atoms/MahCard";
 import { useUser } from "@mah/api/src/hooks/use-users";
 import type { Matter } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../../MattersConfig";
+import { useMatterFeature } from "../../MatterFeatureContext";
 
 type BadgeVariant = "default" | "secondary" | "destructive";
 
@@ -29,6 +29,7 @@ interface LawyerMatterCardProps {
 
 export const LawyerMatterCard = ({ matter }: LawyerMatterCardProps) => {
   const { t } = useTranslation("matters");
+  const { paths } = useMatterFeature();
   const clientQuery = useUser(matter.clientUserId || "");
   const clientName = clientQuery.data?.data?.name || t("fields.client");
 
@@ -80,7 +81,7 @@ export const LawyerMatterCard = ({ matter }: LawyerMatterCardProps) => {
 
       <div className="mt-4 pt-4 border-t">
         <MahButton
-          href={MattersPaths.detail({ matterId: matter.id })}
+          href={paths.detail({ matterId: matter.id })}
           variant="card"
           className="w-full"
         >

@@ -70,7 +70,11 @@ export const OpenMatterDialog = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<OpenMatterFormValues>({
+  } = useForm<
+    z.input<typeof openMatterFormSchema>,
+    any,
+    z.output<typeof openMatterFormSchema>
+  >({
     resolver: zodResolver(openMatterFormSchema),
     defaultValues: {
       title: defaultTitle,

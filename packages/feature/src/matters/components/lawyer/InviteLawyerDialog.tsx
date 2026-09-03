@@ -25,7 +25,7 @@ import { useDirectory } from "@mah/api/src/hooks/use-lawyers";
 import { useMatterMutations } from "@mah/api/src/hooks/use-matters";
 import { useUser } from "@mah/api/src/hooks/use-users";
 import type { Lawyer } from "@mah/api/src/clients/lawyers.api";
-import { useDebouncedValue } from "~/hooks/use-debounce";
+import { useDebouncedValue } from "../../utils";
 
 const MATTER_LAWYER_ROLES = ["primary", "consulting", "referred"] as const;
 type MatterLawyerRole = (typeof MATTER_LAWYER_ROLES)[number];
@@ -80,6 +80,7 @@ export function InviteLawyerDialog({
     assignLawyer.mutate({
       matterId,
       data: {
+        matterId,
         lawyerId: selectedLawyerId,
         role,
         notes: notes.trim() || null,

@@ -4,7 +4,7 @@ import { Badge } from "@mah/ui/components/badge";
 import { MahButton } from "@mah/ui/components/molecules/MahButton";
 import { MahCard } from "@mah/ui/components/atoms/MahCard";
 import type { Matter } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../MattersConfig";
+import { useMatterFeature } from "../MatterFeatureContext";
 
 type BadgeVariant = "default" | "secondary" | "destructive";
 
@@ -28,6 +28,7 @@ interface UserMatterCardProps {
 
 export const UserMatterCard = ({ matter }: UserMatterCardProps) => {
   const { t } = useTranslation("matters");
+  const { paths } = useMatterFeature();
 
   return (
     <MahCard variant="minimal">
@@ -71,7 +72,7 @@ export const UserMatterCard = ({ matter }: UserMatterCardProps) => {
 
       <div className="mt-4 pt-4 border-t">
         <MahButton
-          href={MattersPaths.detail({ matterId: matter.id })}
+          href={paths.detail({ matterId: matter.id })}
           variant="card"
           className="w-full"
         >
