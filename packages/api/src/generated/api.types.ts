@@ -4,617 +4,7802 @@
  */
 
 export interface paths {
-  "/v1/auth/register": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/v1/auth/register": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register a new user
+         * @description Creates a new user account profile
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        email: string | null;
+                        password: string | null;
+                        name: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            email: string | null;
+                            password: string | null;
+                            name: string | null;
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The request could not be completed due to a conflict with the current state of the target resource. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Register a new user
-     * @description Creates a new user account profile
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+    "/v1/auth/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Login user
+         * @description Authenticates an existing user account
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        email: string | null;
+                        password: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            email: string | null;
+                            password: string | null;
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/logout": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Logout user
+         * @description Revokes the current session and clears auth cookies
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": Record<string, never>;
+                };
+            };
+            responses: {
+                /** @description The server successfully processed the request, but is not returning any content. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get current user
+         * @description Returns the authenticated user's profile
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh access token
+         * @description Issues a new access and refresh token pair using the current refresh token cookie
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/request-reset": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Request password reset
+         * @description Sends a password recovery email if an account matches the given address
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: email */
+                        email: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been accepted for processing, but the processing has not been completed. */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** Format: email */
+                            email: string;
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/reset-password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reset password
+         * @description Resets the user's password using a valid recovery token
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        password: string;
+                        token: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The server successfully processed the request, but is not returning any content. */
+                204: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource is no longer available and will not be available again. */
+                410: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/verify-email": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Verify email address
+         * @description Verifies a user's email address using a verification token
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        token: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            token: string;
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The user has sent too many requests in a given amount of time. */
+                429: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/auth/resend-verification": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resend verification email
+         * @description Queues a new verification email for the specified user account
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: email */
+                        email: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been accepted for processing, but the processing has not been completed. */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            message: string;
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/chats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get user's chats
+         * @description Returns a list of chats for the authenticated user
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "chat";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatSession
+                                 * @description ChatSession response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    title: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a new chat
+         * @description Creates a new chat session with an optional initial message
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        message: string;
+                        metadata?: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "chat";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatSession
+                                 * @description ChatSession response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    title: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/chats/{chatId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get chat by ID
+         * @description Returns a specific chat by its ID
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "chat";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatSession
+                                 * @description ChatSession response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    title: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/clients": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get clients
+         * @description Returns a list of users who have matters with the authenticated lawyer.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "user";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * User
+                                 * @description User response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    role: "user" | "admin" | "lawyer";
+                                    /** Format: date-time */
+                                    emailVerifiedAt: string | null;
+                                    userAgent: string | null;
+                                    lastIp: string | null;
+                                    isAnonymous: boolean;
+                                    age: number | null;
+                                    /** @enum {string|null} */
+                                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                                    country: string | null;
+                                    city: string | null;
+                                    phoneNumber: string | null;
+                                    occupation: string | null;
+                                    bio: string | null;
+                                    profilePicture: string | null;
+                                    isFirstLogin: boolean;
+                                    isOnboarded: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/consultations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all consultations
+         * @description Returns a paginated list of consultations with filtering by status, lawyer, or customer.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Request a consultation
+         * @description Customer requests a consultation with a lawyer. Creates the consultation in 'pending' status.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        lawyerId: string;
+                        requestMessage?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/consultations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get consultation by ID
+         * @description Retrieve a single consultation's details by ID.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/consultations/{id}/accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Accept a consultation request
+         * @description Lawyer accepts a pending consultation request.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/consultations/{id}/decline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Decline a consultation request
+         * @description Lawyer declines a pending consultation request, with a reason.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        declineReason: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/consultations/{id}/close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Close a consultation
+         * @description Marks a consultation as closed.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "consultation";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Consultation
+                                 * @description Consultation response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    customerId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                                    requestMessage: string | null;
+                                    /** Format: date-time */
+                                    respondedAt: string | null;
+                                    declineReason: string | null;
+                                    /** Format: date-time */
+                                    engagedAt: string | null;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/corpus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all corpus entries
+         * @description Returns a list of all corpus entries with optional filtering and pagination
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "corpus";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Corpus
+                                 * @description Corpus response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    type: string;
+                                    sections: number;
+                                    lastUpdated: string;
+                                    storageUrl: string;
+                                    downloadCount: number;
+                                    actName: string | null;
+                                    jurisdiction: string | null;
+                                    sourceUrl: string | null;
+                                    version: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a new corpus entry
+         * @description Register a new corpus entry in the system
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        title: string;
+                        description: string;
+                        type: string;
+                        sections: number;
+                        lastUpdated: string;
+                        storageUrl: string;
+                        downloadCount?: number;
+                        actName?: string | null;
+                        jurisdiction?: string | null;
+                        sourceUrl?: string | null;
+                        version?: number;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "corpus";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Corpus
+                                 * @description Corpus response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    type: string;
+                                    sections: number;
+                                    lastUpdated: string;
+                                    storageUrl: string;
+                                    downloadCount: number;
+                                    actName: string | null;
+                                    jurisdiction: string | null;
+                                    sourceUrl: string | null;
+                                    version: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/corpus/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get corpus entry by ID
+         * @description Retrieve corpus entry details by ID
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "corpus";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Corpus
+                                 * @description Corpus response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    type: string;
+                                    sections: number;
+                                    lastUpdated: string;
+                                    storageUrl: string;
+                                    downloadCount: number;
+                                    actName: string | null;
+                                    jurisdiction: string | null;
+                                    sourceUrl: string | null;
+                                    version: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/corpus/{id}/bookmark": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Bookmark a corpus entry
+         * @description Add or remove a bookmark for a corpus entry
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "corpus";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Corpus
+                                 * @description Corpus response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    type: string;
+                                    sections: number;
+                                    lastUpdated: string;
+                                    storageUrl: string;
+                                    downloadCount: number;
+                                    actName: string | null;
+                                    jurisdiction: string | null;
+                                    sourceUrl: string | null;
+                                    version: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/corpus/{id}/download": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download a corpus entry
+         * @description Increment download count and return corpus entry details
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "corpus";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Corpus
+                                 * @description Corpus response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    title: string;
+                                    description: string;
+                                    type: string;
+                                    sections: number;
+                                    lastUpdated: string;
+                                    storageUrl: string;
+                                    downloadCount: number;
+                                    actName: string | null;
+                                    jurisdiction: string | null;
+                                    sourceUrl: string | null;
+                                    version: number;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/corpus/ingest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ingest a corpus entry with progress updates
+         * @description Upload and process a corpus entry with real-time progress updates via Server-Sent Events
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /**
+                         * Format: binary
+                         * @description The corpus file to upload and process
+                         */
+                        file: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": string;
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/notifications": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get current user's notifications
+         * @description Returns a paginated list of notifications for the authenticated user
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "notification";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Notification
+                                 * @description Notification response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string | null;
+                                    recipientEmail: string | null;
+                                    type: string;
+                                    /** @enum {string} */
+                                    channel: "in_app" | "email" | "push";
+                                    /** @enum {string} */
+                                    recipientType: "sender" | "fulfillment_partner" | "admin";
+                                    title: string;
+                                    message: string;
+                                    actionUrl: string | null;
+                                    /** Format: date-time */
+                                    scheduledAt: string;
+                                    /** Format: date-time */
+                                    sentAt: string | null;
+                                    /** Format: date-time */
+                                    deliveredAt: string | null;
+                                    /** @enum {string} */
+                                    status: "notification_pending" | "notification_sent" | "notification_delivered" | "notification_opened" | "notification_failed";
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    templateKey: string | null;
+                                    entityId: string | null;
+                                    isRead: boolean;
+                                    /** Format: date-time */
+                                    readAt: string | null;
+                                    isActioned: boolean;
+                                    /** Format: date-time */
+                                    actionedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/notifications/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get user's notification preferences
+         * @description Retrieve notification preferences for the authenticated user
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "notification-preferences";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * NotificationPreferences
+                                 * @description NotificationPreferences response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    userId: string;
+                                    category: string | null;
+                                    emailEnabled: boolean | null;
+                                    pushEnabled: boolean | null;
+                                    inAppEnabled: boolean | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/notifications/set": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Set initial notification preferences
+         * @description Create default notification preferences for the authenticated user
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "notification-preferences";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * NotificationPreferences
+                                 * @description NotificationPreferences response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    userId: string;
+                                    category: string | null;
+                                    emailEnabled: boolean | null;
+                                    pushEnabled: boolean | null;
+                                    inAppEnabled: boolean | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/notifications/preferences/update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Update notification preferences
+         * @description Update notification preferences for the authenticated user
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        userId: string;
+                        category?: string | null;
+                        emailEnabled?: boolean | null;
+                        pushEnabled?: boolean | null;
+                        inAppEnabled?: boolean | null;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "notification-preferences";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * NotificationPreferences
+                                 * @description NotificationPreferences response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    userId: string;
+                                    category: string | null;
+                                    emailEnabled: boolean | null;
+                                    pushEnabled: boolean | null;
+                                    inAppEnabled: boolean | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/lawyers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all lawyers
+         * @description Returns a list of all registered lawyers with optional filtering and pagination
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Lawyer
+                                 * @description Lawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** @enum {string} */
+                                    status: "draft" | "submitted" | "approved" | "rejected";
+                                    specialization: string | null;
+                                    experienceYears: number | null;
+                                    casesHandled: number;
+                                    isAvailable: boolean;
+                                    location: string | null;
+                                    languages: string[] | null;
+                                    bio: string | null;
+                                    barNumber: string | null;
+                                    issuingAuthority: string | null;
+                                    jurisdiction: string | null;
+                                    education: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    submittedAt: string | null;
+                                    /** Format: uuid */
+                                    reviewedBy: string | null;
+                                    /** Format: date-time */
+                                    reviewedAt: string | null;
+                                    rejectionReason: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a new lawyer
+         * @description Register a new lawyer in the system
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        userId: string;
+                        /** @enum {string} */
+                        status?: "draft" | "submitted" | "approved" | "rejected";
+                        specialization?: string | null;
+                        experienceYears?: number | null;
+                        casesHandled?: number;
+                        isAvailable?: boolean;
+                        location?: string | null;
+                        languages?: string[] | null;
+                        bio?: string | null;
+                        barNumber?: string | null;
+                        issuingAuthority?: string | null;
+                        jurisdiction?: string | null;
+                        education?: string | number | boolean | unknown | {
+                            [key: string]: unknown;
+                        } | unknown[];
+                        /** Format: date-time */
+                        submittedAt?: string | null;
+                        /** Format: uuid */
+                        reviewedBy?: string | null;
+                        /** Format: date-time */
+                        reviewedAt?: string | null;
+                        rejectionReason?: string | null;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Lawyer
+                                 * @description Lawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** @enum {string} */
+                                    status: "draft" | "submitted" | "approved" | "rejected";
+                                    specialization: string | null;
+                                    experienceYears: number | null;
+                                    casesHandled: number;
+                                    isAvailable: boolean;
+                                    location: string | null;
+                                    languages: string[] | null;
+                                    bio: string | null;
+                                    barNumber: string | null;
+                                    issuingAuthority: string | null;
+                                    jurisdiction: string | null;
+                                    education: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    submittedAt: string | null;
+                                    /** Format: uuid */
+                                    reviewedBy: string | null;
+                                    /** Format: date-time */
+                                    reviewedAt: string | null;
+                                    rejectionReason: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The request could not be completed due to a conflict with the current state of the target resource. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/lawyers/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get lawyer by ID
+         * @description Retrieve lawyer details by lawyer ID
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Lawyer
+                                 * @description Lawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** @enum {string} */
+                                    status: "draft" | "submitted" | "approved" | "rejected";
+                                    specialization: string | null;
+                                    experienceYears: number | null;
+                                    casesHandled: number;
+                                    isAvailable: boolean;
+                                    location: string | null;
+                                    languages: string[] | null;
+                                    bio: string | null;
+                                    barNumber: string | null;
+                                    issuingAuthority: string | null;
+                                    jurisdiction: string | null;
+                                    education: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    submittedAt: string | null;
+                                    /** Format: uuid */
+                                    reviewedBy: string | null;
+                                    /** Format: date-time */
+                                    reviewedAt: string | null;
+                                    rejectionReason: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        /**
+         * Update lawyer profile
+         * @description Update an existing lawyer's information
+         */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        userId?: string;
+                        /** @enum {string} */
+                        status?: "draft" | "submitted" | "approved" | "rejected";
+                        specialization?: string | null;
+                        experienceYears?: number | null;
+                        casesHandled?: number;
+                        isAvailable?: boolean;
+                        location?: string | null;
+                        languages?: string[] | null;
+                        bio?: string | null;
+                        barNumber?: string | null;
+                        issuingAuthority?: string | null;
+                        jurisdiction?: string | null;
+                        education?: string | number | boolean | unknown | {
+                            [key: string]: unknown;
+                        } | unknown[];
+                        /** Format: date-time */
+                        submittedAt?: string | null;
+                        /** Format: uuid */
+                        reviewedBy?: string | null;
+                        /** Format: date-time */
+                        reviewedAt?: string | null;
+                        rejectionReason?: string | null;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Lawyer
+                                 * @description Lawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** @enum {string} */
+                                    status: "draft" | "submitted" | "approved" | "rejected";
+                                    specialization: string | null;
+                                    experienceYears: number | null;
+                                    casesHandled: number;
+                                    isAvailable: boolean;
+                                    location: string | null;
+                                    languages: string[] | null;
+                                    bio: string | null;
+                                    barNumber: string | null;
+                                    issuingAuthority: string | null;
+                                    jurisdiction: string | null;
+                                    education: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    submittedAt: string | null;
+                                    /** Format: uuid */
+                                    reviewedBy: string | null;
+                                    /** Format: date-time */
+                                    reviewedAt: string | null;
+                                    rejectionReason: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all matters
+         * @description Returns a list of matters with filtering and sorting options
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Matter
+                                 * @description Matter response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    creatorType: "client" | "lawyer" | "org";
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: uuid */
+                                    creatorOrgId: string | null;
+                                    /** @enum {string} */
+                                    ownerType: "user" | "org" | "external";
+                                    /** Format: uuid */
+                                    clientUserId: string | null;
+                                    /** Format: uuid */
+                                    clientOrgId: string | null;
+                                    externalClientName: string | null;
+                                    externalClientContact: string | null;
+                                    /** Format: uuid */
+                                    representingOrgId: string | null;
+                                    /** Format: uuid */
+                                    sourceChatId: string | null;
+                                    title: string;
+                                    summary: string | null;
+                                    /** @enum {string} */
+                                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                                    jurisdiction: string | null;
+                                    practiceArea: string | null;
+                                    urgency: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    isSharedWithLawyer: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Open a new matter
+         * @description Create and open a new matter record for a client.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** @enum {string} */
+                        creatorType: "client" | "lawyer" | "org";
+                        /** Format: uuid */
+                        createdByUserId: string;
+                        /** Format: uuid */
+                        creatorOrgId?: string | null;
+                        /** @enum {string} */
+                        ownerType: "user" | "org" | "external";
+                        /** Format: uuid */
+                        clientUserId?: string | null;
+                        /** Format: uuid */
+                        clientOrgId?: string | null;
+                        externalClientName?: string | null;
+                        externalClientContact?: string | null;
+                        /** Format: uuid */
+                        representingOrgId?: string | null;
+                        /** Format: uuid */
+                        sourceChatId?: string | null;
+                        title: string;
+                        summary?: string | null;
+                        /** @enum {string} */
+                        status?: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                        jurisdiction?: string | null;
+                        practiceArea?: string | null;
+                        urgency?: string | null;
+                        metadata?: string | number | boolean | unknown | {
+                            [key: string]: unknown;
+                        } | unknown[];
+                        isSharedWithLawyer?: boolean;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                        /** Format: date-time */
+                        closedAt?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Matter
+                                 * @description Matter response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    creatorType: "client" | "lawyer" | "org";
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: uuid */
+                                    creatorOrgId: string | null;
+                                    /** @enum {string} */
+                                    ownerType: "user" | "org" | "external";
+                                    /** Format: uuid */
+                                    clientUserId: string | null;
+                                    /** Format: uuid */
+                                    clientOrgId: string | null;
+                                    externalClientName: string | null;
+                                    externalClientContact: string | null;
+                                    /** Format: uuid */
+                                    representingOrgId: string | null;
+                                    /** Format: uuid */
+                                    sourceChatId: string | null;
+                                    title: string;
+                                    summary: string | null;
+                                    /** @enum {string} */
+                                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                                    jurisdiction: string | null;
+                                    practiceArea: string | null;
+                                    urgency: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    isSharedWithLawyer: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get matter by ID
+         * @description Retrieve matter details by matter ID along with related information.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Matter
+                                 * @description Matter response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    creatorType: "client" | "lawyer" | "org";
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: uuid */
+                                    creatorOrgId: string | null;
+                                    /** @enum {string} */
+                                    ownerType: "user" | "org" | "external";
+                                    /** Format: uuid */
+                                    clientUserId: string | null;
+                                    /** Format: uuid */
+                                    clientOrgId: string | null;
+                                    externalClientName: string | null;
+                                    externalClientContact: string | null;
+                                    /** Format: uuid */
+                                    representingOrgId: string | null;
+                                    /** Format: uuid */
+                                    sourceChatId: string | null;
+                                    title: string;
+                                    summary: string | null;
+                                    /** @enum {string} */
+                                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                                    jurisdiction: string | null;
+                                    practiceArea: string | null;
+                                    urgency: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    isSharedWithLawyer: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/timeline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get matter timeline
+         * @description Retrieve the chronological timeline of events and status changes for a specific matter.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: unknown[];
+                            meta?: {
+                                total: number;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get matter notes
+         * @description List notes for a matter. Internal notes are only returned to lawyers.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-note";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterNote
+                                 * @description MatterNote response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    authorUserId: string;
+                                    content: string;
+                                    isInternal: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a matter note
+         * @description Add a new note to a specific matter.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        content: string;
+                        isInternal?: boolean;
+                        /** Format: date-time */
+                        createdAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-note";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterNote
+                                 * @description MatterNote response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    authorUserId: string;
+                                    content: string;
+                                    isInternal: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/documents": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get matter documents
+         * @description List the documents attached to a specific matter.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-document";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterDocument
+                                 * @description MatterDocument response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    uploadedByUserId: string;
+                                    fileName: string;
+                                    fileUrl: string;
+                                    fileType: string | null;
+                                    fileSize: number | null;
+                                    description: string | null;
+                                    analysis: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    analyzedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Upload a matter document
+         * @description Upload and persist a document to a specific matter, enqueuing async RAG processing.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /**
+                         * Format: binary
+                         * @description The PDF document to upload
+                         */
+                        file: string;
+                        /** @description Optional description of the document */
+                        description?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-document";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterDocument
+                                 * @description MatterDocument response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    uploadedByUserId: string;
+                                    fileName: string;
+                                    fileUrl: string;
+                                    fileType: string | null;
+                                    fileSize: number | null;
+                                    description: string | null;
+                                    analysis: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    analyzedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/documents/{documentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get a matter document
+         * @description Retrieve a single document attached to a specific matter.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-document";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterDocument
+                                 * @description MatterDocument response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    uploadedByUserId: string;
+                                    fileName: string;
+                                    fileUrl: string;
+                                    fileType: string | null;
+                                    fileSize: number | null;
+                                    description: string | null;
+                                    analysis: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    analyzedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/documents/{documentId}/analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Analyze a matter document
+         * @description Enqueues an async job to analyze a matter's legal document. Poll the document to retrieve the result once analysis is complete.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has been accepted for processing, but the processing has not been completed. */
+                202: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-document";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterDocument
+                                 * @description MatterDocument response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    uploadedByUserId: string;
+                                    fileName: string;
+                                    fileUrl: string;
+                                    fileType: string | null;
+                                    fileSize: number | null;
+                                    description: string | null;
+                                    analysis: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    /** Format: date-time */
+                                    analyzedAt: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update an existing matter
+         * @description Update details of a specific matter by ID.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** @enum {string} */
+                        creatorType?: "client" | "lawyer" | "org";
+                        /** Format: uuid */
+                        createdByUserId?: string;
+                        /** Format: uuid */
+                        creatorOrgId?: string | null;
+                        /** @enum {string} */
+                        ownerType?: "user" | "org" | "external";
+                        /** Format: uuid */
+                        clientOrgId?: string | null;
+                        externalClientName?: string | null;
+                        externalClientContact?: string | null;
+                        /** Format: uuid */
+                        representingOrgId?: string | null;
+                        /** Format: uuid */
+                        sourceChatId?: string | null;
+                        title?: string;
+                        summary?: string | null;
+                        /** @enum {string} */
+                        status?: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                        jurisdiction?: string | null;
+                        practiceArea?: string | null;
+                        urgency?: string | null;
+                        metadata?: string | number | boolean | unknown | {
+                            [key: string]: unknown;
+                        } | unknown[];
+                        isSharedWithLawyer?: boolean;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                        /** Format: date-time */
+                        closedAt?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Matter
+                                 * @description Matter response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** @enum {string} */
+                                    creatorType: "client" | "lawyer" | "org";
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: uuid */
+                                    creatorOrgId: string | null;
+                                    /** @enum {string} */
+                                    ownerType: "user" | "org" | "external";
+                                    /** Format: uuid */
+                                    clientUserId: string | null;
+                                    /** Format: uuid */
+                                    clientOrgId: string | null;
+                                    externalClientName: string | null;
+                                    externalClientContact: string | null;
+                                    /** Format: uuid */
+                                    representingOrgId: string | null;
+                                    /** Format: uuid */
+                                    sourceChatId: string | null;
+                                    title: string;
+                                    summary: string | null;
+                                    /** @enum {string} */
+                                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                                    jurisdiction: string | null;
+                                    practiceArea: string | null;
+                                    urgency: string | null;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                    isSharedWithLawyer: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    /** Format: date-time */
+                                    closedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/lawyers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get matter lawyers
+         * @description List the lawyers assigned or invited to a specific matter.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterLawyer
+                                 * @description MatterLawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    role: "primary" | "consulting" | "referred";
+                                    status: string | null;
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    acceptedAt: string | null;
+                                    notes: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Assign a lawyer to a matter
+         * @description Link a lawyer to a specific matter with a defined role.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        lawyerId: string;
+                        /** @enum {string} */
+                        role?: "primary" | "consulting" | "referred";
+                        status?: string | null;
+                        /** Format: date-time */
+                        invitedAt?: string;
+                        /** Format: date-time */
+                        acceptedAt?: string | null;
+                        notes?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterLawyer
+                                 * @description MatterLawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    role: "primary" | "consulting" | "referred";
+                                    status: string | null;
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    acceptedAt: string | null;
+                                    notes: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/matters/{matterId}/lawyers/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update current lawyer's assignment status on a matter
+         * @description Allows the authenticated lawyer to update their assignment details or status on a specific matter.
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        lawyerId?: string;
+                        /** @enum {string} */
+                        role?: "primary" | "consulting" | "referred";
+                        status?: string | null;
+                        /** Format: date-time */
+                        acceptedAt?: string | null;
+                        notes?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "matter-lawyer";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * MatterLawyer
+                                 * @description MatterLawyer response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    matterId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string;
+                                    /** @enum {string} */
+                                    role: "primary" | "consulting" | "referred";
+                                    status: string | null;
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    acceptedAt: string | null;
+                                    notes: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/messages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send a message
+         * @description Send a new message to a chat
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        chatId: string;
+                        content: string;
+                        /** @enum {string} */
+                        senderType: "user" | "assistant" | "system";
+                        /** Format: uuid */
+                        userId: string | null;
+                        metadata?: {
+                            [key: string]: unknown;
+                        };
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "message";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatMessage
+                                 * @description ChatMessage response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    chatId: string;
+                                    content: string;
+                                    /** @enum {string} */
+                                    senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
+                                    /** Format: date-time */
+                                    timestamp: string;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/messages/{chatId}/all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get messages by chat ID
+         * @description Retrieve all messages for a specific chat
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "message";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatMessage
+                                 * @description ChatMessage response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    chatId: string;
+                                    content: string;
+                                    /** @enum {string} */
+                                    senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
+                                    /** Format: date-time */
+                                    timestamp: string;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/messages/{messageId}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Retry a failed assistant reply
+         * @description Reset the reply status to pending and re-enqueue the reply job for a user message
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "message";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * ChatMessage
+                                 * @description ChatMessage response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    chatId: string;
+                                    content: string;
+                                    /** @enum {string} */
+                                    senderType: "user" | "assistant" | "system";
+                                    /** Format: uuid */
+                                    userId: string | null;
+                                    /** Format: date-time */
+                                    timestamp: string;
+                                    metadata: string | number | boolean | unknown | {
+                                        [key: string]: unknown;
+                                    } | unknown[];
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all organizations
+         * @description Returns a paginated list of organizations with filtering and sorting options
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Org
+                                 * @description Org response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string;
+                                    slug: string;
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a new organization
+         * @description Creates a new organization and adds the creator as an owner
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        name: string;
+                        slug: string;
+                        /** Format: date-time */
+                        createdAt?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Org
+                                 * @description Org response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string;
+                                    slug: string;
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The request could not be completed due to a conflict with the current state of the target resource. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs/{orgId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get organization by ID
+         * @description Retrieve organization details by organization ID
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Org
+                                 * @description Org response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string;
+                                    slug: string;
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update organization
+         * @description Update an existing organization's information
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name?: string;
+                        slug?: string;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * Org
+                                 * @description Org response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string;
+                                    slug: string;
+                                    /** Format: uuid */
+                                    createdByUserId: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/orgs/{orgId}/members": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get organization members
+         * @description Returns a paginated list of organization members with filtering options
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org-member";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * OrgMember
+                                 * @description OrgMember response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    orgId: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string | null;
+                                    /** @enum {string} */
+                                    role: "owner" | "admin" | "member";
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "removed";
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    joinedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Invite a member to organization
+         * @description Invites a user to join the organization
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        id?: string;
+                        /** Format: uuid */
+                        userId: string;
+                        /** Format: uuid */
+                        lawyerId?: string | null;
+                        /** @enum {string} */
+                        role?: "owner" | "admin" | "member";
+                        /** @enum {string} */
+                        status?: "invited" | "active" | "removed";
+                        /** Format: date-time */
+                        joinedAt?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org-member";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * OrgMember
+                                 * @description OrgMember response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    orgId: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string | null;
+                                    /** @enum {string} */
+                                    role: "owner" | "admin" | "member";
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "removed";
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    joinedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The request could not be completed due to a conflict with the current state of the target resource. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orgs/{orgId}/members/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove organization member
+         * @description Remove a member from the organization
+         */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org-member";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * OrgMember
+                                 * @description OrgMember response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    orgId: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string | null;
+                                    /** @enum {string} */
+                                    role: "owner" | "admin" | "member";
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "removed";
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    joinedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        /**
+         * Update organization member
+         * @description Update an organization member's role or status
+         */
+        patch: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    orgId: string;
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        /** Format: uuid */
+                        lawyerId?: string | null;
+                        /** @enum {string} */
+                        role?: "owner" | "admin" | "member";
+                        /** @enum {string} */
+                        status?: "invited" | "active" | "removed";
+                        /** Format: date-time */
+                        joinedAt?: string | null;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "org-member";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * OrgMember
+                                 * @description OrgMember response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    /** Format: uuid */
+                                    orgId: string;
+                                    /** Format: uuid */
+                                    userId: string;
+                                    /** Format: uuid */
+                                    lawyerId: string | null;
+                                    /** @enum {string} */
+                                    role: "owner" | "admin" | "member";
+                                    /** @enum {string} */
+                                    status: "invited" | "active" | "removed";
+                                    /** Format: date-time */
+                                    invitedAt: string;
+                                    /** Format: date-time */
+                                    joinedAt: string | null;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        trace?: never;
+    };
+    "/v1/services": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all legal services
+         * @description Returns a list of all available legal services with optional category filtering
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "legal-service";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * LegalService
+                                 * @description LegalService response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string;
+                                    categoryId: string | null;
+                                    slug: string;
+                                    description: string | null;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get current authenticated user's information
+         * @description Returns the currently authenticated user's profile information.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "user";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * User
+                                 * @description User response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    role: "user" | "admin" | "lawyer";
+                                    /** Format: date-time */
+                                    emailVerifiedAt: string | null;
+                                    userAgent: string | null;
+                                    lastIp: string | null;
+                                    isAnonymous: boolean;
+                                    age: number | null;
+                                    /** @enum {string|null} */
+                                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                                    country: string | null;
+                                    city: string | null;
+                                    phoneNumber: string | null;
+                                    occupation: string | null;
+                                    bio: string | null;
+                                    profilePicture: string | null;
+                                    isFirstLogin: boolean;
+                                    isOnboarded: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description An unexpected condition was encountered and no more specific message is suitable. */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all users
+         * @description Returns a paginated list of users with filtering and sorting options
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "user";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * User
+                                 * @description User response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    role: "user" | "admin" | "lawyer";
+                                    /** Format: date-time */
+                                    emailVerifiedAt: string | null;
+                                    userAgent: string | null;
+                                    lastIp: string | null;
+                                    isAnonymous: boolean;
+                                    age: number | null;
+                                    /** @enum {string|null} */
+                                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                                    country: string | null;
+                                    city: string | null;
+                                    phoneNumber: string | null;
+                                    occupation: string | null;
+                                    bio: string | null;
+                                    profilePicture: string | null;
+                                    isFirstLogin: boolean;
+                                    isOnboarded: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            }[];
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                                total: number;
+                                page: number;
+                                limit: number;
+                                totalPages: number;
+                                /** @default {} */
+                                availableFilters: {
+                                    [key: string]: unknown;
+                                };
+                                sortOptions: {
+                                    fields: string[];
+                                    default: string;
+                                    /** @enum {string} */
+                                    direction: "asc" | "desc";
+                                };
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        /**
+         * Create a new user
+         * @description Register a new user account. Can be used for both anonymous and registered users.
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        name?: string | null;
+                        email?: string | null;
+                        password?: string | null;
+                        /** Format: date-time */
+                        emailVerifiedAt?: string | null;
+                        fingerprint?: string | null;
+                        userAgent?: string | null;
+                        lastIp?: string | null;
+                        isAnonymous?: boolean;
+                        age?: number | null;
+                        /** @enum {string|null} */
+                        gender?: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                        country?: string | null;
+                        city?: string | null;
+                        phoneNumber?: string | null;
+                        occupation?: string | null;
+                        bio?: string | null;
+                        profilePicture?: string | null;
+                        isFirstLogin?: boolean;
+                        isOnboarded?: boolean;
+                        /** Format: date-time */
+                        updatedAt?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description The request has been fulfilled and resulted in a new resource being created. */
+                201: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "user";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * User
+                                 * @description User response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    role: "user" | "admin" | "lawyer";
+                                    /** Format: date-time */
+                                    emailVerifiedAt: string | null;
+                                    userAgent: string | null;
+                                    lastIp: string | null;
+                                    isAnonymous: boolean;
+                                    age: number | null;
+                                    /** @enum {string|null} */
+                                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                                    country: string | null;
+                                    city: string | null;
+                                    phoneNumber: string | null;
+                                    occupation: string | null;
+                                    bio: string | null;
+                                    profilePicture: string | null;
+                                    isFirstLogin: boolean;
+                                    isOnboarded: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description The request could not be understood or was missing required parameters. */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The request could not be completed due to a conflict with the current state of the target resource. */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/users/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get user by ID
+         * @description Retrieve user details by user ID. Users can only view their own profile unless they are admins.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The request has succeeded. */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            data: {
+                                /** @enum {string} */
+                                type: "user";
+                                /** Format: uuid */
+                                id: string;
+                                /**
+                                 * User
+                                 * @description User response schema
+                                 */
+                                attributes: {
+                                    /** Format: uuid */
+                                    id: string;
+                                    name: string | null;
+                                    email: string | null;
+                                    /** @enum {string} */
+                                    role: "user" | "admin" | "lawyer";
+                                    /** Format: date-time */
+                                    emailVerifiedAt: string | null;
+                                    userAgent: string | null;
+                                    lastIp: string | null;
+                                    isAnonymous: boolean;
+                                    age: number | null;
+                                    /** @enum {string|null} */
+                                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                                    country: string | null;
+                                    city: string | null;
+                                    phoneNumber: string | null;
+                                    occupation: string | null;
+                                    bio: string | null;
+                                    profilePicture: string | null;
+                                    isFirstLogin: boolean;
+                                    isOnboarded: boolean;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                };
+                                relationships?: {
+                                    [key: string]: unknown;
+                                };
+                                meta?: {
+                                    [key: string]: unknown;
+                                };
+                                links?: {
+                                    [key: string]: string;
+                                };
+                            };
+                            links: {
+                                self: string;
+                            };
+                            metadata: {
+                                requestId: string;
+                                timestamp: string;
+                            } & {
+                                [key: string]: unknown;
+                            };
+                        };
+                    };
+                };
+                /** @description Authentication failed or user doesn't have permissions for the requested operation. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The server understood the request but refuses to authorize it. */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+                /** @description The requested resource could not be found on the server. */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["JsonApiErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+}
+export type webhooks = Record<string, never>;
+export interface components {
+    schemas: {
+        RefreshToken: {
+            /** @description The new access token (JWT) */
+            token: string;
+        };
+        RefreshTokenResource: {
+            /** @enum {string} */
+            type: "refreshToken";
+            /** Format: uuid */
+            id: string;
+            attributes: {
+                /** @description The new access token (JWT) */
+                token: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        RefreshTokenSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "refreshToken";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    /** @description The new access token (JWT) */
+                    token: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        RefreshTokenCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "refreshToken";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    /** @description The new access token (JWT) */
+                    token: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        EmailVerificationStatus: {
+            /** @description A human-readable status message. */
+            message: string;
+        };
+        EmailVerificationStatusResource: {
+            /** @enum {string} */
+            type: "emailVerificationStatus";
+            /** Format: uuid */
+            id: string;
+            attributes: {
+                /** @description A human-readable status message. */
+                message: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        EmailVerificationStatusSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "emailVerificationStatus";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    /** @description A human-readable status message. */
+                    message: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        EmailVerificationStatusCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "emailVerificationStatus";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    /** @description A human-readable status message. */
+                    message: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /** RegisterUser */
+        AuthSignup: {
+            name?: string | null;
+            email?: string | null;
+            password: string;
+            /** @enum {string} */
+            role?: "user" | "admin" | "lawyer";
+        };
+        /** LoginUser */
+        AuthLogin: {
+            /** Format: email */
+            email: string;
+            password: string;
+            /** @enum {string} */
+            role?: "user" | "admin" | "lawyer";
+        };
+        AuthLogout: Record<string, never>;
+        AuthRefresh: Record<string, never>;
+        AuthMe: Record<string, never>;
+        AuthResetPasswordRequest: {
+            /** Format: email */
+            email: string;
+        };
+        AuthResource: {
+            /** @enum {string} */
+            type: "auth";
+            /** Format: uuid */
+            id: string;
+            attributes: {
+                data: {
+                    /** @enum {string} */
+                    type: "user";
+                    /** Format: uuid */
+                    id: string;
+                    /**
+                     * User
+                     * @description User response schema
+                     */
+                    attributes: {
+                        /** Format: uuid */
+                        id: string;
+                        name: string | null;
+                        email: string | null;
+                        /** @enum {string} */
+                        role: "user" | "admin" | "lawyer";
+                        /** Format: date-time */
+                        emailVerifiedAt: string | null;
+                        userAgent: string | null;
+                        lastIp: string | null;
+                        isAnonymous: boolean;
+                        age: number | null;
+                        /** @enum {string|null} */
+                        gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                        country: string | null;
+                        city: string | null;
+                        phoneNumber: string | null;
+                        occupation: string | null;
+                        bio: string | null;
+                        profilePicture: string | null;
+                        isFirstLogin: boolean;
+                        isOnboarded: boolean;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                    };
+                    relationships?: {
+                        [key: string]: unknown;
+                    };
+                    meta?: {
+                        [key: string]: unknown;
+                    };
+                    links?: {
+                        [key: string]: string;
+                    };
+                };
+                links: {
+                    self: string;
+                };
+                metadata: {
+                    requestId: string;
+                    timestamp: string;
+                } & {
+                    [key: string]: unknown;
+                };
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        AuthSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "auth";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    data: {
+                        /** @enum {string} */
+                        type: "user";
+                        /** Format: uuid */
+                        id: string;
+                        /**
+                         * User
+                         * @description User response schema
+                         */
+                        attributes: {
+                            /** Format: uuid */
+                            id: string;
+                            name: string | null;
+                            email: string | null;
+                            /** @enum {string} */
+                            role: "user" | "admin" | "lawyer";
+                            /** Format: date-time */
+                            emailVerifiedAt: string | null;
+                            userAgent: string | null;
+                            lastIp: string | null;
+                            isAnonymous: boolean;
+                            age: number | null;
+                            /** @enum {string|null} */
+                            gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                            country: string | null;
+                            city: string | null;
+                            phoneNumber: string | null;
+                            occupation: string | null;
+                            bio: string | null;
+                            profilePicture: string | null;
+                            isFirstLogin: boolean;
+                            isOnboarded: boolean;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                        relationships?: {
+                            [key: string]: unknown;
+                        };
+                        meta?: {
+                            [key: string]: unknown;
+                        };
+                        links?: {
+                            [key: string]: string;
+                        };
+                    };
+                    links: {
+                        self: string;
+                    };
+                    metadata: {
+                        requestId: string;
+                        timestamp: string;
+                    } & {
+                        [key: string]: unknown;
+                    };
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        AuthCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "auth";
+                /** Format: uuid */
+                id: string;
+                attributes: {
+                    data: {
+                        /** @enum {string} */
+                        type: "user";
+                        /** Format: uuid */
+                        id: string;
+                        /**
+                         * User
+                         * @description User response schema
+                         */
+                        attributes: {
+                            /** Format: uuid */
+                            id: string;
+                            name: string | null;
+                            email: string | null;
+                            /** @enum {string} */
+                            role: "user" | "admin" | "lawyer";
+                            /** Format: date-time */
+                            emailVerifiedAt: string | null;
+                            userAgent: string | null;
+                            lastIp: string | null;
+                            isAnonymous: boolean;
+                            age: number | null;
+                            /** @enum {string|null} */
+                            gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                            country: string | null;
+                            city: string | null;
+                            phoneNumber: string | null;
+                            occupation: string | null;
+                            bio: string | null;
+                            profilePicture: string | null;
+                            isFirstLogin: boolean;
+                            isOnboarded: boolean;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                        };
+                        relationships?: {
+                            [key: string]: unknown;
+                        };
+                        meta?: {
+                            [key: string]: unknown;
+                        };
+                        links?: {
+                            [key: string]: string;
+                        };
+                    };
+                    links: {
+                        self: string;
+                    };
+                    metadata: {
+                        requestId: string;
+                        timestamp: string;
+                    } & {
+                        [key: string]: unknown;
+                    };
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * RegisterRequest
+         * @description Request schema for user registration
+         */
+        RegisterRequest: {
             email: string | null;
             password: string | null;
             name: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              email: string | null;
-              password: string | null;
-              name: string | null;
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The request could not be completed due to a conflict with the current state of the target resource. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/login": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Login user
-     * @description Authenticates an existing user account
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * LoginRequest
+         * @description Request schema for user login
+         */
+        LoginRequest: {
             email: string | null;
             password: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              email: string | null;
-              password: string | null;
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/logout": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Logout user
-     * @description Revokes the current session and clears auth cookies
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": Record<string, never>;
-        };
-      };
-      responses: {
-        /** @description The server successfully processed the request, but is not returning any content. */
-        204: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get current user
-     * @description Returns the authenticated user's profile
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/refresh": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Refresh access token
-     * @description Issues a new access and refresh token pair using the current refresh token cookie
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/request-reset": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Request password reset
-     * @description Sends a password recovery email if an account matches the given address
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        PasswordResetRequest: {
             /** Format: email */
             email: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been accepted for processing, but the processing has not been completed. */
-        202: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** Format: email */
-              email: string;
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/reset-password": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Reset password
-     * @description Resets the user's password using a valid recovery token
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        NewPasswordRequest: {
             password: string;
             token: string;
-          };
         };
-      };
-      responses: {
-        /** @description The server successfully processed the request, but is not returning any content. */
-        204: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource is no longer available and will not be available again. */
-        410: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/verify-email": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Verify email address
-     * @description Verifies a user's email address using a verification token
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        VerifyEmailRequest: {
             token: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              token: string;
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The user has sent too many requests in a given amount of time. */
-        429: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/auth/resend-verification": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Resend verification email
-     * @description Queues a new verification email for the specified user account
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        ResendVerificationRequest: {
             /** Format: email */
             email: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been accepted for processing, but the processing has not been completed. */
-        202: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              message: string;
+        /**
+         * AuthUser
+         * @description AuthUser response schema
+         */
+        AuthUser: {
+            /** Format: uuid */
+            id: string;
+            name: string | null;
+            email: string | null;
+            password: string | null;
+            /** @enum {string} */
+            role: "user" | "admin" | "lawyer";
+            /** Format: date-time */
+            emailVerifiedAt: string | null;
+            fingerprint: string | null;
+            userAgent: string | null;
+            lastIp: string | null;
+            isAnonymous: boolean;
+            age: number | null;
+            /** @enum {string|null} */
+            gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+            country: string | null;
+            city: string | null;
+            phoneNumber: string | null;
+            occupation: string | null;
+            bio: string | null;
+            profilePicture: string | null;
+            isFirstLogin: boolean;
+            isOnboarded: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /**
+         * AuthHeaders
+         * @description Request headers for authentication
+         */
+        AuthHeaders: {
+            authorization: string;
+        };
+        ResetPasswordResponse: {
+            message: string;
+            deliveryEstimate: number;
+        };
+        RefreshTokenSelect: {
+            /** @description The new access token (JWT) */
+            token: string;
+        };
+        /** @enum {string} */
+        UserRole: "admin" | "user" | "lawyer";
+        BaseTokenPayload: {
+            sub: string;
+            sid: string;
+            aud: string;
+            iss: string;
+        };
+        AccessPayload: {
+            sub: string;
+            sid: string;
+            aud: string;
+            iss: string;
+            /** @enum {string} */
+            type: "access";
+            /** @enum {string} */
+            role: "admin" | "user" | "lawyer";
+        };
+        RefreshPayload: {
+            sub: string;
+            sid: string;
+            aud: string;
+            iss: string;
+            /** @enum {string} */
+            type: "refresh";
+        };
+        AuthPayload: {
+            sub: string;
+            sid: string;
+            aud: string;
+            iss: string;
+            /** @enum {string} */
+            type: "access";
+            /** @enum {string} */
+            role: "admin" | "user" | "lawyer";
+        } | {
+            sub: string;
+            sid: string;
+            aud: string;
+            iss: string;
+            /** @enum {string} */
+            type: "refresh";
+        };
+        TokenGenerationArgs: {
+            userId: string;
+            sessionId: string;
+            /** @enum {string} */
+            role: "admin" | "user" | "lawyer";
+        };
+        AuthEventQuery: {
+            /** @default 1 */
+            page: number;
+            /** @default 10 */
+            limit: number;
+            sort?: string;
+            /**
+             * @default desc
+             * @enum {string}
+             */
+            order: "asc" | "desc";
+            q?: string;
+            /** @default 0 */
+            offset: number | null;
+            eventType?: string;
+            userId?: string;
+        };
+        /**
+         * ChatSession
+         * @description ChatSession response schema
+         */
+        Chat: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            userId: string;
+            title: string | null;
+            metadata: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /**
+         * NewChatSession
+         * @description Request schema for creating a new chatsession
+         */
+        NewChat: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            userId: string;
+            title?: string | null;
+            metadata?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        /**
+         * UpdateChatSessionRequest
+         * @description Request schema for updating a chatsession
+         */
+        UpdateChat: {
+            title?: string | null;
+            metadata?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        ChatResource: {
+            /** @enum {string} */
+            type: "chat";
+            /** Format: uuid */
+            id: string;
+            /**
+             * ChatSession
+             * @description ChatSession response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                title: string | null;
+                metadata: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
             };
-          };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/chats": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get user's chats
-     * @description Returns a list of chats for the authenticated user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        ChatSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "chat";
                 /** Format: uuid */
@@ -624,39 +7809,77 @@ export interface paths {
                  * @description ChatSession response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  title: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string;
+                    title: string | null;
+                    metadata: string | number | boolean | unknown | {
                         [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    } | unknown[];
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        ChatCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "chat";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * ChatSession
+                 * @description ChatSession response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string;
+                    title: string | null;
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -665,544 +7888,101 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a new chat
-     * @description Creates a new chat session with an optional initial message
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        CreateChatRequest: {
             message: string;
             metadata?: {
-              [key: string]: unknown;
-            };
-          };
-        };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "chat";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * ChatSession
-                 * @description ChatSession response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  title: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * Consultation
+         * @description Consultation response schema
+         */
+        Consultation: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            customerId: string;
+            /** Format: uuid */
+            lawyerId: string;
+            /** @enum {string} */
+            status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+            requestMessage: string | null;
+            /** Format: date-time */
+            respondedAt: string | null;
+            declineReason: string | null;
+            /** Format: date-time */
+            engagedAt: string | null;
+            /** Format: date-time */
+            closedAt: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/chats/{chatId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get chat by ID
-     * @description Returns a specific chat by its ID
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "chat";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * ChatSession
-                 * @description ChatSession response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  title: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/clients": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get clients
-     * @description Returns a list of users who have matters with the authenticated lawyer.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "user";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * User
-                 * @description User response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string | null;
-                  email: string | null;
-                  /** @enum {string} */
-                  role: "user" | "admin" | "lawyer";
-                  /** Format: date-time */
-                  emailVerifiedAt: string | null;
-                  userAgent: string | null;
-                  lastIp: string | null;
-                  isAnonymous: boolean;
-                  age: number | null;
-                  /** @enum {string|null} */
-                  gender:
-                    | "male"
-                    | "female"
-                    | "non_binary"
-                    | "prefer_not_to_say"
-                    | "other"
-                    | null;
-                  country: string | null;
-                  city: string | null;
-                  phoneNumber: string | null;
-                  occupation: string | null;
-                  bio: string | null;
-                  profilePicture: string | null;
-                  isFirstLogin: boolean;
-                  isOnboarded: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-                total: number;
-                page: number;
-                limit: number;
-                totalPages: number;
-                /** @default {} */
-                availableFilters: {
-                  [key: string]: unknown;
-                };
-                sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
-                };
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/consultations": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all consultations
-     * @description Returns a paginated list of consultations with filtering by status, lawyer, or customer.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "consultation";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Consultation
-                 * @description Consultation response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-                total: number;
-                page: number;
-                limit: number;
-                totalPages: number;
-                /** @default {} */
-                availableFilters: {
-                  [key: string]: unknown;
-                };
-                sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
-                };
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Request a consultation
-     * @description Customer requests a consultation with a lawyer. Creates the consultation in 'pending' status.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * NewConsultation
+         * @description Request schema for creating a new consultation
+         */
+        NewConsultation: {
             /** Format: uuid */
             lawyerId: string;
             requestMessage?: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        UpdateConsultation: Record<string, never>;
+        ConsultationResource: {
+            /** @enum {string} */
+            type: "consultation";
+            /** Format: uuid */
+            id: string;
+            /**
+             * Consultation
+             * @description Consultation response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                customerId: string;
+                /** Format: uuid */
+                lawyerId: string;
+                /** @enum {string} */
+                status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                requestMessage: string | null;
+                /** Format: date-time */
+                respondedAt: string | null;
+                declineReason: string | null;
+                /** Format: date-time */
+                engagedAt: string | null;
+                /** Format: date-time */
+                closedAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        ConsultationSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "consultation";
                 /** Format: uuid */
@@ -1212,106 +7992,49 @@ export interface paths {
                  * @description Consultation response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    customerId: string;
+                    /** Format: uuid */
+                    lawyerId: string;
+                    /** @enum {string} */
+                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                    requestMessage: string | null;
+                    /** Format: date-time */
+                    respondedAt: string | null;
+                    declineReason: string | null;
+                    /** Format: date-time */
+                    engagedAt: string | null;
+                    /** Format: date-time */
+                    closedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/consultations/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get consultation by ID
-     * @description Retrieve a single consultation's details by ID.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        ConsultationCollectionResponse: {
+            data: {
                 /** @enum {string} */
                 type: "consultation";
                 /** Format: uuid */
@@ -1321,495 +8044,41 @@ export interface paths {
                  * @description Consultation response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    customerId: string;
+                    /** Format: uuid */
+                    lawyerId: string;
+                    /** @enum {string} */
+                    status: "pending" | "accepted" | "declined" | "engaged" | "closed";
+                    requestMessage: string | null;
+                    /** Format: date-time */
+                    respondedAt: string | null;
+                    declineReason: string | null;
+                    /** Format: date-time */
+                    engagedAt: string | null;
+                    /** Format: date-time */
+                    closedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            }[];
+            links: {
                 self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
             };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/consultations/{id}/accept": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Accept a consultation request
-     * @description Lawyer accepts a pending consultation request.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "consultation";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Consultation
-                 * @description Consultation response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    trace?: never;
-  };
-  "/v1/consultations/{id}/decline": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Decline a consultation request
-     * @description Lawyer declines a pending consultation request, with a reason.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
-            declineReason: string;
-          };
-        };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "consultation";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Consultation
-                 * @description Consultation response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    trace?: never;
-  };
-  "/v1/consultations/{id}/close": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Close a consultation
-     * @description Marks a consultation as closed.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "consultation";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Consultation
-                 * @description Consultation response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  customerId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  status:
-                    "pending" | "accepted" | "declined" | "engaged" | "closed";
-                  requestMessage: string | null;
-                  /** Format: date-time */
-                  respondedAt: string | null;
-                  declineReason: string | null;
-                  /** Format: date-time */
-                  engagedAt: string | null;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    trace?: never;
-  };
-  "/v1/corpus": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all corpus entries
-     * @description Returns a list of all corpus entries with optional filtering and pagination
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "corpus";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Corpus
-                 * @description Corpus response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  title: string;
-                  description: string;
-                  type: string;
-                  sections: number;
-                  lastUpdated: string;
-                  storageUrl: string;
-                  downloadCount: number;
-                  actName: string | null;
-                  jurisdiction: string | null;
-                  sourceUrl: string | null;
-                  version: number;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -1818,53 +8087,44 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * Corpus
+         * @description Corpus response schema
+         */
+        Corpus: {
+            /** Format: uuid */
+            id: string;
+            title: string;
+            description: string;
+            type: string;
+            sections: number;
+            lastUpdated: string;
+            storageUrl: string;
+            downloadCount: number;
+            actName: string | null;
+            jurisdiction: string | null;
+            sourceUrl: string | null;
+            version: number;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a new corpus entry
-     * @description Register a new corpus entry in the system
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * NewCorpus
+         * @description Request schema for creating a new corpus
+         */
+        NewCorpus: {
             /** Format: uuid */
             id?: string;
             title: string;
@@ -1882,625 +8142,160 @@ export interface paths {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "corpus";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Corpus
-                 * @description Corpus response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  title: string;
-                  description: string;
-                  type: string;
-                  sections: number;
-                  lastUpdated: string;
-                  storageUrl: string;
-                  downloadCount: number;
-                  actName: string | null;
-                  jurisdiction: string | null;
-                  sourceUrl: string | null;
-                  version: number;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
+        /**
+         * UpdateCorpusRequest
+         * @description Request schema for updating a corpus
+         */
+        UpdateCorpus: {
+            /** Format: uuid */
+            id?: string;
+            title?: string;
+            description?: string;
+            type?: string;
+            sections?: number;
+            lastUpdated?: string;
+            storageUrl?: string;
+            downloadCount?: number;
+            actName?: string | null;
+            jurisdiction?: string | null;
+            sourceUrl?: string | null;
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/corpus/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get corpus entry by ID
-     * @description Retrieve corpus entry details by ID
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "corpus";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Corpus
-                 * @description Corpus response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  title: string;
-                  description: string;
-                  type: string;
-                  sections: number;
-                  lastUpdated: string;
-                  storageUrl: string;
-                  downloadCount: number;
-                  actName: string | null;
-                  jurisdiction: string | null;
-                  sourceUrl: string | null;
-                  version: number;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/corpus/{id}/bookmark": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Bookmark a corpus entry
-     * @description Add or remove a bookmark for a corpus entry
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "corpus";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Corpus
-                 * @description Corpus response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  title: string;
-                  description: string;
-                  type: string;
-                  sections: number;
-                  lastUpdated: string;
-                  storageUrl: string;
-                  downloadCount: number;
-                  actName: string | null;
-                  jurisdiction: string | null;
-                  sourceUrl: string | null;
-                  version: number;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/corpus/{id}/download": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Download a corpus entry
-     * @description Increment download count and return corpus entry details
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "corpus";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Corpus
-                 * @description Corpus response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  title: string;
-                  description: string;
-                  type: string;
-                  sections: number;
-                  lastUpdated: string;
-                  storageUrl: string;
-                  downloadCount: number;
-                  actName: string | null;
-                  jurisdiction: string | null;
-                  sourceUrl: string | null;
-                  version: number;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/corpus/ingest": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Ingest a corpus entry with progress updates
-     * @description Upload and process a corpus entry with real-time progress updates via Server-Sent Events
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        CorpusResource: {
+            /** @enum {string} */
+            type: "corpus";
+            /** Format: uuid */
+            id: string;
             /**
-             * Format: binary
-             * @description The corpus file to upload and process
+             * Corpus
+             * @description Corpus response schema
              */
-            file: string;
-          };
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                title: string;
+                description: string;
+                type: string;
+                sections: number;
+                lastUpdated: string;
+                storageUrl: string;
+                downloadCount: number;
+                actName: string | null;
+                jurisdiction: string | null;
+                sourceUrl: string | null;
+                version: number;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": string;
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get current user's notifications
-     * @description Returns a paginated list of notifications for the authenticated user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        CorpusSingleResponse: {
+            data: {
                 /** @enum {string} */
-                type: "notification";
+                type: "corpus";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Notification
-                 * @description Notification response schema
+                 * Corpus
+                 * @description Corpus response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string | null;
-                  recipientEmail: string | null;
-                  type: string;
-                  /** @enum {string} */
-                  channel: "in_app" | "email" | "push";
-                  /** @enum {string} */
-                  recipientType: "sender" | "fulfillment_partner" | "admin";
-                  title: string;
-                  message: string;
-                  actionUrl: string | null;
-                  /** Format: date-time */
-                  scheduledAt: string;
-                  /** Format: date-time */
-                  sentAt: string | null;
-                  /** Format: date-time */
-                  deliveredAt: string | null;
-                  /** @enum {string} */
-                  status:
-                    | "notification_pending"
-                    | "notification_sent"
-                    | "notification_delivered"
-                    | "notification_opened"
-                    | "notification_failed";
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  templateKey: string | null;
-                  entityId: string | null;
-                  isRead: boolean;
-                  /** Format: date-time */
-                  readAt: string | null;
-                  isActioned: boolean;
-                  /** Format: date-time */
-                  actionedAt: string | null;
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    description: string;
+                    type: string;
+                    sections: number;
+                    lastUpdated: string;
+                    storageUrl: string;
+                    downloadCount: number;
+                    actName: string | null;
+                    jurisdiction: string | null;
+                    sourceUrl: string | null;
+                    version: number;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        CorpusCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "corpus";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Corpus
+                 * @description Corpus response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    title: string;
+                    description: string;
+                    type: string;
+                    sections: number;
+                    lastUpdated: string;
+                    storageUrl: string;
+                    downloadCount: number;
+                    actName: string | null;
+                    jurisdiction: string | null;
+                    sourceUrl: string | null;
+                    version: number;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -2509,264 +8304,300 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * NewCorpus
+         * @description Request schema for creating a new corpus
+         */
+        CreateCorpus: {
+            /** Format: uuid */
+            id?: string;
+            title: string;
+            description: string;
+            type: string;
+            sections: number;
+            lastUpdated: string;
+            storageUrl: string;
+            downloadCount?: number;
+            actName?: string | null;
+            jurisdiction?: string | null;
+            sourceUrl?: string | null;
+            version?: number;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * @description Metadata about the response
+         * @example {
+         *       "timestamp": "2023-12-09T15:39:00Z",
+         *       "requestId": "req_12345",
+         *       "resourceId": "resource_678"
+         *     }
+         */
+        ResponseMetadata: {
+            /**
+             * Format: date-time
+             * @description ISO 8601 timestamp of the response
+             */
+            timestamp?: string;
+            /**
+             * Format: uuid
+             * @description Unique identifier for the request
+             */
+            requestId?: string;
+            /** @description Identifier of the resource */
+            resourceId?: string | number;
+        } & {
+            [key: string]: unknown;
         };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/preferences": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get user's notification preferences
-     * @description Retrieve notification preferences for the authenticated user
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification-preferences";
-                /** Format: uuid */
-                id: string;
+        JsonApiError: {
+            /**
+             * Format: uuid
+             * @description Unique identifier for this error instance
+             */
+            id: string;
+            /** @description HTTP status code as string */
+            status: string;
+            /** @description Application-specific error code */
+            code: string;
+            /** @description Short, human-readable summary of the error */
+            title: string;
+            /** @description Human-readable explanation specific to this error */
+            detail: string;
+            /**
+             * @description Metadata about the response
+             * @example {
+             *       "timestamp": "2023-12-09T15:39:00Z",
+             *       "requestId": "req_12345",
+             *       "resourceId": "resource_678"
+             *     }
+             */
+            metadata: {
                 /**
-                 * NotificationPreferences
-                 * @description NotificationPreferences response schema
+                 * Format: date-time
+                 * @description ISO 8601 timestamp of the response
                  */
+                timestamp?: string;
+                /**
+                 * Format: uuid
+                 * @description Unique identifier for the request
+                 */
+                requestId?: string;
+                /** @description Identifier of the resource */
+                resourceId?: string | number;
+            } & {
+                [key: string]: unknown;
+            };
+            source?: {
+                /** @description JSON Pointer to the associated entity in request */
+                pointer?: string;
+                /** @description HTTP method of the request */
+                method?: string;
+            };
+        };
+        JsonApiErrorResponse: {
+            errors: components["schemas"]["JsonApiError"][];
+        };
+        /** @description JSON:API resource object */
+        JsonApiResource: {
+            type: string;
+            id: string;
+            attributes: {
+                [key: string]: unknown;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            metadata?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        /**
+         * @description JSON:API single resource response
+         * @example {
+         *       "data": {
+         *         "id": "123",
+         *         "type": "user",
+         *         "attributes": {
+         *           "name": "John"
+         *         }
+         *       },
+         *       "meta": {
+         *         "timestamp": "2023-12-09T15:39:00Z",
+         *         "requestId": "req_12345"
+         *       }
+         *     }
+         */
+        JsonApiResponse: {
+            data: {
+                type: string;
+                id: string;
                 attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  category: string | null;
-                  emailEnabled: boolean | null;
-                  pushEnabled: boolean | null;
-                  inAppEnabled: boolean | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    [key: string]: unknown;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
-                meta?: {
-                  [key: string]: unknown;
+                metadata?: {
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/set": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Set initial notification preferences
-     * @description Create default notification preferences for the authenticated user
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "notification-preferences";
-                /** Format: uuid */
-                id: string;
+            } | unknown;
+            /**
+             * @description Metadata about the response
+             * @example {
+             *       "timestamp": "2023-12-09T15:39:00Z",
+             *       "requestId": "req_12345",
+             *       "resourceId": "resource_678"
+             *     }
+             */
+            metadata?: {
                 /**
-                 * NotificationPreferences
-                 * @description NotificationPreferences response schema
+                 * Format: date-time
+                 * @description ISO 8601 timestamp of the response
                  */
+                timestamp?: string;
+                /**
+                 * Format: uuid
+                 * @description Unique identifier for the request
+                 */
+                requestId?: string;
+                /** @description Identifier of the resource */
+                resourceId?: string | number;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        /**
+         * @description JSON:API collection response
+         * @example {
+         *       "data": [
+         *         {
+         *           "id": "123",
+         *           "type": "user",
+         *           "attributes": {
+         *             "name": "John"
+         *           }
+         *         },
+         *         {
+         *           "id": "456",
+         *           "type": "user",
+         *           "attributes": {
+         *             "name": "Jane"
+         *           }
+         *         }
+         *       ],
+         *       "meta": {
+         *         "timestamp": "2023-12-09T15:39:00Z",
+         *         "requestId": "req_12345"
+         *       }
+         *     }
+         */
+        JsonApiCollectionResponse: {
+            data: {
+                type: string;
+                id: string;
                 attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  category: string | null;
-                  emailEnabled: boolean | null;
-                  pushEnabled: boolean | null;
-                  inAppEnabled: boolean | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    [key: string]: unknown;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
-                meta?: {
-                  [key: string]: unknown;
+                metadata?: {
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
+            }[];
+            /**
+             * @description Metadata about the response
+             * @example {
+             *       "timestamp": "2023-12-09T15:39:00Z",
+             *       "requestId": "req_12345",
+             *       "resourceId": "resource_678"
+             *     }
+             */
+            metadata?: {
+                /**
+                 * Format: date-time
+                 * @description ISO 8601 timestamp of the response
+                 */
+                timestamp?: string;
+                /**
+                 * Format: uuid
+                 * @description Unique identifier for the request
+                 */
+                requestId?: string;
+                /** @description Identifier of the resource */
+                resourceId?: string | number;
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * Notification
+         * @description Notification response schema
+         */
+        Notification: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            userId: string | null;
+            recipientEmail: string | null;
+            type: string;
+            /** @enum {string} */
+            channel: "in_app" | "email" | "push";
+            /** @enum {string} */
+            recipientType: "sender" | "fulfillment_partner" | "admin";
+            title: string;
+            message: string;
+            actionUrl: string | null;
+            /** Format: date-time */
+            scheduledAt: string;
+            /** Format: date-time */
+            sentAt: string | null;
+            /** Format: date-time */
+            deliveredAt: string | null;
+            /** @enum {string} */
+            status: "notification_pending" | "notification_sent" | "notification_delivered" | "notification_opened" | "notification_failed";
+            metadata: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            templateKey: string | null;
+            entityId: string | null;
+            isRead: boolean;
+            /** Format: date-time */
+            readAt: string | null;
+            isActioned: boolean;
+            /** Format: date-time */
+            actionedAt: string | null;
         };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/notifications/preferences/update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Update notification preferences
-     * @description Update notification preferences for the authenticated user
-     */
-    put: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * NewNotificationPreferences
+         * @description Request schema for creating a new notificationpreferences
+         */
+        NewNotification: {
             /** Format: uuid */
             userId: string;
             category?: string | null;
@@ -2777,18 +8608,301 @@ export interface paths {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        UpdateNotification: {
+            /** Format: uuid */
+            userId?: string;
+            category?: string | null;
+            emailEnabled?: boolean | null;
+            pushEnabled?: boolean | null;
+            inAppEnabled?: boolean | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        NotificationResource: {
+            /** @enum {string} */
+            type: "notification";
+            /** Format: uuid */
+            id: string;
+            /**
+             * Notification
+             * @description Notification response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string | null;
+                recipientEmail: string | null;
+                type: string;
+                /** @enum {string} */
+                channel: "in_app" | "email" | "push";
+                /** @enum {string} */
+                recipientType: "sender" | "fulfillment_partner" | "admin";
+                title: string;
+                message: string;
+                actionUrl: string | null;
+                /** Format: date-time */
+                scheduledAt: string;
+                /** Format: date-time */
+                sentAt: string | null;
+                /** Format: date-time */
+                deliveredAt: string | null;
+                /** @enum {string} */
+                status: "notification_pending" | "notification_sent" | "notification_delivered" | "notification_opened" | "notification_failed";
+                metadata: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                templateKey: string | null;
+                entityId: string | null;
+                isRead: boolean;
+                /** Format: date-time */
+                readAt: string | null;
+                isActioned: boolean;
+                /** Format: date-time */
+                actionedAt: string | null;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        NotificationSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "notification";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Notification
+                 * @description Notification response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string | null;
+                    recipientEmail: string | null;
+                    type: string;
+                    /** @enum {string} */
+                    channel: "in_app" | "email" | "push";
+                    /** @enum {string} */
+                    recipientType: "sender" | "fulfillment_partner" | "admin";
+                    title: string;
+                    message: string;
+                    actionUrl: string | null;
+                    /** Format: date-time */
+                    scheduledAt: string;
+                    /** Format: date-time */
+                    sentAt: string | null;
+                    /** Format: date-time */
+                    deliveredAt: string | null;
+                    /** @enum {string} */
+                    status: "notification_pending" | "notification_sent" | "notification_delivered" | "notification_opened" | "notification_failed";
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    templateKey: string | null;
+                    entityId: string | null;
+                    isRead: boolean;
+                    /** Format: date-time */
+                    readAt: string | null;
+                    isActioned: boolean;
+                    /** Format: date-time */
+                    actionedAt: string | null;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        NotificationCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "notification";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Notification
+                 * @description Notification response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string | null;
+                    recipientEmail: string | null;
+                    type: string;
+                    /** @enum {string} */
+                    channel: "in_app" | "email" | "push";
+                    /** @enum {string} */
+                    recipientType: "sender" | "fulfillment_partner" | "admin";
+                    title: string;
+                    message: string;
+                    actionUrl: string | null;
+                    /** Format: date-time */
+                    scheduledAt: string;
+                    /** Format: date-time */
+                    sentAt: string | null;
+                    /** Format: date-time */
+                    deliveredAt: string | null;
+                    /** @enum {string} */
+                    status: "notification_pending" | "notification_sent" | "notification_delivered" | "notification_opened" | "notification_failed";
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    templateKey: string | null;
+                    entityId: string | null;
+                    isRead: boolean;
+                    /** Format: date-time */
+                    readAt: string | null;
+                    isActioned: boolean;
+                    /** Format: date-time */
+                    actionedAt: string | null;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * NotificationPreferences
+         * @description NotificationPreferences response schema
+         */
+        NotificationPreferences: {
+            /** Format: uuid */
+            userId: string;
+            category: string | null;
+            emailEnabled: boolean | null;
+            pushEnabled: boolean | null;
+            inAppEnabled: boolean | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /**
+         * NewNotificationPreferences
+         * @description Request schema for creating a new notificationpreferences
+         */
+        NewNotificationPreferences: {
+            /** Format: uuid */
+            userId: string;
+            category?: string | null;
+            emailEnabled?: boolean | null;
+            pushEnabled?: boolean | null;
+            inAppEnabled?: boolean | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        UpdateNotificationPreferences: {
+            /** Format: uuid */
+            userId?: string;
+            category?: string | null;
+            emailEnabled?: boolean | null;
+            pushEnabled?: boolean | null;
+            inAppEnabled?: boolean | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        NotificationPreferencesResource: {
+            /** @enum {string} */
+            type: "notification-preferences";
+            /** Format: uuid */
+            id: string;
+            /**
+             * NotificationPreferences
+             * @description NotificationPreferences response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                userId: string;
+                category: string | null;
+                emailEnabled: boolean | null;
+                pushEnabled: boolean | null;
+                inAppEnabled: boolean | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        NotificationPreferencesSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "notification-preferences";
                 /** Format: uuid */
@@ -2798,163 +8912,73 @@ export interface paths {
                  * @description NotificationPreferences response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  userId: string;
-                  category: string | null;
-                  emailEnabled: boolean | null;
-                  pushEnabled: boolean | null;
-                  inAppEnabled: boolean | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    /** Format: uuid */
+                    userId: string;
+                    category: string | null;
+                    emailEnabled: boolean | null;
+                    pushEnabled: boolean | null;
+                    inAppEnabled: boolean | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/lawyers": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all lawyers
-     * @description Returns a list of all registered lawyers with optional filtering and pagination
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        NotificationPreferencesCollectionResponse: {
+            data: {
                 /** @enum {string} */
-                type: "lawyer";
+                type: "notification-preferences";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Lawyer
-                 * @description Lawyer response schema
+                 * NotificationPreferences
+                 * @description NotificationPreferences response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  /** @enum {string} */
-                  status: "draft" | "submitted" | "approved" | "rejected";
-                  specialization: string | null;
-                  experienceYears: number | null;
-                  casesHandled: number;
-                  isAvailable: boolean;
-                  location: string | null;
-                  languages: string[] | null;
-                  bio: string | null;
-                  barNumber: string | null;
-                  issuingAuthority: string | null;
-                  jurisdiction: string | null;
-                  education:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  submittedAt: string | null;
-                  /** Format: uuid */
-                  reviewedBy: string | null;
-                  /** Format: date-time */
-                  reviewedAt: string | null;
-                  rejectionReason: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    /** Format: uuid */
+                    userId: string;
+                    category: string | null;
+                    emailEnabled: boolean | null;
+                    pushEnabled: boolean | null;
+                    inAppEnabled: boolean | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            }[];
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -2963,53 +8987,53 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * Lawyer
+         * @description Lawyer response schema
+         */
+        Lawyer: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            userId: string;
+            /** @enum {string} */
+            status: "draft" | "submitted" | "approved" | "rejected";
+            specialization: string | null;
+            experienceYears: number | null;
+            casesHandled: number;
+            isAvailable: boolean;
+            location: string | null;
+            languages: string[] | null;
+            bio: string | null;
+            barNumber: string | null;
+            issuingAuthority: string | null;
+            jurisdiction: string | null;
+            education: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            submittedAt: string | null;
+            /** Format: uuid */
+            reviewedBy: string | null;
+            /** Format: date-time */
+            reviewedAt: string | null;
+            rejectionReason: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a new lawyer
-     * @description Register a new lawyer in the system
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        NewLawyer: {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -3026,15 +9050,9 @@ export interface paths {
             barNumber?: string | null;
             issuingAuthority?: string | null;
             jurisdiction?: string | null;
-            education?:
-              | string
-              | number
-              | boolean
-              | unknown
-              | {
-                  [key: string]: unknown;
-                }
-              | unknown[];
+            education?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
             /** Format: date-time */
             submittedAt?: string | null;
             /** Format: uuid */
@@ -3046,273 +9064,8 @@ export interface paths {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "lawyer";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Lawyer
-                 * @description Lawyer response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  /** @enum {string} */
-                  status: "draft" | "submitted" | "approved" | "rejected";
-                  specialization: string | null;
-                  experienceYears: number | null;
-                  casesHandled: number;
-                  isAvailable: boolean;
-                  location: string | null;
-                  languages: string[] | null;
-                  bio: string | null;
-                  barNumber: string | null;
-                  issuingAuthority: string | null;
-                  jurisdiction: string | null;
-                  education:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  submittedAt: string | null;
-                  /** Format: uuid */
-                  reviewedBy: string | null;
-                  /** Format: date-time */
-                  reviewedAt: string | null;
-                  rejectionReason: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The request could not be completed due to a conflict with the current state of the target resource. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/lawyers/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get lawyer by ID
-     * @description Retrieve lawyer details by lawyer ID
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "lawyer";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Lawyer
-                 * @description Lawyer response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  /** @enum {string} */
-                  status: "draft" | "submitted" | "approved" | "rejected";
-                  specialization: string | null;
-                  experienceYears: number | null;
-                  casesHandled: number;
-                  isAvailable: boolean;
-                  location: string | null;
-                  languages: string[] | null;
-                  bio: string | null;
-                  barNumber: string | null;
-                  issuingAuthority: string | null;
-                  jurisdiction: string | null;
-                  education:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  submittedAt: string | null;
-                  /** Format: uuid */
-                  reviewedBy: string | null;
-                  /** Format: date-time */
-                  reviewedAt: string | null;
-                  rejectionReason: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    /**
-     * Update lawyer profile
-     * @description Update an existing lawyer's information
-     */
-    put: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        UpdateLawyer: {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
@@ -3329,15 +9082,9 @@ export interface paths {
             barNumber?: string | null;
             issuingAuthority?: string | null;
             jurisdiction?: string | null;
-            education?:
-              | string
-              | number
-              | boolean
-              | unknown
-              | {
-                  [key: string]: unknown;
-                }
-              | unknown[];
+            education?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
             /** Format: date-time */
             submittedAt?: string | null;
             /** Format: uuid */
@@ -3349,18 +9096,60 @@ export interface paths {
             createdAt?: string;
             /** Format: date-time */
             updatedAt?: string;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        LawyerResource: {
+            /** @enum {string} */
+            type: "lawyer";
+            /** Format: uuid */
+            id: string;
+            /**
+             * Lawyer
+             * @description Lawyer response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                userId: string;
+                /** @enum {string} */
+                status: "draft" | "submitted" | "approved" | "rejected";
+                specialization: string | null;
+                experienceYears: number | null;
+                casesHandled: number;
+                isAvailable: boolean;
+                location: string | null;
+                languages: string[] | null;
+                bio: string | null;
+                barNumber: string | null;
+                issuingAuthority: string | null;
+                jurisdiction: string | null;
+                education: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+                /** Format: date-time */
+                submittedAt: string | null;
+                /** Format: uuid */
+                reviewedBy: string | null;
+                /** Format: date-time */
+                reviewedAt: string | null;
+                rejectionReason: string | null;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        LawyerSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "lawyer";
                 /** Format: uuid */
@@ -3370,199 +9159,113 @@ export interface paths {
                  * @description Lawyer response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  userId: string;
-                  /** @enum {string} */
-                  status: "draft" | "submitted" | "approved" | "rejected";
-                  specialization: string | null;
-                  experienceYears: number | null;
-                  casesHandled: number;
-                  isAvailable: boolean;
-                  location: string | null;
-                  languages: string[] | null;
-                  bio: string | null;
-                  barNumber: string | null;
-                  issuingAuthority: string | null;
-                  jurisdiction: string | null;
-                  education:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string;
+                    /** @enum {string} */
+                    status: "draft" | "submitted" | "approved" | "rejected";
+                    specialization: string | null;
+                    experienceYears: number | null;
+                    casesHandled: number;
+                    isAvailable: boolean;
+                    location: string | null;
+                    languages: string[] | null;
+                    bio: string | null;
+                    barNumber: string | null;
+                    issuingAuthority: string | null;
+                    jurisdiction: string | null;
+                    education: string | number | boolean | unknown | {
                         [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  submittedAt: string | null;
-                  /** Format: uuid */
-                  reviewedBy: string | null;
-                  /** Format: date-time */
-                  reviewedAt: string | null;
-                  rejectionReason: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
+                    } | unknown[];
+                    /** Format: date-time */
+                    submittedAt: string | null;
+                    /** Format: uuid */
+                    reviewedBy: string | null;
+                    /** Format: date-time */
+                    reviewedAt: string | null;
+                    rejectionReason: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all matters
-     * @description Returns a list of matters with filtering and sorting options
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        LawyerCollectionResponse: {
+            data: {
                 /** @enum {string} */
-                type: "matter";
+                type: "lawyer";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * Matter
-                 * @description Matter response schema
+                 * Lawyer
+                 * @description Lawyer response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  clientUserId: string;
-                  /** Format: uuid */
-                  sourceChatId: string | null;
-                  title: string;
-                  summary: string | null;
-                  /** @enum {string} */
-                  status:
-                    | "draft"
-                    | "open"
-                    | "waiting_client"
-                    | "waiting_lawyer"
-                    | "in_progress"
-                    | "resolved"
-                    | "closed"
-                    | "archived";
-                  jurisdiction: string | null;
-                  practiceArea: string | null;
-                  urgency: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    userId: string;
+                    /** @enum {string} */
+                    status: "draft" | "submitted" | "approved" | "rejected";
+                    specialization: string | null;
+                    experienceYears: number | null;
+                    casesHandled: number;
+                    isAvailable: boolean;
+                    location: string | null;
+                    languages: string[] | null;
+                    bio: string | null;
+                    barNumber: string | null;
+                    issuingAuthority: string | null;
+                    jurisdiction: string | null;
+                    education: string | number | boolean | unknown | {
                         [key: string]: unknown;
-                      }
-                    | unknown[];
-                  isSharedWithLawyer: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  /** Format: date-time */
-                  closedAt: string | null;
+                    } | unknown[];
+                    /** Format: date-time */
+                    submittedAt: string | null;
+                    /** Format: uuid */
+                    reviewedBy: string | null;
+                    /** Format: date-time */
+                    reviewedAt: string | null;
+                    rejectionReason: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            }[];
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -3571,83 +9274,126 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Open a new matter
-     * @description Create and open a new matter record for a client.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        CreateLawyer: {
             /** Format: uuid */
             id?: string;
             /** Format: uuid */
-            clientUserId: string;
+            userId: string;
+            /** @enum {string} */
+            status?: "draft" | "submitted" | "approved" | "rejected";
+            specialization?: string | null;
+            experienceYears?: number | null;
+            casesHandled?: number;
+            isAvailable?: boolean;
+            location?: string | null;
+            languages?: string[] | null;
+            bio?: string | null;
+            barNumber?: string | null;
+            issuingAuthority?: string | null;
+            jurisdiction?: string | null;
+            education?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            submittedAt?: string | null;
+            /** Format: uuid */
+            reviewedBy?: string | null;
+            /** Format: date-time */
+            reviewedAt?: string | null;
+            rejectionReason?: string | null;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        /**
+         * Matter
+         * @description Matter response schema
+         */
+        Matter: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            creatorType: "client" | "lawyer" | "org";
+            /** Format: uuid */
+            createdByUserId: string;
+            /** Format: uuid */
+            creatorOrgId: string | null;
+            /** @enum {string} */
+            ownerType: "user" | "org" | "external";
+            /** Format: uuid */
+            clientUserId: string | null;
+            /** Format: uuid */
+            clientOrgId: string | null;
+            externalClientName: string | null;
+            externalClientContact: string | null;
+            /** Format: uuid */
+            representingOrgId: string | null;
+            /** Format: uuid */
+            sourceChatId: string | null;
+            title: string;
+            summary: string | null;
+            /** @enum {string} */
+            status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+            jurisdiction: string | null;
+            practiceArea: string | null;
+            urgency: string | null;
+            metadata: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            isSharedWithLawyer: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            /** Format: date-time */
+            closedAt: string | null;
+        };
+        /**
+         * NewMatter
+         * @description Request schema for creating a new matter
+         */
+        NewMatter: {
+            /** Format: uuid */
+            id?: string;
+            /** @enum {string} */
+            creatorType: "client" | "lawyer" | "org";
+            /** Format: uuid */
+            createdByUserId: string;
+            /** Format: uuid */
+            creatorOrgId?: string | null;
+            /** @enum {string} */
+            ownerType: "user" | "org" | "external";
+            /** Format: uuid */
+            clientUserId?: string | null;
+            /** Format: uuid */
+            clientOrgId?: string | null;
+            externalClientName?: string | null;
+            externalClientContact?: string | null;
+            /** Format: uuid */
+            representingOrgId?: string | null;
             /** Format: uuid */
             sourceChatId?: string | null;
             title: string;
             summary?: string | null;
             /** @enum {string} */
-            status?:
-              | "draft"
-              | "open"
-              | "waiting_client"
-              | "waiting_lawyer"
-              | "in_progress"
-              | "resolved"
-              | "closed"
-              | "archived";
+            status?: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
             jurisdiction?: string | null;
             practiceArea?: string | null;
             urgency?: string | null;
-            metadata?:
-              | string
-              | number
-              | boolean
-              | unknown
-              | {
-                  [key: string]: unknown;
-                }
-              | unknown[];
+            metadata?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
             isSharedWithLawyer?: boolean;
             /** Format: date-time */
             createdAt?: string;
@@ -3655,1103 +9401,104 @@ export interface paths {
             updatedAt?: string;
             /** Format: date-time */
             closedAt?: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Matter
-                 * @description Matter response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  clientUserId: string;
-                  /** Format: uuid */
-                  sourceChatId: string | null;
-                  title: string;
-                  summary: string | null;
-                  /** @enum {string} */
-                  status:
-                    | "draft"
-                    | "open"
-                    | "waiting_client"
-                    | "waiting_lawyer"
-                    | "in_progress"
-                    | "resolved"
-                    | "closed"
-                    | "archived";
-                  jurisdiction: string | null;
-                  practiceArea: string | null;
-                  urgency: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  isSharedWithLawyer: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get matter by ID
-     * @description Retrieve matter details by matter ID along with related information.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * Matter
-                 * @description Matter response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  clientUserId: string;
-                  /** Format: uuid */
-                  sourceChatId: string | null;
-                  title: string;
-                  summary: string | null;
-                  /** @enum {string} */
-                  status:
-                    | "draft"
-                    | "open"
-                    | "waiting_client"
-                    | "waiting_lawyer"
-                    | "in_progress"
-                    | "resolved"
-                    | "closed"
-                    | "archived";
-                  jurisdiction: string | null;
-                  practiceArea: string | null;
-                  urgency: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  isSharedWithLawyer: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  /** Format: date-time */
-                  closedAt: string | null;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/timeline": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get matter timeline
-     * @description Retrieve the chronological timeline of events and status changes for a specific matter.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: unknown[];
-              meta?: {
-                total: number;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/notes": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get matter notes
-     * @description List notes for a matter. Internal notes are only returned to lawyers.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-note";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterNote
-                 * @description MatterNote response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  authorUserId: string;
-                  content: string;
-                  isInternal: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-                total: number;
-                page: number;
-                limit: number;
-                totalPages: number;
-                /** @default {} */
-                availableFilters: {
-                  [key: string]: unknown;
-                };
-                sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
-                };
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a matter note
-     * @description Add a new note to a specific matter.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * UpdateMatterRequest
+         * @description Request schema for updating a matter
+         */
+        UpdateMatter: {
+            /** @enum {string} */
+            creatorType?: "client" | "lawyer" | "org";
             /** Format: uuid */
-            id?: string;
-            content: string;
-            isInternal?: boolean;
-            /** Format: date-time */
-            createdAt?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-note";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterNote
-                 * @description MatterNote response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  authorUserId: string;
-                  content: string;
-                  isInternal: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/documents": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get matter documents
-     * @description List the documents attached to a specific matter.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-document";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterDocument
-                 * @description MatterDocument response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  uploadedByUserId: string;
-                  fileName: string;
-                  fileUrl: string;
-                  fileType: string | null;
-                  fileSize: number | null;
-                  description: string | null;
-                  analysis:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  analyzedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-                total: number;
-                page: number;
-                limit: number;
-                totalPages: number;
-                /** @default {} */
-                availableFilters: {
-                  [key: string]: unknown;
-                };
-                sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
-                };
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Upload a matter document
-     * @description Upload and persist a document to a specific matter, enqueuing async RAG processing.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
-            /**
-             * Format: binary
-             * @description The PDF document to upload
-             */
-            file: string;
-            /** @description Optional description of the document */
-            description?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-document";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterDocument
-                 * @description MatterDocument response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  uploadedByUserId: string;
-                  fileName: string;
-                  fileUrl: string;
-                  fileType: string | null;
-                  fileSize: number | null;
-                  description: string | null;
-                  analysis:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  analyzedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/documents/{documentId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get a matter document
-     * @description Retrieve a single document attached to a specific matter.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-document";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterDocument
-                 * @description MatterDocument response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  uploadedByUserId: string;
-                  fileName: string;
-                  fileUrl: string;
-                  fileType: string | null;
-                  fileSize: number | null;
-                  description: string | null;
-                  analysis:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  analyzedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/documents/{documentId}/analyze": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Analyze a matter document
-     * @description Enqueues an async job to analyze a matter's legal document. Poll the document to retrieve the result once analysis is complete.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has been accepted for processing, but the processing has not been completed. */
-        202: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-document";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterDocument
-                 * @description MatterDocument response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  uploadedByUserId: string;
-                  fileName: string;
-                  fileUrl: string;
-                  fileType: string | null;
-                  fileSize: number | null;
-                  description: string | null;
-                  analysis:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                  /** Format: date-time */
-                  analyzedAt: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Update an existing matter
-     * @description Update details of a specific matter by ID.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+            createdByUserId?: string;
+            /** Format: uuid */
+            creatorOrgId?: string | null;
+            /** @enum {string} */
+            ownerType?: "user" | "org" | "external";
+            /** Format: uuid */
+            clientOrgId?: string | null;
+            externalClientName?: string | null;
+            externalClientContact?: string | null;
+            /** Format: uuid */
+            representingOrgId?: string | null;
             /** Format: uuid */
             sourceChatId?: string | null;
             title?: string;
             summary?: string | null;
             /** @enum {string} */
-            status?:
-              | "draft"
-              | "open"
-              | "waiting_client"
-              | "waiting_lawyer"
-              | "in_progress"
-              | "resolved"
-              | "closed"
-              | "archived";
+            status?: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
             jurisdiction?: string | null;
             practiceArea?: string | null;
             urgency?: string | null;
-            metadata?:
-              | string
-              | number
-              | boolean
-              | unknown
-              | {
-                  [key: string]: unknown;
-                }
-              | unknown[];
+            metadata?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
             isSharedWithLawyer?: boolean;
             /** Format: date-time */
             updatedAt?: string;
             /** Format: date-time */
             closedAt?: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        MatterResource: {
+            /** @enum {string} */
+            type: "matter";
+            /** Format: uuid */
+            id: string;
+            /**
+             * Matter
+             * @description Matter response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                creatorType: "client" | "lawyer" | "org";
+                /** Format: uuid */
+                createdByUserId: string;
+                /** Format: uuid */
+                creatorOrgId: string | null;
+                /** @enum {string} */
+                ownerType: "user" | "org" | "external";
+                /** Format: uuid */
+                clientUserId: string | null;
+                /** Format: uuid */
+                clientOrgId: string | null;
+                externalClientName: string | null;
+                externalClientContact: string | null;
+                /** Format: uuid */
+                representingOrgId: string | null;
+                /** Format: uuid */
+                sourceChatId: string | null;
+                title: string;
+                summary: string | null;
+                /** @enum {string} */
+                status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                jurisdiction: string | null;
+                practiceArea: string | null;
+                urgency: string | null;
+                metadata: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+                isSharedWithLawyer: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                /** Format: date-time */
+                closedAt: string | null;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        MatterSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "matter";
                 /** Format: uuid */
@@ -4761,163 +9508,127 @@ export interface paths {
                  * @description Matter response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  clientUserId: string;
-                  /** Format: uuid */
-                  sourceChatId: string | null;
-                  title: string;
-                  summary: string | null;
-                  /** @enum {string} */
-                  status:
-                    | "draft"
-                    | "open"
-                    | "waiting_client"
-                    | "waiting_lawyer"
-                    | "in_progress"
-                    | "resolved"
-                    | "closed"
-                    | "archived";
-                  jurisdiction: string | null;
-                  practiceArea: string | null;
-                  urgency: string | null;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    creatorType: "client" | "lawyer" | "org";
+                    /** Format: uuid */
+                    createdByUserId: string;
+                    /** Format: uuid */
+                    creatorOrgId: string | null;
+                    /** @enum {string} */
+                    ownerType: "user" | "org" | "external";
+                    /** Format: uuid */
+                    clientUserId: string | null;
+                    /** Format: uuid */
+                    clientOrgId: string | null;
+                    externalClientName: string | null;
+                    externalClientContact: string | null;
+                    /** Format: uuid */
+                    representingOrgId: string | null;
+                    /** Format: uuid */
+                    sourceChatId: string | null;
+                    title: string;
+                    summary: string | null;
+                    /** @enum {string} */
+                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                    jurisdiction: string | null;
+                    practiceArea: string | null;
+                    urgency: string | null;
+                    metadata: string | number | boolean | unknown | {
                         [key: string]: unknown;
-                      }
-                    | unknown[];
-                  isSharedWithLawyer: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                  /** Format: date-time */
-                  closedAt: string | null;
+                    } | unknown[];
+                    isSharedWithLawyer: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    /** Format: date-time */
+                    closedAt: string | null;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/lawyers": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get matter lawyers
-     * @description List the lawyers assigned or invited to a specific matter.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        MatterCollectionResponse: {
+            data: {
                 /** @enum {string} */
-                type: "matter-lawyer";
+                type: "matter";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * MatterLawyer
-                 * @description MatterLawyer response schema
+                 * Matter
+                 * @description Matter response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  role: "primary" | "consulting" | "referred";
-                  status: string | null;
-                  /** Format: date-time */
-                  invitedAt: string;
-                  /** Format: date-time */
-                  acceptedAt: string | null;
-                  notes: string | null;
+                    /** Format: uuid */
+                    id: string;
+                    /** @enum {string} */
+                    creatorType: "client" | "lawyer" | "org";
+                    /** Format: uuid */
+                    createdByUserId: string;
+                    /** Format: uuid */
+                    creatorOrgId: string | null;
+                    /** @enum {string} */
+                    ownerType: "user" | "org" | "external";
+                    /** Format: uuid */
+                    clientUserId: string | null;
+                    /** Format: uuid */
+                    clientOrgId: string | null;
+                    externalClientName: string | null;
+                    externalClientContact: string | null;
+                    /** Format: uuid */
+                    representingOrgId: string | null;
+                    /** Format: uuid */
+                    sourceChatId: string | null;
+                    title: string;
+                    summary: string | null;
+                    /** @enum {string} */
+                    status: "draft" | "open" | "waiting_client" | "waiting_lawyer" | "in_progress" | "resolved" | "closed" | "archived";
+                    jurisdiction: string | null;
+                    practiceArea: string | null;
+                    urgency: string | null;
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    isSharedWithLawyer: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                    /** Format: date-time */
+                    closedAt: string | null;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            }[];
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -4926,64 +9637,212 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * MatterNote
+         * @description MatterNote response schema
+         */
+        MatterNote: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            matterId: string;
+            /** Format: uuid */
+            authorUserId: string;
+            content: string;
+            isInternal: boolean;
+            /** Format: date-time */
+            createdAt: string;
         };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Assign a lawyer to a matter
-     * @description Link a lawyer to a specific matter with a defined role.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * NewMatterNote
+         * @description Request schema for creating a new matternote
+         */
+        NewMatterNote: {
             /** Format: uuid */
             id?: string;
+            /** Format: uuid */
+            matterId: string;
+            /** Format: uuid */
+            authorUserId: string;
+            content: string;
+            isInternal?: boolean;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        /**
+         * UpdateMatterNoteRequest
+         * @description Request schema for updating a matternote
+         */
+        UpdateMatterNote: {
+            content?: string;
+            isInternal?: boolean;
+        };
+        MatterNoteResource: {
+            /** @enum {string} */
+            type: "matter-note";
+            /** Format: uuid */
+            id: string;
+            /**
+             * MatterNote
+             * @description MatterNote response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                matterId: string;
+                /** Format: uuid */
+                authorUserId: string;
+                content: string;
+                isInternal: boolean;
+                /** Format: date-time */
+                createdAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        MatterNoteSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "matter-note";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * MatterNote
+                 * @description MatterNote response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    authorUserId: string;
+                    content: string;
+                    isInternal: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        MatterNoteCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "matter-note";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * MatterNote
+                 * @description MatterNote response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    authorUserId: string;
+                    content: string;
+                    isInternal: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * MatterLawyer
+         * @description MatterLawyer response schema
+         */
+        MatterLawyer: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            matterId: string;
+            /** Format: uuid */
+            lawyerId: string;
+            /** @enum {string} */
+            role: "primary" | "consulting" | "referred";
+            status: string | null;
+            /** Format: date-time */
+            invitedAt: string;
+            /** Format: date-time */
+            acceptedAt: string | null;
+            notes: string | null;
+        };
+        /**
+         * NewMatterLawyer
+         * @description Request schema for creating a new matterlawyer
+         */
+        NewMatterLawyer: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            matterId: string;
             /** Format: uuid */
             lawyerId: string;
             /** @enum {string} */
@@ -4994,126 +9853,12 @@ export interface paths {
             /** Format: date-time */
             acceptedAt?: string | null;
             notes?: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "matter-lawyer";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * MatterLawyer
-                 * @description MatterLawyer response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  role: "primary" | "consulting" | "referred";
-                  status: string | null;
-                  /** Format: date-time */
-                  invitedAt: string;
-                  /** Format: date-time */
-                  acceptedAt: string | null;
-                  notes: string | null;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/matters/{matterId}/lawyers/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    /**
-     * Update current lawyer's assignment status on a matter
-     * @description Allows the authenticated lawyer to update their assignment details or status on a specific matter.
-     */
-    patch: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
+        /**
+         * UpdateMatterLawyerRequest
+         * @description Request schema for updating a matterlawyer
+         */
+        UpdateMatterLawyer: {
             /** Format: uuid */
             lawyerId?: string;
             /** @enum {string} */
@@ -5122,18 +9867,44 @@ export interface paths {
             /** Format: date-time */
             acceptedAt?: string | null;
             notes?: string | null;
-          };
         };
-      };
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        MatterLawyerResource: {
+            /** @enum {string} */
+            type: "matter-lawyer";
+            /** Format: uuid */
+            id: string;
+            /**
+             * MatterLawyer
+             * @description MatterLawyer response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                matterId: string;
+                /** Format: uuid */
+                lawyerId: string;
+                /** @enum {string} */
+                role: "primary" | "consulting" | "referred";
+                status: string | null;
+                /** Format: date-time */
+                invitedAt: string;
+                /** Format: date-time */
+                acceptedAt: string | null;
+                notes: string | null;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        MatterLawyerSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "matter-lawyer";
                 /** Format: uuid */
@@ -5143,287 +9914,81 @@ export interface paths {
                  * @description MatterLawyer response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  matterId: string;
-                  /** Format: uuid */
-                  lawyerId: string;
-                  /** @enum {string} */
-                  role: "primary" | "consulting" | "referred";
-                  status: string | null;
-                  /** Format: date-time */
-                  invitedAt: string;
-                  /** Format: date-time */
-                  acceptedAt: string | null;
-                  notes: string | null;
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    lawyerId: string;
+                    /** @enum {string} */
+                    role: "primary" | "consulting" | "referred";
+                    status: string | null;
+                    /** Format: date-time */
+                    invitedAt: string;
+                    /** Format: date-time */
+                    acceptedAt: string | null;
+                    notes: string | null;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    trace?: never;
-  };
-  "/v1/messages": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Send a message
-     * @description Send a new message to a chat
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
-            /** Format: uuid */
-            chatId: string;
-            content: string;
-            /** @enum {string} */
-            senderType: "user" | "assistant" | "system";
-            /** Format: uuid */
-            userId: string | null;
-            metadata?: {
-              [key: string]: unknown;
-            };
-          };
-        };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        MatterLawyerCollectionResponse: {
+            data: {
                 /** @enum {string} */
-                type: "message";
+                type: "matter-lawyer";
                 /** Format: uuid */
                 id: string;
                 /**
-                 * ChatMessage
-                 * @description ChatMessage response schema
+                 * MatterLawyer
+                 * @description MatterLawyer response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  chatId: string;
-                  content: string;
-                  /** @enum {string} */
-                  senderType: "user" | "assistant" | "system";
-                  /** Format: uuid */
-                  userId: string | null;
-                  /** Format: date-time */
-                  timestamp: string;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    lawyerId: string;
+                    /** @enum {string} */
+                    role: "primary" | "consulting" | "referred";
+                    status: string | null;
+                    /** Format: date-time */
+                    invitedAt: string;
+                    /** Format: date-time */
+                    acceptedAt: string | null;
+                    notes: string | null;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            }[];
+            links: {
                 self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
             };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/messages/{chatId}/all": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get messages by chat ID
-     * @description Retrieve all messages for a specific chat
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "message";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * ChatMessage
-                 * @description ChatMessage response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  chatId: string;
-                  content: string;
-                  /** @enum {string} */
-                  senderType: "user" | "assistant" | "system";
-                  /** Format: uuid */
-                  userId: string | null;
-                  /** Format: date-time */
-                  timestamp: string;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
-                        [key: string]: unknown;
-                      }
-                    | unknown[];
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -5432,85 +9997,312 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * MatterDocument
+         * @description MatterDocument response schema
+         */
+        MatterDocument: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            matterId: string;
+            /** Format: uuid */
+            uploadedByUserId: string;
+            fileName: string;
+            fileUrl: string;
+            fileType: string | null;
+            fileSize: number | null;
+            description: string | null;
+            analysis: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            analyzedAt: string | null;
+            /** Format: date-time */
+            createdAt: string;
         };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * NewMatterDocument
+         * @description Request schema for creating a new matterdocument
+         */
+        NewMatterDocument: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            matterId: string;
+            /** Format: uuid */
+            uploadedByUserId: string;
+            fileName: string;
+            fileUrl: string;
+            fileType?: string | null;
+            fileSize?: number | null;
+            description?: string | null;
+            analysis?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            analyzedAt?: string | null;
+            /** Format: date-time */
+            createdAt?: string;
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * UpdateMatterDocumentRequest
+         * @description Request schema for updating a matterdocument
+         */
+        UpdateMatterDocument: {
+            fileName?: string;
+            fileUrl?: string;
+            fileType?: string | null;
+            fileSize?: number | null;
+            description?: string | null;
+            analysis?: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+            /** Format: date-time */
+            analyzedAt?: string | null;
         };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/messages/{messageId}/retry": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Retry a failed assistant reply
-     * @description Reset the reply status to pending and re-enqueue the reply job for a user message
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        MatterDocumentResource: {
+            /** @enum {string} */
+            type: "matter-document";
+            /** Format: uuid */
+            id: string;
+            /**
+             * MatterDocument
+             * @description MatterDocument response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                matterId: string;
+                /** Format: uuid */
+                uploadedByUserId: string;
+                fileName: string;
+                fileUrl: string;
+                fileType: string | null;
+                fileSize: number | null;
+                description: string | null;
+                analysis: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+                /** Format: date-time */
+                analyzedAt: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        MatterDocumentSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "matter-document";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * MatterDocument
+                 * @description MatterDocument response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    uploadedByUserId: string;
+                    fileName: string;
+                    fileUrl: string;
+                    fileType: string | null;
+                    fileSize: number | null;
+                    description: string | null;
+                    analysis: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    /** Format: date-time */
+                    analyzedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        MatterDocumentCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "matter-document";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * MatterDocument
+                 * @description MatterDocument response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    matterId: string;
+                    /** Format: uuid */
+                    uploadedByUserId: string;
+                    fileName: string;
+                    fileUrl: string;
+                    fileType: string | null;
+                    fileSize: number | null;
+                    description: string | null;
+                    analysis: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                    /** Format: date-time */
+                    analyzedAt: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * ChatMessage
+         * @description ChatMessage response schema
+         */
+        Message: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
+            /** Format: date-time */
+            timestamp: string;
+            metadata: string | number | boolean | unknown | {
+                [key: string]: unknown;
+            } | unknown[];
+        };
+        NewMessage: {
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
+            metadata?: {
+                [key: string]: unknown;
+            };
+        };
+        UpdateMessage: {
+            /** Format: uuid */
+            chatId?: string;
+            content?: string;
+            /** @enum {string} */
+            senderType?: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId?: string | null;
+            metadata?: {
+                [key: string]: unknown;
+            };
+        };
+        MessageResource: {
+            /** @enum {string} */
+            type: "message";
+            /** Format: uuid */
+            id: string;
+            /**
+             * ChatMessage
+             * @description ChatMessage response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                chatId: string;
+                content: string;
+                /** @enum {string} */
+                senderType: "user" | "assistant" | "system";
+                /** Format: uuid */
+                userId: string | null;
+                /** Format: date-time */
+                timestamp: string;
+                metadata: string | number | boolean | unknown | {
+                    [key: string]: unknown;
+                } | unknown[];
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        MessageSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "message";
                 /** Format: uuid */
@@ -5520,121 +10312,558 @@ export interface paths {
                  * @description ChatMessage response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  /** Format: uuid */
-                  chatId: string;
-                  content: string;
-                  /** @enum {string} */
-                  senderType: "user" | "assistant" | "system";
-                  /** Format: uuid */
-                  userId: string | null;
-                  /** Format: date-time */
-                  timestamp: string;
-                  metadata:
-                    | string
-                    | number
-                    | boolean
-                    | unknown
-                    | {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    chatId: string;
+                    content: string;
+                    /** @enum {string} */
+                    senderType: "user" | "assistant" | "system";
+                    /** Format: uuid */
+                    userId: string | null;
+                    /** Format: date-time */
+                    timestamp: string;
+                    metadata: string | number | boolean | unknown | {
                         [key: string]: unknown;
-                      }
-                    | unknown[];
+                    } | unknown[];
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              };
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
-              } & {
+            } & {
                 [key: string]: unknown;
-              };
             };
-          };
         };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        MessageCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "message";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * ChatMessage
+                 * @description ChatMessage response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    chatId: string;
+                    content: string;
+                    /** @enum {string} */
+                    senderType: "user" | "assistant" | "system";
+                    /** Format: uuid */
+                    userId: string | null;
+                    /** Format: date-time */
+                    timestamp: string;
+                    metadata: string | number | boolean | unknown | {
+                        [key: string]: unknown;
+                    } | unknown[];
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        MessageSender: {
+            id: string;
+            displayName?: string;
         };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        SendMessageRequest: {
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
+            metadata?: {
+                [key: string]: unknown;
+            };
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        MessageInput: {
+            /** Format: uuid */
+            chatId: string;
+            content: string;
+            /** @enum {string} */
+            senderType: "user" | "assistant" | "system";
+            /** Format: uuid */
+            userId: string | null;
+            metadata?: {
+                [key: string]: unknown;
+            };
         };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/services": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all legal services
-     * @description Returns a list of all available legal services with optional category filtering
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
+        /**
+         * Org
+         * @description Org response schema
+         */
+        Org: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            slug: string;
+            /** Format: uuid */
+            createdByUserId: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        /**
+         * NewOrg
+         * @description Request schema for creating a new org
+         */
+        NewOrg: {
+            /** Format: uuid */
+            id?: string;
+            name: string;
+            slug: string;
+            /** Format: uuid */
+            createdByUserId: string;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        /**
+         * UpdateOrgRequest
+         * @description Request schema for updating a org
+         */
+        UpdateOrg: {
+            name?: string;
+            slug?: string;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        OrgResource: {
+            /** @enum {string} */
+            type: "org";
+            /** Format: uuid */
+            id: string;
+            /**
+             * Org
+             * @description Org response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                slug: string;
+                /** Format: uuid */
+                createdByUserId: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        OrgSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "org";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Org
+                 * @description Org response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    slug: string;
+                    /** Format: uuid */
+                    createdByUserId: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        OrgCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "org";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * Org
+                 * @description Org response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    slug: string;
+                    /** Format: uuid */
+                    createdByUserId: string;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * OrgMember
+         * @description OrgMember response schema
+         */
+        OrgMember: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            orgId: string;
+            /** Format: uuid */
+            userId: string;
+            /** Format: uuid */
+            lawyerId: string | null;
+            /** @enum {string} */
+            role: "owner" | "admin" | "member";
+            /** @enum {string} */
+            status: "invited" | "active" | "removed";
+            /** Format: date-time */
+            invitedAt: string;
+            /** Format: date-time */
+            joinedAt: string | null;
+        };
+        /**
+         * NewOrgMember
+         * @description Request schema for creating a new orgmember
+         */
+        NewOrgMember: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            orgId: string;
+            /** Format: uuid */
+            userId: string;
+            /** Format: uuid */
+            lawyerId?: string | null;
+            /** @enum {string} */
+            role?: "owner" | "admin" | "member";
+            /** @enum {string} */
+            status?: "invited" | "active" | "removed";
+            /** Format: date-time */
+            invitedAt?: string;
+            /** Format: date-time */
+            joinedAt?: string | null;
+        };
+        /**
+         * UpdateOrgMemberRequest
+         * @description Request schema for updating a orgmember
+         */
+        UpdateOrgMember: {
+            /** Format: uuid */
+            lawyerId?: string | null;
+            /** @enum {string} */
+            role?: "owner" | "admin" | "member";
+            /** @enum {string} */
+            status?: "invited" | "active" | "removed";
+            /** Format: date-time */
+            joinedAt?: string | null;
+        };
+        OrgMemberResource: {
+            /** @enum {string} */
+            type: "org-member";
+            /** Format: uuid */
+            id: string;
+            /**
+             * OrgMember
+             * @description OrgMember response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                orgId: string;
+                /** Format: uuid */
+                userId: string;
+                /** Format: uuid */
+                lawyerId: string | null;
+                /** @enum {string} */
+                role: "owner" | "admin" | "member";
+                /** @enum {string} */
+                status: "invited" | "active" | "removed";
+                /** Format: date-time */
+                invitedAt: string;
+                /** Format: date-time */
+                joinedAt: string | null;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        OrgMemberSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "org-member";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * OrgMember
+                 * @description OrgMember response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    orgId: string;
+                    /** Format: uuid */
+                    userId: string;
+                    /** Format: uuid */
+                    lawyerId: string | null;
+                    /** @enum {string} */
+                    role: "owner" | "admin" | "member";
+                    /** @enum {string} */
+                    status: "invited" | "active" | "removed";
+                    /** Format: date-time */
+                    invitedAt: string;
+                    /** Format: date-time */
+                    joinedAt: string | null;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            };
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        OrgMemberCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "org-member";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * OrgMember
+                 * @description OrgMember response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    orgId: string;
+                    /** Format: uuid */
+                    userId: string;
+                    /** Format: uuid */
+                    lawyerId: string | null;
+                    /** @enum {string} */
+                    role: "owner" | "admin" | "member";
+                    /** @enum {string} */
+                    status: "invited" | "active" | "removed";
+                    /** Format: date-time */
+                    invitedAt: string;
+                    /** Format: date-time */
+                    joinedAt: string | null;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
+            };
+        };
+        /**
+         * LegalService
+         * @description LegalService response schema
+         */
+        LegalService: {
+            /** Format: uuid */
+            id: string;
+            name: string;
+            categoryId: string | null;
+            slug: string;
+            description: string | null;
+            /** Format: date-time */
+            createdAt: string;
+        };
+        /**
+         * NewLegalService
+         * @description Request schema for creating a new legalservice
+         */
+        NewLegalService: {
+            /** Format: uuid */
+            id?: string;
+            name: string;
+            categoryId?: string | null;
+            slug: string;
+            description?: string | null;
+            /** Format: date-time */
+            createdAt?: string;
+        };
+        LegalServiceResource: {
+            /** @enum {string} */
+            type: "legal-service";
+            /** Format: uuid */
+            id: string;
+            /**
+             * LegalService
+             * @description LegalService response schema
+             */
+            attributes: {
+                /** Format: uuid */
+                id: string;
+                name: string;
+                categoryId: string | null;
+                slug: string;
+                description: string | null;
+                /** Format: date-time */
+                createdAt: string;
+            };
+            relationships?: {
+                [key: string]: unknown;
+            };
+            meta?: {
+                [key: string]: unknown;
+            };
+            links?: {
+                [key: string]: string;
+            };
+        };
+        LegalServiceSingleResponse: {
+            data: {
                 /** @enum {string} */
                 type: "legal-service";
                 /** Format: uuid */
@@ -5644,29 +10873,69 @@ export interface paths {
                  * @description LegalService response schema
                  */
                 attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string;
-                  categoryId: string | null;
-                  slug: string;
-                  description: string | null;
-                  /** Format: date-time */
-                  createdAt: string;
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    categoryId: string | null;
+                    slug: string;
+                    description: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
                 };
                 relationships?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 meta?: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 links?: {
-                  [key: string]: string;
+                    [key: string]: string;
                 };
-              }[];
-              links: {
+            };
+            links: {
                 self: string;
-              };
-              metadata: {
+            };
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
+            };
+        };
+        LegalServiceCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "legal-service";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * LegalService
+                 * @description LegalService response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string;
+                    categoryId: string | null;
+                    slug: string;
+                    description: string | null;
+                    /** Format: date-time */
+                    createdAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
+            };
+            metadata: {
                 requestId: string;
                 timestamp: string;
                 total: number;
@@ -5675,808 +10944,30 @@ export interface paths {
                 totalPages: number;
                 /** @default {} */
                 availableFilters: {
-                  [key: string]: unknown;
+                    [key: string]: unknown;
                 };
                 sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
                 };
-              };
             };
-          };
         };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
+        /**
+         * ServiceCategory
+         * @description ServiceCategory response schema
+         */
+        ServiceCategory: {
+            id: string;
+            label: string;
+            icon: string;
         };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/users/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get current authenticated user's information
-     * @description Returns the currently authenticated user's profile information.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "user";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * User
-                 * @description User response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string | null;
-                  email: string | null;
-                  /** @enum {string} */
-                  role: "user" | "admin" | "lawyer";
-                  /** Format: date-time */
-                  emailVerifiedAt: string | null;
-                  userAgent: string | null;
-                  lastIp: string | null;
-                  isAnonymous: boolean;
-                  age: number | null;
-                  /** @enum {string|null} */
-                  gender:
-                    | "male"
-                    | "female"
-                    | "non_binary"
-                    | "prefer_not_to_say"
-                    | "other"
-                    | null;
-                  country: string | null;
-                  city: string | null;
-                  phoneNumber: string | null;
-                  occupation: string | null;
-                  bio: string | null;
-                  profilePicture: string | null;
-                  isFirstLogin: boolean;
-                  isOnboarded: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description An unexpected condition was encountered and no more specific message is suitable. */
-        500: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/users": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get all users
-     * @description Returns a paginated list of users with filtering and sorting options
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "user";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * User
-                 * @description User response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string | null;
-                  email: string | null;
-                  /** @enum {string} */
-                  role: "user" | "admin" | "lawyer";
-                  /** Format: date-time */
-                  emailVerifiedAt: string | null;
-                  userAgent: string | null;
-                  lastIp: string | null;
-                  isAnonymous: boolean;
-                  age: number | null;
-                  /** @enum {string|null} */
-                  gender:
-                    | "male"
-                    | "female"
-                    | "non_binary"
-                    | "prefer_not_to_say"
-                    | "other"
-                    | null;
-                  country: string | null;
-                  city: string | null;
-                  phoneNumber: string | null;
-                  occupation: string | null;
-                  bio: string | null;
-                  profilePicture: string | null;
-                  isFirstLogin: boolean;
-                  isOnboarded: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              }[];
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-                total: number;
-                page: number;
-                limit: number;
-                totalPages: number;
-                /** @default {} */
-                availableFilters: {
-                  [key: string]: unknown;
-                };
-                sortOptions: {
-                  fields: string[];
-                  default: string;
-                  /** @enum {string} */
-                  direction: "asc" | "desc";
-                };
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    /**
-     * Create a new user
-     * @description Register a new user account. Can be used for both anonymous and registered users.
-     */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: {
-        content: {
-          "application/json": {
-            name?: string | null;
-            email?: string | null;
-            password?: string | null;
-            /** Format: date-time */
-            emailVerifiedAt?: string | null;
-            fingerprint?: string | null;
-            userAgent?: string | null;
-            lastIp?: string | null;
-            isAnonymous?: boolean;
-            age?: number | null;
-            /** @enum {string|null} */
-            gender?:
-              | "male"
-              | "female"
-              | "non_binary"
-              | "prefer_not_to_say"
-              | "other"
-              | null;
-            country?: string | null;
-            city?: string | null;
-            phoneNumber?: string | null;
-            occupation?: string | null;
-            bio?: string | null;
-            profilePicture?: string | null;
-            isFirstLogin?: boolean;
-            isOnboarded?: boolean;
-            /** Format: date-time */
-            updatedAt?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description The request has been fulfilled and resulted in a new resource being created. */
-        201: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "user";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * User
-                 * @description User response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string | null;
-                  email: string | null;
-                  /** @enum {string} */
-                  role: "user" | "admin" | "lawyer";
-                  /** Format: date-time */
-                  emailVerifiedAt: string | null;
-                  userAgent: string | null;
-                  lastIp: string | null;
-                  isAnonymous: boolean;
-                  age: number | null;
-                  /** @enum {string|null} */
-                  gender:
-                    | "male"
-                    | "female"
-                    | "non_binary"
-                    | "prefer_not_to_say"
-                    | "other"
-                    | null;
-                  country: string | null;
-                  city: string | null;
-                  phoneNumber: string | null;
-                  occupation: string | null;
-                  bio: string | null;
-                  profilePicture: string | null;
-                  isFirstLogin: boolean;
-                  isOnboarded: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description The request could not be understood or was missing required parameters. */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The request could not be completed due to a conflict with the current state of the target resource. */
-        409: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/v1/users/{id}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get user by ID
-     * @description Retrieve user details by user ID. Users can only view their own profile unless they are admins.
-     */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          id: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description The request has succeeded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              data: {
-                /** @enum {string} */
-                type: "user";
-                /** Format: uuid */
-                id: string;
-                /**
-                 * User
-                 * @description User response schema
-                 */
-                attributes: {
-                  /** Format: uuid */
-                  id: string;
-                  name: string | null;
-                  email: string | null;
-                  /** @enum {string} */
-                  role: "user" | "admin" | "lawyer";
-                  /** Format: date-time */
-                  emailVerifiedAt: string | null;
-                  userAgent: string | null;
-                  lastIp: string | null;
-                  isAnonymous: boolean;
-                  age: number | null;
-                  /** @enum {string|null} */
-                  gender:
-                    | "male"
-                    | "female"
-                    | "non_binary"
-                    | "prefer_not_to_say"
-                    | "other"
-                    | null;
-                  country: string | null;
-                  city: string | null;
-                  phoneNumber: string | null;
-                  occupation: string | null;
-                  bio: string | null;
-                  profilePicture: string | null;
-                  isFirstLogin: boolean;
-                  isOnboarded: boolean;
-                  /** Format: date-time */
-                  createdAt: string;
-                  /** Format: date-time */
-                  updatedAt: string;
-                };
-                relationships?: {
-                  [key: string]: unknown;
-                };
-                meta?: {
-                  [key: string]: unknown;
-                };
-                links?: {
-                  [key: string]: string;
-                };
-              };
-              links: {
-                self: string;
-              };
-              metadata: {
-                requestId: string;
-                timestamp: string;
-              } & {
-                [key: string]: unknown;
-              };
-            };
-          };
-        };
-        /** @description Authentication failed or user doesn't have permissions for the requested operation. */
-        401: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The server understood the request but refuses to authorize it. */
-        403: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-        /** @description The requested resource could not be found on the server. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["JsonApiErrorResponse"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-}
-export type webhooks = Record<string, never>;
-export interface components {
-  schemas: {
-    RefreshToken: {
-      /** @description The new access token (JWT) */
-      token: string;
-    };
-    RefreshTokenResource: {
-      /** @enum {string} */
-      type: "refreshToken";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        /** @description The new access token (JWT) */
-        token: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    RefreshTokenSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "refreshToken";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** @description The new access token (JWT) */
-          token: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    RefreshTokenCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "refreshToken";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** @description The new access token (JWT) */
-          token: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    EmailVerificationStatus: {
-      /** @description A human-readable status message. */
-      message: string;
-    };
-    EmailVerificationStatusResource: {
-      /** @enum {string} */
-      type: "emailVerificationStatus";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        /** @description A human-readable status message. */
-        message: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    EmailVerificationStatusSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "emailVerificationStatus";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** @description A human-readable status message. */
-          message: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    EmailVerificationStatusCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "emailVerificationStatus";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          /** @description A human-readable status message. */
-          message: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /** RegisterUser */
-    AuthSignup: {
-      name?: string | null;
-      email?: string | null;
-      password: string;
-      /** @enum {string} */
-      role?: "user" | "admin" | "lawyer";
-    };
-    /** LoginUser */
-    AuthLogin: {
-      /** Format: email */
-      email: string;
-      password: string;
-      /** @enum {string} */
-      role?: "user" | "admin" | "lawyer";
-    };
-    AuthLogout: Record<string, never>;
-    AuthRefresh: Record<string, never>;
-    AuthMe: Record<string, never>;
-    AuthResetPasswordRequest: {
-      /** Format: email */
-      email: string;
-    };
-    AuthResource: {
-      /** @enum {string} */
-      type: "auth";
-      /** Format: uuid */
-      id: string;
-      attributes: {
-        data: {
-          /** @enum {string} */
-          type: "user";
-          /** Format: uuid */
-          id: string;
-          /**
-           * User
-           * @description User response schema
-           */
-          attributes: {
+        /**
+         * User
+         * @description User response schema
+         */
+        User: {
             /** Format: uuid */
             id: string;
             name: string | null;
@@ -6490,13 +10981,7 @@ export interface components {
             isAnonymous: boolean;
             age: number | null;
             /** @enum {string|null} */
-            gender:
-              | "male"
-              | "female"
-              | "non_binary"
-              | "prefer_not_to_say"
-              | "other"
-              | null;
+            gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
             country: string | null;
             city: string | null;
             phoneNumber: string | null;
@@ -6509,45 +10994,60 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-          };
-          relationships?: {
-            [key: string]: unknown;
-          };
-          meta?: {
-            [key: string]: unknown;
-          };
-          links?: {
-            [key: string]: string;
-          };
         };
-        links: {
-          self: string;
+        /**
+         * NewUser
+         * @description Request schema for creating a new user
+         */
+        NewUser: {
+            name?: string | null;
+            email?: string | null;
+            password?: string | null;
+            /** Format: date-time */
+            emailVerifiedAt?: string | null;
+            fingerprint?: string | null;
+            userAgent?: string | null;
+            lastIp?: string | null;
+            isAnonymous?: boolean;
+            age?: number | null;
+            /** @enum {string|null} */
+            gender?: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+            country?: string | null;
+            city?: string | null;
+            phoneNumber?: string | null;
+            occupation?: string | null;
+            bio?: string | null;
+            profilePicture?: string | null;
+            isFirstLogin?: boolean;
+            isOnboarded?: boolean;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-        metadata: {
-          requestId: string;
-          timestamp: string;
-        } & {
-          [key: string]: unknown;
+        UpdateUser: {
+            name?: string | null;
+            email?: string | null;
+            password?: string | null;
+            /** Format: date-time */
+            emailVerifiedAt?: string | null;
+            fingerprint?: string | null;
+            userAgent?: string | null;
+            lastIp?: string | null;
+            isAnonymous?: boolean;
+            age?: number | null;
+            /** @enum {string|null} */
+            gender?: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+            country?: string | null;
+            city?: string | null;
+            phoneNumber?: string | null;
+            occupation?: string | null;
+            bio?: string | null;
+            profilePicture?: string | null;
+            isFirstLogin?: boolean;
+            isOnboarded?: boolean;
+            /** Format: date-time */
+            updatedAt?: string;
         };
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    AuthSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "auth";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          data: {
+        UserResource: {
             /** @enum {string} */
             type: "user";
             /** Format: uuid */
@@ -6557,3675 +11057,177 @@ export interface components {
              * @description User response schema
              */
             attributes: {
-              /** Format: uuid */
-              id: string;
-              name: string | null;
-              email: string | null;
-              /** @enum {string} */
-              role: "user" | "admin" | "lawyer";
-              /** Format: date-time */
-              emailVerifiedAt: string | null;
-              userAgent: string | null;
-              lastIp: string | null;
-              isAnonymous: boolean;
-              age: number | null;
-              /** @enum {string|null} */
-              gender:
-                | "male"
-                | "female"
-                | "non_binary"
-                | "prefer_not_to_say"
-                | "other"
-                | null;
-              country: string | null;
-              city: string | null;
-              phoneNumber: string | null;
-              occupation: string | null;
-              bio: string | null;
-              profilePicture: string | null;
-              isFirstLogin: boolean;
-              isOnboarded: boolean;
-              /** Format: date-time */
-              createdAt: string;
-              /** Format: date-time */
-              updatedAt: string;
+                /** Format: uuid */
+                id: string;
+                name: string | null;
+                email: string | null;
+                /** @enum {string} */
+                role: "user" | "admin" | "lawyer";
+                /** Format: date-time */
+                emailVerifiedAt: string | null;
+                userAgent: string | null;
+                lastIp: string | null;
+                isAnonymous: boolean;
+                age: number | null;
+                /** @enum {string|null} */
+                gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                country: string | null;
+                city: string | null;
+                phoneNumber: string | null;
+                occupation: string | null;
+                bio: string | null;
+                profilePicture: string | null;
+                isFirstLogin: boolean;
+                isOnboarded: boolean;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
             };
             relationships?: {
-              [key: string]: unknown;
+                [key: string]: unknown;
             };
             meta?: {
-              [key: string]: unknown;
+                [key: string]: unknown;
             };
             links?: {
-              [key: string]: string;
+                [key: string]: string;
             };
-          };
-          links: {
-            self: string;
-          };
-          metadata: {
-            requestId: string;
-            timestamp: string;
-          } & {
-            [key: string]: unknown;
-          };
         };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    AuthCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "auth";
-        /** Format: uuid */
-        id: string;
-        attributes: {
-          data: {
-            /** @enum {string} */
-            type: "user";
-            /** Format: uuid */
-            id: string;
-            /**
-             * User
-             * @description User response schema
-             */
-            attributes: {
-              /** Format: uuid */
-              id: string;
-              name: string | null;
-              email: string | null;
-              /** @enum {string} */
-              role: "user" | "admin" | "lawyer";
-              /** Format: date-time */
-              emailVerifiedAt: string | null;
-              userAgent: string | null;
-              lastIp: string | null;
-              isAnonymous: boolean;
-              age: number | null;
-              /** @enum {string|null} */
-              gender:
-                | "male"
-                | "female"
-                | "non_binary"
-                | "prefer_not_to_say"
-                | "other"
-                | null;
-              country: string | null;
-              city: string | null;
-              phoneNumber: string | null;
-              occupation: string | null;
-              bio: string | null;
-              profilePicture: string | null;
-              isFirstLogin: boolean;
-              isOnboarded: boolean;
-              /** Format: date-time */
-              createdAt: string;
-              /** Format: date-time */
-              updatedAt: string;
+        UserSingleResponse: {
+            data: {
+                /** @enum {string} */
+                type: "user";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * User
+                 * @description User response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string | null;
+                    email: string | null;
+                    /** @enum {string} */
+                    role: "user" | "admin" | "lawyer";
+                    /** Format: date-time */
+                    emailVerifiedAt: string | null;
+                    userAgent: string | null;
+                    lastIp: string | null;
+                    isAnonymous: boolean;
+                    age: number | null;
+                    /** @enum {string|null} */
+                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                    country: string | null;
+                    city: string | null;
+                    phoneNumber: string | null;
+                    occupation: string | null;
+                    bio: string | null;
+                    profilePicture: string | null;
+                    isFirstLogin: boolean;
+                    isOnboarded: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
             };
-            relationships?: {
-              [key: string]: unknown;
+            links: {
+                self: string;
             };
-            meta?: {
-              [key: string]: unknown;
+            metadata: {
+                requestId: string;
+                timestamp: string;
+            } & {
+                [key: string]: unknown;
             };
-            links?: {
-              [key: string]: string;
+        };
+        UserCollectionResponse: {
+            data: {
+                /** @enum {string} */
+                type: "user";
+                /** Format: uuid */
+                id: string;
+                /**
+                 * User
+                 * @description User response schema
+                 */
+                attributes: {
+                    /** Format: uuid */
+                    id: string;
+                    name: string | null;
+                    email: string | null;
+                    /** @enum {string} */
+                    role: "user" | "admin" | "lawyer";
+                    /** Format: date-time */
+                    emailVerifiedAt: string | null;
+                    userAgent: string | null;
+                    lastIp: string | null;
+                    isAnonymous: boolean;
+                    age: number | null;
+                    /** @enum {string|null} */
+                    gender: "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
+                    country: string | null;
+                    city: string | null;
+                    phoneNumber: string | null;
+                    occupation: string | null;
+                    bio: string | null;
+                    profilePicture: string | null;
+                    isFirstLogin: boolean;
+                    isOnboarded: boolean;
+                    /** Format: date-time */
+                    createdAt: string;
+                    /** Format: date-time */
+                    updatedAt: string;
+                };
+                relationships?: {
+                    [key: string]: unknown;
+                };
+                meta?: {
+                    [key: string]: unknown;
+                };
+                links?: {
+                    [key: string]: string;
+                };
+            }[];
+            links: {
+                self: string;
             };
-          };
-          links: {
-            self: string;
-          };
-          metadata: {
-            requestId: string;
-            timestamp: string;
-          } & {
-            [key: string]: unknown;
-          };
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * RegisterRequest
-     * @description Request schema for user registration
-     */
-    RegisterRequest: {
-      email: string | null;
-      password: string | null;
-      name: string | null;
-    };
-    /**
-     * LoginRequest
-     * @description Request schema for user login
-     */
-    LoginRequest: {
-      email: string | null;
-      password: string | null;
-    };
-    PasswordResetRequest: {
-      /** Format: email */
-      email: string;
-    };
-    NewPasswordRequest: {
-      password: string;
-      token: string;
-    };
-    VerifyEmailRequest: {
-      token: string;
-    };
-    ResendVerificationRequest: {
-      /** Format: email */
-      email: string;
-    };
-    /**
-     * AuthUser
-     * @description AuthUser response schema
-     */
-    AuthUser: {
-      /** Format: uuid */
-      id: string;
-      name: string | null;
-      email: string | null;
-      password: string | null;
-      /** @enum {string} */
-      role: "user" | "admin" | "lawyer";
-      /** Format: date-time */
-      emailVerifiedAt: string | null;
-      fingerprint: string | null;
-      userAgent: string | null;
-      lastIp: string | null;
-      isAnonymous: boolean;
-      age: number | null;
-      /** @enum {string|null} */
-      gender:
-        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
-      country: string | null;
-      city: string | null;
-      phoneNumber: string | null;
-      occupation: string | null;
-      bio: string | null;
-      profilePicture: string | null;
-      isFirstLogin: boolean;
-      isOnboarded: boolean;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * AuthHeaders
-     * @description Request headers for authentication
-     */
-    AuthHeaders: {
-      authorization: string;
-    };
-    ResetPasswordResponse: {
-      message: string;
-      deliveryEstimate: number;
-    };
-    RefreshTokenSelect: {
-      /** @description The new access token (JWT) */
-      token: string;
-    };
-    /** @enum {string} */
-    UserRole: "admin" | "user" | "lawyer";
-    BaseTokenPayload: {
-      sub: string;
-      sid: string;
-      aud: string;
-      iss: string;
-    };
-    AccessPayload: {
-      sub: string;
-      sid: string;
-      aud: string;
-      iss: string;
-      /** @enum {string} */
-      type: "access";
-      /** @enum {string} */
-      role: "admin" | "user" | "lawyer";
-    };
-    RefreshPayload: {
-      sub: string;
-      sid: string;
-      aud: string;
-      iss: string;
-      /** @enum {string} */
-      type: "refresh";
-    };
-    AuthPayload:
-      | {
-          sub: string;
-          sid: string;
-          aud: string;
-          iss: string;
-          /** @enum {string} */
-          type: "access";
-          /** @enum {string} */
-          role: "admin" | "user" | "lawyer";
-        }
-      | {
-          sub: string;
-          sid: string;
-          aud: string;
-          iss: string;
-          /** @enum {string} */
-          type: "refresh";
-        };
-    TokenGenerationArgs: {
-      userId: string;
-      sessionId: string;
-      /** @enum {string} */
-      role: "admin" | "user" | "lawyer";
-    };
-    AuthEventQuery: {
-      /** @default 1 */
-      page: number;
-      /** @default 10 */
-      limit: number;
-      sort?: string;
-      /**
-       * @default desc
-       * @enum {string}
-       */
-      order: "asc" | "desc";
-      q?: string;
-      /** @default 0 */
-      offset: number | null;
-      eventType?: string;
-      userId?: string;
-    };
-    /**
-     * ChatSession
-     * @description ChatSession response schema
-     */
-    Chat: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      userId: string;
-      title: string | null;
-      metadata:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * NewChatSession
-     * @description Request schema for creating a new chatsession
-     */
-    NewChat: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      userId: string;
-      title?: string | null;
-      metadata?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    /**
-     * UpdateChatSessionRequest
-     * @description Request schema for updating a chatsession
-     */
-    UpdateChat: {
-      title?: string | null;
-      metadata?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    ChatResource: {
-      /** @enum {string} */
-      type: "chat";
-      /** Format: uuid */
-      id: string;
-      /**
-       * ChatSession
-       * @description ChatSession response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        userId: string;
-        title: string | null;
-        metadata:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    ChatSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "chat";
-        /** Format: uuid */
-        id: string;
-        /**
-         * ChatSession
-         * @description ChatSession response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          title: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    ChatCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "chat";
-        /** Format: uuid */
-        id: string;
-        /**
-         * ChatSession
-         * @description ChatSession response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          title: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    CreateChatRequest: {
-      message: string;
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    /**
-     * Consultation
-     * @description Consultation response schema
-     */
-    Consultation: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      customerId: string;
-      /** Format: uuid */
-      lawyerId: string;
-      /** @enum {string} */
-      status: "pending" | "accepted" | "declined" | "engaged" | "closed";
-      requestMessage: string | null;
-      /** Format: date-time */
-      respondedAt: string | null;
-      declineReason: string | null;
-      /** Format: date-time */
-      engagedAt: string | null;
-      /** Format: date-time */
-      closedAt: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * NewConsultation
-     * @description Request schema for creating a new consultation
-     */
-    NewConsultation: {
-      /** Format: uuid */
-      lawyerId: string;
-      requestMessage?: string | null;
-    };
-    UpdateConsultation: Record<string, never>;
-    ConsultationResource: {
-      /** @enum {string} */
-      type: "consultation";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Consultation
-       * @description Consultation response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        customerId: string;
-        /** Format: uuid */
-        lawyerId: string;
-        /** @enum {string} */
-        status: "pending" | "accepted" | "declined" | "engaged" | "closed";
-        requestMessage: string | null;
-        /** Format: date-time */
-        respondedAt: string | null;
-        declineReason: string | null;
-        /** Format: date-time */
-        engagedAt: string | null;
-        /** Format: date-time */
-        closedAt: string | null;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    ConsultationSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "consultation";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Consultation
-         * @description Consultation response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          customerId: string;
-          /** Format: uuid */
-          lawyerId: string;
-          /** @enum {string} */
-          status: "pending" | "accepted" | "declined" | "engaged" | "closed";
-          requestMessage: string | null;
-          /** Format: date-time */
-          respondedAt: string | null;
-          declineReason: string | null;
-          /** Format: date-time */
-          engagedAt: string | null;
-          /** Format: date-time */
-          closedAt: string | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    ConsultationCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "consultation";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Consultation
-         * @description Consultation response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          customerId: string;
-          /** Format: uuid */
-          lawyerId: string;
-          /** @enum {string} */
-          status: "pending" | "accepted" | "declined" | "engaged" | "closed";
-          requestMessage: string | null;
-          /** Format: date-time */
-          respondedAt: string | null;
-          declineReason: string | null;
-          /** Format: date-time */
-          engagedAt: string | null;
-          /** Format: date-time */
-          closedAt: string | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * Corpus
-     * @description Corpus response schema
-     */
-    Corpus: {
-      /** Format: uuid */
-      id: string;
-      title: string;
-      description: string;
-      type: string;
-      sections: number;
-      lastUpdated: string;
-      storageUrl: string;
-      downloadCount: number;
-      actName: string | null;
-      jurisdiction: string | null;
-      sourceUrl: string | null;
-      version: number;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * NewCorpus
-     * @description Request schema for creating a new corpus
-     */
-    NewCorpus: {
-      /** Format: uuid */
-      id?: string;
-      title: string;
-      description: string;
-      type: string;
-      sections: number;
-      lastUpdated: string;
-      storageUrl: string;
-      downloadCount?: number;
-      actName?: string | null;
-      jurisdiction?: string | null;
-      sourceUrl?: string | null;
-      version?: number;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    /**
-     * UpdateCorpusRequest
-     * @description Request schema for updating a corpus
-     */
-    UpdateCorpus: {
-      /** Format: uuid */
-      id?: string;
-      title?: string;
-      description?: string;
-      type?: string;
-      sections?: number;
-      lastUpdated?: string;
-      storageUrl?: string;
-      downloadCount?: number;
-      actName?: string | null;
-      jurisdiction?: string | null;
-      sourceUrl?: string | null;
-      version?: number;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    CorpusResource: {
-      /** @enum {string} */
-      type: "corpus";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Corpus
-       * @description Corpus response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        title: string;
-        description: string;
-        type: string;
-        sections: number;
-        lastUpdated: string;
-        storageUrl: string;
-        downloadCount: number;
-        actName: string | null;
-        jurisdiction: string | null;
-        sourceUrl: string | null;
-        version: number;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    CorpusSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "corpus";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Corpus
-         * @description Corpus response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          title: string;
-          description: string;
-          type: string;
-          sections: number;
-          lastUpdated: string;
-          storageUrl: string;
-          downloadCount: number;
-          actName: string | null;
-          jurisdiction: string | null;
-          sourceUrl: string | null;
-          version: number;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    CorpusCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "corpus";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Corpus
-         * @description Corpus response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          title: string;
-          description: string;
-          type: string;
-          sections: number;
-          lastUpdated: string;
-          storageUrl: string;
-          downloadCount: number;
-          actName: string | null;
-          jurisdiction: string | null;
-          sourceUrl: string | null;
-          version: number;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * NewCorpus
-     * @description Request schema for creating a new corpus
-     */
-    CreateCorpus: {
-      /** Format: uuid */
-      id?: string;
-      title: string;
-      description: string;
-      type: string;
-      sections: number;
-      lastUpdated: string;
-      storageUrl: string;
-      downloadCount?: number;
-      actName?: string | null;
-      jurisdiction?: string | null;
-      sourceUrl?: string | null;
-      version?: number;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    /**
-     * @description Metadata about the response
-     * @example {
-     *       "timestamp": "2023-12-09T15:39:00Z",
-     *       "requestId": "req_12345",
-     *       "resourceId": "resource_678"
-     *     }
-     */
-    ResponseMetadata: {
-      /**
-       * Format: date-time
-       * @description ISO 8601 timestamp of the response
-       */
-      timestamp?: string;
-      /**
-       * Format: uuid
-       * @description Unique identifier for the request
-       */
-      requestId?: string;
-      /** @description Identifier of the resource */
-      resourceId?: string | number;
-    } & {
-      [key: string]: unknown;
-    };
-    JsonApiError: {
-      /**
-       * Format: uuid
-       * @description Unique identifier for this error instance
-       */
-      id: string;
-      /** @description HTTP status code as string */
-      status: string;
-      /** @description Application-specific error code */
-      code: string;
-      /** @description Short, human-readable summary of the error */
-      title: string;
-      /** @description Human-readable explanation specific to this error */
-      detail: string;
-      /**
-       * @description Metadata about the response
-       * @example {
-       *       "timestamp": "2023-12-09T15:39:00Z",
-       *       "requestId": "req_12345",
-       *       "resourceId": "resource_678"
-       *     }
-       */
-      metadata: {
-        /**
-         * Format: date-time
-         * @description ISO 8601 timestamp of the response
-         */
-        timestamp?: string;
-        /**
-         * Format: uuid
-         * @description Unique identifier for the request
-         */
-        requestId?: string;
-        /** @description Identifier of the resource */
-        resourceId?: string | number;
-      } & {
-        [key: string]: unknown;
-      };
-      source?: {
-        /** @description JSON Pointer to the associated entity in request */
-        pointer?: string;
-        /** @description HTTP method of the request */
-        method?: string;
-      };
-    };
-    JsonApiErrorResponse: {
-      errors: components["schemas"]["JsonApiError"][];
-    };
-    /** @description JSON:API resource object */
-    JsonApiResource: {
-      type: string;
-      id: string;
-      attributes: {
-        [key: string]: unknown;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      metadata?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    /**
-     * @description JSON:API single resource response
-     * @example {
-     *       "data": {
-     *         "id": "123",
-     *         "type": "user",
-     *         "attributes": {
-     *           "name": "John"
-     *         }
-     *       },
-     *       "meta": {
-     *         "timestamp": "2023-12-09T15:39:00Z",
-     *         "requestId": "req_12345"
-     *       }
-     *     }
-     */
-    JsonApiResponse: {
-      data:
-        | {
-            type: string;
-            id: string;
-            attributes: {
-              [key: string]: unknown;
+            metadata: {
+                requestId: string;
+                timestamp: string;
+                total: number;
+                page: number;
+                limit: number;
+                totalPages: number;
+                /** @default {} */
+                availableFilters: {
+                    [key: string]: unknown;
+                };
+                sortOptions: {
+                    fields: string[];
+                    default: string;
+                    /** @enum {string} */
+                    direction: "asc" | "desc";
+                };
             };
-            relationships?: {
-              [key: string]: unknown;
-            };
-            metadata?: {
-              [key: string]: unknown;
-            };
-            links?: {
-              [key: string]: string;
-            };
-          }
-        | unknown;
-      /**
-       * @description Metadata about the response
-       * @example {
-       *       "timestamp": "2023-12-09T15:39:00Z",
-       *       "requestId": "req_12345",
-       *       "resourceId": "resource_678"
-       *     }
-       */
-      metadata?: {
-        /**
-         * Format: date-time
-         * @description ISO 8601 timestamp of the response
-         */
-        timestamp?: string;
-        /**
-         * Format: uuid
-         * @description Unique identifier for the request
-         */
-        requestId?: string;
-        /** @description Identifier of the resource */
-        resourceId?: string | number;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    /**
-     * @description JSON:API collection response
-     * @example {
-     *       "data": [
-     *         {
-     *           "id": "123",
-     *           "type": "user",
-     *           "attributes": {
-     *             "name": "John"
-     *           }
-     *         },
-     *         {
-     *           "id": "456",
-     *           "type": "user",
-     *           "attributes": {
-     *             "name": "Jane"
-     *           }
-     *         }
-     *       ],
-     *       "meta": {
-     *         "timestamp": "2023-12-09T15:39:00Z",
-     *         "requestId": "req_12345"
-     *       }
-     *     }
-     */
-    JsonApiCollectionResponse: {
-      data: {
-        type: string;
-        id: string;
-        attributes: {
-          [key: string]: unknown;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        metadata?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      /**
-       * @description Metadata about the response
-       * @example {
-       *       "timestamp": "2023-12-09T15:39:00Z",
-       *       "requestId": "req_12345",
-       *       "resourceId": "resource_678"
-       *     }
-       */
-      metadata?: {
-        /**
-         * Format: date-time
-         * @description ISO 8601 timestamp of the response
-         */
-        timestamp?: string;
-        /**
-         * Format: uuid
-         * @description Unique identifier for the request
-         */
-        requestId?: string;
-        /** @description Identifier of the resource */
-        resourceId?: string | number;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    /**
-     * Notification
-     * @description Notification response schema
-     */
-    Notification: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      userId: string | null;
-      recipientEmail: string | null;
-      type: string;
-      /** @enum {string} */
-      channel: "in_app" | "email" | "push";
-      /** @enum {string} */
-      recipientType: "sender" | "fulfillment_partner" | "admin";
-      title: string;
-      message: string;
-      actionUrl: string | null;
-      /** Format: date-time */
-      scheduledAt: string;
-      /** Format: date-time */
-      sentAt: string | null;
-      /** Format: date-time */
-      deliveredAt: string | null;
-      /** @enum {string} */
-      status:
-        | "notification_pending"
-        | "notification_sent"
-        | "notification_delivered"
-        | "notification_opened"
-        | "notification_failed";
-      metadata:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      templateKey: string | null;
-      entityId: string | null;
-      isRead: boolean;
-      /** Format: date-time */
-      readAt: string | null;
-      isActioned: boolean;
-      /** Format: date-time */
-      actionedAt: string | null;
-    };
-    /**
-     * NewNotificationPreferences
-     * @description Request schema for creating a new notificationpreferences
-     */
-    NewNotification: {
-      /** Format: uuid */
-      userId: string;
-      category?: string | null;
-      emailEnabled?: boolean | null;
-      pushEnabled?: boolean | null;
-      inAppEnabled?: boolean | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    UpdateNotification: {
-      /** Format: uuid */
-      userId?: string;
-      category?: string | null;
-      emailEnabled?: boolean | null;
-      pushEnabled?: boolean | null;
-      inAppEnabled?: boolean | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    NotificationResource: {
-      /** @enum {string} */
-      type: "notification";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Notification
-       * @description Notification response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        userId: string | null;
-        recipientEmail: string | null;
-        type: string;
-        /** @enum {string} */
-        channel: "in_app" | "email" | "push";
-        /** @enum {string} */
-        recipientType: "sender" | "fulfillment_partner" | "admin";
-        title: string;
-        message: string;
-        actionUrl: string | null;
-        /** Format: date-time */
-        scheduledAt: string;
-        /** Format: date-time */
-        sentAt: string | null;
-        /** Format: date-time */
-        deliveredAt: string | null;
-        /** @enum {string} */
-        status:
-          | "notification_pending"
-          | "notification_sent"
-          | "notification_delivered"
-          | "notification_opened"
-          | "notification_failed";
-        metadata:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-        templateKey: string | null;
-        entityId: string | null;
-        isRead: boolean;
-        /** Format: date-time */
-        readAt: string | null;
-        isActioned: boolean;
-        /** Format: date-time */
-        actionedAt: string | null;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    NotificationSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Notification
-         * @description Notification response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string | null;
-          recipientEmail: string | null;
-          type: string;
-          /** @enum {string} */
-          channel: "in_app" | "email" | "push";
-          /** @enum {string} */
-          recipientType: "sender" | "fulfillment_partner" | "admin";
-          title: string;
-          message: string;
-          actionUrl: string | null;
-          /** Format: date-time */
-          scheduledAt: string;
-          /** Format: date-time */
-          sentAt: string | null;
-          /** Format: date-time */
-          deliveredAt: string | null;
-          /** @enum {string} */
-          status:
-            | "notification_pending"
-            | "notification_sent"
-            | "notification_delivered"
-            | "notification_opened"
-            | "notification_failed";
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-          templateKey: string | null;
-          entityId: string | null;
-          isRead: boolean;
-          /** Format: date-time */
-          readAt: string | null;
-          isActioned: boolean;
-          /** Format: date-time */
-          actionedAt: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    NotificationCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Notification
-         * @description Notification response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string | null;
-          recipientEmail: string | null;
-          type: string;
-          /** @enum {string} */
-          channel: "in_app" | "email" | "push";
-          /** @enum {string} */
-          recipientType: "sender" | "fulfillment_partner" | "admin";
-          title: string;
-          message: string;
-          actionUrl: string | null;
-          /** Format: date-time */
-          scheduledAt: string;
-          /** Format: date-time */
-          sentAt: string | null;
-          /** Format: date-time */
-          deliveredAt: string | null;
-          /** @enum {string} */
-          status:
-            | "notification_pending"
-            | "notification_sent"
-            | "notification_delivered"
-            | "notification_opened"
-            | "notification_failed";
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-          templateKey: string | null;
-          entityId: string | null;
-          isRead: boolean;
-          /** Format: date-time */
-          readAt: string | null;
-          isActioned: boolean;
-          /** Format: date-time */
-          actionedAt: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * NotificationPreferences
-     * @description NotificationPreferences response schema
-     */
-    NotificationPreferences: {
-      /** Format: uuid */
-      userId: string;
-      category: string | null;
-      emailEnabled: boolean | null;
-      pushEnabled: boolean | null;
-      inAppEnabled: boolean | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * NewNotificationPreferences
-     * @description Request schema for creating a new notificationpreferences
-     */
-    NewNotificationPreferences: {
-      /** Format: uuid */
-      userId: string;
-      category?: string | null;
-      emailEnabled?: boolean | null;
-      pushEnabled?: boolean | null;
-      inAppEnabled?: boolean | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    UpdateNotificationPreferences: {
-      /** Format: uuid */
-      userId?: string;
-      category?: string | null;
-      emailEnabled?: boolean | null;
-      pushEnabled?: boolean | null;
-      inAppEnabled?: boolean | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    NotificationPreferencesResource: {
-      /** @enum {string} */
-      type: "notification-preferences";
-      /** Format: uuid */
-      id: string;
-      /**
-       * NotificationPreferences
-       * @description NotificationPreferences response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        userId: string;
-        category: string | null;
-        emailEnabled: boolean | null;
-        pushEnabled: boolean | null;
-        inAppEnabled: boolean | null;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    NotificationPreferencesSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification-preferences";
-        /** Format: uuid */
-        id: string;
-        /**
-         * NotificationPreferences
-         * @description NotificationPreferences response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          userId: string;
-          category: string | null;
-          emailEnabled: boolean | null;
-          pushEnabled: boolean | null;
-          inAppEnabled: boolean | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    NotificationPreferencesCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "notification-preferences";
-        /** Format: uuid */
-        id: string;
-        /**
-         * NotificationPreferences
-         * @description NotificationPreferences response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          userId: string;
-          category: string | null;
-          emailEnabled: boolean | null;
-          pushEnabled: boolean | null;
-          inAppEnabled: boolean | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * Lawyer
-     * @description Lawyer response schema
-     */
-    Lawyer: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      userId: string;
-      /** @enum {string} */
-      status: "draft" | "submitted" | "approved" | "rejected";
-      specialization: string | null;
-      experienceYears: number | null;
-      casesHandled: number;
-      isAvailable: boolean;
-      location: string | null;
-      languages: string[] | null;
-      bio: string | null;
-      barNumber: string | null;
-      issuingAuthority: string | null;
-      jurisdiction: string | null;
-      education:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      submittedAt: string | null;
-      /** Format: uuid */
-      reviewedBy: string | null;
-      /** Format: date-time */
-      reviewedAt: string | null;
-      rejectionReason: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    NewLawyer: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      userId: string;
-      /** @enum {string} */
-      status?: "draft" | "submitted" | "approved" | "rejected";
-      specialization?: string | null;
-      experienceYears?: number | null;
-      casesHandled?: number;
-      isAvailable?: boolean;
-      location?: string | null;
-      languages?: string[] | null;
-      bio?: string | null;
-      barNumber?: string | null;
-      issuingAuthority?: string | null;
-      jurisdiction?: string | null;
-      education?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      submittedAt?: string | null;
-      /** Format: uuid */
-      reviewedBy?: string | null;
-      /** Format: date-time */
-      reviewedAt?: string | null;
-      rejectionReason?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    UpdateLawyer: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      userId?: string;
-      /** @enum {string} */
-      status?: "draft" | "submitted" | "approved" | "rejected";
-      specialization?: string | null;
-      experienceYears?: number | null;
-      casesHandled?: number;
-      isAvailable?: boolean;
-      location?: string | null;
-      languages?: string[] | null;
-      bio?: string | null;
-      barNumber?: string | null;
-      issuingAuthority?: string | null;
-      jurisdiction?: string | null;
-      education?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      submittedAt?: string | null;
-      /** Format: uuid */
-      reviewedBy?: string | null;
-      /** Format: date-time */
-      reviewedAt?: string | null;
-      rejectionReason?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    LawyerResource: {
-      /** @enum {string} */
-      type: "lawyer";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Lawyer
-       * @description Lawyer response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        userId: string;
-        /** @enum {string} */
-        status: "draft" | "submitted" | "approved" | "rejected";
-        specialization: string | null;
-        experienceYears: number | null;
-        casesHandled: number;
-        isAvailable: boolean;
-        location: string | null;
-        languages: string[] | null;
-        bio: string | null;
-        barNumber: string | null;
-        issuingAuthority: string | null;
-        jurisdiction: string | null;
-        education:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-        /** Format: date-time */
-        submittedAt: string | null;
-        /** Format: uuid */
-        reviewedBy: string | null;
-        /** Format: date-time */
-        reviewedAt: string | null;
-        rejectionReason: string | null;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    LawyerSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "lawyer";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Lawyer
-         * @description Lawyer response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          /** @enum {string} */
-          status: "draft" | "submitted" | "approved" | "rejected";
-          specialization: string | null;
-          experienceYears: number | null;
-          casesHandled: number;
-          isAvailable: boolean;
-          location: string | null;
-          languages: string[] | null;
-          bio: string | null;
-          barNumber: string | null;
-          issuingAuthority: string | null;
-          jurisdiction: string | null;
-          education:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          submittedAt: string | null;
-          /** Format: uuid */
-          reviewedBy: string | null;
-          /** Format: date-time */
-          reviewedAt: string | null;
-          rejectionReason: string | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    LawyerCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "lawyer";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Lawyer
-         * @description Lawyer response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          userId: string;
-          /** @enum {string} */
-          status: "draft" | "submitted" | "approved" | "rejected";
-          specialization: string | null;
-          experienceYears: number | null;
-          casesHandled: number;
-          isAvailable: boolean;
-          location: string | null;
-          languages: string[] | null;
-          bio: string | null;
-          barNumber: string | null;
-          issuingAuthority: string | null;
-          jurisdiction: string | null;
-          education:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          submittedAt: string | null;
-          /** Format: uuid */
-          reviewedBy: string | null;
-          /** Format: date-time */
-          reviewedAt: string | null;
-          rejectionReason: string | null;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    CreateLawyer: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      userId: string;
-      /** @enum {string} */
-      status?: "draft" | "submitted" | "approved" | "rejected";
-      specialization?: string | null;
-      experienceYears?: number | null;
-      casesHandled?: number;
-      isAvailable?: boolean;
-      location?: string | null;
-      languages?: string[] | null;
-      bio?: string | null;
-      barNumber?: string | null;
-      issuingAuthority?: string | null;
-      jurisdiction?: string | null;
-      education?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      submittedAt?: string | null;
-      /** Format: uuid */
-      reviewedBy?: string | null;
-      /** Format: date-time */
-      reviewedAt?: string | null;
-      rejectionReason?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    /**
-     * Matter
-     * @description Matter response schema
-     */
-    Matter: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      clientUserId: string;
-      /** Format: uuid */
-      sourceChatId: string | null;
-      title: string;
-      summary: string | null;
-      /** @enum {string} */
-      status:
-        | "draft"
-        | "open"
-        | "waiting_client"
-        | "waiting_lawyer"
-        | "in_progress"
-        | "resolved"
-        | "closed"
-        | "archived";
-      jurisdiction: string | null;
-      practiceArea: string | null;
-      urgency: string | null;
-      metadata:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      isSharedWithLawyer: boolean;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      /** Format: date-time */
-      closedAt: string | null;
-    };
-    /**
-     * NewMatter
-     * @description Request schema for creating a new matter
-     */
-    NewMatter: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      clientUserId: string;
-      /** Format: uuid */
-      sourceChatId?: string | null;
-      title: string;
-      summary?: string | null;
-      /** @enum {string} */
-      status?:
-        | "draft"
-        | "open"
-        | "waiting_client"
-        | "waiting_lawyer"
-        | "in_progress"
-        | "resolved"
-        | "closed"
-        | "archived";
-      jurisdiction?: string | null;
-      practiceArea?: string | null;
-      urgency?: string | null;
-      metadata?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      isSharedWithLawyer?: boolean;
-      /** Format: date-time */
-      createdAt?: string;
-      /** Format: date-time */
-      updatedAt?: string;
-      /** Format: date-time */
-      closedAt?: string | null;
-    };
-    /**
-     * UpdateMatterRequest
-     * @description Request schema for updating a matter
-     */
-    UpdateMatter: {
-      /** Format: uuid */
-      sourceChatId?: string | null;
-      title?: string;
-      summary?: string | null;
-      /** @enum {string} */
-      status?:
-        | "draft"
-        | "open"
-        | "waiting_client"
-        | "waiting_lawyer"
-        | "in_progress"
-        | "resolved"
-        | "closed"
-        | "archived";
-      jurisdiction?: string | null;
-      practiceArea?: string | null;
-      urgency?: string | null;
-      metadata?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      isSharedWithLawyer?: boolean;
-      /** Format: date-time */
-      updatedAt?: string;
-      /** Format: date-time */
-      closedAt?: string | null;
-    };
-    MatterResource: {
-      /** @enum {string} */
-      type: "matter";
-      /** Format: uuid */
-      id: string;
-      /**
-       * Matter
-       * @description Matter response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        clientUserId: string;
-        /** Format: uuid */
-        sourceChatId: string | null;
-        title: string;
-        summary: string | null;
-        /** @enum {string} */
-        status:
-          | "draft"
-          | "open"
-          | "waiting_client"
-          | "waiting_lawyer"
-          | "in_progress"
-          | "resolved"
-          | "closed"
-          | "archived";
-        jurisdiction: string | null;
-        practiceArea: string | null;
-        urgency: string | null;
-        metadata:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-        isSharedWithLawyer: boolean;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-        /** Format: date-time */
-        closedAt: string | null;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    MatterSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Matter
-         * @description Matter response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          clientUserId: string;
-          /** Format: uuid */
-          sourceChatId: string | null;
-          title: string;
-          summary: string | null;
-          /** @enum {string} */
-          status:
-            | "draft"
-            | "open"
-            | "waiting_client"
-            | "waiting_lawyer"
-            | "in_progress"
-            | "resolved"
-            | "closed"
-            | "archived";
-          jurisdiction: string | null;
-          practiceArea: string | null;
-          urgency: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          isSharedWithLawyer: boolean;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-          /** Format: date-time */
-          closedAt: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    MatterCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter";
-        /** Format: uuid */
-        id: string;
-        /**
-         * Matter
-         * @description Matter response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          clientUserId: string;
-          /** Format: uuid */
-          sourceChatId: string | null;
-          title: string;
-          summary: string | null;
-          /** @enum {string} */
-          status:
-            | "draft"
-            | "open"
-            | "waiting_client"
-            | "waiting_lawyer"
-            | "in_progress"
-            | "resolved"
-            | "closed"
-            | "archived";
-          jurisdiction: string | null;
-          practiceArea: string | null;
-          urgency: string | null;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          isSharedWithLawyer: boolean;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-          /** Format: date-time */
-          closedAt: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * MatterNote
-     * @description MatterNote response schema
-     */
-    MatterNote: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      authorUserId: string;
-      content: string;
-      isInternal: boolean;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    /**
-     * NewMatterNote
-     * @description Request schema for creating a new matternote
-     */
-    NewMatterNote: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      authorUserId: string;
-      content: string;
-      isInternal?: boolean;
-      /** Format: date-time */
-      createdAt?: string;
-    };
-    /**
-     * UpdateMatterNoteRequest
-     * @description Request schema for updating a matternote
-     */
-    UpdateMatterNote: {
-      content?: string;
-      isInternal?: boolean;
-    };
-    MatterNoteResource: {
-      /** @enum {string} */
-      type: "matter-note";
-      /** Format: uuid */
-      id: string;
-      /**
-       * MatterNote
-       * @description MatterNote response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        matterId: string;
-        /** Format: uuid */
-        authorUserId: string;
-        content: string;
-        isInternal: boolean;
-        /** Format: date-time */
-        createdAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    MatterNoteSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-note";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterNote
-         * @description MatterNote response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          authorUserId: string;
-          content: string;
-          isInternal: boolean;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    MatterNoteCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-note";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterNote
-         * @description MatterNote response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          authorUserId: string;
-          content: string;
-          isInternal: boolean;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * MatterLawyer
-     * @description MatterLawyer response schema
-     */
-    MatterLawyer: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      lawyerId: string;
-      /** @enum {string} */
-      role: "primary" | "consulting" | "referred";
-      status: string | null;
-      /** Format: date-time */
-      invitedAt: string;
-      /** Format: date-time */
-      acceptedAt: string | null;
-      notes: string | null;
-    };
-    /**
-     * NewMatterLawyer
-     * @description Request schema for creating a new matterlawyer
-     */
-    NewMatterLawyer: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      lawyerId: string;
-      /** @enum {string} */
-      role?: "primary" | "consulting" | "referred";
-      status?: string | null;
-      /** Format: date-time */
-      invitedAt?: string;
-      /** Format: date-time */
-      acceptedAt?: string | null;
-      notes?: string | null;
-    };
-    /**
-     * UpdateMatterLawyerRequest
-     * @description Request schema for updating a matterlawyer
-     */
-    UpdateMatterLawyer: {
-      /** Format: uuid */
-      lawyerId?: string;
-      /** @enum {string} */
-      role?: "primary" | "consulting" | "referred";
-      status?: string | null;
-      /** Format: date-time */
-      acceptedAt?: string | null;
-      notes?: string | null;
-    };
-    MatterLawyerResource: {
-      /** @enum {string} */
-      type: "matter-lawyer";
-      /** Format: uuid */
-      id: string;
-      /**
-       * MatterLawyer
-       * @description MatterLawyer response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        matterId: string;
-        /** Format: uuid */
-        lawyerId: string;
-        /** @enum {string} */
-        role: "primary" | "consulting" | "referred";
-        status: string | null;
-        /** Format: date-time */
-        invitedAt: string;
-        /** Format: date-time */
-        acceptedAt: string | null;
-        notes: string | null;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    MatterLawyerSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-lawyer";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterLawyer
-         * @description MatterLawyer response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          lawyerId: string;
-          /** @enum {string} */
-          role: "primary" | "consulting" | "referred";
-          status: string | null;
-          /** Format: date-time */
-          invitedAt: string;
-          /** Format: date-time */
-          acceptedAt: string | null;
-          notes: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    MatterLawyerCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-lawyer";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterLawyer
-         * @description MatterLawyer response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          lawyerId: string;
-          /** @enum {string} */
-          role: "primary" | "consulting" | "referred";
-          status: string | null;
-          /** Format: date-time */
-          invitedAt: string;
-          /** Format: date-time */
-          acceptedAt: string | null;
-          notes: string | null;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * MatterDocument
-     * @description MatterDocument response schema
-     */
-    MatterDocument: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      uploadedByUserId: string;
-      fileName: string;
-      fileUrl: string;
-      fileType: string | null;
-      fileSize: number | null;
-      description: string | null;
-      analysis:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      analyzedAt: string | null;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    /**
-     * NewMatterDocument
-     * @description Request schema for creating a new matterdocument
-     */
-    NewMatterDocument: {
-      /** Format: uuid */
-      id?: string;
-      /** Format: uuid */
-      matterId: string;
-      /** Format: uuid */
-      uploadedByUserId: string;
-      fileName: string;
-      fileUrl: string;
-      fileType?: string | null;
-      fileSize?: number | null;
-      description?: string | null;
-      analysis?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      analyzedAt?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-    };
-    /**
-     * UpdateMatterDocumentRequest
-     * @description Request schema for updating a matterdocument
-     */
-    UpdateMatterDocument: {
-      fileName?: string;
-      fileUrl?: string;
-      fileType?: string | null;
-      fileSize?: number | null;
-      description?: string | null;
-      analysis?:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-      /** Format: date-time */
-      analyzedAt?: string | null;
-    };
-    MatterDocumentResource: {
-      /** @enum {string} */
-      type: "matter-document";
-      /** Format: uuid */
-      id: string;
-      /**
-       * MatterDocument
-       * @description MatterDocument response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        matterId: string;
-        /** Format: uuid */
-        uploadedByUserId: string;
-        fileName: string;
-        fileUrl: string;
-        fileType: string | null;
-        fileSize: number | null;
-        description: string | null;
-        analysis:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-        /** Format: date-time */
-        analyzedAt: string | null;
-        /** Format: date-time */
-        createdAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    MatterDocumentSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-document";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterDocument
-         * @description MatterDocument response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          uploadedByUserId: string;
-          fileName: string;
-          fileUrl: string;
-          fileType: string | null;
-          fileSize: number | null;
-          description: string | null;
-          analysis:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          analyzedAt: string | null;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    MatterDocumentCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "matter-document";
-        /** Format: uuid */
-        id: string;
-        /**
-         * MatterDocument
-         * @description MatterDocument response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          matterId: string;
-          /** Format: uuid */
-          uploadedByUserId: string;
-          fileName: string;
-          fileUrl: string;
-          fileType: string | null;
-          fileSize: number | null;
-          description: string | null;
-          analysis:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-          /** Format: date-time */
-          analyzedAt: string | null;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * ChatMessage
-     * @description ChatMessage response schema
-     */
-    Message: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      chatId: string;
-      content: string;
-      /** @enum {string} */
-      senderType: "user" | "assistant" | "system";
-      /** Format: uuid */
-      userId: string | null;
-      /** Format: date-time */
-      timestamp: string;
-      metadata:
-        | string
-        | number
-        | boolean
-        | unknown
-        | {
-            [key: string]: unknown;
-          }
-        | unknown[];
-    };
-    NewMessage: {
-      /** Format: uuid */
-      chatId: string;
-      content: string;
-      /** @enum {string} */
-      senderType: "user" | "assistant" | "system";
-      /** Format: uuid */
-      userId: string | null;
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    UpdateMessage: {
-      /** Format: uuid */
-      chatId?: string;
-      content?: string;
-      /** @enum {string} */
-      senderType?: "user" | "assistant" | "system";
-      /** Format: uuid */
-      userId?: string | null;
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    MessageResource: {
-      /** @enum {string} */
-      type: "message";
-      /** Format: uuid */
-      id: string;
-      /**
-       * ChatMessage
-       * @description ChatMessage response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        chatId: string;
-        content: string;
-        /** @enum {string} */
-        senderType: "user" | "assistant" | "system";
-        /** Format: uuid */
-        userId: string | null;
-        /** Format: date-time */
-        timestamp: string;
-        metadata:
-          | string
-          | number
-          | boolean
-          | unknown
-          | {
-              [key: string]: unknown;
-            }
-          | unknown[];
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    MessageSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "message";
-        /** Format: uuid */
-        id: string;
-        /**
-         * ChatMessage
-         * @description ChatMessage response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          chatId: string;
-          content: string;
-          /** @enum {string} */
-          senderType: "user" | "assistant" | "system";
-          /** Format: uuid */
-          userId: string | null;
-          /** Format: date-time */
-          timestamp: string;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    MessageCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "message";
-        /** Format: uuid */
-        id: string;
-        /**
-         * ChatMessage
-         * @description ChatMessage response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          /** Format: uuid */
-          chatId: string;
-          content: string;
-          /** @enum {string} */
-          senderType: "user" | "assistant" | "system";
-          /** Format: uuid */
-          userId: string | null;
-          /** Format: date-time */
-          timestamp: string;
-          metadata:
-            | string
-            | number
-            | boolean
-            | unknown
-            | {
-                [key: string]: unknown;
-              }
-            | unknown[];
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    MessageSender: {
-      id: string;
-      displayName?: string;
-    };
-    SendMessageRequest: {
-      /** Format: uuid */
-      chatId: string;
-      content: string;
-      /** @enum {string} */
-      senderType: "user" | "assistant" | "system";
-      /** Format: uuid */
-      userId: string | null;
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    MessageInput: {
-      /** Format: uuid */
-      chatId: string;
-      content: string;
-      /** @enum {string} */
-      senderType: "user" | "assistant" | "system";
-      /** Format: uuid */
-      userId: string | null;
-      metadata?: {
-        [key: string]: unknown;
-      };
-    };
-    /**
-     * LegalService
-     * @description LegalService response schema
-     */
-    LegalService: {
-      /** Format: uuid */
-      id: string;
-      name: string;
-      categoryId: string | null;
-      slug: string;
-      description: string | null;
-      /** Format: date-time */
-      createdAt: string;
-    };
-    /**
-     * NewLegalService
-     * @description Request schema for creating a new legalservice
-     */
-    NewLegalService: {
-      /** Format: uuid */
-      id?: string;
-      name: string;
-      categoryId?: string | null;
-      slug: string;
-      description?: string | null;
-      /** Format: date-time */
-      createdAt?: string;
-    };
-    LegalServiceResource: {
-      /** @enum {string} */
-      type: "legal-service";
-      /** Format: uuid */
-      id: string;
-      /**
-       * LegalService
-       * @description LegalService response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        name: string;
-        categoryId: string | null;
-        slug: string;
-        description: string | null;
-        /** Format: date-time */
-        createdAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    LegalServiceSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "legal-service";
-        /** Format: uuid */
-        id: string;
-        /**
-         * LegalService
-         * @description LegalService response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          name: string;
-          categoryId: string | null;
-          slug: string;
-          description: string | null;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    LegalServiceCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "legal-service";
-        /** Format: uuid */
-        id: string;
-        /**
-         * LegalService
-         * @description LegalService response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          name: string;
-          categoryId: string | null;
-          slug: string;
-          description: string | null;
-          /** Format: date-time */
-          createdAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
-        };
-      };
-    };
-    /**
-     * ServiceCategory
-     * @description ServiceCategory response schema
-     */
-    ServiceCategory: {
-      id: string;
-      label: string;
-      icon: string;
-    };
-    /**
-     * User
-     * @description User response schema
-     */
-    User: {
-      /** Format: uuid */
-      id: string;
-      name: string | null;
-      email: string | null;
-      /** @enum {string} */
-      role: "user" | "admin" | "lawyer";
-      /** Format: date-time */
-      emailVerifiedAt: string | null;
-      userAgent: string | null;
-      lastIp: string | null;
-      isAnonymous: boolean;
-      age: number | null;
-      /** @enum {string|null} */
-      gender:
-        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
-      country: string | null;
-      city: string | null;
-      phoneNumber: string | null;
-      occupation: string | null;
-      bio: string | null;
-      profilePicture: string | null;
-      isFirstLogin: boolean;
-      isOnboarded: boolean;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    /**
-     * NewUser
-     * @description Request schema for creating a new user
-     */
-    NewUser: {
-      name?: string | null;
-      email?: string | null;
-      password?: string | null;
-      /** Format: date-time */
-      emailVerifiedAt?: string | null;
-      fingerprint?: string | null;
-      userAgent?: string | null;
-      lastIp?: string | null;
-      isAnonymous?: boolean;
-      age?: number | null;
-      /** @enum {string|null} */
-      gender?:
-        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
-      country?: string | null;
-      city?: string | null;
-      phoneNumber?: string | null;
-      occupation?: string | null;
-      bio?: string | null;
-      profilePicture?: string | null;
-      isFirstLogin?: boolean;
-      isOnboarded?: boolean;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    UpdateUser: {
-      name?: string | null;
-      email?: string | null;
-      password?: string | null;
-      /** Format: date-time */
-      emailVerifiedAt?: string | null;
-      fingerprint?: string | null;
-      userAgent?: string | null;
-      lastIp?: string | null;
-      isAnonymous?: boolean;
-      age?: number | null;
-      /** @enum {string|null} */
-      gender?:
-        "male" | "female" | "non_binary" | "prefer_not_to_say" | "other" | null;
-      country?: string | null;
-      city?: string | null;
-      phoneNumber?: string | null;
-      occupation?: string | null;
-      bio?: string | null;
-      profilePicture?: string | null;
-      isFirstLogin?: boolean;
-      isOnboarded?: boolean;
-      /** Format: date-time */
-      updatedAt?: string;
-    };
-    UserResource: {
-      /** @enum {string} */
-      type: "user";
-      /** Format: uuid */
-      id: string;
-      /**
-       * User
-       * @description User response schema
-       */
-      attributes: {
-        /** Format: uuid */
-        id: string;
-        name: string | null;
-        email: string | null;
-        /** @enum {string} */
-        role: "user" | "admin" | "lawyer";
-        /** Format: date-time */
-        emailVerifiedAt: string | null;
-        userAgent: string | null;
-        lastIp: string | null;
-        isAnonymous: boolean;
-        age: number | null;
-        /** @enum {string|null} */
-        gender:
-          | "male"
-          | "female"
-          | "non_binary"
-          | "prefer_not_to_say"
-          | "other"
-          | null;
-        country: string | null;
-        city: string | null;
-        phoneNumber: string | null;
-        occupation: string | null;
-        bio: string | null;
-        profilePicture: string | null;
-        isFirstLogin: boolean;
-        isOnboarded: boolean;
-        /** Format: date-time */
-        createdAt: string;
-        /** Format: date-time */
-        updatedAt: string;
-      };
-      relationships?: {
-        [key: string]: unknown;
-      };
-      meta?: {
-        [key: string]: unknown;
-      };
-      links?: {
-        [key: string]: string;
-      };
-    };
-    UserSingleResponse: {
-      data: {
-        /** @enum {string} */
-        type: "user";
-        /** Format: uuid */
-        id: string;
-        /**
-         * User
-         * @description User response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          name: string | null;
-          email: string | null;
-          /** @enum {string} */
-          role: "user" | "admin" | "lawyer";
-          /** Format: date-time */
-          emailVerifiedAt: string | null;
-          userAgent: string | null;
-          lastIp: string | null;
-          isAnonymous: boolean;
-          age: number | null;
-          /** @enum {string|null} */
-          gender:
-            | "male"
-            | "female"
-            | "non_binary"
-            | "prefer_not_to_say"
-            | "other"
-            | null;
-          country: string | null;
-          city: string | null;
-          phoneNumber: string | null;
-          occupation: string | null;
-          bio: string | null;
-          profilePicture: string | null;
-          isFirstLogin: boolean;
-          isOnboarded: boolean;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      };
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-      } & {
-        [key: string]: unknown;
-      };
-    };
-    UserCollectionResponse: {
-      data: {
-        /** @enum {string} */
-        type: "user";
-        /** Format: uuid */
-        id: string;
-        /**
-         * User
-         * @description User response schema
-         */
-        attributes: {
-          /** Format: uuid */
-          id: string;
-          name: string | null;
-          email: string | null;
-          /** @enum {string} */
-          role: "user" | "admin" | "lawyer";
-          /** Format: date-time */
-          emailVerifiedAt: string | null;
-          userAgent: string | null;
-          lastIp: string | null;
-          isAnonymous: boolean;
-          age: number | null;
-          /** @enum {string|null} */
-          gender:
-            | "male"
-            | "female"
-            | "non_binary"
-            | "prefer_not_to_say"
-            | "other"
-            | null;
-          country: string | null;
-          city: string | null;
-          phoneNumber: string | null;
-          occupation: string | null;
-          bio: string | null;
-          profilePicture: string | null;
-          isFirstLogin: boolean;
-          isOnboarded: boolean;
-          /** Format: date-time */
-          createdAt: string;
-          /** Format: date-time */
-          updatedAt: string;
-        };
-        relationships?: {
-          [key: string]: unknown;
-        };
-        meta?: {
-          [key: string]: unknown;
-        };
-        links?: {
-          [key: string]: string;
-        };
-      }[];
-      links: {
-        self: string;
-      };
-      metadata: {
-        requestId: string;
-        timestamp: string;
-        total: number;
-        page: number;
-        limit: number;
-        totalPages: number;
-        /** @default {} */
-        availableFilters: {
-          [key: string]: unknown;
-        };
-        sortOptions: {
-          fields: string[];
-          default: string;
-          /** @enum {string} */
-          direction: "asc" | "desc";
         };
-      };
     };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export type operations = Record<string, never>;

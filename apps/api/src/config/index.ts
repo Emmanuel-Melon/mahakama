@@ -41,8 +41,7 @@ export const serverConfig = ServerConfigSchema.parse({
   protocol: process.env.NODE_ENV === "production" ? "https" : "http",
   baseUrl:
     process.env.BASE_URL?.trim() ||
-    `${process.env.NODE_ENV === "production" ? "https" : "http"}://${
-      process.env.HOSTNAME || "localhost"
+    `${process.env.NODE_ENV === "production" ? "https" : "http"}://${process.env.HOSTNAME || "localhost"
     }:${Number(process.env.PORT) || 3000}`,
   endpoints: {
     api: "/api",
@@ -75,17 +74,17 @@ export const dbConfig = DatabaseConfigSchema.parse({
   },
   redis: process.env.REDIS_URL
     ? {
-        url: process.env.REDIS_URL,
-        port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
-        host: process.env.REDIS_HOST || "localhost",
-      }
+      url: process.env.REDIS_URL,
+      port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+      host: process.env.REDIS_HOST || "localhost",
+    }
     : undefined,
   chroma: process.env.CHROMA_API_KEY
     ? {
-        chromaApiKey: process.env.CHROMA_API_KEY,
-        chromaDatabase: process.env.CHROMA_DATABASE,
-        chromaTenant: process.env.CHROMA_TENANT,
-      }
+      chromaApiKey: process.env.CHROMA_API_KEY,
+      chromaDatabase: process.env.CHROMA_DATABASE,
+      chromaTenant: process.env.CHROMA_TENANT,
+    }
     : undefined,
 }) satisfies IDatabaseConfig;
 
@@ -111,10 +110,10 @@ export const storageConfig = StorageConfigSchema.parse({
 export const servicesConfig = ServicesConfigSchema.parse({
   upstash: process.env.UPSTASH_REDIS_REST_URL
     ? {
-        restUrl: process.env.UPSTASH_REDIS_REST_URL,
-        restToken: process.env.UPSTASH_REDIS_REST_TOKEN,
-        restPassword: process.env.UPSTASH_REDIS_REST_PASSWORD,
-      }
+      restUrl: process.env.UPSTASH_REDIS_REST_URL,
+      restToken: process.env.UPSTASH_REDIS_REST_TOKEN,
+      restPassword: process.env.UPSTASH_REDIS_REST_PASSWORD,
+    }
     : undefined,
   r2: {
     accountId: process.env.R2_ACCOUNT_ID ?? "",
@@ -206,6 +205,8 @@ export const corsOrigins = [
   "http://127.0.0.1:5173",
   "http://localhost:5174",
   "http://127.0.0.1:5174",
+  "http://localhost:5175",
+  "http://127.0.0.1:5175",
 ];
 
 // API Servers

@@ -3,6 +3,7 @@
     "group": "Application",
     "dashboard": "Dashboard",
     "corpus": "Corpus",
+    "orgs": "Organizations",
     "lawyerInvites": "Lawyer Invites",
     "lawyerProfiles": "Lawyer Profiles"
   },

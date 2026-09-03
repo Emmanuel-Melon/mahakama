@@ -38,3 +38,9 @@ export const MATTERS_API_ROUTES = {
   LAWYERS: "/v1/matters/:matterId/lawyers",
   LAWYERS_ME: "/v1/matters/:matterId/lawyers/me",
 } as const;
+
+export const ORGS_API_ROUTES = {
+  ROOT: "/v1/orgs",
+  MEMBERS: "/v1/orgs/:orgId/members",
+  MEMBER: "/v1/orgs/:orgId/members/:userId",
+} as const;
