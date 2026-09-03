@@ -20,6 +20,7 @@ import { consultationsRegistry } from "@/feature/consultations/consultations.doc
 import { matterRegistry } from "@/feature/matter/matter.docs";
 import { clientsRegistry } from "@/feature/clients/clients.docs";
 import { notificationsRegistry } from "@/feature/notifications/notifications.docs";
+import { orgsRegistry } from "@/feature/orgs/orgs.docs";
 
 extendZodWithOpenApi(z);
 
@@ -43,6 +44,7 @@ const registries = [
   lawyersRegistry,
   matterRegistry,
   messagesRegistry,
+  orgsRegistry,
   servicesRegistry,
   usersRegistry,
   securityRegistry,

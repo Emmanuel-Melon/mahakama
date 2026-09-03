@@ -8,6 +8,7 @@ import { dashboardRoutes } from "./feature/dashboard/DashboardConfig";
 import { lawyersRoutes } from "./feature/lawyers/LawyersConfig";
 import { corpusRoutes } from "./feature/corpus/CorpusConfig";
 import { authRoutes } from "./feature/auth/AuthConfig";
+import { orgsRoutes } from "./feature/orgs/OrgsConfig";
 import type { RouteDefinition } from "@mah/client/nav";
 
 export default [
@@ -15,6 +16,7 @@ export default [
   ...toRouteConfig(lawyersRoutes),
   ...toRouteConfig(corpusRoutes),
   ...toRouteConfig(authRoutes),
+  ...toRouteConfig(orgsRoutes),
   layout("./feature/onboarding/layouts/onboarding.layout.tsx", [
     route("onboarding", "routes/onboarding.tsx"),
     route("onboarding/lawyer", "routes/lawyer-onboarding.tsx"),

@@ -1,0 +1,24 @@
+{
+  "title": "Organizations",
+  "subtitle": "Manage organizations",
+  "create": "Create Organization",
+  "form": {
+    "name": "Name",
+    "slug": "Slug",
+    "namePlaceholder": "e.g., Acme Legal",
+    "slugPlaceholder": "auto-generated from name"
+  },
+  "empty": {
+    "title": "No organizations",
+    "description": "Create your first organization."
+  },
+  "actions": {
+    "create": "Create",
+    "cancel": "Cancel",
+    "creating": "Creating..."
+  },
+  "toast": {
+    "created": "Organization created successfully",
+    "createError": "Failed to create organization"
+  }
+}

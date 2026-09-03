@@ -6,11 +6,12 @@ import { initReactI18next } from "react-i18next";
 import { authI18n } from "~/feature/auth/AuthConfig";
 import { corpusI18n } from "~/feature/corpus/CorpusConfig";
 import { lawyersI18n } from "~/feature/lawyers/LawyersConfig";
+import { orgsI18n } from "~/feature/orgs/OrgsConfig";
 
 import commonAr from "~/locales/ar/common.json";
 import commonEn from "~/locales/en/common.json";
 
-const i18nConfigs = [authI18n, corpusI18n, lawyersI18n];
+const i18nConfigs = [authI18n, corpusI18n, lawyersI18n, orgsI18n];
 
 const resources: Resource = i18nConfigs.reduce<Resource>(
   (acc, Config) => {

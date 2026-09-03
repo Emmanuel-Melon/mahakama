@@ -62,6 +62,17 @@ const postV1corpus_Body = z
     updatedAt: z.string().datetime({ offset: true }).optional(),
   })
   .passthrough();
+const putV1notificationspreferencesupdate_Body = z
+  .object({
+    userId: z.string().uuid(),
+    category: z.string().nullish(),
+    emailEnabled: z.boolean().nullish(),
+    pushEnabled: z.boolean().nullish(),
+    inAppEnabled: z.boolean().nullish(),
+    createdAt: z.string().datetime({ offset: true }).optional(),
+    updatedAt: z.string().datetime({ offset: true }).optional(),
+  })
+  .passthrough();
 const postV1lawyers_Body = z
   .object({
     id: z.string().uuid().optional(),
@@ -140,7 +151,15 @@ const putV1lawyersId_Body = z
 const postV1matters_Body = z
   .object({
     id: z.string().uuid().optional(),
-    clientUserId: z.string().uuid(),
+    creatorType: z.enum(["client", "lawyer", "org"]),
+    createdByUserId: z.string().uuid(),
+    creatorOrgId: z.string().uuid().nullish(),
+    ownerType: z.enum(["user", "org", "external"]),
+    clientUserId: z.string().uuid().nullish(),
+    clientOrgId: z.string().uuid().nullish(),
+    externalClientName: z.string().max(255).nullish(),
+    externalClientContact: z.string().max(255).nullish(),
+    representingOrgId: z.string().uuid().nullish(),
     sourceChatId: z.string().uuid().nullish(),
     title: z.string(),
     summary: z.string().nullish(),
@@ -188,6 +207,14 @@ const postV1mattersMatterIddocuments_Body = z
   .passthrough();
 const patchV1mattersMatterId_Body = z
   .object({
+    creatorType: z.enum(["client", "lawyer", "org"]),
+    createdByUserId: z.string().uuid(),
+    creatorOrgId: z.string().uuid().nullable(),
+    ownerType: z.enum(["user", "org", "external"]),
+    clientOrgId: z.string().uuid().nullable(),
+    externalClientName: z.string().max(255).nullable(),
+    externalClientContact: z.string().max(255).nullable(),
+    representingOrgId: z.string().uuid().nullable(),
     sourceChatId: z.string().uuid().nullable(),
     title: z.string(),
     summary: z.string().nullable(),
@@ -291,6 +318,7 @@ export const schemas = {
   postV1chats_Body,
   postV1consultations_Body,
   postV1corpus_Body,
+  putV1notificationspreferencesupdate_Body,
   postV1lawyers_Body,
   putV1lawyersId_Body,
   postV1matters_Body,
@@ -651,7 +679,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -748,6 +776,108 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/v1/clients",
+    alias: "getV1clients",
+    description: `Returns a list of users who have matters with the authenticated lawyer.`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("user"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  name: z.string().max(255).nullable(),
+                  email: z.string().max(255).nullable(),
+                  role: z.enum(["user", "admin", "lawyer"]),
+                  emailVerifiedAt: z
+                    .string()
+                    .datetime({ offset: true })
+                    .nullable(),
+                  userAgent: z.string().nullable(),
+                  lastIp: z.string().max(45).nullable(),
+                  isAnonymous: z.boolean(),
+                  age: z
+                    .number()
+                    .int()
+                    .gte(-2147483648)
+                    .lte(2147483647)
+                    .nullable(),
+                  gender: z
+                    .enum([
+                      "male",
+                      "female",
+                      "non_binary",
+                      "prefer_not_to_say",
+                      "other",
+                      null,
+                    ])
+                    .nullable(),
+                  country: z.string().max(100).nullable(),
+                  city: z.string().max(100).nullable(),
+                  phoneNumber: z.string().max(20).nullable(),
+                  occupation: z.string().max(100).nullable(),
+                  bio: z.string().nullable(),
+                  profilePicture: z.string().nullable(),
+                  isFirstLogin: z.boolean(),
+                  isOnboarded: z.boolean(),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 403,
+        description: `The server understood the request but refuses to authorize it.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/v1/consultations",
     alias: "getV1consultations",
     description: `Returns a paginated list of consultations with filtering by status, lawyer, or customer.`,
@@ -784,7 +914,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1177,7 +1307,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1582,7 +1712,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1898,7 +2028,15 @@ const endpoints = makeApi([
               attributes: z
                 .object({
                   id: z.string().uuid(),
-                  clientUserId: z.string().uuid(),
+                  creatorType: z.enum(["client", "lawyer", "org"]),
+                  createdByUserId: z.string().uuid(),
+                  creatorOrgId: z.string().uuid().nullable(),
+                  ownerType: z.enum(["user", "org", "external"]),
+                  clientUserId: z.string().uuid().nullable(),
+                  clientOrgId: z.string().uuid().nullable(),
+                  externalClientName: z.string().max(255).nullable(),
+                  externalClientContact: z.string().max(255).nullable(),
+                  representingOrgId: z.string().uuid().nullable(),
                   sourceChatId: z.string().uuid().nullable(),
                   title: z.string(),
                   summary: z.string().nullable(),
@@ -1933,7 +2071,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -1994,7 +2132,15 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                clientUserId: z.string().uuid(),
+                creatorType: z.enum(["client", "lawyer", "org"]),
+                createdByUserId: z.string().uuid(),
+                creatorOrgId: z.string().uuid().nullable(),
+                ownerType: z.enum(["user", "org", "external"]),
+                clientUserId: z.string().uuid().nullable(),
+                clientOrgId: z.string().uuid().nullable(),
+                externalClientName: z.string().max(255).nullable(),
+                externalClientContact: z.string().max(255).nullable(),
+                representingOrgId: z.string().uuid().nullable(),
                 sourceChatId: z.string().uuid().nullable(),
                 title: z.string(),
                 summary: z.string().nullable(),
@@ -2069,7 +2215,15 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                clientUserId: z.string().uuid(),
+                creatorType: z.enum(["client", "lawyer", "org"]),
+                createdByUserId: z.string().uuid(),
+                creatorOrgId: z.string().uuid().nullable(),
+                ownerType: z.enum(["user", "org", "external"]),
+                clientUserId: z.string().uuid().nullable(),
+                clientOrgId: z.string().uuid().nullable(),
+                externalClientName: z.string().max(255).nullable(),
+                externalClientContact: z.string().max(255).nullable(),
+                representingOrgId: z.string().uuid().nullable(),
                 sourceChatId: z.string().uuid().nullable(),
                 title: z.string(),
                 summary: z.string().nullable(),
@@ -2149,7 +2303,15 @@ const endpoints = makeApi([
             attributes: z
               .object({
                 id: z.string().uuid(),
-                clientUserId: z.string().uuid(),
+                creatorType: z.enum(["client", "lawyer", "org"]),
+                createdByUserId: z.string().uuid(),
+                creatorOrgId: z.string().uuid().nullable(),
+                ownerType: z.enum(["user", "org", "external"]),
+                clientUserId: z.string().uuid().nullable(),
+                clientOrgId: z.string().uuid().nullable(),
+                externalClientName: z.string().max(255).nullable(),
+                externalClientContact: z.string().max(255).nullable(),
+                representingOrgId: z.string().uuid().nullable(),
                 sourceChatId: z.string().uuid().nullable(),
                 title: z.string(),
                 summary: z.string().nullable(),
@@ -2251,7 +2413,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2529,7 +2691,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2772,7 +2934,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -2950,7 +3112,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -3058,6 +3220,252 @@ const endpoints = makeApi([
   },
   {
     method: "get",
+    path: "/v1/notifications",
+    alias: "getV1notifications",
+    description: `Returns a paginated list of notifications for the authenticated user`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z.array(
+          z
+            .object({
+              type: z.literal("notification"),
+              id: z.string().uuid(),
+              attributes: z
+                .object({
+                  id: z.string().uuid(),
+                  userId: z.string().uuid().nullable(),
+                  recipientEmail: z.string().max(255).nullable(),
+                  type: z.string().max(100),
+                  channel: z.enum(["in_app", "email", "push"]),
+                  recipientType: z.enum([
+                    "sender",
+                    "fulfillment_partner",
+                    "admin",
+                  ]),
+                  title: z.string().max(255),
+                  message: z.string(),
+                  actionUrl: z.string().nullable(),
+                  scheduledAt: z.string().datetime({ offset: true }),
+                  sentAt: z.string().datetime({ offset: true }).nullable(),
+                  deliveredAt: z.string().datetime({ offset: true }).nullable(),
+                  status: z.enum([
+                    "notification_pending",
+                    "notification_sent",
+                    "notification_delivered",
+                    "notification_opened",
+                    "notification_failed",
+                  ]),
+                  metadata: z.union([
+                    z.string(),
+                    z.number(),
+                    z.boolean(),
+                    z.unknown(),
+                    z.record(z.unknown().nullable()),
+                    z.array(z.unknown().nullable()),
+                  ]),
+                  createdAt: z.string().datetime({ offset: true }),
+                  updatedAt: z.string().datetime({ offset: true }),
+                  templateKey: z.string().max(100).nullable(),
+                  entityId: z.string().max(255).nullable(),
+                  isRead: z.boolean(),
+                  readAt: z.string().datetime({ offset: true }).nullable(),
+                  isActioned: z.boolean(),
+                  actionedAt: z.string().datetime({ offset: true }).nullable(),
+                })
+                .passthrough(),
+              relationships: z.record(z.unknown().nullable()).optional(),
+              meta: z.record(z.unknown().nullable()).optional(),
+              links: z.record(z.string()).optional(),
+            })
+            .passthrough()
+        ),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z
+          .object({
+            requestId: z.string(),
+            timestamp: z.string(),
+            total: z.number().int().gte(0),
+            page: z.number().int().gt(0),
+            limit: z.number().int().gt(0),
+            totalPages: z.number().int().gte(0),
+            availableFilters: z
+              .record(z.unknown().nullable())
+              .optional()
+              .default({}),
+            sortOptions: z
+              .object({
+                fields: z.array(z.string()),
+                default: z.string(),
+                direction: z.enum(["asc", "desc"]),
+              })
+              .passthrough(),
+          })
+          .passthrough(),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 500,
+        description: `An unexpected condition was encountered and no more specific message is suitable.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
+    path: "/v1/notifications/preferences",
+    alias: "getV1notificationspreferences",
+    description: `Retrieve notification preferences for the authenticated user`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("notification-preferences"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                userId: z.string().uuid(),
+                category: z.string().nullable(),
+                emailEnabled: z.boolean().nullable(),
+                pushEnabled: z.boolean().nullable(),
+                inAppEnabled: z.boolean().nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "put",
+    path: "/v1/notifications/preferences/update",
+    alias: "putV1notificationspreferencesupdate",
+    description: `Update notification preferences for the authenticated user`,
+    requestFormat: "json",
+    parameters: [
+      {
+        name: "body",
+        type: "Body",
+        schema: putV1notificationspreferencesupdate_Body,
+      },
+    ],
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("notification-preferences"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                userId: z.string().uuid(),
+                category: z.string().nullable(),
+                emailEnabled: z.boolean().nullable(),
+                pushEnabled: z.boolean().nullable(),
+                inAppEnabled: z.boolean().nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 400,
+        description: `The request could not be understood or was missing required parameters.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "post",
+    path: "/v1/notifications/set",
+    alias: "postV1notificationsset",
+    description: `Create default notification preferences for the authenticated user`,
+    requestFormat: "json",
+    response: z
+      .object({
+        data: z
+          .object({
+            type: z.literal("notification-preferences"),
+            id: z.string().uuid(),
+            attributes: z
+              .object({
+                userId: z.string().uuid(),
+                category: z.string().nullable(),
+                emailEnabled: z.boolean().nullable(),
+                pushEnabled: z.boolean().nullable(),
+                inAppEnabled: z.boolean().nullable(),
+                createdAt: z.string().datetime({ offset: true }),
+                updatedAt: z.string().datetime({ offset: true }),
+              })
+              .passthrough(),
+            relationships: z.record(z.unknown().nullable()).optional(),
+            meta: z.record(z.unknown().nullable()).optional(),
+            links: z.record(z.string()).optional(),
+          })
+          .passthrough(),
+        links: z.object({ self: z.string() }).passthrough(),
+        metadata: z.record(z.unknown().nullable()),
+      })
+      .passthrough(),
+    errors: [
+      {
+        status: 401,
+        description: `Authentication failed or user doesn&#x27;t have permissions for the requested operation.`,
+        schema: JsonApiErrorResponse,
+      },
+      {
+        status: 404,
+        description: `The requested resource could not be found on the server.`,
+        schema: JsonApiErrorResponse,
+      },
+    ],
+  },
+  {
+    method: "get",
     path: "/v1/services",
     alias: "getV1services",
     description: `Returns a list of all available legal services with optional category filtering`,
@@ -3083,7 +3491,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z
@@ -3180,7 +3588,7 @@ const endpoints = makeApi([
               meta: z.record(z.unknown().nullable()).optional(),
               links: z.record(z.string()).optional(),
             })
-            .passthrough(),
+            .passthrough()
         ),
         links: z.object({ self: z.string() }).passthrough(),
         metadata: z

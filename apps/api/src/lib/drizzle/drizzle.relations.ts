@@ -28,6 +28,13 @@ import {
   matterEventsTable,
   matterActivitiesTable,
 } from "@/feature/matter/matter.schema";
+import {
+  orgsTable,
+  orgMembersTable,
+  orgClientsTable,
+  orgClientMembersTable,
+  clientDocumentsTable,
+} from "@/feature/orgs/orgs.schema";
 
 // Users Relations
 export const usersRelations = relations(usersSchema, ({ many }) => ({
@@ -223,6 +230,59 @@ export const matterActivitiesRelations = relations(
   }),
 );
 
+// Org Relations
+export const orgsRelations = relations(orgsTable, ({ many }) => ({
+  members: many(orgMembersTable),
+  clients: many(orgClientsTable),
+}));
+
+export const orgMembersRelations = relations(orgMembersTable, ({ one }) => ({
+  org: one(orgsTable, {
+    fields: [orgMembersTable.orgId],
+    references: [orgsTable.id],
+  }),
+  user: one(usersSchema, {
+    fields: [orgMembersTable.userId],
+    references: [usersSchema.id],
+  }),
+}));
+
+export const orgClientsRelations = relations(
+  orgClientsTable,
+  ({ one, many }) => ({
+    org: one(orgsTable, {
+      fields: [orgClientsTable.orgId],
+      references: [orgsTable.id],
+    }),
+    clientOrg: one(orgsTable, {
+      fields: [orgClientsTable.clientOrgId],
+      references: [orgsTable.id],
+    }),
+    members: many(orgClientMembersTable),
+    documents: many(clientDocumentsTable),
+  }),
+);
+
+export const orgClientMembersRelations = relations(
+  orgClientMembersTable,
+  ({ one }) => ({
+    orgClient: one(orgClientsTable, {
+      fields: [orgClientMembersTable.orgClientId],
+      references: [orgClientsTable.id],
+    }),
+  }),
+);
+
+export const clientDocumentsRelations = relations(
+  clientDocumentsTable,
+  ({ one }) => ({
+    orgClient: one(orgClientsTable, {
+      fields: [clientDocumentsTable.orgClientId],
+      references: [orgClientsTable.id],
+    }),
+  }),
+);
+
 // Combined Relations Export
 export const allRelations = {
   usersRelations,
@@ -245,4 +305,9 @@ export const allRelations = {
   matterStatusHistoryRelations,
   matterEventsRelations,
   matterActivitiesRelations,
+  orgsRelations,
+  orgMembersRelations,
+  orgClientsRelations,
+  orgClientMembersRelations,
+  clientDocumentsRelations,
 };

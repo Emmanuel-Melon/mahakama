@@ -14,6 +14,7 @@ import "./app.css";
 import { QueryClientProviderWrapper } from "~/context/query-client-provider";
 import { UserProvider } from "~/context/user-provider";
 import { AppShell } from "@mah/ui/components/organisms/layout/AppShell";
+import { Toaster } from "@mah/ui/components/Sonner";
 import { AuthLayout } from "@mah/ui/components/organisms/layout/AuthLayout";
 import { useNavLinks } from "~/lib/nav/nav.permissions";
 import { useUser } from "~/context/user-provider";
@@ -122,6 +123,7 @@ function AdminShell({ children }: { children: React.ReactNode }) {
       onLogout={logout}
     >
       {children}
+      <Toaster position="bottom-right" />
     </AppShell>
   );
 }

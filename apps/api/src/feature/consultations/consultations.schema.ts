@@ -25,7 +25,7 @@ export const consultationsTable = pgTable("consultations", {
     .references(() => usersSchema.id),
   lawyerId: uuid("lawyer_id")
     .notNull()
-    .references(() => lawyersTable.id),
+    .references(() => lawyersTable.id, { onDelete: "cascade" }),
 
   status: consultationStatusEnum("status").default("pending").notNull(),
 

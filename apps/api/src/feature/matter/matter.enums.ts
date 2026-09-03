@@ -42,3 +42,15 @@ export const matterActivityTypeEnum = pgEnum("matter_activity_type", [
   "summary_updated",
   "system",
 ]);
+
+export const matterCreatorTypeEnum = pgEnum("matter_creator_type", [
+  "client", // client opened it themselves
+  "lawyer", // an independent lawyer opened it on behalf of a client
+  "org",    // a lawyer opened it while acting within a firm
+]);
+
+export const matterOwnerTypeEnum = pgEnum("matter_owner_type", [
+  "user",     // client is a registered platform user
+  "org",      // client is a registered client-org (company)
+  "external", // client has no platform account — contact captured inline
+]);

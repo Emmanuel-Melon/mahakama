@@ -16,13 +16,33 @@ import {
   matterLawyerRoleEnum,
   matterEventTypeEnum,
   matterActivityTypeEnum,
+  matterCreatorTypeEnum,
+  matterOwnerTypeEnum,
 } from "./matter.enums";
+import { orgsTable } from "../orgs/orgs.schema";
 
 export const mattersTable = pgTable("matters", {
   id: uuid("id").primaryKey().defaultRandom(),
-  clientUserId: uuid("client_user_id")
+
+  // Who actually created this record
+  creatorType: matterCreatorTypeEnum("creator_type").notNull(),
+  createdByUserId: uuid("created_by_user_id")
     .notNull()
     .references(() => usersSchema.id),
+  creatorOrgId: uuid("creator_org_id").references(() => orgsTable.id), // set only when creatorType = 'org'
+
+  // Who the matter belongs to (the client)
+  ownerType: matterOwnerTypeEnum("owner_type").notNull(),
+  clientUserId: uuid("client_user_id").references(() => usersSchema.id),
+  clientOrgId: uuid("client_org_id").references(() => orgsTable.id),
+  externalClientName: varchar("external_client_name", { length: 255 }),
+  externalClientContact: varchar("external_client_contact", { length: 255 }),
+
+  // Firm representing the client, if any — auto-set to creatorOrgId when
+  // creatorType = 'org'; can also be set later if a firm takes over a
+  // matter a client opened solo.
+  representingOrgId: uuid("representing_org_id").references(() => orgsTable.id),
+
   sourceChatId: uuid("source_chat_id").references(() => chatsSchema.id, {
     onDelete: "set null",
   }),
