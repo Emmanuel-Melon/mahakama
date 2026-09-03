@@ -16,10 +16,10 @@ import { ChatInput } from "~/feature/chats/components/chat-input";
 import { MessageList } from "~/feature/chats/components/MessageList";
 import { CitationsSidebar } from "~/feature/chats/components/CitationsSidebar";
 import { DocumentIndicator } from "~/feature/chats/components/DocumentIndicator";
-import { OpenMatterDialog } from "~/feature/matters/components/OpenMatterDialog";
-import type { OpenMatterFormValues } from "~/feature/matters/components/OpenMatterDialog";
-import { MatterPreparingSheet } from "~/feature/matters/components/MatterPreparingSheet";
-import { isMatterPrepared } from "~/feature/matters/components/matter-utils";
+import { OpenMatterDialog } from "@mah/feature/matters";
+import type { OpenMatterFormValues } from "@mah/feature/matters";
+import { MatterPreparingSheet } from "@mah/feature/matters";
+import { isMatterPrepared } from "@mah/feature/matters";
 import { PageDetailsLoading } from "@mah/ui/components/molecules/PageDetailsLoading";
 import { PageDetailsError } from "@mah/ui/components/molecules/PageDetailsError";
 import {

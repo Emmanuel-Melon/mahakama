@@ -65,7 +65,8 @@
     "requestedLawyer": "تم طلب محامٍ",
     "updatingRequest": "جارٍ التحديث...",
     "changeStatus": "تغيير الحالة",
-    "updatingStatus": "جارٍ التحديث..."
+    "updatingStatus": "جارٍ التحديث...",
+    "openedFromChat": "تم فتحه من المحادثة"
   },
   "summary": {
     "label": "الملخص الذكي",

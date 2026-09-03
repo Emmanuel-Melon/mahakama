@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 import { useMessages } from "@mah/api/src/hooks/chats/use-chats";
-import { MessageBubble } from "~/feature/chats/components/MessageBubble";
-import { ChatsPaths } from "~/feature/chats/ChatsConfig";
+import { useMatterFeature } from "../../MatterFeatureContext";
 import { EraDivider } from "./EraDivider";
 import { isSubstantiveAssistantMessage } from "./chat.utils";
 
 export function MatterChatConversation({ chatId }: { chatId: string }) {
   const { t } = useTranslation("matters");
   const { data: messagesData, isLoading } = useMessages(chatId);
+  const { chatPathResolver, MessageComponent } = useMatterFeature();
   const messages = messagesData?.data ?? [];
 
   const usedInSummaryIds = useMemo(
@@ -56,7 +56,13 @@ export function MatterChatConversation({ chatId }: { chatId: string }) {
                 />
               )}
               <div className={chipVisible ? "relative mb-2" : "relative"}>
-                <MessageBubble message={message} />
+                {MessageComponent ? (
+                  <MessageComponent message={message} />
+                ) : (
+                  <p className="text-sm text-gray-900 whitespace-pre-wrap break-words">
+                    {message.content}
+                  </p>
+                )}
                 {chipVisible && (
                   <span className="absolute -bottom-2 left-8 z-10 inline-flex items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-2 py-0.5 text-[10px] font-medium text-blue-700">
                     <Sparkles className="h-3 w-3" />
@@ -70,13 +76,15 @@ export function MatterChatConversation({ chatId }: { chatId: string }) {
       </div>
 
       <div className="border-t border-gray-200 px-4 py-3">
-        <a
-          href={ChatsPaths.chatDetail({ chatId })}
-          className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
-        >
-          <ArrowUpRight className="h-3.5 w-3.5" />
-          {t("chat.openFull")}
-        </a>
+        {chatPathResolver && (
+          <a
+            href={chatPathResolver(chatId)}
+            className="inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            <ArrowUpRight className="h-3.5 w-3.5" />
+            {t("chat.openFull")}
+          </a>
+        )}
       </div>
     </>
   );

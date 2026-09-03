@@ -9,18 +9,17 @@ import {
   useMatterMutations,
   isDocumentAnalyzed,
 } from "@mah/api/src/hooks/use-matters";
-import { MattersPaths } from "../MattersConfig";
 import type {
   MatterDocument,
   MatterDocumentAnalysis,
 } from "@mah/api/src/clients/matters.api";
 import { DocumentAnalysisSection } from "../components/analysis/DocumentAnalysisSection";
-import { appConfig } from "~/config";
+import { useMatterFeature } from "../MatterFeatureContext";
 
 const UPLOADS_PATH = "/uploads/";
 
-function resolveFileUrl(fileUrl: string): string {
-  const apiUrl = appConfig.api.baseURL.replace(/\/+$/, "");
+function resolveFileUrl(fileUrl: string, apiBaseURL: string): string {
+  const apiUrl = apiBaseURL.replace(/\/+$/, "");
   const path = fileUrl.slice(fileUrl.indexOf(UPLOADS_PATH));
   const origin = apiUrl.replace(/\/api\/?$/, "");
   return `${origin}${path}`;
@@ -31,6 +30,7 @@ interface MatterDocumentScreenProps {
   documentId: string;
   role: "lawyer" | "user";
   currentUserId?: string;
+  apiBaseURL: string;
 }
 
 const ANALYSIS_POLL_INTERVAL_MS = 3000;
@@ -38,9 +38,11 @@ const ANALYSIS_POLL_INTERVAL_MS = 3000;
 export function MatterDocumentScreen({
   matterId,
   documentId,
+  apiBaseURL,
 }: MatterDocumentScreenProps) {
   const { t } = useTranslation("matters");
   const navigate = useNavigate();
+  const { paths } = useMatterFeature();
   const { data, isLoading, error, refetch } = useMatterDocument(
     matterId,
     documentId,
@@ -48,7 +50,9 @@ export function MatterDocumentScreen({
   const { analyzeDocument } = useMatterMutations();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [showAnalysis, setShowAnalysis] = useState(false);
-  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   const document = data?.data;
   const analysis = (
@@ -89,7 +93,7 @@ export function MatterDocumentScreen({
   }, []);
 
   const breadcrumbs = [
-    { label: t("title"), to: MattersPaths.index(), icon: FileText },
+    { label: t("title"), to: paths.index(), icon: FileText },
     { label: document?.fileName ?? t("title"), to: "#" },
   ];
 
@@ -134,7 +138,7 @@ export function MatterDocumentScreen({
               <div className="flex items-center gap-2">
                 {document.fileUrl && (
                   <a
-                    href={resolveFileUrl(document.fileUrl)}
+                    href={resolveFileUrl(document.fileUrl, apiBaseURL)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -147,7 +151,7 @@ export function MatterDocumentScreen({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => navigate(MattersPaths.detail({ matterId }))}
+                  onClick={() => navigate(paths.detail({ matterId }))}
                   className="gap-2"
                 >
                   <X className="h-4 w-4" />
@@ -159,7 +163,7 @@ export function MatterDocumentScreen({
             {document.fileUrl && (
               <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
                 <embed
-                  src={`${resolveFileUrl(document.fileUrl)}#toolbar=0&navpanes=0&scrollbar=1`}
+                  src={`${resolveFileUrl(document.fileUrl, apiBaseURL)}#toolbar=0&navpanes=0&scrollbar=1`}
                   type="application/pdf"
                   className="w-full min-h-[70vh]"
                 />

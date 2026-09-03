@@ -65,7 +65,8 @@
     "requestedLawyer": "Lawyer requested",
     "updatingRequest": "Updating…",
     "changeStatus": "Change status",
-    "updatingStatus": "Updating…"
+    "updatingStatus": "Updating…",
+    "openedFromChat": "Opened from chat"
   },
   "summary": {
     "label": "AI Summary",

@@ -1,9 +1,15 @@
 import type { Route } from "./+types/$matterId";
-import { MatterDetailScreen } from "~/feature/matters/screens/MatterDetailScreen";
+import {
+  MatterDetailScreen,
+  MatterFeatureProvider,
+} from "@mah/feature/matters";
 import { useMatter } from "@mah/api/src/hooks/use-matters";
 import { authContext, userContext } from "~/middleware/context";
 import { useAppError } from "~/lib/errors/errors.registry";
 import { MahErrorBoundary } from "~/components/RootErrorBoundary";
+import { MattersPaths } from "~/feature/matters/MattersConfig";
+import { ChatsPaths } from "~/feature/chats/ChatsConfig";
+import { MessageBubble } from "~/feature/chats/components/MessageBubble";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -33,13 +39,22 @@ export default function MatterDetailsRoute({
   const { data, isLoading, error } = useMatter(matterId || "");
 
   return (
-    <MatterDetailScreen
-      matter={data?.data}
-      isLoading={isLoading}
-      error={error}
-      role={isLawyer ? "lawyer" : "user"}
-      currentUserId={user?.id}
-    />
+    <MatterFeatureProvider
+      value={{
+        paths: MattersPaths,
+        chatPathResolver: (chatId) =>
+          ChatsPaths.chatDetail().replace(":chatId", chatId),
+        MessageComponent: MessageBubble,
+      }}
+    >
+      <MatterDetailScreen
+        matter={data?.data}
+        isLoading={isLoading}
+        error={error}
+        role={isLawyer ? "lawyer" : "user"}
+        currentUserId={user?.id}
+      />
+    </MatterFeatureProvider>
   );
 }
 

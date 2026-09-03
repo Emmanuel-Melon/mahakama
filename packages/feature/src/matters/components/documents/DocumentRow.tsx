@@ -11,7 +11,7 @@ import { Link } from "react-router";
 import { IconContainer } from "@mah/ui/components/IconContainer";
 import { Button } from "@mah/ui";
 import type { MatterDocument } from "@mah/api/src/clients/matters.api";
-import { MattersPaths } from "../../MattersConfig";
+import { useMatterFeature } from "../../MatterFeatureContext";
 import { formatDate, formatSize } from "./documents.utils";
 import {
   useMatterMutations,
@@ -20,6 +20,7 @@ import {
 
 export function DocumentRow({ document }: { document: MatterDocument }) {
   const { t } = useTranslation("matters");
+  const { paths } = useMatterFeature();
   const size = formatSize(document.fileSize);
   const analyzed = isDocumentAnalyzed(document);
   const { analyzeDocument } = useMatterMutations();
@@ -34,7 +35,7 @@ export function DocumentRow({ document }: { document: MatterDocument }) {
 
   return (
     <Link
-      to={MattersPaths.document({
+      to={paths.document({
         matterId: document.matterId,
         documentId: document.id,
       })}
