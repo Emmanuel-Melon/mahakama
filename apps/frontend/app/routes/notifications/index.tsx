@@ -1,5 +1,5 @@
 import type { Route } from "./+types/index";
-import { NotificationsScreen } from "~/feature/notifications/Screens/NotificationsScreen";
+import { NotificationsScreen } from "@mah/feature/notifications";
 import { useNotifications } from "@mah/api/src/hooks/use-notifications";
 import { useLoaderData } from "react-router";
 import { authContext } from "~/middleware/context";
